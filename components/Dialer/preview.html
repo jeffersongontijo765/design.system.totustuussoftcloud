@@ -1,0 +1,131 @@
+<!-- @dsCard group="Formulários · Plugins" height=270 subtitle="ttsc-dialer · inteiro, passo, decimais com prefixo R$, limites, desabilitado" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Dialer</title>
+<style>
+  .ttsc-dialer { display: inline-flex; align-items: stretch; }
+  .ttsc-dialer .ttsc-input { width: 128px; text-align: center; font-variant-numeric: tabular-nums; border-radius: 0; }
+  .ttsc-dialer > .ttsc-btn:first-child { border-start-end-radius: 0; border-end-end-radius: 0; border-inline-end-width: 0; }
+  .ttsc-dialer > .ttsc-btn:last-child { border-start-start-radius: 0; border-end-start-radius: 0; border-inline-start-width: 0; }
+  .ttsc-dialer [data-ttsc-dialer-control]:disabled { opacity: .5; cursor: not-allowed; }
+  .ttsc-dialer.is-disabled { opacity: .5; }
+  .dl-field { display: flex; flex-direction: column; gap: 6px; }
+  .dl-field label { font-size: 13px; font-weight: 500; color: var(--ttsc-text); }
+  .dl-hint { font-size: 12px; color: var(--ttsc-text-muted); }
+  .dl-log { font-family: var(--font-mono, monospace); font-size: 12px; color: var(--ttsc-text-2); background: var(--ttsc-surface-2); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-sm); padding: 8px 10px; }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="ds-label">Inteiro com limites (courses.max_students)</div>
+  <div class="ds-row" style="gap:24px;align-items:flex-start">
+    <div class="dl-field">
+      <label id="lbl-max">Vagas por turma</label>
+      <div class="ttsc-dialer" data-ttsc-dialer data-ttsc-dialer-min="5" data-ttsc-dialer-max="60" data-ttsc-dialer-step="5">
+        <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-icon" data-ttsc-dialer-control="decrease" aria-label="Diminuir vagas"><i class="fa-light fa-minus"></i></button>
+        <input type="text" class="ttsc-input" name="max_students" value="40" inputmode="numeric" aria-labelledby="lbl-max" data-ttsc-dialer-input>
+        <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-icon" data-ttsc-dialer-control="increase" aria-label="Aumentar vagas"><i class="fa-light fa-plus"></i></button>
+      </div>
+      <span class="dl-hint">Entre 5 e 60, de 5 em 5.</span>
+    </div>
+    <div class="dl-field">
+      <label id="lbl-fee">Mensalidade</label>
+      <div class="ttsc-dialer" data-ttsc-dialer data-ttsc-dialer-min="0" data-ttsc-dialer-max="5000" data-ttsc-dialer-step="50" data-ttsc-dialer-decimals="2" data-ttsc-dialer-prefix="R$ ">
+        <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-icon" data-ttsc-dialer-control="decrease" aria-label="Diminuir mensalidade"><i class="fa-light fa-minus"></i></button>
+        <input type="text" class="ttsc-input" name="tuition_amount" value="1250" inputmode="decimal" aria-labelledby="lbl-fee" data-ttsc-dialer-input>
+        <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-icon" data-ttsc-dialer-control="increase" aria-label="Aumentar mensalidade"><i class="fa-light fa-plus"></i></button>
+      </div>
+      <span class="dl-hint">Passo R$ 50,00; duas casas decimais.</span>
+    </div>
+  </div>
+  <div class="ds-label">No limite e desabilitado</div>
+  <div class="ds-row" style="gap:24px">
+    <div class="ttsc-dialer" data-ttsc-dialer data-ttsc-dialer-min="1" data-ttsc-dialer-max="10" data-ttsc-dialer-step="1">
+      <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-icon" data-ttsc-dialer-control="decrease" aria-label="Diminuir períodos"><i class="fa-light fa-minus"></i></button>
+      <input type="text" class="ttsc-input" name="duration_periods" value="10" inputmode="numeric" aria-label="Duração em períodos" data-ttsc-dialer-input>
+      <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-icon" data-ttsc-dialer-control="increase" aria-label="Aumentar períodos"><i class="fa-light fa-plus"></i></button>
+    </div>
+    <div class="ttsc-dialer" data-ttsc-dialer data-ttsc-dialer-min="0" data-ttsc-dialer-max="100">
+      <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-icon" data-ttsc-dialer-control="decrease" aria-label="Diminuir" disabled><i class="fa-light fa-minus"></i></button>
+      <input type="text" class="ttsc-input" value="25" aria-label="Vagas (bloqueado)" disabled data-ttsc-dialer-input>
+      <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-icon" data-ttsc-dialer-control="increase" aria-label="Aumentar" disabled><i class="fa-light fa-plus"></i></button>
+    </div>
+  </div>
+  <div class="dl-log" id="dl-log" aria-live="polite">ttsc.dialer.change → aguardando…</div>
+</div>
+<script>
+(function (w) {
+  'use strict';
+  function TTSCDialer(el, opts) {
+    if (el.ttscDialer) return el.ttscDialer;
+    var d = el.dataset;
+    this.el = el;
+    this.input = el.querySelector('[data-ttsc-dialer-input]');
+    this.dec = el.querySelector('[data-ttsc-dialer-control="decrease"]');
+    this.inc = el.querySelector('[data-ttsc-dialer-control="increase"]');
+    this.o = Object.assign({
+      min: d.ttscDialerMin !== undefined ? +d.ttscDialerMin : -Infinity,
+      max: d.ttscDialerMax !== undefined ? +d.ttscDialerMax : Infinity,
+      step: +(d.ttscDialerStep || 1),
+      decimals: +(d.ttscDialerDecimals || 0),
+      prefix: d.ttscDialerPrefix || '',
+      suffix: d.ttscDialerSuffix || ''
+    }, opts || {});
+    this.fmt = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: this.o.decimals, maximumFractionDigits: this.o.decimals });
+    this.input.setAttribute('role', 'spinbutton');
+    if (isFinite(this.o.min)) this.input.setAttribute('aria-valuemin', this.o.min);
+    if (isFinite(this.o.max)) this.input.setAttribute('aria-valuemax', this.o.max);
+    var self = this;
+    this.dec.addEventListener('click', function () { self.decrease(); });
+    this.inc.addEventListener('click', function () { self.increase(); });
+    this.input.addEventListener('keydown', function (e) {
+      var k = { ArrowUp: 1, ArrowDown: -1, PageUp: 10, PageDown: -10 }[e.key];
+      if (k) { e.preventDefault(); self.setValue(self.getValue() + k * self.o.step); }
+      if (e.key === 'Home' && isFinite(self.o.min)) { e.preventDefault(); self.setValue(self.o.min); }
+      if (e.key === 'End' && isFinite(self.o.max)) { e.preventDefault(); self.setValue(self.o.max); }
+    });
+    this.input.addEventListener('blur', function () { self.setValue(self.parse(self.input.value)); });
+    this.setValue(this.parse(this.input.value), true);
+    el.ttscDialer = this;
+  }
+  TTSCDialer.prototype.parse = function (text) {
+    var s = String(text).replace(this.o.prefix, '').replace(this.o.suffix, '').replace(/\s/g, '');
+    if (s.indexOf(',') > -1) s = s.replace(/\./g, '').replace(',', '.');
+    var n = parseFloat(s);
+    return isNaN(n) ? (isFinite(this.o.min) ? this.o.min : 0) : n;
+  };
+  TTSCDialer.prototype.getValue = function () { return this.value; };
+  TTSCDialer.prototype.setValue = function (v, silent) {
+    var f = Math.pow(10, this.o.decimals);
+    v = Math.round(Math.min(this.o.max, Math.max(this.o.min, v)) * f) / f;
+    var changed = v !== this.value;
+    this.value = v;
+    this.input.value = this.o.prefix + this.fmt.format(v) + this.o.suffix;
+    this.input.setAttribute('aria-valuenow', v);
+    this.input.setAttribute('aria-valuetext', this.input.value);
+    if (!this.input.disabled) {
+      this.dec.disabled = v <= this.o.min;
+      this.inc.disabled = v >= this.o.max;
+    }
+    if (changed && !silent) {
+      this.el.dispatchEvent(new CustomEvent('ttsc.dialer.change', { bubbles: true, detail: { value: v, formatted: this.input.value } }));
+    }
+  };
+  TTSCDialer.prototype.increase = function () { this.setValue(this.value + this.o.step); };
+  TTSCDialer.prototype.decrease = function () { this.setValue(this.value - this.o.step); };
+  TTSCDialer.getInstance = function (el) { return el.ttscDialer || null; };
+  TTSCDialer.init = function (root) {
+    (root || document).querySelectorAll('[data-ttsc-dialer]').forEach(function (el) { new TTSCDialer(el); });
+  };
+  w.TTSCDialer = TTSCDialer;
+})(window);
+
+TTSC.init();
+TTSCDialer.init();
+document.addEventListener('ttsc.dialer.change', function (e) {
+  var name = e.target.querySelector('input').name;
+  document.getElementById('dl-log').textContent = 'ttsc.dialer.change → ' + name + ' = ' + e.detail.value + ' (' + e.detail.formatted + ')';
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!-- @dsCard group="Geral" height=305 subtitle="jKanban 1.3.1 · quadro de solicitações (columns_cfg), arrastar entre colunas, adicionar item, prioridade, tema com tokens" -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><title>jKanban Board</title>
+<link rel="stylesheet" href="../../vendor/jkanban/jkanban.min.css">
+<style>
+  .ttsc-jkanban { overflow-x: auto; padding-bottom: 4px; }
+  .ttsc-jkanban .kanban-board { background: var(--ttsc-canvas-2); border: 1px solid var(--ttsc-border-soft); border-radius: var(--ttsc-radius-surface); }
+  .ttsc-jkanban .kanban-board header { padding: 10px 12px; display: flex; align-items: center; gap: 8px; font-size: 13px; border-bottom: 1px solid var(--ttsc-border-soft); }
+  .ttsc-jkanban .kanban-board header .kanban-title-board { font-weight: 600; color: var(--ttsc-text); flex: 1; display: flex; align-items: center; gap: 6px; }
+  .ttsc-jkanban .kanban-board header .kanban-title-board::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--col, var(--ttsc-meta)); }
+  .ttsc-jkanban .kanban-title-button { float: none; }
+  .ttsc-jkanban .kanban-board .kanban-drag { min-height: 120px; padding: 8px; display: flex; flex-direction: column; gap: 8px; }
+  .ttsc-jkanban .kanban-item { background: var(--ttsc-surface); color: var(--ttsc-text); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-control); padding: 10px; margin: 0; box-shadow: var(--ttsc-shadow-xs); font-size: 12px; cursor: grab; }
+  .ttsc-jkanban .kanban-item:focus-visible { outline: 2px solid var(--ttsc-accent); outline-offset: 2px; }
+  .ttsc-jkanban .kanban-item.is-moving.gu-mirror { box-shadow: var(--ttsc-shadow-lg); border-color: var(--ttsc-accent-border); }
+  .ttsc-jkanban .gu-transit { opacity: .35 !important; }
+  .kb-title { font-weight: 600; color: var(--ttsc-text); line-height: 1.35; }
+  .kb-meta { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-top: 8px; color: var(--ttsc-text-muted); font-size: 11px; }
+  .kb-meta i { margin-right: 4px; }
+  .kb-col-waiting { --col: var(--ttsc-meta); } .kb-col-in_progress { --col: var(--ttsc-info); }
+  .kb-col-blocked { --col: var(--ttsc-danger); } .kb-col-done { --col: var(--ttsc-success); }
+  .kb-count { font-size: 11px; color: var(--ttsc-text-muted); font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="ds-row" style="justify-content:space-between">
+    <span class="ds-label">Solicitações · Saúde e Segurança do Trabalho</span>
+    <span class="ds-note" id="kb-log" aria-live="polite">Arraste um card para mudar o status.</span>
+  </div>
+  <div class="ttsc-jkanban" id="kb-board"></div>
+</div>
+<script src="../../vendor/jkanban/jkanban.min.js"></script>
+<script>
+  // kanban_boards.columns_cfg (JSON) — colunas = valores de smt_kanban_tasks.kanban_status
+  var columnsCfg = { status_field: 'kanban_status', columns: [
+    { key: 'waiting', title: 'Aguardando' }, { key: 'in_progress', title: 'Em andamento' },
+    { key: 'blocked', title: 'Bloqueado' }, { key: 'done', title: 'Concluído', collapsed_after_days: 30 } ] };
+  var PRIORITY = { normal: ['Normal', 'ttsc-badge-secondary'], urgent: ['Urgente', 'ttsc-badge-warning'], critical: ['Crítica', 'ttsc-badge-destructive'] };
+  var tasks = [
+    { id: 't1', status: 'waiting', title: 'ASO periódico — Prof.ª Carla Dias', type: 'exam', priority: 'normal', due: '04/11' },
+    { id: 't2', status: 'waiting', title: 'Treinamento NR-23 — brigada de incêndio', type: 'training', priority: 'urgent', due: '28/10' },
+    { id: 't3', status: 'in_progress', title: 'Atestado médico — Marcos Lima (secretaria)', type: 'absence', priority: 'normal', due: '22/10' },
+    { id: 't4', status: 'in_progress', title: 'Entrega de EPIs — laboratório de química', type: 'risk_action', priority: 'critical', due: '21/10' },
+    { id: 't5', status: 'blocked', title: 'Envio eSocial S-2240 — aguardando PGR', type: 'esocial', priority: 'urgent', due: '25/10' },
+    { id: 't6', status: 'done', title: 'Reunião CIPA — outubro', type: 'cipa', priority: 'normal', due: '15/10' }
+  ];
+  var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  function card(t) {
+    var p = PRIORITY[t.priority];
+    return '<div class="kb-title">' + esc(t.title) + '</div><div class="kb-meta"><span><i class="fa-light fa-calendar"></i>' + t.due + '</span>' +
+      '<span class="ttsc-badge ttsc-badge-sm ttsc-badge-outline ' + p[1] + '">' + p[0] + '</span></div>';
+  }
+  function countLabel(n) { return '<span class="kb-count">' + n + '</span>'; }
+  var kanban = new jKanban({
+    element: '#kb-board', gutter: '6px', widthBoard: '214px', responsivePercentage: false,
+    dragBoards: false,
+    itemAddOptions: { enabled: true, content: '+', class: 'ttsc-btn ttsc-btn-ghost ttsc-btn-icon ttsc-btn-sm', footer: false },
+    boards: columnsCfg.columns.map(function (c) {
+      var items = tasks.filter(function (t) { return t.status === c.key; });
+      return { id: c.key, title: c.title, class: 'kb-col-' + c.key,
+        item: items.map(function (t) { return { id: t.id, title: card(t), priority: t.priority }; }) };
+    }),
+    dropEl: function (el, target, source) {
+      var to = target.parentElement.getAttribute('data-id'), from = source.parentElement.getAttribute('data-id');
+      if (to === from) return;
+      // produção: PATCH /admin/smt/kanban/tasks/{uuid} { kanban_status: to } — reverter com moveElement se falhar
+      document.getElementById('kb-log').textContent = 'Card movido de "' + titleOf(from) + '" para "' + titleOf(to) + '".';
+      refreshCounts();
+    },
+    buttonClick: function (el, boardId) {
+      var id = 'n' + Date.now();
+      kanban.addElement(boardId, { id: id, title: card({ title: 'Nova solicitação', priority: 'normal', due: '—' }), priority: 'normal' });
+      decorate(); refreshCounts();
+      document.getElementById('kb-log').textContent = 'Solicitação criada em "' + titleOf(boardId) + '".';
+    }
+  });
+  function titleOf(key) { return (columnsCfg.columns.filter(function (c) { return c.key === key; })[0] || {}).title; }
+  function decorate() {
+    document.querySelectorAll('#kb-board .kanban-item').forEach(function (i) { i.tabIndex = 0; i.setAttribute('role', 'listitem'); });
+    document.querySelectorAll('#kb-board .kanban-board header button').forEach(function (b) { b.setAttribute('aria-label', 'Adicionar solicitação'); b.innerHTML = '<i class="fa-light fa-plus"></i>'; });
+  }
+  function refreshCounts() {
+    columnsCfg.columns.forEach(function (c) {
+      var h = document.querySelector('#kb-board .kanban-board[data-id="' + c.key + '"] .kanban-title-board');
+      h.innerHTML = esc(c.title) + ' ' + countLabel(kanban.getBoardElements(c.key).length);
+    });
+  }
+  decorate(); refreshCounts();
+  TTSC.init();
+</script>
+</body>
+</html>

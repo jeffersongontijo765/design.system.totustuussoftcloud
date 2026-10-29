@@ -1,0 +1,73 @@
+<!-- @dsCard group="Base" height=263 subtitle="ttsc-rotate + ttsc-rotate-90/180/270 · gira com .active / aria-expanded (ttsc collapse) · ordenação" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Rotate</title>
+<style>
+  .ttsc-rotate-target { display: inline-block; transition: transform .2s ease; }
+  .ttsc-rotate.active.ttsc-rotate-90  .ttsc-rotate-target, .ttsc-rotate[aria-expanded="true"].ttsc-rotate-90  .ttsc-rotate-target { transform: rotate(90deg); }
+  .ttsc-rotate.active.ttsc-rotate-180 .ttsc-rotate-target, .ttsc-rotate[aria-expanded="true"].ttsc-rotate-180 .ttsc-rotate-target { transform: rotate(180deg); }
+  .ttsc-rotate.active.ttsc-rotate-270 .ttsc-rotate-target, .ttsc-rotate[aria-expanded="true"].ttsc-rotate-270 .ttsc-rotate-target { transform: rotate(270deg); }
+  .ttsc-rotate.active.ttsc-rotate-n90 .ttsc-rotate-target, .ttsc-rotate[aria-expanded="true"].ttsc-rotate-n90 .ttsc-rotate-target { transform: rotate(-90deg); }
+  .rotate-90 { transform: rotate(90deg); } .rotate-180 { transform: rotate(180deg); } .rotate-270 { transform: rotate(270deg); }
+  @media (prefers-reduced-motion: reduce) { .ttsc-rotate-target { transition: none; } }
+  .rt-cols { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; align-items: start; }
+  .rt-list { border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-control); background: var(--ttsc-surface); overflow: hidden; }
+  .rt-toggle { width: 100%; display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: none; border: 0; border-bottom: 1px solid var(--ttsc-border-soft); color: var(--ttsc-text); font: inherit; font-weight: 600; text-align: left; cursor: pointer; }
+  .rt-toggle:hover { background: var(--ttsc-canvas-2); }
+  .rt-toggle .rt-count { margin-left: auto; font-weight: 400; font-size: 12px; color: var(--ttsc-text-muted); }
+  .rt-toggle i { color: var(--ttsc-text-muted); width: 14px; text-align: center; }
+  .rt-panel { transition: height .2s ease; }
+  .rt-panel ul { list-style: none; margin: 0; padding: 6px 12px 10px 36px; display: flex; flex-direction: column; gap: 6px; color: var(--ttsc-text-2); }
+  .rt-box { border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-control); background: var(--ttsc-surface); padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+  .rt-static { display: flex; gap: 18px; align-items: center; color: var(--ttsc-text); font-size: 16px; }
+  .rt-static span { display: inline-flex; flex-direction: column; align-items: center; gap: 4px; }
+  .rt-static small { font-size: 11px; color: var(--ttsc-text-muted); }
+  .rt-sort { background: none; border: 0; padding: 4px 6px; display: inline-flex; align-items: center; gap: 6px; color: var(--ttsc-text); font: inherit; font-weight: 500; cursor: pointer; border-radius: var(--ttsc-radius-xs); }
+  .rt-sort:hover { background: var(--ttsc-canvas-2); }
+  .rt-sort i { color: var(--ttsc-text-muted); }
+</style>
+</head>
+<body>
+<div class="ds-pad rt-cols">
+  <div>
+    <div class="ds-label" style="margin-bottom:6px">Chevron em collapse (ttscui) · clique</div>
+    <div class="rt-list">
+      <button type="button" class="rt-toggle ttsc-rotate ttsc-rotate-90 active" aria-expanded="true" data-ttsc-collapse="#p1">
+        <i class="fa-light fa-chevron-right ttsc-rotate-target"></i> 1º período <span class="rt-count">5 disciplinas · 400 h</span></button>
+      <div class="rt-panel active" id="p1"><ul><li>Anatomia Humana · 80 h</li><li>Fundamentos de Enfermagem · 120 h</li><li>Biossegurança · 40 h</li></ul></div>
+      <button type="button" class="rt-toggle ttsc-rotate ttsc-rotate-90" aria-expanded="false" data-ttsc-collapse="#p2">
+        <i class="fa-light fa-chevron-right ttsc-rotate-target"></i> 2º período <span class="rt-count">6 disciplinas · 440 h</span></button>
+      <div class="rt-panel hidden" id="p2"><ul><li>Farmacologia · 80 h</li><li>Enfermagem Clínica · 120 h</li></ul></div>
+      <button type="button" class="rt-toggle ttsc-rotate ttsc-rotate-180" aria-expanded="false" data-ttsc-collapse="#p3" style="border-bottom:0">
+        <i class="fa-light fa-chevron-down ttsc-rotate-target"></i> 3º período (rotate-180) <span class="rt-count">4 disciplinas · 360 h</span></button>
+      <div class="rt-panel hidden" id="p3"><ul><li>Saúde Coletiva · 80 h</li><li>Estágio Supervisionado I · 160 h</li></ul></div>
+    </div>
+  </div>
+  <div class="rt-box">
+    <div class="ds-label">Rotação fixa (utilitário)</div>
+    <div class="rt-static">
+      <span><i class="fa-light fa-arrow-right"></i><small>0°</small></span>
+      <span><i class="fa-light fa-arrow-right rotate-90"></i><small>rotate-90</small></span>
+      <span><i class="fa-light fa-arrow-right rotate-180"></i><small>rotate-180</small></span>
+      <span><i class="fa-light fa-arrow-right rotate-270"></i><small>rotate-270</small></span>
+    </div>
+    <div class="ds-label">Ordenação de coluna · clique</div>
+    <div class="ds-row">
+      <button type="button" class="rt-sort ttsc-rotate ttsc-rotate-180" id="sort-name" aria-pressed="false" aria-label="Ordenar por nome, crescente">
+        Nome do aluno <i class="fa-light fa-arrow-up ttsc-rotate-target"></i></button>
+      <span class="ds-note" id="sort-state">A → Z</span>
+    </div>
+  </div>
+</div>
+<script>
+  TTSC.init();
+  var sort = document.getElementById('sort-name');
+  sort.addEventListener('click', function () {
+    var desc = sort.classList.toggle('active');
+    sort.setAttribute('aria-pressed', String(desc));
+    sort.setAttribute('aria-label', 'Ordenar por nome, ' + (desc ? 'decrescente' : 'crescente'));
+    document.getElementById('sort-state').textContent = desc ? 'Z → A' : 'A → Z';
+  });
+</script>
+</body>
+</html>

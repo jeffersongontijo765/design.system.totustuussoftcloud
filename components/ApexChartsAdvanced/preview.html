@@ -1,0 +1,773 @@
+<!-- @dsCard group="Gráficos" height=1525 width=1280 subtitle="ApexCharts 8.5.0 — candlestick, radar, treemap, waterfall, gauge radial, barras empilhadas/agrupadas e linha com faixa de previsão; tokens e tema" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>ApexChartsAdvanced</title>
+<style>
+  html,body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font-family:Inter,system-ui,sans-serif;font-size:13px;-webkit-font-smoothing:antialiased}
+  *,*::before,*::after{box-sizing:border-box}
+  .axg{max-width:1280px;margin:0 auto;padding:16px;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:14px;align-items:stretch}
+  .ax-card{grid-column:span 5;display:flex;flex-direction:column;min-width:0;margin:0;padding:14px 16px 12px;background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-surface);box-shadow:var(--ttsc-shadow-sm)}
+  .s7{grid-column:span 7}.s5{grid-column:span 5}.s4{grid-column:span 4}.s8{grid-column:span 8}.s12{grid-column:span 12}
+  .ax-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:6px}
+  .ax-hd h2{margin:0;font-size:14px;line-height:20px;font-weight:600;color:var(--ttsc-text)}
+  .ax-hd p{margin:2px 0 0;font-size:12px;line-height:16px;color:var(--ttsc-text-muted)}
+  .ax-pill{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;font-size:11px;font-weight:600;line-height:16px;padding:2px 8px;border-radius:var(--ttsc-radius-pill);border:1px solid var(--ttsc-border);color:var(--ttsc-text-2);background:var(--ttsc-surface);font-variant-numeric:tabular-nums}
+  .ax-pill .dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+  .ax-pill--ok{color:var(--ttsc-accent-text);border-color:var(--ttsc-accent-border)}
+  .ax-pill--warn{color:var(--ttsc-warning-text);border-color:color-mix(in srgb,var(--ttsc-warning) 45%,transparent)}
+  .ax-chart{min-width:0;width:100%}
+  .ax-note{margin:4px 0 0;font-size:11px;line-height:16px;color:var(--ttsc-text-muted);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .tnum{font-variant-numeric:tabular-nums}
+  .ax-tip{min-width:150px;padding:9px 11px;font-size:12px;line-height:18px;color:var(--ttsc-text);background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-sm);box-shadow:var(--ttsc-shadow-popover)}
+  .ax-tip-t{font-weight:600;font-size:12px;color:var(--ttsc-text);margin-bottom:4px}
+  .ax-tip-r{display:flex;justify-content:space-between;gap:18px;color:var(--ttsc-text-2)}
+  .ax-tip-r b{font-weight:600;color:var(--ttsc-text);font-variant-numeric:tabular-nums}
+  .ax-tip-r b.up{color:var(--ttsc-accent-text)}
+  .ax-tip-r b.down{color:var(--ttsc-danger-text)}
+  .ax-tip-s{margin-top:5px;padding-top:5px;border-top:1px solid var(--ttsc-border-soft);font-size:11px;color:var(--ttsc-text-muted)}
+  /* Apex: tooltip e legenda nos tokens (os dois temas) */
+  .apexcharts-tooltip.apexcharts-theme-light,.apexcharts-tooltip.apexcharts-theme-dark{background:var(--ttsc-surface)!important;color:var(--ttsc-text)!important;border:1px solid var(--ttsc-border)!important;box-shadow:var(--ttsc-shadow-popover)!important;border-radius:var(--ttsc-radius-sm)!important}
+  .apexcharts-tooltip.apexcharts-theme-light .apexcharts-tooltip-title,.apexcharts-tooltip.apexcharts-theme-dark .apexcharts-tooltip-title{background:var(--ttsc-canvas-2)!important;border-bottom:1px solid var(--ttsc-border)!important;color:var(--ttsc-text-2)!important}
+  .apexcharts-legend-text{color:var(--ttsc-text-2)!important}
+  .apexcharts-legend .apexcharts-legend-series .apexcharts-legend-text{font-size:11px!important;font-weight:500!important}
+  /* O bundle força legendas em coluna; nas galerias de gráfico a leitura é horizontal. */
+  .apexcharts-legend.apx-legend-position-top,.apexcharts-legend.apx-legend-position-bottom{flex-direction:row!important;flex-wrap:wrap;align-items:center;gap:6px 2px}
+  .apexcharts-legend.apx-legend-position-top .apexcharts-legend-series,.apexcharts-legend.apx-legend-position-bottom .apexcharts-legend-series{margin:0 12px 0 0!important}
+  .apexcharts-xaxistooltip,.apexcharts-yaxistooltip{background:var(--ttsc-surface)!important;border-color:var(--ttsc-border)!important;color:var(--ttsc-text)!important}
+  /* Segmentado */
+  .seg{display:inline-flex;gap:2px;padding:2px;border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-pill);background:var(--ttsc-surface-2);flex-shrink:0}
+  .seg button{appearance:none;border:0;background:transparent;color:var(--ttsc-text-muted);font:600 11px/16px Inter,system-ui,sans-serif;padding:5px 10px;border-radius:var(--ttsc-radius-pill);cursor:pointer;transition:background .15s,color .15s}
+  .seg button:hover{color:var(--ttsc-text)}
+  .seg button[aria-pressed="true"]{background:var(--ttsc-surface);color:var(--ttsc-text);box-shadow:var(--ttsc-shadow-sm)}
+  :focus-visible{outline:2px solid var(--ttsc-accent);outline-offset:2px}
+  /* Waterfall: legenda própria */
+  .wf-legend{display:flex;flex-wrap:wrap;gap:12px;margin:2px 0 0;font-size:11px;line-height:16px;color:var(--ttsc-text-muted)}
+  .wf-legend span{display:inline-flex;align-items:center;gap:5px}
+  .wf-legend i{width:8px;height:8px;border-radius:2px;display:inline-block;background:var(--c)}
+  /* Treemap: rótulos HTML sincronizados com os retângulos */
+  .tm-wrap{position:relative;width:100%}
+  .tm-labels{position:absolute;inset:0;pointer-events:none}
+  .tm-lab{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;padding:2px 4px;color:var(--ttsc-text);line-height:1.15}
+  .tm-lab b{font-size:11px;font-weight:600;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .tm-lab span{font-size:10px;color:var(--ttsc-text-2);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .tm-lab.sm b{font-size:10px}.tm-lab.sm span{font-size:9px}
+  /* Gauge */
+  .g-meta{display:flex;align-items:center;justify-content:center;gap:6px;margin-top:-6px;font-size:11px;color:var(--ttsc-text-muted);flex-wrap:wrap}
+  .g-meta b{color:var(--ttsc-warning-text);font-weight:600}
+  .ax-radar-legend{justify-content:center;gap:14px}
+  .lg{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--ttsc-text-2)}
+  .lg i{width:8px;height:8px;border-radius:2px;background:var(--c)}
+  /* Tabela alternativa */
+  .ax-details{margin-top:8px;border-top:1px solid var(--ttsc-border-soft);padding-top:6px}
+  .ax-details summary{cursor:pointer;font-size:11px;font-weight:600;color:var(--ttsc-text-2);list-style:none;display:inline-flex;align-items:center;gap:6px;padding:3px 0}
+  .ax-details summary::-webkit-details-marker{display:none}
+  .ax-details summary::before{content:"\f0ce";font-family:"Font Awesome 7 Pro";font-weight:300;font-size:10px;color:var(--ttsc-text-muted)}
+  .ax-details[open] summary::before{content:"\f0d7"}
+  .ax-table-wrap{overflow-x:auto;margin:6px 0 2px;border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-sm);max-width:100%}
+  .ax-table{width:100%;border-collapse:collapse;font-size:11px;line-height:16px;font-variant-numeric:tabular-nums}
+  .ax-table th,.ax-table td{padding:5px 10px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--ttsc-border-soft)}
+  .ax-table th{font-weight:600;color:var(--ttsc-text-muted);background:var(--ttsc-surface-2);position:sticky;top:0}
+  .ax-table th:first-child,.ax-table td:first-child{text-align:left}
+  .ax-table tbody tr:last-child td{border-bottom:0}
+  .ax-table td{color:var(--ttsc-text-2)}
+  .ax-table td b{color:var(--ttsc-text);font-weight:600}
+  @media (max-width:1024px){
+    .ax-card,.s7,.s4,.s8{grid-column:span 12}
+    .axg{gap:12px}
+  }
+  @media (max-width:560px){
+    .axg{padding:12px;gap:10px}
+    .ax-card{padding:12px}
+    .ax-hd{flex-wrap:wrap}
+    .ax-hd h2{font-size:13px}
+    .seg button{padding:6px 9px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  }
+</style>
+</head>
+<body>
+<div class="axg">
+
+  <figure class="ax-card s7">
+    <div class="ax-hd">
+      <div><h2>Candlestick · BTC/USDT</h2><p>30 dias até 23/10/2026 · preços em US$</p></div>
+      <span class="ax-pill ax-pill--ok"><span class="dot"></span>+10,2% no período</span>
+    </div>
+    <div id="ax-candle" class="ax-chart" role="img" aria-label="Candlestick de 30 dias: abertura em 66.850, mínima de 66.150 e máxima de 74.210; fechamento em 73.640, tendência de alta."></div>
+  </figure>
+
+  <figure class="ax-card s5">
+    <div class="ax-hd">
+      <div><h2>Radar · Maturidade operacional</h2><p>Comparação 2025 e 2026 · escala de 0 a 100</p></div>
+    </div>
+    <div id="ax-radar" class="ax-chart" role="img" aria-label="Radar de maturidade: 2026 entre 68 e 84 pontos, 2025 entre 49 e 71; maior avanço em Segurança, de 71 para 84."></div>
+    <p class="ax-note ax-radar-legend"><span class="lg" style="--c:var(--ttsc-info)"><i></i>2025</span><span class="lg" style="--c:var(--ttsc-accent)"><i></i>2026</span></p>
+  </figure>
+
+  <figure class="ax-card s5">
+    <div class="ax-hd">
+      <div><h2>Treemap · Receita por categoria</h2><p>Outubro de 2026 · valores em R$ mil</p></div>
+      <span class="ax-pill">Total R$ 1.620 mil</span>
+    </div>
+    <div class="tm-wrap" id="tm-wrap">
+      <div id="ax-treemap" class="ax-chart" role="img" aria-label="Treemap de 8 categorias: Assinaturas lidera com R$ 340 mil e 21,0%; Outros tem R$ 110 mil e 6,8%; total de R$ 1.620 mil."></div>
+      <div class="tm-labels" id="tm-labels" aria-hidden="true"></div>
+    </div>
+    <p class="ax-note">Área proporcional à receita. Passe o cursor para ver o valor completo.</p>
+  </figure>
+
+  <figure class="ax-card s7">
+    <div class="ax-hd">
+      <div><h2>Waterfall · Ponte de caixa</h2><p>Outubro de 2026 · valores em R$ mil</p></div>
+      <span class="ax-pill ax-pill--ok"><span class="dot"></span>Saldo final R$ 1.334 mil</span>
+    </div>
+    <div id="ax-waterfall" class="ax-chart" role="img" aria-label="Waterfall: saldo inicial de R$ 1.240 mil, receitas de R$ 386 mil, custos de R$ 214 mil e impostos de R$ 78 mil, chegando ao saldo final de R$ 1.334 mil."></div>
+    <p class="wf-legend"><span style="--c:var(--ttsc-success)"><i></i>Aumento</span><span style="--c:var(--ttsc-danger)"><i></i>Redução</span><span style="--c:var(--ttsc-accent)"><i></i>Total</span></p>
+    <p class="ax-note">Variações do mês: +386 receitas · −214 custos · −78 impostos. Saldo final de 1.334.</p>
+  </figure>
+
+  <figure class="ax-card s4">
+    <div class="ax-hd">
+      <div><h2>Gauge radial · Saúde do SLA</h2><p>Chamados encerrados no prazo</p></div>
+    </div>
+    <div id="ax-gauge" class="ax-chart" role="img" aria-label="Gauge radial: SLA em 87%, três pontos percentuais abaixo da meta de 90%."></div>
+    <p class="g-meta"><i class="fa-light fa-bullseye"></i> Meta <b>90%</b> · 3 p.p. abaixo</p>
+  </figure>
+
+  <figure class="ax-card s8">
+    <div class="ax-hd">
+      <div><h2>Receita por canal</h2><p>Maio a outubro de 2026 · valores em R$ mil</p></div>
+      <div class="seg" role="group" aria-label="Modo de exibição das barras">
+        <button type="button" data-mode="stacked" aria-pressed="true">Empilhado</button>
+        <button type="button" data-mode="grouped" aria-pressed="false">Agrupado</button>
+      </div>
+    </div>
+    <div id="ax-stacked" class="ax-chart" role="img" aria-label="Barras por canal: Direto cresce de R$ 620 mil para R$ 842 mil, Parceiros de R$ 310 mil para R$ 421 mil e Online de R$ 180 mil para R$ 318 mil; total de R$ 8.092 mil no período."></div>
+    <p class="sr-status" id="ax-mode-status" role="status" aria-live="polite" style="margin:4px 0 0;font-size:11px;color:var(--ttsc-text-muted)">Modo empilhado.</p>
+  </figure>
+
+  <figure class="ax-card s12">
+    <div class="ax-hd">
+      <div><h2>Receita realizada vs. prevista</h2><p>Novembro de 2025 a outubro de 2026 · valores em R$ mil · faixa de 90% de confiança</p></div>
+      <span class="ax-pill ax-pill--warn"><span class="dot"></span>Outubro previsto: R$ 584 mil</span>
+    </div>
+    <div id="ax-forecast" class="ax-chart" role="img" aria-label="Linha de receita: realizado de R$ 412 mil em novembro a R$ 549 mil em agosto; previsão de R$ 584 mil em outubro, com intervalo entre R$ 556 mil e R$ 610 mil."></div>
+    <details class="ax-details" id="fc-details">
+      <summary>Ver tabela de dados</summary>
+      <div class="ax-table-wrap">
+        <table class="ax-table">
+          <caption class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Receita realizada e prevista, em reais mil, de novembro de 2025 a outubro de 2026.</caption>
+          <thead><tr><th scope="col">Mês</th><th scope="col">Previsto</th><th scope="col">Intervalo</th><th scope="col">Realizado</th></tr></thead>
+          <tbody>
+            <tr><td>Nov/2025</td><td>410</td><td>398–422</td><td><b>412</b></td></tr>
+            <tr><td>Dez/2025</td><td>426</td><td>414–438</td><td><b>428</b></td></tr>
+            <tr><td>Jan/2026</td><td>440</td><td>427–453</td><td><b>441</b></td></tr>
+            <tr><td>Fev/2026</td><td>456</td><td>442–470</td><td><b>458</b></td></tr>
+            <tr><td>Mar/2026</td><td>472</td><td>457–487</td><td><b>474</b></td></tr>
+            <tr><td>Abr/2026</td><td>486</td><td>470–502</td><td><b>487</b></td></tr>
+            <tr><td>Mai/2026</td><td>501</td><td>484–518</td><td><b>503</b></td></tr>
+            <tr><td>Jun/2026</td><td>517</td><td>498–534</td><td><b>518</b></td></tr>
+            <tr><td>Jul/2026</td><td>532</td><td>512–551</td><td><b>534</b></td></tr>
+            <tr><td>Ago/2026</td><td>548</td><td>526–568</td><td><b>549</b></td></tr>
+            <tr><td>Set/2026</td><td>566</td><td>540–588</td><td>—</td></tr>
+            <tr><td>Out/2026</td><td><b>584</b></td><td>556–610</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="ax-note">Realizado consolidado até agosto de 2026; setembro e outubro são projeção. Dados ilustrativos.</p>
+    </details>
+  </figure>
+
+</div>
+<script>
+if (window.TTSC) TTSC.init();
+
+var AXP = { charts: [], tm: null, tmRows: [], observer: null, ro: null, wired: false };
+var RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- tokens e formatadores ---------- */
+function isDark() {
+  var el = document.documentElement;
+  return el.getAttribute('data-theme') === 'dark' || el.classList.contains('dark');
+}
+function readTokens() {
+  var cs = getComputedStyle(document.documentElement);
+  var t = function (n) { return cs.getPropertyValue(n).trim(); };
+  var c = function (n) { return cssColor(t(n)); };
+  return {
+    dark: isDark(),
+    accent: c('--ttsc-accent'), accentOn: c('--ttsc-accent-on'), accentText: c('--ttsc-accent-text'),
+    success: c('--ttsc-success'), warning: c('--ttsc-warning'), danger: c('--ttsc-danger'), info: c('--ttsc-info'),
+    p200: c('--ttsc-primary-200'), p300: c('--ttsc-primary-300'), p400: c('--ttsc-primary-400'),
+    p700: c('--ttsc-primary-700'), p800: c('--ttsc-primary-800'),
+    surface: c('--ttsc-surface'), surface2: c('--ttsc-surface-2'), canvas: c('--ttsc-canvas'),
+    text: c('--ttsc-text'), text2: c('--ttsc-text-2'), muted: c('--ttsc-text-muted'),
+    border: c('--ttsc-border'), borderSoft: c('--ttsc-border-soft')
+  };
+}
+/* Tokens registrados com @property chegam em oklch; o Apex precisa de hex/rgb para calcular sombras. */
+function cssColor(v) {
+  if (!v) return v;
+  if (v.indexOf('oklch(') === 0) return oklchToHex(v);
+  return v;
+}
+function oklchToHex(str) {
+  var m = str.match(/oklch\(\s*([\d.]+%?)\s+([\d.]+)\s+([\d.]+)(?:deg)?(?:\s*\/\s*([\d.]+%?))?\s*\)/);
+  if (!m) return str;
+  var L = m[1].slice(-1) === '%' ? parseFloat(m[1]) / 100 : parseFloat(m[1]);
+  var Cc = parseFloat(m[2]);
+  var h = parseFloat(m[3]) * Math.PI / 180;
+  var A = Cc * Math.cos(h), B = Cc * Math.sin(h);
+  var l_ = L + 0.3963377774 * A + 0.2158037573 * B;
+  var m_ = L - 0.1055613458 * A - 0.0638541728 * B;
+  var s_ = L - 0.0894841775 * A - 1.2914855480 * B;
+  var l = l_ * l_ * l_, mm = m_ * m_ * m_, s = s_ * s_ * s_;
+  var r = 4.0767416621 * l - 3.3077115913 * mm + 0.2309699292 * s;
+  var g = -1.2684380046 * l + 2.6097574011 * mm - 0.3413193965 * s;
+  var b = -0.0041960863 * l - 0.7034186147 * mm + 1.7076147010 * s;
+  var enc = function (x) {
+    x = x <= 0.0031308 ? 12.92 * x : 1.055 * Math.pow(x, 1 / 2.4) - 0.055;
+    return Math.max(0, Math.min(255, Math.round(x * 255)));
+  };
+  return '#' + [enc(r), enc(g), enc(b)].map(function (x) { return x.toString(16).padStart(2, '0'); }).join('');
+}
+var NF0 = new Intl.NumberFormat('pt-BR');
+var NF1 = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+var NF2 = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+function pct1(v) { return NF1.format(v) + '%'; }
+function pct2(v) { return NF2.format(v) + '%'; }
+function brlMil(v) { return 'R$ ' + NF0.format(v) + ' mil'; }
+function money(v) { return 'US$ ' + NF0.format(v); }
+function fmtDate(ts) {
+  return new Date(ts).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+}
+/* mistura dois hex/rgb — usada no treemap e nas faixas */
+function toRgb(c) {
+  if (c.charAt(0) === '#') {
+    var h = c.slice(1);
+    if (h.length === 3) h = h.charAt(0) + h.charAt(0) + h.charAt(1) + h.charAt(1) + h.charAt(2) + h.charAt(2);
+    return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
+  }
+  var m = c.match(/[\d.]+/g);
+  return m ? [+m[0], +m[1], +m[2]] : [0, 0, 0];
+}
+function mix(a, b, w) {
+  var A = toRgb(a), B = toRgb(b);
+  var h = function (x) { return Math.round(x).toString(16).padStart(2, '0'); };
+  return '#' + h(A[0] * w + B[0] * (1 - w)) + h(A[1] * w + B[1] * (1 - w)) + h(A[2] * w + B[2] * (1 - w));
+}
+/* texto pequeno em vermelho precisa clarear no tema escuro (contraste >= 4,5:1) */
+function dangerText(C) {
+  return C.dark ? mix('#ffffff', C.danger, 0.45) : C.danger;
+}
+function treemapColors(C) {
+  var w = C.dark ? [0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45] : [0.22, 0.33, 0.44, 0.55, 0.66, 0.77, 0.88, 0.96];
+  return w.map(function (x) { return mix(C.accent, C.surface, x); });
+}
+
+/* ---------- base do Apex ---------- */
+function apexBase(C) {
+  return {
+    chart: {
+      fontFamily: 'Inter, system-ui, sans-serif', foreColor: C.muted, background: 'transparent',
+      toolbar: { show: false }, zoom: { enabled: false },
+      animations: { enabled: !RM, speed: 420 },
+      defaultLocale: 'pt-br',
+      locales: [{
+        name: 'pt-br', options: {
+          months: ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'],
+          shortMonths: ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'],
+          days: ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado'],
+          shortDays: ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'],
+          toolbar: { download: 'Baixar SVG', selection: 'Selecionar', selectionZoom: 'Zoom', zoomIn: 'Ampliar', zoomOut: 'Reduzir', pan: 'Mover', reset: 'Restaurar' }
+        }
+      }]
+    },
+    theme: { mode: C.dark ? 'dark' : 'light' },
+    tooltip: { theme: C.dark ? 'dark' : 'light' },
+    grid: { borderColor: C.border, strokeDashArray: 3 },
+    dataLabels: { enabled: false },
+    legend: { labels: { colors: C.text2 }, fontSize: '12px' }
+  };
+}
+function axis(C) {
+  return {
+    labels: { style: { colors: C.muted, fontSize: '11px' } },
+    axisBorder: { show: false }, axisTicks: { show: false }
+  };
+}
+
+/* ---------- 1. candlestick ---------- */
+var OHLC = [
+  [66850, 67420, 66210, 67180], [67180, 67960, 66900, 67740], [67740, 68250, 67280, 67510],
+  [67510, 68040, 66720, 66930], [66930, 67380, 66150, 66480], [66480, 67120, 66240, 67010],
+  [67010, 67880, 66820, 67720], [67720, 68940, 67510, 68680], [68680, 69260, 68140, 68420],
+  [68420, 69010, 67880, 68160], [68160, 68730, 67640, 68540], [68540, 69820, 68330, 69590],
+  [69590, 70410, 69280, 70170], [70170, 70760, 69640, 69920], [69920, 70380, 69110, 69460],
+  [69460, 70120, 69230, 69910], [69910, 71240, 69720, 70980], [70980, 71610, 70400, 71220],
+  [71220, 71840, 70690, 70940], [70940, 71480, 70120, 70410], [70410, 71120, 70050, 70860],
+  [70860, 72340, 70680, 72060], [72060, 72880, 71610, 72540], [72540, 73120, 71980, 72260],
+  [72260, 72740, 71340, 71680], [71680, 72480, 71420, 72190], [72190, 73560, 71980, 73240],
+  [73240, 74020, 72760, 73780], [73780, 74210, 72850, 73120], [73120, 73960, 72740, 73640]
+];
+function candleSeries() {
+  return [{
+    name: 'BTC/USDT',
+    data: OHLC.map(function (r, i) {
+      return { x: new Date(2026, 8, 24 + i).getTime(), y: r };
+    })
+  }];
+}
+function candleTooltip(ctx) {
+  var w = ctx.w, idx = ctx.dataPointIndex;
+  var cfg = w.config.series[ctx.seriesIndex || 0] || w.config.series[0];
+  var item = cfg && cfg.data[idx];
+  var y = item && item.y;
+  if (!y || y.length < 4) {
+    y = [w.globals.seriesCandleO[idx], w.globals.seriesCandleH[idx], w.globals.seriesCandleL[idx], w.globals.seriesCandleC[idx]];
+  }
+  if (!y || y[0] == null) return '';
+  var x = (w.globals.seriesX && w.globals.seriesX[0] && w.globals.seriesX[0][idx]) || (item && item.x);
+  var chg = (y[3] - y[0]) / y[0] * 100;
+  var cls = chg >= 0 ? 'up' : 'down';
+  return '<div class="ax-tip"><div class="ax-tip-t">' + fmtDate(x) + '</div>' +
+    '<div class="ax-tip-r"><span>Abertura</span><b>' + money(y[0]) + '</b></div>' +
+    '<div class="ax-tip-r"><span>Máxima</span><b>' + money(y[1]) + '</b></div>' +
+    '<div class="ax-tip-r"><span>Mínima</span><b>' + money(y[2]) + '</b></div>' +
+    '<div class="ax-tip-r"><span>Fechamento</span><b>' + money(y[3]) + '</b></div>' +
+    '<div class="ax-tip-r"><span>Variação</span><b class="' + cls + '">' + (chg >= 0 ? '+' : '−') + NF2.format(Math.abs(chg)) + '%</b></div>' +
+    '</div>';
+}
+function candleTheme() {
+  var C = readTokens();
+  return {
+    chart: { foreColor: C.muted },
+    theme: { mode: C.dark ? 'dark' : 'light' },
+    tooltip: { theme: C.dark ? 'dark' : 'light' },
+    grid: { borderColor: C.border },
+    xaxis: { labels: { style: { colors: C.muted } } },
+    yaxis: { labels: { style: { colors: C.muted } } },
+    plotOptions: { candlestick: { colors: { upward: C.success, downward: C.danger }, wick: { useFillColor: true } } },
+    stroke: { colors: [C.success, C.danger] }
+  };
+}
+function buildCandle(mount) {
+  var C = readTokens(), base = apexBase(C);
+  var chart = new ApexCharts(mount, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'candlestick', height: 250 }),
+    series: candleSeries(),
+    plotOptions: { candlestick: { colors: { upward: C.success, downward: C.danger }, wick: { useFillColor: true } } },
+    stroke: { width: 1, colors: [C.success, C.danger] },
+    xaxis: Object.assign({ type: 'datetime', tickAmount: 6, labels: { format: 'dd/MM', style: { colors: C.muted, fontSize: '11px' } } }, { axisBorder: { show: false }, axisTicks: { show: false } }),
+    yaxis: { tickAmount: 4, labels: { formatter: function (v) { return NF0.format(v); }, style: { colors: C.muted, fontSize: '11px' } } },
+    grid: { borderColor: C.border, strokeDashArray: 3, padding: { left: 6, right: 10, top: 0, bottom: 0 } },
+    tooltip: { custom: candleTooltip },
+    markers: { size: 0 }
+  }));
+  chart.render();
+  AXP.charts.push({ chart: chart, theme: candleTheme });
+}
+
+/* ---------- 2. radar ---------- */
+function radarTheme() {
+  var C = readTokens();
+  return {
+    chart: { foreColor: C.muted },
+    theme: { mode: C.dark ? 'dark' : 'light' },
+    tooltip: { theme: C.dark ? 'dark' : 'light' },
+    colors: [C.info, C.accent],
+    stroke: { colors: [C.info, C.accent] },
+    fill: { opacity: [0.18, 0.24] },
+    xaxis: { labels: { style: { colors: C.text2, fontSize: '11px' } } },
+    plotOptions: { radar: { polygons: { strokeColors: C.border, connectorColors: C.border, fill: { colors: ['transparent'] } } } },
+    legend: { show: false },
+    markers: { strokeColors: [C.info, C.accent] },
+    grid: { borderColor: C.border }
+  };
+}
+function buildRadar(mount) {
+  var C = readTokens(), base = apexBase(C);
+  var chart = new ApexCharts(mount, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'radar', height: 256 }),
+    series: [{ name: '2025', data: [58, 64, 49, 71, 62, 55] }, { name: '2026', data: [74, 81, 68, 84, 77, 72] }],
+    labels: ['Processos', 'Dados', 'Automação', 'Segurança', 'Pessoas', 'Cliente'],
+    colors: [C.info, C.accent],
+    stroke: { width: 2, colors: [C.info, C.accent] },
+    fill: { opacity: [0.18, 0.24] },
+    markers: { size: 3, hover: { size: 5 }, strokeWidth: 1, strokeColors: [C.info, C.accent] },
+    xaxis: { labels: { style: { colors: C.text2, fontSize: '11px' } } },
+    yaxis: { show: false, min: 0, max: 100, tickAmount: 4 },
+    plotOptions: { radar: { size: 90, offsetY: 2, polygons: { strokeColors: C.border, connectorColors: C.border, fill: { colors: ['transparent'] } } } },
+    legend: { show: false },
+    tooltip: { theme: C.dark ? 'dark' : 'light', y: { formatter: function (v) { return v + ' pts'; } } }
+  }));
+  chart.render();
+  AXP.charts.push({ chart: chart, theme: radarTheme });
+}
+
+/* ---------- 3. treemap ---------- */
+var TM_ROWS = [
+  { name: 'Assinaturas', value: 340 }, { name: 'Cursos', value: 280 }, { name: 'Consultoria', value: 240 },
+  { name: 'Certificações', value: 200 }, { name: 'Treinamentos', value: 170 }, { name: 'Licenças', value: 150 },
+  { name: 'Serviços', value: 130 }, { name: 'Outros', value: 110 }
+];
+var TM_TOTAL = TM_ROWS.reduce(function (a, r) { return a + r.value; }, 0);
+function treemapTheme() {
+  var C = readTokens();
+  return {
+    chart: { foreColor: C.muted },
+    theme: { mode: C.dark ? 'dark' : 'light' },
+    tooltip: { theme: C.dark ? 'dark' : 'light' },
+    colors: treemapColors(C),
+    stroke: { colors: [C.surface] },
+    grid: { borderColor: C.border }
+  };
+}
+function buildTreemap(mount) {
+  var C = readTokens(), base = apexBase(C);
+  var chart = new ApexCharts(mount, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'treemap', height: 268 }),
+    series: [{ data: TM_ROWS.map(function (r) { return { x: r.name, y: r.value }; }) }],
+    colors: treemapColors(C),
+    plotOptions: { treemap: { enableShades: false, distributed: true, borderRadius: 3, useFillColorAsStroke: false } },
+    dataLabels: { enabled: false },
+    stroke: { width: 2, colors: [C.surface] },
+    legend: { show: false },
+    grid: { padding: { left: 0, right: 0, top: 0, bottom: 0 } },
+    tooltip: { theme: C.dark ? 'dark' : 'light', y: { formatter: function (v) { return brlMil(v); } }, x: { show: true } }
+  }));
+  chart.render().then(function () { setTimeout(layoutTreemapLabels, 560); });
+  AXP.tm = chart;
+  AXP.charts.push({ chart: chart, theme: treemapTheme, after: function () { setTimeout(layoutTreemapLabels, 60); } });
+  AXP.tmRows = TM_ROWS;
+}
+function layoutTreemapLabels() {
+  var wrap = document.getElementById('tm-wrap');
+  var host = document.getElementById('ax-treemap');
+  var layer = document.getElementById('tm-labels');
+  if (!wrap || !host || !layer) return;
+  var rects = host.querySelectorAll('rect.apexcharts-treemap-rect');
+  if (!rects.length) return;
+  var base = wrap.getBoundingClientRect();
+  var frag = document.createDocumentFragment();
+  rects.forEach(function (r) {
+    var b = r.getBoundingClientRect();
+    var j = parseInt(r.getAttribute('j'), 10);
+    var row = AXP.tmRows[j];
+    if (!row) return;
+    var el = document.createElement('div');
+    var small = b.width < 104 || b.height < 62;
+    el.className = 'tm-lab' + (small ? ' sm' : '');
+    el.style.left = (b.left - base.left) + 'px';
+    el.style.top = (b.top - base.top) + 'px';
+    el.style.width = b.width + 'px';
+    el.style.height = b.height + 'px';
+    var pct = (row.value / TM_TOTAL * 100);
+    el.innerHTML = '<b>' + row.name + '</b>' +
+      '<span>' + brlMil(row.value).replace('R$ ', 'R$ ') + '</span>' +
+      '<span>' + pct1(pct) + '</span>';
+    frag.appendChild(el);
+  });
+  layer.innerHTML = '';
+  layer.appendChild(frag);
+}
+
+/* ---------- 4. waterfall (barra empilhada) ---------- */
+var WF = {
+  cat: ['Saldo inicial', 'Receitas', 'Custos', 'Impostos', 'Saldo final'],
+  base: [0, 1240, 1412, 1334, 0],
+  up: [0, 386, 0, 0, 0],
+  down: [0, 0, 214, 78, 0],
+  total: [1240, 0, 0, 0, 1334]
+};
+function wfTooltip(ctx) {
+  var i = ctx.dataPointIndex;
+  var labels = ['Saldo inicial', 'Receitas', 'Custos', 'Impostos', 'Saldo final'];
+  var rows = ['Saldo: ', 'Receita: +', 'Custo: −', 'Impostos: −', 'Saldo: '];
+  var after = ['1.240', '1.626', '1.412', '1.334', '1.334'];
+  var v = [1240, 386, 214, 78, 1334][i];
+  var sign = i === 2 || i === 3 ? '−' : (i === 1 ? '+' : '');
+  return '<div class="ax-tip"><div class="ax-tip-t">' + labels[i] + '</div>' +
+    '<div class="ax-tip-r"><span>' + (i === 0 || i === 4 ? 'Saldo' : 'Variação') + '</span><b>' + sign + brlMil(v) + '</b></div>' +
+    '<div class="ax-tip-s">Saldo após o lançamento: ' + brlMil(+after[i].replace('.', '')) + '</div></div>';
+}
+function wfTheme() {
+  var C = readTokens();
+  return {
+    chart: { foreColor: C.muted },
+    theme: { mode: C.dark ? 'dark' : 'light' },
+    tooltip: { theme: C.dark ? 'dark' : 'light' },
+    colors: ['transparent', C.success, C.danger, C.dark ? C.p400 : C.accent],
+    xaxis: { labels: { style: { colors: C.text2, fontSize: '11px' } } },
+    yaxis: { labels: { style: { colors: C.muted, fontSize: '11px' } } },
+    annotations: { points: [{ x: 'Impostos', y: 1412, marker: { size: 0 }, label: { text: '−78', borderWidth: 0, offsetY: -8, style: { background: 'transparent', color: dangerText(C), fontSize: '11px', fontWeight: 600 } } }] },
+    grid: { borderColor: C.border },
+    legend: { labels: { colors: C.text2 } }
+  };
+}
+function buildWaterfall(mount) {
+  var C = readTokens(), base = apexBase(C);
+  var chart = new ApexCharts(mount, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'bar', height: 250, stacked: true }),
+    series: [
+      { name: 'Base', data: WF.base },
+      { name: 'Aumento', data: WF.up },
+      { name: 'Redução', data: WF.down },
+      { name: 'Total', data: WF.total }
+    ],
+    colors: ['transparent', C.success, C.danger, C.dark ? C.p400 : C.accent],
+    plotOptions: { bar: { columnWidth: '56%', borderRadius: 3, borderRadiusApplication: 'end', borderRadiusWhenStacked: 'last', dataLabels: { position: 'top' } } },
+    dataLabels: {
+      enabled: true, offsetY: -2,
+      style: { fontSize: '11px', fontWeight: 600, colors: ['transparent', '#ffffff', '#ffffff', C.accentOn] },
+      formatter: function (v, opt) {
+        if (!v) return '';
+        var i = opt.seriesIndex;
+        if (i === 0) return '';
+        if (i === 1) return '+' + NF0.format(v);
+        if (i === 2) return '−' + NF0.format(v);
+        return NF0.format(v);
+      }
+    },
+    annotations: { points: [{ x: 'Impostos', y: 1412, marker: { size: 0 }, label: { text: '−78', borderWidth: 0, offsetY: -8, style: { background: 'transparent', color: dangerText(C), fontSize: '11px', fontWeight: 600 } } }] },
+    xaxis: Object.assign({ categories: WF.cat, labels: { style: { colors: C.text2, fontSize: '11px' } } }, { axisBorder: { show: false }, axisTicks: { show: false } }),
+    yaxis: { min: 0, max: 2000, tickAmount: 4, labels: { formatter: function (v) { return NF0.format(v); }, style: { colors: C.muted, fontSize: '11px' } } },
+    grid: { borderColor: C.border, strokeDashArray: 3, padding: { left: 8, right: 8, top: 14, bottom: 0 } },
+    tooltip: { custom: wfTooltip },
+    legend: { show: false },
+    states: { hover: { filter: { type: 'darken', value: 0.06 } } }
+  }));
+  chart.render();
+  AXP.charts.push({ chart: chart, theme: wfTheme });
+}
+
+/* ---------- 5. gauge radial ---------- */
+function gaugeTheme() {
+  var C = readTokens();
+  return {
+    chart: { foreColor: C.muted },
+    theme: { mode: C.dark ? 'dark' : 'light' },
+    colors: [C.accent],
+    fill: { gradient: { gradientToColors: [C.dark ? C.p300 : C.p700] } },
+    plotOptions: { radialBar: { track: { background: C.surface2 }, dataLabels: { name: { color: C.muted }, value: { color: C.text } } } },
+    grid: { borderColor: C.border }
+  };
+}
+function buildGauge(mount) {
+  var C = readTokens(), base = apexBase(C);
+  var chart = new ApexCharts(mount, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'radialBar', height: 196 }),
+    series: [87],
+    labels: ['SLA no prazo'],
+    colors: [C.accent],
+    plotOptions: {
+      radialBar: {
+        hollow: { size: '64%', background: 'transparent' },
+        track: { background: C.surface2, strokeWidth: '100%', margin: 6 },
+        startAngle: -135, endAngle: 135,
+        dataLabels: {
+          show: true,
+          name: { show: true, fontSize: '11px', fontWeight: 500, color: C.muted, offsetY: 24 },
+          value: { show: true, fontSize: '30px', fontWeight: 700, color: C.text, offsetY: -6, formatter: function (v) { return Math.round(v) + '%'; } }
+        }
+      }
+    },
+    fill: { type: 'gradient', gradient: { shade: 'dark', type: 'horizontal', shadeIntensity: 0.35, gradientToColors: [C.dark ? C.p300 : C.p700], inverseColors: false, opacityFrom: 1, opacityTo: 1, stops: [0, 100] } },
+    stroke: { lineCap: 'round' },
+    labels: ['SLA no prazo'],
+    legend: { show: false },
+    tooltip: { enabled: false }
+  }));
+  chart.render();
+  AXP.charts.push({ chart: chart, theme: gaugeTheme });
+}
+
+/* ---------- 6. barras empilhadas / agrupadas ---------- */
+var CH_MONTHS = ['mai', 'jun', 'jul', 'ago', 'set', 'out'];
+var CH = {
+  'Direto': [620, 684, 712, 748, 806, 842],
+  'Parceiros': [310, 328, 356, 372, 398, 421],
+  'Online': [180, 214, 236, 258, 289, 318]
+};
+function stackedTheme() {
+  var C = readTokens();
+  return {
+    chart: { foreColor: C.muted },
+    theme: { mode: C.dark ? 'dark' : 'light' },
+    tooltip: { theme: C.dark ? 'dark' : 'light' },
+    colors: [C.accent, C.info, C.warning],
+    xaxis: { labels: { style: { colors: C.text2, fontSize: '11px' } } },
+    yaxis: { labels: { style: { colors: C.muted, fontSize: '11px' } } },
+    grid: { borderColor: C.border },
+    legend: { labels: { colors: C.text2 } },
+    plotOptions: { bar: { borderRadius: 3, borderRadiusApplication: 'end', borderRadiusWhenStacked: 'last' } }
+  };
+}
+function buildStacked(mount) {
+  var C = readTokens(), base = apexBase(C);
+  var chart = new ApexCharts(mount, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'bar', height: 228, stacked: true }),
+    series: [
+      { name: 'Direto', data: CH['Direto'] },
+      { name: 'Parceiros', data: CH['Parceiros'] },
+      { name: 'Online', data: CH['Online'] }
+    ],
+    colors: [C.accent, C.info, C.warning],
+    plotOptions: { bar: { columnWidth: '52%', borderRadius: 3, borderRadiusApplication: 'end', borderRadiusWhenStacked: 'last' } },
+    xaxis: Object.assign({ categories: CH_MONTHS, labels: { style: { colors: C.text2, fontSize: '11px' } } }, { axisBorder: { show: false }, axisTicks: { show: false } }),
+    yaxis: { tickAmount: 4, labels: { formatter: function (v) { return NF0.format(v); }, style: { colors: C.muted, fontSize: '11px' } } },
+    grid: { borderColor: C.border, strokeDashArray: 3, padding: { left: 8, right: 8, top: 0, bottom: 0 } },
+    legend: { show: true, position: 'bottom', horizontalAlign: 'left', markers: { size: 6 }, itemMargin: { horizontal: 12, vertical: 0 }, labels: { colors: C.text2 } },
+    tooltip: { theme: C.dark ? 'dark' : 'light', y: { formatter: function (v) { return brlMil(v); } } }
+  }));
+  chart.render();
+  AXP.stacked = chart;
+  AXP.charts.push({ chart: chart, theme: stackedTheme });
+}
+
+/* ---------- 7. linha + faixa de previsão ---------- */
+var FC = {
+  months: ['nov', 'dez', 'jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out'],
+  low: [398, 414, 427, 442, 457, 470, 484, 498, 512, 526, 540, 556],
+  high: [422, 438, 453, 470, 487, 502, 518, 534, 551, 568, 588, 610],
+  prev: [410, 426, 440, 456, 472, 486, 501, 517, 532, 548, 566, 584],
+  real: [412, 428, 441, 458, 474, 487, 503, 518, 534, 549, null, null]
+};
+function fcTooltip(ctx) {
+  var i = ctx.dataPointIndex;
+  var real = FC.real[i], prev = FC.prev[i], lo = FC.low[i], hi = FC.high[i];
+  var diff = real == null ? null : (real - prev) / prev * 100;
+  return '<div class="ax-tip"><div class="ax-tip-t">' + FC.months[i].charAt(0).toUpperCase() + FC.months[i].slice(1) + ' · R$ mil</div>' +
+    '<div class="ax-tip-r"><span>Previsto</span><b>' + NF0.format(prev) + '</b></div>' +
+    '<div class="ax-tip-r"><span>Intervalo</span><b>' + NF0.format(lo) + '–' + NF0.format(hi) + '</b></div>' +
+    (real == null
+      ? '<div class="ax-tip-s">Sem realizado consolidado; valor projetado.</div>'
+      : '<div class="ax-tip-r"><span>Realizado</span><b class="' + (diff >= 0 ? 'up' : 'down') + '">' + NF0.format(real) + '</b></div>' +
+        '<div class="ax-tip-s">' + (diff >= 0 ? '+' : '−') + NF2.format(Math.abs(diff)) + '% vs. previsto</div>') +
+    '</div>';
+}
+function forecastTheme() {
+  var C = readTokens();
+  var band = C.dark ? mix(C.accent, C.surface, 0.28) : C.p200;
+  return {
+    chart: { foreColor: C.muted },
+    theme: { mode: C.dark ? 'dark' : 'light' },
+    tooltip: { theme: C.dark ? 'dark' : 'light' },
+    colors: [band, C.accent, C.info],
+    stroke: { colors: [band, C.accent, C.info] },
+    fill: { opacity: [C.dark ? 0.5 : 0.7, 1, 1] },
+    markers: { strokeWidth: 0, colors: [band, C.accent, C.info] },
+    xaxis: { labels: { style: { colors: C.muted, fontSize: '11px' } } },
+    yaxis: { labels: { style: { colors: C.muted, fontSize: '11px' } } },
+    grid: { borderColor: C.border },
+    legend: { labels: { colors: C.text2 } }
+  };
+}
+function buildForecast(mount) {
+  var C = readTokens(), base = apexBase(C);
+  var band = C.dark ? mix(C.accent, C.surface, 0.28) : C.p200;
+  var chart = new ApexCharts(mount, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'line', height: 252 }),
+    series: [
+      { name: 'Intervalo de confiança', type: 'rangeArea', data: FC.low.map(function (lo, i) { return { x: FC.months[i], y: [lo, FC.high[i]] }; }) },
+      { name: 'Realizado', type: 'line', data: FC.real.map(function (v, i) { return v == null ? null : { x: FC.months[i], y: v }; }).filter(Boolean) },
+      { name: 'Previsto', type: 'line', data: FC.prev.map(function (v, i) { return { x: FC.months[i], y: v }; }) }
+    ],
+    colors: [band, C.accent, C.info],
+    stroke: { curve: 'straight', width: [0, 3, 2], dashArray: [0, 0, 6], colors: [band, C.accent, C.info] },
+    fill: { type: ['solid', 'solid', 'solid'], opacity: [C.dark ? 0.5 : 0.7, 1, 1] },
+    markers: { size: [0, 3, 0], strokeWidth: 0, hover: { size: 5 }, colors: [band, C.accent, C.info] },
+    xaxis: Object.assign({ categories: FC.months, labels: { style: { colors: C.muted, fontSize: '11px' } } }, { axisBorder: { show: false }, axisTicks: { show: false } }),
+    yaxis: { min: 380, max: 620, tickAmount: 3, labels: { formatter: function (v) { return NF0.format(v); }, style: { colors: C.muted, fontSize: '11px' } } },
+    grid: { borderColor: C.border, strokeDashArray: 3, padding: { left: 8, right: 10, top: 0, bottom: 0 } },
+    legend: { show: true, position: 'top', horizontalAlign: 'left', markers: { size: 6 }, itemMargin: { horizontal: 12, vertical: 0 }, labels: { colors: C.text2 } },
+    tooltip: { custom: fcTooltip }
+  }));
+  chart.render();
+  AXP.charts.push({ chart: chart, theme: forecastTheme });
+}
+
+/* ---------- montagem ---------- */
+function renderAll() {
+  buildCandle(document.getElementById('ax-candle'));
+  buildRadar(document.getElementById('ax-radar'));
+  buildTreemap(document.getElementById('ax-treemap'));
+  buildWaterfall(document.getElementById('ax-waterfall'));
+  buildGauge(document.getElementById('ax-gauge'));
+  buildStacked(document.getElementById('ax-stacked'));
+  buildForecast(document.getElementById('ax-forecast'));
+  wireSegmented();
+  observeTheme();
+  observeResize();
+}
+function wireSegmented() {
+  if (AXP.wired) return;
+  AXP.wired = true;
+  var group = document.querySelector('.seg');
+  if (!group) return;
+  var status = document.getElementById('ax-mode-status');
+  group.addEventListener('click', function (ev) {
+    var btn = ev.target.closest('button[data-mode]');
+    if (!btn) return;
+    var stacked = btn.getAttribute('data-mode') === 'stacked';
+    group.querySelectorAll('button').forEach(function (b) {
+      b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+    });
+    if (AXP.stacked) {
+      AXP.stacked.updateOptions({ chart: { stacked: stacked } }, true, false);
+    }
+    if (status) status.textContent = stacked ? 'Modo empilhado.' : 'Modo agrupado.';
+  });
+}
+function observeTheme() {
+  if (AXP.observer) AXP.observer.disconnect();
+  AXP.observer = new MutationObserver(function () {
+    AXP.charts.forEach(function (c) {
+      try {
+        c.chart.updateOptions(c.theme(), true, false);
+        if (c.after) c.after();
+      } catch (e) { /* gráfico desmontado */ }
+    });
+  });
+  AXP.observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class'] });
+}
+function observeResize() {
+  var wrap = document.getElementById('tm-wrap');
+  if (!wrap || !('ResizeObserver' in window)) return;
+  if (AXP.ro) AXP.ro.disconnect();
+  var raf = 0;
+  AXP.ro = new ResizeObserver(function () {
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(layoutTreemapLabels);
+  });
+  AXP.ro.observe(wrap);
+}
+
+/* API do preview: monta os sete gráficos e permite desmontar sem recarregar. */
+window.TTSCChartsAdvanced = {
+  init: function () {
+    if (!AXP.charts.length) renderAll();
+    return window.TTSCChartsAdvanced;
+  },
+  destroy: function () {
+    AXP.charts.forEach(function (c) { try { c.chart.destroy(); } catch (e) { /* já removido */ } });
+    AXP.charts = []; AXP.tm = null; AXP.stacked = null;
+    var layer = document.getElementById('tm-labels');
+    if (layer) layer.innerHTML = '';
+    if (AXP.observer) { AXP.observer.disconnect(); AXP.observer = null; }
+    if (AXP.ro) { AXP.ro.disconnect(); AXP.ro = null; }
+    return window.TTSCChartsAdvanced;
+  },
+  charts: function () { return AXP.charts.map(function (c) { return c.chart; }); },
+  relayout: layoutTreemapLabels
+};
+
+var apex = document.createElement('script');
+apex.src = '../../vendor/apexcharts/apexcharts.min.js';
+apex.onload = renderAll;
+document.head.appendChild(apex);
+</script>
+</body>
+</html>

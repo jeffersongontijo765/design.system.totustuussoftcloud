@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Declaração de matrícula</title>
+<style>
+  /* Folha A4 retrato. Documento oficial: timbre, número, código de validação e assinatura. */
+  @page { size: A4 portrait; margin: 16mm 18mm 18mm; }
+  * { box-sizing: border-box; }
+  html { background: #e5e7eb; }
+  body { font: 12px/1.6 Georgia, "Times New Roman", serif; color: #111; background: #fff;
+    width: 210mm; min-height: 297mm; margin: 16px auto; padding: 16mm 18mm; box-shadow: 0 1px 6px rgba(0,0,0,.18); display: flex; flex-direction: column; }
+  .timbre { display: flex; justify-content: space-between; align-items: center; padding-bottom: 10px; border-bottom: 2px solid #111; font-family: system-ui, sans-serif; }
+  .timbre b { font-size: 15px; display: block; }
+  .timbre span { font-size: 10px; color: #555; }
+  .mark { width: 44px; height: 44px; border-radius: 10px; background: #0f766e; color: #fff; display: grid; place-items: center; font: 700 16px system-ui, sans-serif; }
+  h1 { font-size: 16px; text-align: center; letter-spacing: .12em; margin: 26px 0 2px; }
+  .num { text-align: center; font: 11px system-ui, sans-serif; color: #555; margin: 0 0 24px; }
+  p { margin: 0 0 14px; text-align: justify; }
+  dl { display: grid; grid-template-columns: 180px 1fr; gap: 6px 12px; margin: 18px 0 22px; font-family: system-ui, sans-serif; font-size: 11px; }
+  dt { color: #555; }
+  dd { margin: 0; font-weight: 600; }
+  .closing { margin-top: 8px; }
+  .place { text-align: center; margin: 26px 0 40px; }
+  .sign { width: 70%; margin: 0 auto; text-align: center; border-top: 1px solid #111; padding-top: 6px; font: 11px system-ui, sans-serif; }
+  .sign small { display: block; color: #555; }
+  .verify { margin-top: auto; display: grid; grid-template-columns: 1fr 84px; gap: 14px; align-items: center; border: 1px solid #cfd4dc; border-radius: 6px; padding: 12px 14px;
+    font: 10px/1.5 system-ui, sans-serif; color: #333; }
+  .verify b { font-family: ui-monospace, Menlo, monospace; font-size: 12px; letter-spacing: .08em; color: #111; }
+  .qr { width: 84px; height: 84px; border: 1px dashed #888; display: grid; place-items: center; font: 10px system-ui, sans-serif; color: #666; }
+  @media print { html { background: #fff; } body { margin: 0; box-shadow: none; width: auto; padding: 0; min-height: 0; } }
+</style>
+</head>
+<body>
+  <header class="timbre">
+    <div style="display:flex;gap:12px;align-items:center"><div class="mark" aria-hidden="true">TT</div><div><b>Escola Exemplo</b><span>Secretaria Acadêmica · Rua das Flores, 120 · Centro</span></div></div>
+    <span>CNPJ 00.000.000/0001-00</span>
+  </header>
+
+  <h1>DECLARAÇÃO DE MATRÍCULA</h1>
+  <p class="num">Nº 2026/0412 · emitida em 22/10/2026</p>
+
+  <p>A Secretaria Acadêmica da Escola Exemplo declara, para os devidos fins, que <strong>Ana Beatriz Souza</strong>, portadora do CPF ***.***.***-21, encontra-se regularmente matriculada no curso de Administração, no período letivo 2026/2, conforme os dados abaixo.</p>
+
+  <dl>
+    <dt>Número da matrícula</dt><dd>MAT-2026-0157</dd>
+    <dt>Curso</dt><dd>Administração (bacharelado)</dd>
+    <dt>Série e turma</dt><dd>1º ano, turma B</dd>
+    <dt>Turno</dt><dd>Matutino</dd>
+    <dt>Período letivo</dt><dd>2026/2</dd>
+    <dt>Início da matrícula</dt><dd>01/08/2026</dd>
+    <dt>Situação</dt><dd>Ativa</dd>
+  </dl>
+
+  <p class="closing">Por ser verdade, firmamos a presente declaração, que não gera direito a nenhum benefício além do expressamente informado.</p>
+
+  <p class="place">Centro, 22 de outubro de 2026.</p>
+
+  <div class="sign">Joana Silva<small>Secretária acadêmica · Registro 1234</small></div>
+
+  <section class="verify" aria-label="Validação do documento">
+    <div>
+      Para conferir a autenticidade, acesse <b>escola.exemplo/validar</b> e informe o código:<br>
+      <b>7F3K-9QWD-2X8M</b><br>
+      O código vale enquanto a matrícula estiver ativa. Dados pessoais protegidos pela LGPD.
+    </div>
+    <div class="qr" role="img" aria-label="QR code de validação">QR</div>
+  </section>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!-- @dsCard group="Componentes" height=290 subtitle="data-ttsc-scrollable · height fixa, max-height, height auto com dependencies/offset, ttsc-scrollable-y-auto/-hover" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Scrollable</title>
+<style>
+  .pv-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--ttsc-space-4); align-items: start; }
+  .pv-box { border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); background: var(--ttsc-surface); overflow: hidden; }
+  .pv-head { padding: var(--ttsc-space-2) var(--ttsc-space-3); border-bottom: 1px solid var(--ttsc-border); font-size: 12px; font-weight: 600; color: var(--ttsc-text); display: flex; justify-content: space-between; }
+  .pv-head code { font-weight: 400; color: var(--ttsc-text-muted); }
+  .pv-list { list-style: none; margin: 0; padding: 0; }
+  .pv-list li { display: flex; justify-content: space-between; gap: 8px; padding: 8px var(--ttsc-space-3); font-size: 12px; color: var(--ttsc-text-2); border-bottom: 1px solid var(--ttsc-border-soft); }
+  .pv-list li b { color: var(--ttsc-text); font-weight: 500; }
+  #pv-top { padding: var(--ttsc-space-2) var(--ttsc-space-4); font-size: 12px; color: var(--ttsc-text-muted); border-bottom: 1px solid var(--ttsc-border); }
+</style>
+</head>
+<body>
+<div id="pv-top">Barra simulada (dependência do height auto) · <span id="pv-h">altura calculada: —</span></div>
+<div class="ds-pad pv-cols">
+  <div class="pv-box">
+    <div class="pv-head">Avisos da turma <code>height=180</code></div>
+    <div class="ttsc-scrollable-y-auto" data-ttsc-scrollable="true" data-ttsc-scrollable-height="180">
+      <ul class="pv-list" id="l1"></ul>
+    </div>
+  </div>
+  <div class="pv-box">
+    <div class="pv-head">Pendências <code>max-height=180</code></div>
+    <div class="ttsc-scrollable-y-hover" data-ttsc-scrollable="true" data-ttsc-scrollable-max-height="180">
+      <ul class="pv-list" id="l2"></ul>
+    </div>
+  </div>
+  <div class="pv-box">
+    <div class="pv-head">Chamada <code>height=auto</code></div>
+    <div class="ttsc-scrollable-y-auto" id="auto" data-ttsc-scrollable="true" data-ttsc-scrollable-height="auto"
+         data-ttsc-scrollable-dependencies="#pv-top" data-ttsc-scrollable-offset="390px">
+      <ul class="pv-list" id="l3"></ul>
+    </div>
+  </div>
+</div>
+<script>
+  var names = ['Ana Beatriz Moreira', 'Bruno Henrique Costa', 'Carla Souza Mendes', 'Daniel Rocha Pereira', 'Eduarda Nunes Alves', 'Felipe Araújo Lima', 'Gabriela Teixeira', 'Henrique Barros', 'Isabela Cardoso', 'João Pedro Martins', 'Larissa Gomes', 'Mateus Ribeiro'];
+  function fill(id, fn) { document.getElementById(id).innerHTML = names.map(fn).join(''); }
+  fill('l1', function (n, i) { return '<li><b>Prova de Matemática</b><span>' + (10 + i) + '/11</span></li>'; });
+  fill('l2', function (n, i) { return i < 4 ? '<li><b>' + n + '</b><span>documento</span></li>' : ''; });
+  fill('l3', function (n, i) { return '<li><b>' + n + '</b><span>' + (i % 4 ? 'Presente' : 'Falta') + '</span></li>'; });
+  TTSC.init();
+  document.getElementById('pv-h').textContent = 'altura calculada: ' + TTSC.Scrollable.getInstance(document.getElementById('auto')).getHeight();
+</script>
+</body>
+</html>

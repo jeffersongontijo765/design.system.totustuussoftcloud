@@ -1,0 +1,48 @@
+<!-- @dsCard height=288 -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Cover</title>
+<style>
+  html, body { margin: 0; height: 288px; background: var(--ttsc-canvas); overflow: hidden; }
+  .cover { position: relative; width: 960px; height: 288px; }
+  svg { position: absolute; inset: 0; }
+  .accent { fill: var(--ttsc-accent); }
+  .deep { fill: var(--ttsc-primary-900); }
+  .tint { fill: var(--ttsc-primary-100); }
+  .ink { fill: var(--ttsc-text); }
+  .logo { fill: var(--ttsc-logo); }
+  .relief { fill: var(--ttsc-primary-200); }
+  .dot { fill: var(--ttsc-accent); }
+  .surface { rx: var(--ttsc-radius-surface); }
+  .control { rx: var(--ttsc-radius-control); }
+  .xs { rx: var(--ttsc-radius-xs); }
+  .text { position: absolute; left: 40px; bottom: 36px; max-width: 440px; }
+  .name { font-family: var(--font-sans); font-weight: 700; font-size: 80px; line-height: .95; letter-spacing: -0.02em; color: var(--ttsc-text); margin: 0; }
+  .tag { margin: 16px 0 0; font-family: var(--font-sans); font-size: 13px; line-height: 20px; color: var(--ttsc-text-muted); }
+</style></head>
+<body>
+<div class="cover">
+  <!-- blocks: ttsc-accent 284x120, ttsc-primary-900 152x208, ttsc-primary-100 136x76, ttsc-text 136x76, ttsc-logo 136x100, ttsc-primary-200 300x100 -->
+  <!-- arrangement: modular grid of three columns on a 12px gutter (ttsc-space-3), tiles merged two-wide like chassis cards, bleeding off top, right and bottom -->
+  <!-- pattern: geometric/modular dense UI -> tiles cut by radius tokens, plus five rail-icon squares (ttsc-radius-xs) echoing the 60px icon rail -->
+  <!-- scales: gutter ttsc-space-3 (12px), inset ttsc-space-6 (24px), radii ttsc-radius-surface 16, ttsc-radius-control 12, ttsc-radius-xs 6 -->
+  <svg width="960" height="288" viewBox="0 0 960 288" aria-hidden="true">
+    <rect class="accent surface" x="512" y="-16" width="284" height="120"/>
+    <rect class="deep surface" x="808" y="-16" width="152" height="208"/>
+    <rect class="tint control" x="512" y="116" width="136" height="76"/>
+    <rect class="ink control" x="660" y="116" width="136" height="76"/>
+    <rect class="logo surface" x="512" y="204" width="136" height="100"/>
+    <rect class="relief surface" x="660" y="204" width="300" height="100"/>
+    <rect class="dot xs" x="832" y="24" width="12" height="12"/>
+    <rect class="dot xs" x="832" y="52" width="12" height="12"/>
+    <rect class="dot xs" x="832" y="80" width="12" height="12"/>
+    <rect class="dot xs" x="832" y="108" width="12" height="12"/>
+    <rect class="dot xs" x="832" y="136" width="12" height="12"/>
+  </svg>
+  <div class="text">
+    <h1 class="name">TotusTuus<br>SoftCloud</h1>
+    <p class="tag">Emerald Cloud: o chassi das telas acadêmicas e administrativas.</p>
+  </div>
+</div>
+</body>
+</html>

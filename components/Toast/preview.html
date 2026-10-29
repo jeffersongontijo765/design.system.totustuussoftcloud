@@ -1,0 +1,86 @@
+<!-- @dsCard group="Componentes" height=285 subtitle="TTSC.Toast.show · success, info, warning, destructive, light/outline, ação, progress, posições; exemplos estáticos" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Toast</title>
+<style>
+  .ttsc-toast { font-size: 13px; }
+  .ttsc-toast .ttsc-alert-toolbar button[data-ttsc-toast-action] { font: inherit; font-size: 12px; font-weight: 600; text-decoration: underline; background: none; border: 0; color: inherit; cursor: pointer; padding: 0 4px; }
+  /* Ponte TTSC: o runtime pinta info em violeta; o produto usa --ttsc-info */
+  .ttsc-alert-info.ttsc-alert-light { background-color: color-mix(in oklab, var(--ttsc-info) 10%, var(--ttsc-surface)); border-color: color-mix(in oklab, var(--ttsc-info) 35%, transparent); color: var(--ttsc-text); }
+  .ttsc-alert-info.ttsc-alert-light .ttsc-alert-icon { color: var(--ttsc-info-text); }
+  .pv-cols { display: grid; grid-template-columns: 1fr 1fr; gap: var(--ttsc-space-6); align-items: start; }
+  .pv-static { display: flex; flex-direction: column; gap: var(--ttsc-space-2); }
+  .pv-static .ttsc-toast { position: static; width: 100%; max-width: 100%; animation: none; opacity: 1; }
+</style>
+</head>
+<body>
+<div class="ds-pad pv-cols">
+  <div class="ds-stack">
+    <div class="ds-label">Disparar (canto superior direito)</div>
+    <div class="ds-row">
+      <button type="button" class="ttsc-btn ttsc-btn-primary ttsc-btn-sm" data-demo="success"><i class="fa-light fa-check"></i> Salvar matrícula</button>
+      <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-sm" data-demo="info">Info</button>
+      <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-sm" data-demo="warning">Aviso</button>
+      <button type="button" class="ttsc-btn ttsc-btn-destructive ttsc-btn-sm" data-demo="destructive">Erro</button>
+    </div>
+    <div class="ds-row">
+      <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-sm" data-demo="undo"><i class="fa-light fa-trash"></i> Excluir com desfazer</button>
+      <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-sm" data-demo="bottom">Rodapé centro</button>
+      <button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-sm" data-demo="clear">Fechar todos</button>
+    </div>
+    <div class="ds-note" id="log" aria-live="polite">Eventos: —</div>
+  </div>
+  <div class="ds-stack">
+    <div class="ds-label">Exemplos estáticos (mesma marcação gerada)</div>
+    <div class="pv-static">
+      <div class="ttsc-toast ttsc-alert ttsc-alert-success ttsc-alert-light ttsc-alert-md" role="status">
+        <div class="ttsc-alert-icon"><i class="fa-light fa-circle-check"></i></div>
+        <div class="ttsc-alert-title">Matrícula 2026014 salva com sucesso.</div>
+        <div class="ttsc-alert-toolbar"><div class="ttsc-alert-actions"><button class="ttsc-alert-close" aria-label="Fechar"><i class="fa-light fa-xmark"></i></button></div></div>
+      </div>
+      <div class="ttsc-toast ttsc-alert ttsc-alert-warning ttsc-alert-light ttsc-alert-md" role="status">
+        <div class="ttsc-alert-icon"><i class="fa-light fa-triangle-exclamation"></i></div>
+        <div class="ttsc-alert-title">3 alunos abaixo de 75% de frequência.</div>
+        <div class="ttsc-alert-toolbar"><div class="ttsc-alert-actions"><button data-ttsc-toast-action="true" type="button">Ver lista</button></div></div>
+      </div>
+      <div class="ttsc-toast ttsc-alert ttsc-alert-destructive ttsc-alert-light ttsc-alert-md" role="alert">
+        <div class="ttsc-alert-icon"><i class="fa-light fa-circle-xmark"></i></div>
+        <div class="ttsc-alert-title">Não foi possível gerar o boleto. Tente novamente.</div>
+      </div>
+      <div class="ttsc-toast ttsc-alert ttsc-alert-info ttsc-alert-light ttsc-alert-md" role="status">
+        <div class="ttsc-alert-icon"><i class="fa-light fa-circle-info"></i></div>
+        <div class="ttsc-alert-title">Importação concluída: 128 alunos.</div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  TTSC.init();
+  TTSC.Toast.config({ position: 'top-end', duration: 4000, maxToasts: 4, offset: 16, gap: 8 });
+  var log = document.getElementById('log');
+  var icons = { success: 'fa-circle-check', info: 'fa-circle-info', warning: 'fa-triangle-exclamation', destructive: 'fa-circle-xmark' };
+  var msgs = { success: 'Matrícula salva com sucesso.', info: 'Rematrícula aberta até 30/11.', warning: 'Mensalidade de outubro vence amanhã.', destructive: 'Erro ao enviar o boletim por e-mail.' };
+  document.addEventListener('ttsc.toast.hidden', function (e) { log.textContent = 'Eventos: ttsc.toast.hidden · ' + e.detail.id.slice(0, 16) + '…'; }, true);
+  document.querySelectorAll('[data-demo]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var v = b.dataset.demo;
+      if (v === 'clear') { TTSC.Toast.clearAll(); return; }
+      if (v === 'undo') {
+        TTSC.Toast.show({
+          message: 'Matrícula 2026014 excluída.', variant: 'mono', appearance: 'solid', icon: '<i class="fa-light fa-trash"></i>',
+          duration: 6000, progress: true, pauseOnHover: true,
+          action: { label: 'Desfazer', onClick: function () { log.textContent = 'Eventos: ação Desfazer executada'; } }
+        });
+        return;
+      }
+      if (v === 'bottom') {
+        TTSC.Toast.show({ message: 'Rascunho salvo automaticamente.', variant: 'secondary', appearance: 'light', position: 'bottom-center', duration: 2500 });
+        return;
+      }
+      var t = TTSC.Toast.show({ message: msgs[v], variant: v, appearance: 'light', icon: '<i class="fa-light ' + icons[v] + '"></i>', progress: true, role: v === 'destructive' ? 'alert' : 'status' });
+      t.element.addEventListener('ttsc.toast.hidden', function () { log.textContent = 'Eventos: ttsc.toast.hidden (' + v + ')'; });
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,413 @@
+<!-- @dsCard group="Gráficos" height=486 width=1280 subtitle="Fluxo Sankey em SVG — origem, qualificação, proposta e desfecho, com foco, teclado e tooltip" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>SankeyFlow</title>
+<style>
+  html,body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font-family:Inter,system-ui,sans-serif;font-size:13px;-webkit-font-smoothing:antialiased}
+  *,*::before,*::after{box-sizing:border-box}
+  .sk-demo{max-width:1280px;margin:0 auto;padding:16px}
+  .sk-card{position:relative;background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-surface);box-shadow:var(--ttsc-shadow-sm);padding:16px 20px 14px;min-width:0}
+  .sk-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:10px}
+  .sk-hd h2{margin:0;font-size:15px;line-height:22px;font-weight:600;color:var(--ttsc-text)}
+  .sk-hd p{margin:2px 0 0;font-size:12px;line-height:16px;color:var(--ttsc-text-muted)}
+  .sk-pill{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;font-size:11px;font-weight:600;line-height:16px;padding:3px 9px;border-radius:var(--ttsc-radius-pill);border:1px solid var(--ttsc-accent-border);background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text);font-variant-numeric:tabular-nums}
+  .sk-pill i{width:6px;height:6px;border-radius:50%;background:currentColor}
+  .sk-kpis{list-style:none;display:flex;flex-wrap:wrap;gap:6px 18px;margin:0 0 6px;padding:0;font-size:11px;line-height:16px;color:var(--ttsc-text-muted)}
+  .sk-kpis li{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+  .sk-kpis i{width:7px;height:7px;border-radius:2px;background:var(--c);flex-shrink:0}
+  .sk-kpis b{color:var(--ttsc-text);font-weight:600;font-variant-numeric:tabular-nums}
+  .sk-kpis small{color:var(--ttsc-text-muted);font-size:11px;font-variant-numeric:tabular-nums}
+  .sk-stage{position:relative;min-width:0}
+  .sk-svg{display:block;width:100%;height:auto;overflow:visible}
+  .sk-col{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;fill:var(--ttsc-text-muted)}
+  .sk-name{font-size:11px;font-weight:600;fill:var(--ttsc-text-2);paint-order:stroke;stroke:var(--ttsc-surface);stroke-width:3px;stroke-linejoin:round}
+  .sk-val{font-size:10px;fill:var(--ttsc-text-muted);font-variant-numeric:tabular-nums;paint-order:stroke;stroke:var(--ttsc-surface);stroke-width:3px;stroke-linejoin:round}
+  .sk-link{fill:var(--c);fill-opacity:.32;stroke:none;cursor:pointer;transition:fill-opacity .15s ease}
+  .sk-node{cursor:pointer}
+  .sk-node rect{fill:var(--c);stroke:var(--ttsc-surface);stroke-width:2;transition:opacity .15s ease}
+  .sk-link:hover,.sk-link.is-active{fill-opacity:.72}
+  .sk-link:focus-visible{outline:none;filter:drop-shadow(0 0 2px var(--ttsc-text)) drop-shadow(0 0 1px var(--ttsc-text))}
+  .sk-node:focus-visible{outline:none}
+  .sk-node:focus-visible rect{stroke:var(--ttsc-text);stroke-width:2.5}
+  .sk-stage.is-dim .sk-link:not(.is-active){fill-opacity:.07}
+  .sk-stage.is-dim .sk-node:not(.is-active) rect{opacity:.35}
+  .sk-tip{position:absolute;z-index:5;max-width:260px;padding:8px 10px;background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-sm);box-shadow:var(--ttsc-shadow-popover);pointer-events:none;opacity:0;transform:translateY(4px);transition:opacity .12s ease}
+  .sk-tip.on{opacity:1;transform:none}
+  .sk-tip b{display:block;font-size:12px;font-weight:600;line-height:17px;color:var(--ttsc-text)}
+  .sk-tip span{display:block;font-size:11px;line-height:16px;color:var(--ttsc-text-2);font-variant-numeric:tabular-nums;margin-top:1px}
+  .sk-tip em{display:block;font-style:normal;font-size:10px;line-height:15px;color:var(--ttsc-text-muted);margin-top:3px}
+  .sk-legend{display:flex;align-items:center;flex-wrap:wrap;gap:6px 14px;margin:2px 0 0;font-size:11px;line-height:16px;color:var(--ttsc-text-muted)}
+  .sk-legend span{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+  .sk-legend i{width:8px;height:8px;border-radius:2px;background:var(--c)}
+  .sk-legend .note{margin-left:auto;color:var(--ttsc-text-muted)}
+  .sk-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+  /* Lista alternativa no mobile */
+  .sk-mobile{display:none;list-style:none;margin:4px 0 0;padding:0}
+  .sk-mhead{margin:10px 0 4px;font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ttsc-text-muted)}
+  .sk-mhead:first-child{margin-top:0}
+  .sk-mrow{display:grid;grid-template-columns:minmax(72px,auto) 14px minmax(0,1fr);gap:6px;align-items:baseline;padding:5px 0;border-bottom:1px solid var(--ttsc-border-soft);font-size:12px;line-height:17px}
+  .sk-mrow:last-child{border-bottom:0}
+  .sk-from{font-weight:600;color:var(--ttsc-text)}
+  .sk-arrow{color:var(--ttsc-text-muted);font-size:11px}
+  .sk-dest{color:var(--ttsc-text-2)}
+  .sk-dest b{font-weight:600;color:var(--ttsc-text);font-variant-numeric:tabular-nums}
+  .sk-dest .sep{color:var(--ttsc-text-muted);padding:0 2px}
+  @media (max-width:640px){
+    .sk-demo{padding:12px}
+    .sk-card{padding:14px 12px}
+    .sk-svg,.sk-legend{display:none}
+    .sk-mobile{display:block}
+    .sk-hd{flex-wrap:wrap}
+    .sk-kpis{gap:4px 12px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  }
+</style>
+</head>
+<body>
+<div class="sk-demo">
+  <section class="sk-card" aria-labelledby="sk-title">
+    <div class="sk-hd">
+      <div>
+        <h2 id="sk-title">Fluxo de aquisição</h2>
+        <p>Coorte de outubro de 2026 · origem, qualificação, oportunidade e desfecho.</p>
+      </div>
+      <span class="sk-pill"><i></i><span id="sk-total">5.800 leads</span></span>
+    </div>
+    <ul class="sk-kpis" id="sk-kpis">
+      <li style="--c:var(--ttsc-success)"><i></i>Ganho <b>1.624</b> <small>28,0%</small></li>
+      <li style="--c:var(--ttsc-warning)"><i></i>Em negociação <b>1.392</b> <small>24,0%</small></li>
+      <li style="--c:var(--ttsc-danger)"><i></i>Perdido <b>2.784</b> <small>48,0%</small></li>
+    </ul>
+    <div id="sk-chart"></div>
+    <ol class="sk-mobile" id="sk-mobile" aria-label="Fluxo de aquisição em lista"></ol>
+    <p class="sk-legend" id="sk-legend">
+      <span style="--c:var(--ttsc-accent)"><i></i>Origem</span>
+      <span style="--c:var(--ttsc-info)"><i></i>Qualificação</span>
+      <span style="--c:var(--ttsc-warning)"><i></i>Oportunidade</span>
+      <span style="--c:var(--ttsc-primary-700)"><i></i>Desfecho</span>
+      <span class="note">Largura proporcional ao volume; foco e teclado mostram valor e participação.</span>
+    </p>
+  </section>
+  <p class="sk-sr" id="sk-summary">Fluxo de aquisição com 5.800 leads: 2.050 em MQL, 1.480 em SQL e 2.270 em nutrição; 3.020 propostas e 2.780 follow-ups; 1.624 ganhos (28,0%), 1.392 em negociação (24,0%) e 2.784 perdidos (48,0%).</p>
+</div>
+<script>
+(function () {
+  'use strict';
+
+  /* Modelo de dados: nós por coluna e links com origem, destino e volume. */
+  var DATA = {
+    total: 5800,
+    stages: ['Origem', 'Qualificação', 'Oportunidade', 'Desfecho'],
+    nodes: [
+      { id: 'organico', label: 'Orgânico', stage: 0, value: 2300, tone: 'accent' },
+      { id: 'pago', label: 'Pago', stage: 0, value: 1750, tone: 'accent' },
+      { id: 'indicacao', label: 'Indicação', stage: 0, value: 960, tone: 'accent' },
+      { id: 'direto', label: 'Direto', stage: 0, value: 790, tone: 'accent' },
+      { id: 'mql', label: 'MQL', stage: 1, value: 2050, tone: 'info' },
+      { id: 'sql', label: 'SQL', stage: 1, value: 1480, tone: 'info' },
+      { id: 'nutricao', label: 'Nutrição', stage: 1, value: 2270, tone: 'info' },
+      { id: 'proposta', label: 'Proposta', stage: 2, value: 3020, tone: 'warning' },
+      { id: 'followup', label: 'Follow-up', stage: 2, value: 2780, tone: 'warning' },
+      { id: 'ganho', label: 'Ganho', stage: 3, value: 1624, tone: 'success' },
+      { id: 'negociacao', label: 'Em negociação', stage: 3, value: 1392, tone: 'warning' },
+      { id: 'perdido', label: 'Perdido', stage: 3, value: 2784, tone: 'danger' }
+    ],
+    links: [
+      { source: 'organico', target: 'mql', value: 900 },
+      { source: 'organico', target: 'sql', value: 620 },
+      { source: 'organico', target: 'nutricao', value: 780 },
+      { source: 'pago', target: 'mql', value: 640 },
+      { source: 'pago', target: 'sql', value: 470 },
+      { source: 'pago', target: 'nutricao', value: 640 },
+      { source: 'indicacao', target: 'mql', value: 380 },
+      { source: 'indicacao', target: 'sql', value: 300 },
+      { source: 'indicacao', target: 'nutricao', value: 280 },
+      { source: 'direto', target: 'mql', value: 130 },
+      { source: 'direto', target: 'sql', value: 90 },
+      { source: 'direto', target: 'nutricao', value: 570 },
+      { source: 'mql', target: 'proposta', value: 1290 },
+      { source: 'mql', target: 'followup', value: 760 },
+      { source: 'sql', target: 'proposta', value: 1210 },
+      { source: 'sql', target: 'followup', value: 270 },
+      { source: 'nutricao', target: 'proposta', value: 520 },
+      { source: 'nutricao', target: 'followup', value: 1750 },
+      { source: 'proposta', target: 'ganho', value: 1320 },
+      { source: 'proposta', target: 'negociacao', value: 790 },
+      { source: 'proposta', target: 'perdido', value: 910 },
+      { source: 'followup', target: 'ganho', value: 304 },
+      { source: 'followup', target: 'negociacao', value: 602 },
+      { source: 'followup', target: 'perdido', value: 1874 }
+    ]
+  };
+
+  var NS = 'http://www.w3.org/2000/svg';
+  var NF0 = new Intl.NumberFormat('pt-BR');
+  var NF1 = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  function pct(v) { return NF1.format(v) + '%'; }
+  function n(v) { return NF0.format(v); }
+  function tone(t) { return 'var(--ttsc-' + (t === 'primary' ? 'primary-700' : t) + ')'; }
+
+  function el(tag, attrs, parent) {
+    var e = document.createElementNS(NS, tag);
+    if (attrs) Object.keys(attrs).forEach(function (k) {
+      if (k === 'text') e.textContent = attrs[k];
+      else e.setAttribute(k, attrs[k]);
+    });
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+
+  function build(data, host) {
+    host.innerHTML = '';
+    var widths = { w: 1200, h: 330, x0: 4, y0: 34, plotH: 286, gap: 11, nodeW: 10, cols: [4, 300, 600, 900] };
+    var total = data.total;
+    var byId = {};
+    data.nodes.forEach(function (nd) { byId[nd.id] = nd; });
+    var columns = [[], [], [], []];
+    data.nodes.forEach(function (nd) { columns[nd.stage].push(nd); });
+
+    /* Uma única escala para as quatro colunas: a altura compara volume entre etapas. */
+    var maxNodes = columns.reduce(function (m, col) { return Math.max(m, col.length); }, 1);
+    var k = (widths.plotH - widths.gap * (maxNodes - 1)) / total;
+    columns.forEach(function (col) {
+      var y = widths.y0;
+      col.forEach(function (nd) {
+        nd._h = nd.value * k;
+        nd._y = y;
+        nd._x = widths.cols[nd.stage];
+        y += nd._h + widths.gap;
+      });
+    });
+
+    /* Ordena os links na origem e no destino para reduzir cruzamentos. */
+    var out = {}, inn = {};
+    data.links.forEach(function (l) {
+      l._s = byId[l.source]; l._t = byId[l.target];
+      (out[l.source] = out[l.source] || []).push(l);
+      (inn[l.target] = inn[l.target] || []).push(l);
+    });
+    Object.keys(out).forEach(function (id) {
+      out[id].sort(function (a, b) { return a._t._y - b._t._y; });
+      var off = 0;
+      out[id].forEach(function (l) {
+        l._sh = l._s._h * (l.value / l._s.value);
+        l._sy = l._s._y + off;
+        off += l._sh;
+      });
+    });
+    Object.keys(inn).forEach(function (id) {
+      inn[id].sort(function (a, b) { return a._s._y - b._s._y; });
+      var off = 0;
+      inn[id].forEach(function (l) {
+        l._th = l._t._h * (l.value / l._t.value);
+        l._ty = l._t._y + off;
+        off += l._th;
+      });
+    });
+
+    var stage = document.createElement('div');
+    stage.className = 'sk-stage';
+    var svg = el('svg', {
+      viewBox: '0 0 ' + widths.w + ' ' + widths.h,
+      class: 'sk-svg', role: 'group', 'aria-labelledby': 'sk-svg-title', 'aria-describedby': 'sk-summary'
+    });
+    var title = el('title', { id: 'sk-svg-title' }, svg);
+    title.textContent = 'Fluxo de aquisição: 5.800 leads da origem ao desfecho.';
+
+    /* Cabeçalhos das colunas */
+    data.stages.forEach(function (name, i) {
+      el('text', { x: widths.cols[i], y: 14, class: 'sk-col', text: name }, svg);
+    });
+
+    /* Links (atrás dos nós) */
+    var gLinks = el('g', { class: 'sk-links' }, svg);
+    data.links.forEach(function (l) {
+      var x0 = l._s._x + widths.nodeW, x1 = l._t._x;
+      var mid = (x0 + x1) / 2;
+      var d = 'M' + x0 + ',' + l._sy +
+        ' C' + mid + ',' + l._sy + ' ' + mid + ',' + l._ty + ' ' + x1 + ',' + l._ty +
+        ' L' + x1 + ',' + (l._ty + l._th) +
+        ' C' + mid + ',' + (l._ty + l._th) + ' ' + mid + ',' + (l._sy + l._sh) + ' ' + x0 + ',' + (l._sy + l._sh) + ' Z';
+      var p = el('path', { d: d, class: 'sk-link', tabindex: '0', role: 'img' }, gLinks);
+      p.style.setProperty('--c', tone(l._s.tone));
+      var share = l.value / l._s.value * 100;
+      var label = l._s.label + ' para ' + l._t.label + ': ' + n(l.value) + ' leads, ' + pct(share) + ' de ' + l._s.label + '.';
+      p.setAttribute('aria-label', label);
+      var t = el('title', {}, p); t.textContent = label;
+      p._info = { title: l._s.label + ' → ' + l._t.label, value: n(l.value) + ' leads', share: pct(share) + ' de ' + l._s.label, total: pct(l.value / total * 100) + ' do total', kind: 'link', source: l.source, target: l.target };
+    });
+
+    /* Nós e rótulos */
+    var gNodes = el('g', { class: 'sk-nodes' }, svg);
+    data.nodes.forEach(function (nd) {
+      var g = el('g', { class: 'sk-node', tabindex: '0', role: 'img' }, gNodes);
+      g.style.setProperty('--c', tone(nd.tone));
+      var share = nd.value / total * 100;
+      var label = 'Etapa ' + data.stages[nd.stage] + ', ' + nd.label + ': ' + n(nd.value) + ' leads, ' + pct(share) + ' do total.';
+      g.setAttribute('aria-label', label);
+      var t = el('title', {}, g); t.textContent = label;
+      el('rect', { x: nd._x, y: nd._y, width: widths.nodeW, height: Math.max(2, nd._h), rx: 3 }, g);
+      var cx = nd._x + widths.nodeW + 8;
+      var cy = nd._y + nd._h / 2;
+      el('text', { x: cx, y: cy - 1, class: 'sk-name', text: nd.label }, g);
+      el('text', { x: cx, y: cy + 12, class: 'sk-val', text: n(nd.value) }, g);
+      g._info = { title: nd.label, value: n(nd.value) + ' leads', share: pct(share) + ' do total', kind: 'node', id: nd.id };
+    });
+
+    /* Tooltip único */
+    var tip = document.createElement('div');
+    tip.className = 'sk-tip';
+    tip.id = 'sk-tip';
+    tip.setAttribute('role', 'status');
+    tip.setAttribute('aria-live', 'polite');
+    stage.appendChild(svg);
+    stage.appendChild(tip);
+    host.appendChild(stage);
+
+    function place(target, ev) {
+      tip.innerHTML = '<b>' + target._info.title + '</b><span>' + target._info.value + ' · ' + target._info.share + '</span>' +
+        (target._info.total ? '<em>' + target._info.total + '</em>' : '');
+      tip.classList.add('on');
+      var box = stage.getBoundingClientRect();
+      var x, y;
+      if (ev && ev.clientX) {
+        x = ev.clientX - box.left + 12;
+        y = ev.clientY - box.top - tip.offsetHeight - 8;
+      } else {
+        var b = target.getBoundingClientRect();
+        x = b.left - box.left + b.width / 2 - tip.offsetWidth / 2;
+        y = b.top - box.top - tip.offsetHeight - 8;
+      }
+      x = Math.min(Math.max(6, x), Math.max(6, box.width - tip.offsetWidth - 6));
+      y = Math.max(4, Math.min(y, box.height - tip.offsetHeight - 4));
+      tip.style.left = x + 'px';
+      tip.style.top = y + 'px';
+    }
+    function hide() { tip.classList.remove('on'); }
+    function clear() {
+      stage.classList.remove('is-dim');
+      svg.querySelectorAll('.is-active').forEach(function (e) { e.classList.remove('is-active'); });
+    }
+    function activate(target) {
+      clear();
+      stage.classList.add('is-dim');
+      target.classList.add('is-active');
+      if (target._info.kind === 'link') {
+        var s = target._info.source, t = target._info.target;
+        gNodes.querySelectorAll('.sk-node').forEach(function (g) {
+          if (g._info.id === s || g._info.id === t) g.classList.add('is-active');
+        });
+      } else {
+        var id = target._info.id;
+        var nb = {};
+        var linkEls = gLinks.querySelectorAll('.sk-link');
+        data.links.forEach(function (l, i) {
+          if (l.source === id || l.target === id) {
+            linkEls[i].classList.add('is-active');
+            nb[l.source] = true; nb[l.target] = true;
+          }
+        });
+        gNodes.querySelectorAll('.sk-node').forEach(function (g) { if (nb[g._info.id]) g.classList.add('is-active'); });
+      }
+    }
+    function enter(ev) {
+      var t = ev.target.closest ? ev.target.closest('.sk-link, .sk-node') : null;
+      if (!t || !t._info) return;
+      activate(t);
+      place(t, ev);
+    }
+    function leave(ev) {
+      var t = ev.target.closest ? ev.target.closest('.sk-link, .sk-node') : null;
+      if (!t) return;
+      if (ev.relatedTarget && t.contains(ev.relatedTarget)) return;
+      hide(); clear();
+    }
+    function focusIn(ev) {
+      var t = ev.target.closest ? ev.target.closest('.sk-link, .sk-node') : null;
+      if (!t || !t._info) return;
+      activate(t);
+      place(t, null);
+    }
+    function focusOut(ev) {
+      var t = ev.target.closest ? ev.target.closest('.sk-link, .sk-node') : null;
+      if (!t) return;
+      hide(); clear();
+    }
+    stage.addEventListener('mouseover', enter);
+    stage.addEventListener('mouseout', leave);
+    stage.addEventListener('focusin', focusIn);
+    stage.addEventListener('focusout', focusOut);
+    stage.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') { hide(); clear(); } });
+
+    return { stage: stage, svg: svg };
+  }
+
+  /* Lista vertical alternativa (mobile) */
+  function buildMobile(data, list) {
+    var byId = {};
+    data.nodes.forEach(function (nd) { byId[nd.id] = nd; });
+    var html = '';
+    for (var gi = 0; gi < 3; gi += 1) {
+      var rows = data.links.filter(function (l) { return byId[l.source].stage === gi; });
+      if (!rows.length) continue;
+      html += '<li class="sk-mhead">' + data.stages[gi] + ' → ' + data.stages[gi + 1] + '</li>';
+      var order = [], bySource = {};
+      rows.forEach(function (l) {
+        if (!bySource[l.source]) {
+          bySource[l.source] = { node: byId[l.source], dest: [] };
+          order.push(l.source);
+        }
+        bySource[l.source].dest.push({ node: byId[l.target], value: l.value });
+      });
+      order.forEach(function (id) {
+        var item = bySource[id];
+        var dest = item.dest.map(function (d, i) {
+          return (i ? '<span class="sep">·</span>' : '') + d.node.label + ' <b>' + n(d.value) + '</b>';
+        }).join('');
+        var txt = item.node.label + ' para ' + item.dest.map(function (d) { return d.node.label + ': ' + n(d.value); }).join('; ');
+        html += '<li class="sk-mrow" aria-label="' + txt + '"><span class="sk-from">' + item.node.label +
+          '</span><span class="sk-arrow" aria-hidden="true">→</span><span class="sk-dest">' + dest + '</span></li>';
+      });
+    }
+    list.innerHTML = html;
+  }
+
+  function init() {
+    var host = document.getElementById('sk-chart');
+    var list = document.getElementById('sk-mobile');
+    var total = document.getElementById('sk-total');
+    var summary = document.getElementById('sk-summary');
+    if (!host) return;
+    if (total) total.textContent = n(DATA.total) + ' leads';
+    if (summary) {
+      summary.textContent = 'Fluxo de aquisição com ' + n(DATA.total) + ' leads: 2.050 em MQL, 1.480 em SQL e 2.270 em nutrição; ' +
+        '3.020 propostas e 2.780 follow-ups; 1.624 ganhos (28,0%), 1.392 em negociação (24,0%) e 2.784 perdidos (48,0%).';
+    }
+    buildMobile(DATA, list);
+
+    /* API pública, também usada pelo preview */
+    window.TTSCSankey = {
+      render: function (container, data) {
+        window.TTSCSankey.destroy(container);
+        var out = build(data || DATA, container);
+        container.__ttscSankey = out;
+        return out;
+      },
+      destroy: function (container) {
+        if (container && container.__ttscSankey) {
+          container.innerHTML = '';
+          container.__ttscSankey = null;
+        }
+      }
+    };
+    window.TTSCSankey.render(host, DATA);
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+</script>
+</body>
+</html>

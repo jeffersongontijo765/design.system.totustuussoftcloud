@@ -1,0 +1,142 @@
+<!-- @dsCard group="Formulários · Plugins" height=510 subtitle="Dropzone 5.9.3 · área de soltar, fila (autoProcessQueue false), enviado, erro de tamanho/tipo, pt-BR" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Dropzone</title>
+<link rel="stylesheet" href="../../vendor/dropzone/dropzone.css">
+<script src="../../vendor/dropzone/dropzone.js"></script>
+<script>Dropzone.autoDiscover = false;</script>
+<style>
+  .ttsc-dropzone { display: flex; align-items: center; gap: 14px; padding: 18px 20px; border: 1px dashed var(--ttsc-border-strong); border-radius: var(--ttsc-radius-surface); background: var(--ttsc-canvas-2); color: var(--ttsc-text-2); cursor: pointer; transition: border-color .15s, background-color .15s; }
+  .ttsc-dropzone:hover, .ttsc-dropzone:focus-visible { border-color: var(--ttsc-accent); outline: none; }
+  .ttsc-dropzone.dz-drag-hover { border-color: var(--ttsc-accent); background: var(--ttsc-accent-soft); }
+  .ttsc-dropzone .dz-icon { width: 40px; height: 40px; flex: none; display: grid; place-items: center; border-radius: var(--ttsc-radius-control); background: var(--ttsc-surface); border: 1px solid var(--ttsc-border); color: var(--ttsc-accent-text); font-size: 18px; }
+  .ttsc-dropzone .dz-title { color: var(--ttsc-text); font-weight: 600; font-size: 14px; }
+  .ttsc-dropzone .dz-sub { color: var(--ttsc-text-muted); font-size: 12px; }
+  .ttsc-dz-list { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
+  .ttsc-dz-item { display: grid; grid-template-columns: 36px 1fr auto; gap: 12px; align-items: center; padding: 10px 12px; border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-control); background: var(--ttsc-surface); }
+  .ttsc-dz-item .dz-thumb { width: 36px; height: 36px; border-radius: var(--ttsc-radius-sm); background: var(--ttsc-surface-2); display: grid; place-items: center; overflow: hidden; color: var(--ttsc-text-2); }
+  .ttsc-dz-item .dz-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .ttsc-dz-item .dz-thumb img:not([src]) { display: none; }
+  .ttsc-dz-item .dz-thumb img[src] + i { display: none; }
+  .ttsc-dz-item .dz-name { color: var(--ttsc-text); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .ttsc-dz-item .dz-meta { display: flex; gap: 8px; align-items: center; font-size: 12px; color: var(--ttsc-text-muted); }
+  .ttsc-dz-item .dz-size strong { font-weight: 400; }
+  .ttsc-dz-item .dz-bar { height: 4px; border-radius: var(--ttsc-radius-pill); background: var(--ttsc-surface-2); margin-top: 6px; overflow: hidden; }
+  .ttsc-dz-item .dz-bar > span { display: block; height: 100%; width: 0; background: var(--ttsc-accent); transition: width .2s; }
+  .ttsc-dz-item .dz-error-message { display: none; font-size: 12px; color: var(--ttsc-danger-text); margin-top: 4px; }
+  .ttsc-dz-item.dz-error { border-color: var(--ttsc-danger); }
+  .ttsc-dz-item.dz-error .dz-error-message { display: block; }
+  .ttsc-dz-item.dz-error .dz-bar, .ttsc-dz-item.dz-success .dz-bar { display: none; }
+  .ttsc-dz-item .dz-state { display: none; }
+  .ttsc-dz-item.dz-success .dz-state-ok, .ttsc-dz-item.dz-error .dz-state-err, .ttsc-dz-item:not(.dz-success):not(.dz-error) .dz-state-queue { display: inline-flex; }
+  .dz-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="ds-label">Documentos da solicitação de matrícula · Ana Beatriz Souza</div>
+  <div class="ttsc-dropzone" id="dz-docs" tabindex="0" role="button" aria-describedby="dz-help">
+    <span class="dz-icon"><i class="fa-light fa-cloud-arrow-up"></i></span>
+    <div class="dz-message" data-dz-message>
+      <div class="dz-title">Arraste os arquivos aqui ou clique para selecionar</div>
+      <div class="dz-sub" id="dz-help">PDF, JPG ou PNG · até 5 MB por arquivo · máximo de 6 arquivos</div>
+    </div>
+  </div>
+  <ul class="ttsc-dz-list" id="dz-previews" aria-live="polite"></ul>
+  <div class="dz-foot">
+    <span class="ds-note" id="dz-status">Fila: 0 arquivo(s) aguardando envio.</span>
+    <div class="ds-row">
+      <button type="button" class="ttsc-btn ttsc-btn-ghost" id="dz-clear">Limpar fila</button>
+      <button type="button" class="ttsc-btn ttsc-btn-primary" id="dz-send"><i class="fa-light fa-paper-plane"></i> Enviar documentos</button>
+    </div>
+  </div>
+</div>
+
+<template id="dz-tpl">
+  <li class="ttsc-dz-item dz-preview">
+    <div class="dz-thumb"><img data-dz-thumbnail alt=""><i class="fa-light fa-file-pdf"></i></div>
+    <div style="min-width:0">
+      <div class="dz-name" data-dz-name></div>
+      <div class="dz-meta">
+        <span class="dz-size" data-dz-size></span>
+        <span class="ttsc-badge ttsc-badge-sm ttsc-badge-outline dz-state dz-state-queue">Na fila</span>
+        <span class="ttsc-badge ttsc-badge-sm ttsc-badge-success ttsc-badge-outline dz-state dz-state-ok"><i class="fa-light fa-check"></i> Enviado</span>
+        <span class="ttsc-badge ttsc-badge-sm ttsc-badge-destructive ttsc-badge-outline dz-state dz-state-err">Recusado</span>
+      </div>
+      <div class="dz-bar"><span data-dz-uploadprogress></span></div>
+      <div class="dz-error-message" data-dz-errormessage></div>
+    </div>
+    <button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon ttsc-btn-sm" data-dz-remove aria-label="Remover arquivo"><i class="fa-light fa-xmark"></i></button>
+  </li>
+</template>
+
+<script>
+TTSC.init();
+var DZ_PT_BR = {
+  dictDefaultMessage: 'Arraste os arquivos aqui ou clique para selecionar',
+  dictFallbackMessage: 'Seu navegador não suporta envio por arrastar e soltar.',
+  dictFileTooBig: 'Arquivo muito grande ({{filesize}} MB). Máximo: {{maxFilesize}} MB.',
+  dictInvalidFileType: 'Tipo de arquivo não permitido. Envie PDF, JPG ou PNG.',
+  dictResponseError: 'O servidor respondeu com o código {{statusCode}}.',
+  dictCancelUpload: 'Cancelar envio',
+  dictUploadCanceled: 'Envio cancelado.',
+  dictCancelUploadConfirmation: 'Deseja cancelar este envio?',
+  dictRemoveFile: 'Remover arquivo',
+  dictRemoveFileConfirmation: null,
+  dictMaxFilesExceeded: 'Limite de {{maxFiles}} arquivos atingido.',
+  dictFileSizeUnits: { tb: 'TB', gb: 'GB', mb: 'MB', kb: 'KB', b: 'bytes' }
+};
+var dz = new Dropzone('#dz-docs', Object.assign({
+  url: '/academic/enrollment-requests/REQ-UUID/documents',   // sem servidor no preview
+  autoProcessQueue: false,
+  paramName: 'file',
+  maxFilesize: 5,
+  maxFiles: 6,
+  acceptedFiles: '.pdf,.jpg,.jpeg,.png',
+  thumbnailWidth: 72, thumbnailHeight: 72,
+  previewsContainer: '#dz-previews',
+  previewTemplate: document.getElementById('dz-tpl').innerHTML
+}, DZ_PT_BR));
+var dzSize = dz.filesize.bind(dz);
+dz.filesize = function (size) { return dzSize(size).replace('.', ','); };   // 0,3 MB
+
+function refresh() {
+  document.getElementById('dz-status').textContent =
+    'Fila: ' + dz.getQueuedFiles().length + ' arquivo(s) aguardando envio · ' +
+    dz.getFilesWithStatus(Dropzone.SUCCESS).length + ' enviado(s).';
+}
+['addedfile', 'removedfile', 'success', 'error', 'reset'].forEach(function (ev) { dz.on(ev, function () { setTimeout(refresh); }); });
+
+// Já enviado anteriormente (enrollment_request_documents.status = approved)
+var existing = { name: 'rg-frente-ana-beatriz.jpg', size: 284512, accepted: true, status: Dropzone.SUCCESS };
+dz.files.push(existing);
+dz.displayExistingFile(existing, 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="72" height="72"><rect width="72" height="72" fill="#a7f3d0"/><rect x="12" y="20" width="48" height="32" rx="4" fill="#00925a"/><circle cx="26" cy="34" r="6" fill="#ecfdf5"/></svg>'));
+existing.previewElement.classList.add('dz-success', 'dz-complete');
+
+// Na fila (aguardando "Enviar") e um recusado por tamanho
+dz.addFile(new File([new Blob(['%PDF-1.4 historico'])], 'historico-escolar-ensino-medio.pdf', { type: 'application/pdf' }));
+dz.addFile(new File([new Blob(['%PDF-1.4 comprovante'])], 'comprovante-residencia.pdf', { type: 'application/pdf' }));
+dz.addFile(new File([new ArrayBuffer(6 * 1024 * 1024)], 'certidao-nascimento-scan.pdf', { type: 'application/pdf' }));
+refresh();
+
+// Preview sem servidor: simula o envio da fila
+document.getElementById('dz-send').addEventListener('click', function () {
+  dz.getQueuedFiles().forEach(function (file, i) {
+    var p = 0, t = setInterval(function () {
+      p += 25; dz.emit('uploadprogress', file, p, file.size * p / 100);
+      if (p >= 100) {
+        clearInterval(t); file.status = Dropzone.SUCCESS;
+        dz.emit('success', file, { uuid: 'doc-' + i, status: 'submitted' }); dz.emit('complete', file);
+      }
+    }, 150);
+  });
+});
+document.getElementById('dz-clear').addEventListener('click', function () {
+  dz.getQueuedFiles().concat(dz.getRejectedFiles()).forEach(function (f) { dz.removeFile(f); });
+});
+document.getElementById('dz-docs').addEventListener('keydown', function (e) {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); dz.hiddenFileInput.click(); }
+});
+</script>
+</body>
+</html>

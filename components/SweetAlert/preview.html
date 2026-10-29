@@ -1,0 +1,80 @@
+<!-- @dsCard group="Geral" height=405 subtitle="SweetAlert2 11.14.5 · confirmação de exclusão, sucesso, input; buttonsStyling:false + customClass ttsc-btn; target no card" -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><title>SweetAlert</title>
+<style>
+  /* Tema SweetAlert2 com tokens */
+  .ttsc-swal.swal2-popup { background: var(--ttsc-surface); color: var(--ttsc-text); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); box-shadow: var(--ttsc-shadow-xl); padding: 20px; width: 26em; font-family: inherit; }
+  .ttsc-swal .swal2-title { color: var(--ttsc-text); font-size: 17px; font-weight: 600; padding: 8px 0 0; }
+  .ttsc-swal .swal2-html-container { color: var(--ttsc-text-2); font-size: 13px; line-height: 1.55; margin: 8px 0 0; }
+  .ttsc-swal .swal2-actions { gap: 8px; margin-top: 18px; }
+  .ttsc-swal .swal2-actions .ttsc-btn { margin: 0; }
+  .ttsc-swal .swal2-input, .ttsc-swal .swal2-textarea { background: var(--ttsc-surface); color: var(--ttsc-text); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-control); box-shadow: none; font-size: 13px; margin: 14px 0 0; width: 100%; }
+  .ttsc-swal .swal2-input:focus, .ttsc-swal .swal2-textarea:focus { border-color: var(--ttsc-accent-border); box-shadow: 0 0 0 3px var(--ttsc-accent-soft); }
+  .ttsc-swal .swal2-validation-message { background: transparent; color: var(--ttsc-danger-text); font-size: 12px; }
+  .ttsc-swal .swal2-icon { transform: scale(.8); margin: 4px auto 0; }
+  .ttsc-swal .swal2-icon.swal2-warning { border-color: var(--ttsc-warning); color: var(--ttsc-warning-text); }
+  .ttsc-swal .swal2-icon.swal2-success { border-color: var(--ttsc-success); color: var(--ttsc-success); }
+  .ttsc-swal .swal2-icon.swal2-success [class^=swal2-success-line] { background-color: var(--ttsc-success); }
+  .ttsc-swal .swal2-icon.swal2-success .swal2-success-ring { border-color: color-mix(in srgb, var(--ttsc-success) 30%, transparent); }
+  .ttsc-swal .swal2-icon.swal2-success [class^=swal2-success-circular-line], .ttsc-swal .swal2-icon.swal2-success .swal2-success-fix { background: var(--ttsc-surface) !important; }
+  .ttsc-swal .swal2-icon.swal2-question { border-color: var(--ttsc-info); color: var(--ttsc-info-text); }
+  .swal2-container.swal2-backdrop-show { background: var(--ttsc-scrim); }
+  /* Demo: diálogo renderizado dentro do card (option target) */
+  .sw-host { position: relative; height: 330px; border: 1px dashed var(--ttsc-border); border-radius: var(--ttsc-radius-surface); overflow: hidden; background: var(--ttsc-canvas); }
+  .sw-host > .swal2-container { position: absolute; }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="ds-row">
+    <button type="button" class="ttsc-btn ttsc-btn-destructive ttsc-btn-sm" id="sw-delete"><i class="fa-light fa-trash"></i> Excluir matrícula</button>
+    <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-sm" id="sw-success"><i class="fa-light fa-circle-check"></i> Sucesso</button>
+    <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-sm" id="sw-input"><i class="fa-light fa-pen-to-square"></i> Cancelar com motivo</button>
+    <span class="ds-note" id="sw-result" aria-live="polite"></span>
+  </div>
+  <div class="sw-host" id="sw-host"></div>
+</div>
+<script src="../../vendor/sweetalert2/sweetalert2.all.min.js"></script>
+<script>
+  var TtscSwal = Swal.mixin({
+    target: '#sw-host',                      // em produção: omitir (body)
+    buttonsStyling: false, reverseButtons: true, focusCancel: false,
+    customClass: { popup: 'ttsc-swal', confirmButton: 'ttsc-btn ttsc-btn-primary', cancelButton: 'ttsc-btn ttsc-btn-ghost', denyButton: 'ttsc-btn ttsc-btn-outline' },
+    showClass: { popup: 'swal2-show' }, cancelButtonText: 'Cancelar'
+  });
+  var out = document.getElementById('sw-result');
+  function confirmDelete() {
+    return TtscSwal.fire({
+      icon: 'warning', title: 'Excluir a matrícula MAT-2026-0102?',
+      html: 'Bruno Carvalho será removido da turma <b>1º ano B — Tarde</b>. Mensalidades em aberto continuam no financeiro.',
+      showCancelButton: true, confirmButtonText: 'Excluir matrícula', focusCancel: true,
+      customClass: { popup: 'ttsc-swal', confirmButton: 'ttsc-btn ttsc-btn-destructive', cancelButton: 'ttsc-btn ttsc-btn-ghost' },
+      showLoaderOnConfirm: true,
+      preConfirm: function () { return new Promise(function (r) { setTimeout(function () { r({ ok: true }); }, 600); }); },
+      allowOutsideClick: function () { return !Swal.isLoading(); }
+    }).then(function (res) {
+      out.textContent = res.isConfirmed ? 'Matrícula excluída.' : 'Exclusão cancelada (' + (res.dismiss || '') + ').';
+      if (res.isConfirmed) success();
+    });
+  }
+  function success() {
+    return TtscSwal.fire({ icon: 'success', title: 'Matrícula excluída', text: 'O histórico foi mantido para auditoria.', confirmButtonText: 'Fechar', timer: 2500, timerProgressBar: true });
+  }
+  function askReason() {
+    return TtscSwal.fire({
+      icon: 'question', title: 'Cancelar a solicitação?', input: 'textarea', inputLabel: 'Motivo (visível ao responsável)',
+      inputPlaceholder: 'Ex.: documentação incompleta', inputAttributes: { 'aria-label': 'Motivo do cancelamento', maxlength: 500 },
+      showCancelButton: true, confirmButtonText: 'Cancelar solicitação', cancelButtonText: 'Voltar',
+      inputValidator: function (v) { if (!v || v.trim().length < 10) return 'Descreva o motivo com ao menos 10 caracteres.'; }
+    }).then(function (res) { if (res.isConfirmed) out.textContent = 'Motivo: ' + res.value; });
+  }
+  document.getElementById('sw-delete').addEventListener('click', confirmDelete);
+  document.getElementById('sw-success').addEventListener('click', success);
+  document.getElementById('sw-input').addEventListener('click', askReason);
+  TTSC.init();
+  confirmDelete(); // aberto no load, dentro do card
+</script>
+</body>
+</html>

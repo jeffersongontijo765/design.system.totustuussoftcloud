@@ -1,0 +1,86 @@
+<!-- @dsCard group="Base" height=530 subtitle="Utilitários Tailwind presentes no bundle · espaço, tipografia, cores por token, flex/grid, raio/sombra, status → classe" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Utilities</title>
+<style>
+  .pv-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ttsc-space-5) var(--ttsc-space-6); }
+  .pv-sp { background: var(--ttsc-accent-soft); border: 1px dashed var(--ttsc-accent-border); border-radius: var(--ttsc-radius-xs); }
+  .pv-sp > span { display: block; background: var(--ttsc-surface); border: 1px solid var(--ttsc-border); font-size: 11px; color: var(--ttsc-text-2); padding: 0 4px; font-family: ui-monospace, monospace; }
+  .pv-code { font-family: ui-monospace, monospace; font-size: 11px; color: var(--ttsc-text-muted); }
+  .pv-sw { width: 100%; height: 28px; }
+  .pv-cell { min-height: 28px; border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-xs); background: var(--ttsc-canvas-2); font-size: 11px; color: var(--ttsc-text-2); display: flex; align-items: center; justify-content: center; }
+  .pv-box { width: 56px; height: 40px; background: var(--ttsc-surface); }
+</style>
+</head>
+<body>
+<div class="ds-pad pv-cols">
+  <div class="ds-stack">
+    <div class="ds-label">Espaço · p-* / gap-*</div>
+    <div class="flex items-end gap-2">
+      <div class="pv-sp p-0.5"><span>p-0.5</span></div>
+      <div class="pv-sp p-1.5"><span>p-1.5</span></div>
+      <div class="pv-sp p-2.5"><span>p-2.5</span></div>
+      <div class="pv-sp p-4"><span>p-4</span></div>
+      <div class="pv-sp p-7.5"><span>p-7.5</span></div>
+    </div>
+    <div class="ds-label">Tipografia</div>
+    <div class="flex flex-col gap-1">
+      <span class="text-2xl font-semibold text-foreground">text-2xl semibold</span>
+      <span class="text-lg font-medium text-foreground">text-lg medium · Boletim 2026/1</span>
+      <span class="text-sm text-foreground">text-sm · Ana Beatriz Souza, 1º ano A</span>
+      <span class="text-xs text-muted-foreground">text-xs muted · atualizado há 5 min</span>
+      <span class="text-2xs uppercase text-muted-foreground">text-2xs uppercase</span>
+      <span class="text-sm text-foreground truncate w-[220px]" title="Técnico em Desenvolvimento de Sistemas — Turma Noite">truncate · Técnico em Desenvolvimento de Sistemas — Turma Noite</span>
+    </div>
+    <div class="ds-label">Flex / grid</div>
+    <div class="grid grid-cols-3 gap-2">
+      <div class="pv-cell">grid-cols-3</div><div class="pv-cell col-span-2">col-span-2</div>
+      <div class="pv-cell col-span-2 flex justify-between px-2"><span>justify-between</span><span>→</span></div><div class="pv-cell">gap-2</div>
+    </div>
+  </div>
+  <div class="ds-stack">
+    <div class="ds-label">Cores ligadas a tokens</div>
+    <div class="grid grid-cols-3 gap-2">
+      <div class="flex flex-col gap-1"><div class="pv-sw bg-background border border-border rounded-md"></div><span class="pv-code">bg-background</span></div>
+      <div class="flex flex-col gap-1"><div class="pv-sw bg-muted rounded-md"></div><span class="pv-code">bg-muted</span></div>
+      <div class="flex flex-col gap-1"><div class="pv-sw bg-accent border border-border rounded-md"></div><span class="pv-code">bg-accent (hover)</span></div>
+      <div class="flex flex-col gap-1"><div class="pv-sw bg-primary/10 border border-primary rounded-md"></div><span class="pv-code">bg-primary/10</span></div>
+      <div class="flex flex-col gap-1"><div class="pv-sw border-2 border-input rounded-md"></div><span class="pv-code">border-input</span></div>
+      <div class="flex flex-col gap-1"><div class="pv-sw border border-dashed border-border rounded-md"></div><span class="pv-code">border-dashed</span></div>
+    </div>
+    <div class="flex gap-4 text-sm">
+      <span class="text-foreground">text-foreground</span>
+      <span class="text-muted-foreground">text-muted-foreground</span>
+      <span class="text-destructive">text-destructive</span>
+    </div>
+    <div class="ds-label">Raio e sombra</div>
+    <div class="flex gap-3">
+      <div class="pv-box border border-border rounded-sm"></div>
+      <div class="pv-box border border-border rounded-lg shadow-xs"></div>
+      <div class="pv-box border border-border rounded-xl shadow-md"></div>
+      <div class="pv-box border border-border rounded-full"></div>
+    </div>
+    <div class="ds-label">Status do banco → classe (CASE)</div>
+    <div class="flex flex-col border border-border rounded-lg" id="pv-list"></div>
+  </div>
+</div>
+<script>
+  TTSC.init();
+  var STATUS_CLASS = { active: 'ttsc-badge ttsc-badge-success', pending: 'ttsc-badge ttsc-badge-warning', locked: 'ttsc-badge ttsc-badge-info', cancelled: 'ttsc-badge ttsc-badge-destructive' };
+  var LABEL = { active: 'Ativa', pending: 'Pendente', locked: 'Trancada', cancelled: 'Cancelada' };
+  var rows = [['AS', 'Ana Beatriz Souza', 'MAT-2026-00412', 'active'], ['LC', 'Lucas Carvalho', 'MAT-2026-00398', 'pending'], ['MR', 'Marina Ribeiro', 'MAT-2025-01120', 'locked'], ['PH', 'Pedro Henrique Alves', 'MAT-2025-00877', 'cancelled']];
+  var list = document.getElementById('pv-list');
+  rows.forEach(function (r, i) {
+    var row = document.createElement('div');
+    row.className = 'flex items-center gap-3 px-3 py-2' + (i < rows.length - 1 ? ' border-b border-border' : '');
+    var av = document.createElement('span'); av.className = 'size-7 rounded-full bg-muted flex items-center justify-center text-xs font-medium text-secondary-foreground shrink-0'; av.textContent = r[0];
+    var txt = document.createElement('div'); txt.className = 'flex flex-col min-w-0 flex-1';
+    var n = document.createElement('span'); n.className = 'text-sm font-medium text-foreground truncate'; n.textContent = r[1];
+    var c = document.createElement('span'); c.className = 'text-xs text-muted-foreground'; c.textContent = r[2];
+    txt.append(n, c);
+    var b = document.createElement('span'); b.className = STATUS_CLASS[r[3]] || 'ttsc-badge ttsc-badge-secondary'; b.textContent = LABEL[r[3]];
+    row.append(av, txt, b); list.append(row);
+  });
+</script>
+</body>
+</html>

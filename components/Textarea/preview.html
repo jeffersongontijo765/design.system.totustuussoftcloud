@@ -1,0 +1,65 @@
+<!-- @dsCard group="Formulários" height=310 subtitle="ttsc-textarea · contador n/máx, resize-y, sm/lg, readonly, inválido, autosize" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Textarea</title>
+<script src="../../vendor/autosize/autosize.min.js"></script>
+<style>
+  .ttsc-textarea.resize-y { resize: vertical; }
+  .ttsc-textarea.resize-none { resize: none; }
+  .ttsc-textarea[readonly] { background-color: var(--ttsc-canvas-2); color: var(--ttsc-text-2); }
+  .ttsc-textarea-counter { font-size: 12px; color: var(--ttsc-text-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .ttsc-textarea-counter.is-near { color: var(--ttsc-warning-text); }
+  .ttsc-textarea-counter.is-full { color: var(--ttsc-danger-text); font-weight: 600; }
+  .ttsc-form-label { color: var(--ttsc-text); }
+  .ttsc-form-description { color: var(--ttsc-text-muted); }
+  .ttsc-form-message { color: var(--ttsc-danger-text); }
+  .pv-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ttsc-space-4) var(--ttsc-space-5); }
+</style>
+</head>
+<body>
+<div class="ds-pad pv-cols">
+  <div class="ttsc-form-item">
+    <label class="ttsc-form-label" for="pv-notes">Observações da matrícula</label>
+    <textarea class="ttsc-textarea resize-y" id="pv-notes" rows="4" maxlength="180" lang="pt-BR" data-ttsc-counter aria-describedby="pv-notes-help pv-notes-count">Aluno transferido da E.E. Prof. Lima em março. Histórico escolar entregue; aguardando declaração de vacinação. Responsável prefere contato por WhatsApp no período da tarde.</textarea>
+    <div class="flex justify-between gap-2">
+      <span class="ttsc-form-description" id="pv-notes-help">Visível apenas para a secretaria.</span>
+      <span class="ttsc-textarea-counter" id="pv-notes-count" data-for="pv-notes"></span>
+    </div>
+  </div>
+  <div class="ttsc-form-item">
+    <label class="ttsc-form-label" for="pv-just">Justificativa da falta *</label>
+    <textarea class="ttsc-textarea ttsc-textarea-sm resize-none" id="pv-just" rows="2" required minlength="10" aria-invalid="true" aria-describedby="pv-just-msg">Doente</textarea>
+    <div class="ttsc-form-message" id="pv-just-msg">Descreva o motivo (mínimo 10 caracteres).</div>
+  </div>
+  <div class="ttsc-form-item">
+    <label class="ttsc-form-label" for="pv-auto">Parecer descritivo (autosize)</label>
+    <textarea class="ttsc-textarea ttsc-textarea-lg resize-none" id="pv-auto" rows="1" maxlength="1000" data-ttsc-counter placeholder="Digite: a altura acompanha o texto"></textarea>
+    <div class="flex justify-end"><span class="ttsc-textarea-counter" data-for="pv-auto"></span></div>
+  </div>
+  <div class="ttsc-form-item">
+    <label class="ttsc-form-label" for="pv-ro">Motivo do cancelamento (registrado)</label>
+    <textarea class="ttsc-textarea" id="pv-ro" rows="2" readonly>Mudança de cidade da família. Solicitado em 12/08/2026.</textarea>
+  </div>
+</div>
+<script>
+  TTSC.init();
+  document.querySelectorAll('textarea[data-ttsc-counter]').forEach(function (ta) {
+    var counter = document.querySelector('.ttsc-textarea-counter[data-for="' + ta.id + '"]');
+    var max = ta.maxLength > 0 ? ta.maxLength : null;
+    var update = function () {
+      var n = ta.value.length, r = max ? n / max : 0;
+      counter.textContent = max ? n + '/' + max : String(n);
+      counter.classList.toggle('is-near', r >= 0.9 && r < 1);
+      counter.classList.toggle('is-full', r >= 1);
+      counter.setAttribute('aria-live', r >= 0.9 ? 'polite' : 'off');
+    };
+    ta.addEventListener('input', update); update();
+  });
+  if (window.autosize) autosize(document.getElementById('pv-auto'));
+  document.addEventListener('input', function (e) {
+    var ta = e.target.closest('textarea[aria-invalid]');
+    if (ta) ta.setAttribute('aria-invalid', ta.checkValidity() ? 'false' : 'true');
+  });
+</script>
+</body>
+</html>

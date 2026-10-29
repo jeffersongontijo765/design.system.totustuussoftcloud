@@ -1,0 +1,75 @@
+<!-- @dsCard group="Geral" height=260 subtitle="js-cookie 3.0.5 · Cookies.get/set/remove, preferência de UI (sidebar recolhida, densidade), SameSite/Secure" -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><title>Cookie</title>
+<style>
+  .ck-shell { display: flex; height: 150px; border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); overflow: hidden; background: var(--ttsc-canvas); }
+  .ck-side { width: 168px; background: var(--ttsc-surface); border-right: 1px solid var(--ttsc-border); padding: 8px; display: flex; flex-direction: column; gap: 2px; transition: width .2s ease; }
+  .ck-side a { display: flex; align-items: center; gap: 10px; padding: 6px 8px; border-radius: var(--ttsc-radius-sm); color: var(--ttsc-text-2); text-decoration: none; white-space: nowrap; overflow: hidden; }
+  .ck-side a.active { background: var(--ttsc-accent-soft); color: var(--ttsc-accent-text); }
+  .ck-side i { width: 16px; text-align: center; flex: none; }
+  .ck-shell.is-collapsed .ck-side { width: 50px; }
+  .ck-shell.is-collapsed .ck-side span { display: none; }
+  .ck-main { flex: 1; padding: 12px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .ck-main.is-compact .ck-row { padding: 3px 8px; }
+  .ck-row { padding: 7px 8px; border-bottom: 1px solid var(--ttsc-border-soft); color: var(--ttsc-text-2); font-size: 12px; }
+  .ck-jar { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: var(--ttsc-text); background: var(--ttsc-surface-2); border: 1px solid var(--ttsc-border-soft); border-radius: var(--ttsc-radius-sm); padding: 8px 10px; word-break: break-all; }
+  .ck-grid { display: grid; grid-template-columns: 1fr 260px; gap: 12px; }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="ck-grid">
+    <div class="ck-shell" id="shell">
+      <nav class="ck-side" aria-label="Menu do módulo">
+        <a href="#" class="active"><i class="fa-light fa-graduation-cap"></i><span>Matrículas</span></a>
+        <a href="#"><i class="fa-light fa-users"></i><span>Turmas</span></a>
+        <a href="#"><i class="fa-light fa-calendar-check"></i><span>Frequência</span></a>
+        <a href="#"><i class="fa-light fa-file-invoice-dollar"></i><span>Mensalidades</span></a>
+      </nav>
+      <div class="ck-main" id="main">
+        <div class="ck-row">MAT-2026-0101 · Ana Beatriz Souza</div>
+        <div class="ck-row">MAT-2026-0102 · Bruno Carvalho</div>
+        <div class="ck-row">MAT-2026-0103 · Camila Rocha</div>
+      </div>
+    </div>
+    <div class="ds-stack">
+      <label class="flex items-center gap-2 text-sm"><input type="checkbox" class="ttsc-switch" id="pref-sidebar"> Recolher menu lateral</label>
+      <label class="flex items-center gap-2 text-sm"><input type="checkbox" class="ttsc-switch" id="pref-compact"> Linhas compactas</label>
+      <div class="ds-row">
+        <button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-sm" id="btn-reset"><i class="fa-light fa-rotate-left"></i> Restaurar padrão</button>
+      </div>
+    </div>
+  </div>
+  <div class="ds-label">document.cookie (lido via Cookies.get())</div>
+  <div class="ck-jar" id="jar">—</div>
+</div>
+<script src="../../vendor/js-cookie/js.cookie.min.js"></script>
+<script>
+  // Instância com atributos padrão do chassi: path /, 1 ano, SameSite=Lax, Secure em HTTPS
+  var UiCookies = Cookies.withAttributes({ path: '/', expires: 365, sameSite: 'Lax', secure: location.protocol === 'https:' });
+  var KEYS = { sidebar: 'ttsc_sidebar_collapsed', density: 'ttsc_table_density' };
+  var shell = document.getElementById('shell'), main = document.getElementById('main');
+  var sw = document.getElementById('pref-sidebar'), cp = document.getElementById('pref-compact');
+
+  function apply() {
+    var collapsed = UiCookies.get(KEYS.sidebar) === '1';
+    var compact = UiCookies.get(KEYS.density) === 'compact';
+    shell.classList.toggle('is-collapsed', collapsed); sw.checked = collapsed;
+    main.classList.toggle('is-compact', compact); cp.checked = compact;
+    var all = Cookies.get(), out = Object.keys(all).filter(function (k) { return k.indexOf('ttsc_') === 0; })
+      .map(function (k) { return k + '=' + all[k]; });
+    document.getElementById('jar').textContent = out.length ? out.join('; ') : '(nenhum cookie ttsc_*: padrões em uso)';
+  }
+  sw.addEventListener('change', function () { UiCookies.set(KEYS.sidebar, sw.checked ? '1' : '0'); apply(); });
+  cp.addEventListener('change', function () { cp.checked ? UiCookies.set(KEYS.density, 'compact') : UiCookies.remove(KEYS.density); apply(); });
+  document.getElementById('btn-reset').addEventListener('click', function () { UiCookies.remove(KEYS.sidebar); UiCookies.remove(KEYS.density); apply(); });
+
+  // estado inicial de demonstração
+  if (UiCookies.get(KEYS.sidebar) === undefined) UiCookies.set(KEYS.sidebar, '1');
+  TTSC.init();
+  apply();
+</script>
+</body>
+</html>

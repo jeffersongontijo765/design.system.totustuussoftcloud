@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="pt-br" dir="ltr" data-theme="light">
+<head>
+<meta charset="utf-8"><script>
+/* Starter Kit: segue o tema do preview (frame pai) e grava as chaves reais de tema de cada layout:
+   app/web/erros = html.dark + data-theme + localStorage 'ttsc-theme'; auth = 'od-theme'; portal de suporte = 'portal_theme'. */
+(function () {
+  function apply() {
+    var p = null; try { p = parent.document.documentElement.getAttribute('data-theme'); } catch (e) {}
+    var t = p === 'dark' ? 'dark' : 'light', h = document.documentElement;
+    h.setAttribute('data-theme', t); h.classList.toggle('dark', t === 'dark'); h.classList.toggle('light', t !== 'dark');
+    try { ['ttsc-theme', 'od-theme', 'theme', 'portal_theme'].forEach(function (k) { localStorage.setItem(k, t); }); } catch (e) {}
+  }
+  apply();
+  try { if (parent !== window) new MutationObserver(apply).observe(parent.document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class'] }); } catch (e) {}
+})();
+</script><script>try{localStorage.setItem('ttsc_cookie_consent','accepted_all')}catch(e){}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="csrf-token" content="d850d74a203dcaf2e104af64f98577aeb409c9e82b198d98a376be883cb39097">
+<!-- Blocking script: detect theme BEFORE first paint to prevent FOUC -->
+<script>(function(){var t=localStorage.getItem('portal_theme');if(t==='system'||!t){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';}t=t||'light';document.documentElement.setAttribute('data-theme',t);document.cookie='portal_theme='+t+';path=/;max-age=31536000';})();</script>
+<title>Meus Atendimentos</title>
+<link rel="stylesheet" href="assets/fa.css">
+<link href="assets/css/ttsc.rtl.css" rel="stylesheet">
+<style>
+:root {
+  --accent: #3ecf8e;
+  --accent-soft: color-mix(in oklab, var(--accent) 8%, transparent);
+  --accent-border: color-mix(in oklab, var(--accent) 20%, transparent);
+  --accent-hover: #00c573;
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --text: #0f172a;
+  --fg-2: #64748b;
+  --border: #e2e8f0;
+  --success: #3ecf8e;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --info: #3b82f6;
+  --muted: #94a3b8;
+  --radius: 8px;
+  --radius-sm: 6px;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,.06);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,.08);
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', monospace;
+  --drawer-bg: rgba(0,0,0,.5);
+}
+
+/* ── Dark Mode ── */
+[data-theme="dark"] {
+  --accent: #3ecf8e;
+  --accent-soft: color-mix(in oklab, var(--accent) 12%, transparent);
+  --accent-border: color-mix(in oklab, var(--accent) 25%, transparent);
+  --accent-hover: #00c573;
+  --bg: #0f0f0f;
+  --surface: #171717;
+  --text: #fafafa;
+  --fg-2: #b4b4b4;
+  --border: #2e2e2e;
+  --success: #3ecf8e;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --info: #3b82f6;
+  --muted: #898989;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.2);
+  --shadow-md: 0 4px 12px rgba(0,0,0,.3);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,.4);
+  --drawer-bg: rgba(0,0,0,.7);
+}
+
+/* Smooth transition for theme changes */
+*, *::before, *::after {
+  transition: background-color .2s ease, border-color .2s ease, color .15s ease, box-shadow .2s ease;
+}
+
+/* Disable CSS transitions during View Transitions to avoid snapshot mismatch */
+html.view-transitioning *,
+html.view-transitioning *::before,
+html.view-transitioning *::after {
+  transition: none !important;
+}
+
+/* Exclude transition from elements that shouldn't animate */
+.portal-spinner, .skeleton {
+  transition: none !important;
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px}
+body{font-family:var(--font-sans);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.portal-shell{display:flex;flex-direction:column;min-height:100vh}
+
+/* ── Navigation Progress Bar ── */
+#navProgress{position:fixed;top:0;left:0;width:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--info));z-index:9999;transition:width .3s ease,opacity .3s ease;opacity:0}
+#navProgress.is-loading{opacity:1}
+
+/* ── Mobile Nav Toggle ── */
+.nav-hamburger{display:none;background:none;border:none;color:var(--text);font-size:20px;cursor:pointer;padding:4px;border-radius:var(--radius-sm)}
+
+/* ── Navigation ── */
+.portal-nav{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;backdrop-filter:blur(8px);background:color-mix(in oklab,var(--surface) 92%,transparent)}
+.portal-nav .logo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:16px;color:var(--text);transition:opacity .15s}
+.portal-nav .logo:hover{opacity:.8;text-decoration:none}
+.portal-nav .logo i{color:var(--accent);font-size:20px}
+.portal-nav-links{display:flex;align-items:center;gap:12px}
+.portal-nav .nav-link{font-size:13px;color:var(--fg-2);display:flex;align-items:center;gap:4px;padding:6px 10px;border-radius:var(--radius-sm);transition:color .15s,background .15s}
+.portal-nav .nav-link:hover{color:var(--text);background:var(--accent-soft);text-decoration:none}
+
+/* ── Main Content ── */
+.portal-main{flex:1;max-width:960px;width:100%;margin:32px auto;padding:0 16px}
+.portal-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow-sm)}
+.portal-card+.portal-card{margin-top:16px}
+
+/* ── Footer ── */
+.portal-footer{text-align:center;padding:24px;font-size:13px;color:var(--muted);border-top:1px solid var(--border);margin-top:auto}
+
+/* ── Buttons ── */
+.portal-btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:var(--radius);font-size:14px;font-weight:500;border:none;cursor:pointer;background:var(--accent);color:#fff;transition:background .15s,transform .1s,box-shadow .15s}
+.portal-btn:hover{background:var(--accent-hover);text-decoration:none;box-shadow:0 2px 8px var(--accent-border)}
+.portal-btn:active{box-shadow:inset 0 2px 4px rgba(0,0,0,.15)}
+.portal-btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.portal-btn-secondary{background:transparent;color:var(--text);border:1px solid var(--border)}
+.portal-btn-secondary:hover{background:var(--bg);box-shadow:none}
+.portal-btn-sm{padding:6px 12px;font-size:13px}
+.portal-btn-icon{width:36px;height:36px;padding:0;display:inline-flex;align-items:center;justify-content:center;border-radius:var(--radius)}
+
+/* ── Forms ── */
+.portal-input,.portal-select,.portal-textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:14px;font-family:var(--font-sans);color:var(--text);background:var(--surface);transition:border-color .15s,box-shadow .15s}
+.portal-input:focus,.portal-select:focus,.portal-textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.portal-input::placeholder,.portal-textarea::placeholder{color:var(--muted)}
+.portal-select{-webkit-appearance:none;appearance:none;background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E") no-repeat right 12px center;padding-right:32px}
+.portal-textarea{resize:vertical;min-height:120px}
+.portal-label{display:block;font-size:13px;font-weight:500;color:var(--text);margin-bottom:4px}
+.portal-field{margin-bottom:16px}
+.portal-hint{font-size:12px;color:var(--muted);margin-top:4px}
+
+/* ── Alerts ── */
+.portal-alert{padding:12px 16px;border-radius:var(--radius);font-size:13px;margin-bottom:16px;display:flex;align-items:flex-start;gap:8px}
+.portal-alert i{margin-top:1px;flex-shrink:0}
+.portal-alert-error{background:color-mix(in oklab,var(--danger) 8%,transparent);border:1px solid color-mix(in oklab,var(--danger) 20%,transparent);color:var(--danger)}
+.portal-alert-success{background:color-mix(in oklab,var(--success) 8%,transparent);border:1px solid color-mix(in oklab,var(--success) 20%,transparent);color:var(--success)}
+.portal-alert-info{background:color-mix(in oklab,var(--info) 8%,transparent);border:1px solid color-mix(in oklab,var(--info) 20%,transparent);color:var(--info)}
+.portal-alert-warning{background:color-mix(in oklab,var(--warning) 8%,transparent);border:1px solid color-mix(in oklab,var(--warning) 20%,transparent);color:var(--warning)}
+
+/* ── Badges ── */
+/* the label arrives translated and cased (portal_status_*): no text-transform */
+.badge-status{display:inline-flex;padding:2px 8px;border-radius:9999px;font-size:11px;font-weight:600}
+.badge-new,.badge-triaging,.badge-open,.badge-reopened{background:color-mix(in oklab,var(--info) 14%,transparent);color:var(--info)}
+.badge-in_progress{background:color-mix(in oklab,var(--warning) 14%,transparent);color:var(--warning)}
+.badge-waiting_customer,.badge-waiting_internal,.badge-cancelled{background:color-mix(in oklab,var(--muted) 14%,transparent);color:var(--muted)}
+.badge-escalated{background:color-mix(in oklab,var(--danger) 14%,transparent);color:var(--danger)}
+.badge-resolved,.badge-closed{background:color-mix(in oklab,var(--success) 14%,transparent);color:var(--success)}
+.badge-priority{display:inline-flex;padding:2px 6px;border-radius:4px;font-size:11px;font-weight:600}
+
+/* ── Tab Navigation ── */
+.portal-tabs{display:flex;gap:2px;margin-bottom:20px;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none}
+.portal-tabs::-webkit-scrollbar{display:none}
+.portal-tab{flex-shrink:0;white-space:nowrap;padding:10px 16px;font-size:13px;font-weight:500;color:var(--fg-2);cursor:pointer;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;background:none;border-top:none;border-left:none;border-right:none;font-family:var(--font-sans)}
+.portal-tab:hover{color:var(--text)}
+.portal-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* ── Table ── */
+.portal-table{width:100%;border-collapse:collapse;font-size:14px}
+.portal-table th{text-align:left;padding:10px 12px;font-weight:500;color:var(--fg-2);font-size:12px;text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--border)}
+.portal-table td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
+.portal-table tbody tr{transition:background .12s}
+.portal-table tbody tr:hover td{background:var(--accent-soft)}
+.portal-table tbody tr:last-child td{border-bottom:none}
+
+/* ── Empty State ── */
+.empty-state{text-align:center;padding:48px 24px;color:var(--muted)}
+.empty-state i{font-size:48px;margin-bottom:16px;opacity:.4}
+.empty-state p{font-size:14px;margin-bottom:16px}
+.mono{font-family:var(--font-mono);font-size:13px;white-space:nowrap}
+
+/* ── Stats ── */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+.stat-card{background:var(--bg);border-radius:var(--radius);padding:16px;text-align:center;border:1px solid transparent;transition:border-color .15s,box-shadow .15s}
+.stat-card:hover{border-color:var(--accent-border);box-shadow:0 2px 8px var(--accent-soft)}
+.stat-card .stat-value{font-size:28px;font-weight:700;color:var(--text)}
+.stat-card .stat-label{font-size:12px;color:var(--fg-2);margin-top:2px}
+
+/* ── Page Title ── */
+.page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px}
+.page-header h1{font-size:20px;font-weight:700}
+.page-header p{color:var(--fg-2);font-size:13px}
+
+/* ── Loading Spinner ── */
+.portal-spinner{display:inline-block;width:16px;height:16px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Toast Notifications ── */
+.portal-toast{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.portal-toast-item{pointer-events:auto;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;font-size:13px;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:8px;animation:toastIn .25s ease;max-width:380px}
+.portal-toast-item.toast-out{animation:toastOut .2s ease forwards}
+.portal-toast-item i{font-size:16px}
+.portal-toast-item.toast-success i{color:var(--success)}
+.portal-toast-item.toast-error i{color:var(--danger)}
+.portal-toast-item.toast-info i{color:var(--info)}
+@keyframes toastIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes toastOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(12px)}}
+
+/* ── Page Transition ── */
+.portal-main{animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Skeleton Loading ── */
+.skeleton{background:linear-gradient(90deg,var(--border) 25%,color-mix(in oklab,var(--border) 50%,transparent) 50%,var(--border) 75%);background-size:200% 100%;animation:shimmer 1.2s ease infinite;border-radius:var(--radius-sm)}
+@keyframes shimmer{0%{background-position:200% 0}to{background-position:-200% 0}}
+
+/* ── CSS View Transitions for smooth theme changes ──
+     Circle-wipe animation with direction awareness + reduced-motion
+  ── */
+
+/* Default (→ dark): old (top) clips away to reveal new (bottom) */
+::view-transition-old(root) {
+  z-index: 2;
+  animation: circle-shrink 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+::view-transition-new(root) {
+  z-index: 1;
+  animation: none;
+}
+
+/* Reverse (→ light): new (top) clips in over old (bottom) */
+html[data-transition-direction="light"]::view-transition-old(root) {
+  z-index: 1;
+  animation: none;
+}
+html[data-transition-direction="light"]::view-transition-new(root) {
+  z-index: 2;
+  animation: circle-grow 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes circle-shrink {
+  from { clip-path: circle(150%); }
+  to   { clip-path: circle(0%); }
+}
+
+@keyframes circle-grow {
+  from { clip-path: circle(0%); }
+  to   { clip-path: circle(150%); }
+}
+
+/* Respect prefers-reduced-motion — skip animation entirely */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* ── Settings / Theme Dropdown ── */
+.portal-settings-dropdown{position:relative}
+.portal-dropdown-menu{display:none;position:absolute;top:100%;right:0;min-width:180px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-lg);z-index:200;padding:6px 0;margin-top:6px;animation:fadeIn .15s ease}
+.portal-dropdown-menu.is-open{display:block}
+.portal-dropdown-header{padding:6px 14px 4px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.portal-theme-option{display:flex;align-items:center;gap:8px;width:100%;padding:8px 14px;font-size:13px;color:var(--fg-2);background:none;border:none;cursor:pointer;font-family:var(--font-sans);text-align:left;transition:background .12s,color .12s}
+.portal-theme-option:hover{background:var(--accent-soft);color:var(--text)}
+.portal-theme-option i:first-child{width:16px;text-align:center;font-size:14px}
+.portal-theme-option .theme-check{display:none;margin-left:auto;font-size:11px;color:var(--accent)}
+.portal-theme-option.is-active{color:var(--text);font-weight:500}
+.portal-theme-option.is-active .theme-check{display:inline-block}
+
+/* ── Navigation Progress Bar ── */
+#navProgress{position:fixed;top:0;left:0;width:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--info));z-index:9999;transition:width .3s ease,opacity .3s ease;opacity:0}
+#navProgress.is-loading{opacity:1}
+
+/* ── Mobile Nav Toggle ── */
+.nav-hamburger{display:none;background:none;border:none;color:var(--text);font-size:20px;cursor:pointer;padding:4px;border-radius:var(--radius-sm);transition:background .15s}
+.nav-hamburger:hover{background:var(--accent-soft)}
+.portal-mobile-menu{display:none;background:var(--surface);border-bottom:1px solid var(--border);padding:8px 16px;gap:4px;flex-direction:column}
+.portal-mobile-menu.is-open{display:flex}
+.portal-mobile-menu .nav-link{font-size:14px;padding:10px 12px;border-radius:var(--radius-sm);color:var(--fg-2);display:flex;align-items:center;gap:8px;transition:color .15s,background .15s}
+.portal-mobile-menu .nav-link:hover{color:var(--text);background:var(--accent-soft);text-decoration:none}
+
+/* ── Footer with Links ── */
+.portal-footer{text-align:center;padding:20px 24px;font-size:13px;color:var(--muted);border-top:1px solid var(--border);margin-top:auto}
+.portal-footer-links{display:flex;justify-content:center;gap:16px;margin-bottom:6px;flex-wrap:wrap}
+.portal-footer-links a{color:var(--fg-2);font-size:12px;transition:color .15s}
+.portal-footer-links a:hover{color:var(--accent);text-decoration:none}
+
+/* ── Responsive ── */
+@media(max-width:768px){
+  .portal-nav-links .nav-link span{display:none}
+}
+@media(max-width:640px){
+  .portal-main{margin:16px auto}
+  .portal-card{padding:16px}
+  .portal-nav{padding:0 12px}
+  .portal-nav-links .nav-link span{display:none}
+  .nav-hamburger{display:inline-flex!important;align-items:center;justify-content:center}
+  .portal-nav-links .nav-link:not(.nav-hamburger):not(:has(#themeIcon)):not(#themeToggle):not(.portal-settings-dropdown){display:none}
+  .portal-nav-links #themeToggle{display:none}
+  .stats-row{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .stat-card{padding:12px 8px}
+  .stat-card .stat-value{font-size:22px}
+  .stat-card .stat-label{font-size:11px;line-height:1.3}
+  .portal-tab{padding:10px 12px}
+  .portal-toast{left:16px;right:16px;bottom:16px}
+}
+</style>
+</head>
+<body>
+<div class="portal-shell">
+  <!-- Navigation Progress Bar -->
+  <div id="navProgress"></div>
+
+  <nav class="portal-nav">
+    <a href="#/support/portal" class="logo">
+      <i class="fa-light fa-headset"></i> Portal de Suporte    </a>
+    <div class="portal-nav-links">
+      <button type="button" class="nav-hamburger" id="mobileMenuToggle" aria-label="Alternar tema (Claro / Escuro / Sistema)" title="Atendimentos">
+        <i class="fa-light fa-bars"></i>
+      </button>
+      <a href="#/support/portal/dashboard" class="nav-link"><i class="fa-light fa-ticket"></i> <span>Atendimentos</span></a>
+      <a href="#/support/portal/kb" class="nav-link"><i class="fa-light fa-book-open"></i> <span>Base de Conhecimento</span></a>
+      <a href="#/" class="nav-link"><i class="fa-light fa-arrow-left"></i> <span>Site</span></a>
+      <button type="button" id="themeToggle" class="nav-link" style="background:none;border:none;cursor:pointer;font-size:16px" aria-label="Alternar tema (Claro / Escuro / Sistema)" title="Tema: clique para alternar Claro → Escuro → Sistema">
+        <i class="fa-light fa-circle-half-stroke" id="themeIcon"></i>
+      </button>
+      <!-- Settings gear with theme selector dropdown -->
+      <div class="portal-settings-dropdown" id="settingsDropdown">
+        <button type="button" class="nav-link" id="settingsToggle" style="background:none;border:none;cursor:pointer;font-size:15px" aria-label="Configurações" title="Configurações de tema">
+          <i class="fa-light fa-gear"></i>
+        </button>
+        <div class="portal-dropdown-menu" id="settingsMenu">
+          <div class="portal-dropdown-header">Tema</div>
+          <button type="button" class="portal-theme-option" data-theme="light">
+            <i class="fa-light fa-sun"></i>
+            <span>Claro</span>
+            <i class="fa-light fa-check theme-check"></i>
+          </button>
+          <button type="button" class="portal-theme-option" data-theme="dark">
+            <i class="fa-light fa-moon"></i>
+            <span>Escuro</span>
+            <i class="fa-light fa-check theme-check"></i>
+          </button>
+          <button type="button" class="portal-theme-option" data-theme="system">
+            <i class="fa-light fa-circle-half-stroke"></i>
+            <span>Sistema</span>
+            <i class="fa-light fa-check theme-check"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu (hidden on desktop) -->
+  <div class="portal-mobile-menu" id="mobileMenu">
+    <a href="#/support/portal/dashboard" class="nav-link"><i class="fa-light fa-ticket"></i> Atendimentos</a>
+    <a href="#/support/portal/kb" class="nav-link"><i class="fa-light fa-book-open"></i> Base de Conhecimento</a>
+    <a href="#/" class="nav-link"><i class="fa-light fa-arrow-left"></i> Site Principal</a>
+    <div style="display:flex;gap:6px;padding:8px 12px">
+      <button type="button" class="portal-btn portal-btn-secondary portal-btn-sm" onclick="window.portalSetTheme('light')" style="flex:1;justify-content:center;font-size:12px"><i class="fa-light fa-sun"></i> Claro</button>
+      <button type="button" class="portal-btn portal-btn-secondary portal-btn-sm" onclick="window.portalSetTheme('dark')" style="flex:1;justify-content:center;font-size:12px"><i class="fa-light fa-moon"></i> Escuro</button>
+      <button type="button" class="portal-btn portal-btn-secondary portal-btn-sm" onclick="window.portalSetTheme('system')" style="flex:1;justify-content:center;font-size:12px"><i class="fa-light fa-circle-half-stroke"></i> Automático</button>
+    </div>
+  </div>
+
+  <main class="portal-main">
+    <div class="portal-card">
+      <div class="page-header">
+  <div>
+    <h1>Olá, Mariana Albuquerque</h1>
+    <p>Acompanhe seus tickets de suporte</p>
+  </div>
+  <a href="#/support/portal/new" class="portal-btn" id="newTicketBtn">
+    <i class="fa-light fa-plus"></i> Novo Ticket  </a>
+</div>
+
+<noscript>
+  <style>#dashboardSkeleton{display:none!important}#dashboardContent{display:block!important}</style>
+</noscript>
+
+<!-- ============================================ -->
+<!-- Skeleton Loading State                       -->
+<!-- ============================================ -->
+<div id="dashboardSkeleton" aria-hidden="true">
+
+  <!-- Skeleton Stats -->
+  <div class="stats-row">
+        <div class="stat-card" style="border-color:var(--border)">
+      <div class="skeleton" style="width:48px;height:36px;margin:0 auto 8px;border-radius:6px"></div>
+      <div class="skeleton" style="width:80px;height:14px;margin:4px auto 0;border-radius:4px"></div>
+    </div>
+        <div class="stat-card" style="border-color:var(--border)">
+      <div class="skeleton" style="width:48px;height:36px;margin:0 auto 8px;border-radius:6px"></div>
+      <div class="skeleton" style="width:80px;height:14px;margin:4px auto 0;border-radius:4px"></div>
+    </div>
+        <div class="stat-card" style="border-color:var(--border)">
+      <div class="skeleton" style="width:48px;height:36px;margin:0 auto 8px;border-radius:6px"></div>
+      <div class="skeleton" style="width:80px;height:14px;margin:4px auto 0;border-radius:4px"></div>
+    </div>
+      </div>
+
+  <!-- Skeleton Tabs -->
+  <div style="display:flex;gap:8px;margin-bottom:20px">
+        <div class="skeleton" style="width:50px;height:34px;border-radius:6px"></div>
+        <div class="skeleton" style="width:60px;height:34px;border-radius:6px"></div>
+        <div class="skeleton" style="width:80px;height:34px;border-radius:6px"></div>
+        <div class="skeleton" style="width:100px;height:34px;border-radius:6px"></div>
+        <div class="skeleton" style="width:70px;height:34px;border-radius:6px"></div>
+      </div>
+
+  <!-- Skeleton Table -->
+  <div style="overflow-x:auto">
+  <table class="portal-table" style="opacity:1">
+    <thead>
+      <tr>
+        <th style="width:80px">#</th>
+        <th>Assunto</th>
+        <th style="width:100px">Status</th>
+        <th style="width:80px;text-align:center">Prioridade</th>
+        <th style="width:120px;text-align:right">Data</th>
+      </tr>
+    </thead>
+    <tbody>
+            <tr>
+        <td><div class="skeleton" style="width:60px;height:16px;border-radius:4px"></div></td>
+        <td>
+          <div class="skeleton" style="width:67%;height:16px;border-radius:4px;margin-bottom:6px"></div>
+          <div class="skeleton" style="width:50%;height:12px;border-radius:4px"></div>
+        </td>
+        <td><div class="skeleton" style="width:70px;height:22px;border-radius:9999px;margin:0 auto"></div></td>
+        <td><div class="skeleton" style="width:50px;height:18px;border-radius:4px;margin:0 auto"></div></td>
+        <td><div class="skeleton" style="width:70px;height:14px;border-radius:4px;margin-left:auto"></div></td>
+      </tr>
+            <tr>
+        <td><div class="skeleton" style="width:60px;height:16px;border-radius:4px"></div></td>
+        <td>
+          <div class="skeleton" style="width:89%;height:16px;border-radius:4px;margin-bottom:6px"></div>
+          <div class="skeleton" style="width:30%;height:12px;border-radius:4px"></div>
+        </td>
+        <td><div class="skeleton" style="width:70px;height:22px;border-radius:9999px;margin:0 auto"></div></td>
+        <td><div class="skeleton" style="width:50px;height:18px;border-radius:4px;margin:0 auto"></div></td>
+        <td><div class="skeleton" style="width:70px;height:14px;border-radius:4px;margin-left:auto"></div></td>
+      </tr>
+            <tr>
+        <td><div class="skeleton" style="width:60px;height:16px;border-radius:4px"></div></td>
+        <td>
+          <div class="skeleton" style="width:58%;height:16px;border-radius:4px;margin-bottom:6px"></div>
+          <div class="skeleton" style="width:36%;height:12px;border-radius:4px"></div>
+        </td>
+        <td><div class="skeleton" style="width:70px;height:22px;border-radius:9999px;margin:0 auto"></div></td>
+        <td><div class="skeleton" style="width:50px;height:18px;border-radius:4px;margin:0 auto"></div></td>
+        <td><div class="skeleton" style="width:70px;height:14px;border-radius:4px;margin-left:auto"></div></td>
+      </tr>
+            <tr>
+        <td><div class="skeleton" style="width:60px;height:16px;border-radius:4px"></div></td>
+        <td>
+          <div class="skeleton" style="width:87%;height:16px;border-radius:4px;margin-bottom:6px"></div>
+          <div class="skeleton" style="width:47%;height:12px;border-radius:4px"></div>
+        </td>
+        <td><div class="skeleton" style="width:70px;height:22px;border-radius:9999px;margin:0 auto"></div></td>
+        <td><div class="skeleton" style="width:50px;height:18px;border-radius:4px;margin:0 auto"></div></td>
+        <td><div class="skeleton" style="width:70px;height:14px;border-radius:4px;margin-left:auto"></div></td>
+      </tr>
+            <tr>
+        <td><div class="skeleton" style="width:60px;height:16px;border-radius:4px"></div></td>
+        <td>
+          <div class="skeleton" style="width:87%;height:16px;border-radius:4px;margin-bottom:6px"></div>
+          <div class="skeleton" style="width:35%;height:12px;border-radius:4px"></div>
+        </td>
+        <td><div class="skeleton" style="width:70px;height:22px;border-radius:9999px;margin:0 auto"></div></td>
+        <td><div class="skeleton" style="width:50px;height:18px;border-radius:4px;margin:0 auto"></div></td>
+        <td><div class="skeleton" style="width:70px;height:14px;border-radius:4px;margin-left:auto"></div></td>
+      </tr>
+          </tbody>
+  </table>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- Real Content (hidden initially via JS)       -->
+<!-- ============================================ -->
+<div id="dashboardContent" style="display:none">
+
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="stat-value">4</div>
+    <div class="stat-label">Total de Atendimentos</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value" style="color:var(--warning)">2</div>
+    <div class="stat-label">Aberto</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value" style="color:var(--success)">2</div>
+    <div class="stat-label">Resolvido</div>
+  </div>
+</div>
+
+<!-- Status filter tabs with counts -->
+<div class="portal-tabs" role="tablist" id="filterTabs">
+  <button class="portal-tab active" data-filter="all" role="tab">Todos <span class="tab-count">4</span></button>
+  <button class="portal-tab" data-filter="open" role="tab">Aberto <span class="tab-count">2</span></button>
+  <button class="portal-tab" data-filter="resolved" role="tab">Resolvido <span class="tab-count">2</span></button>
+  <button class="portal-tab" data-filter="in_progress" role="tab">Em Andamento</button>
+  <button class="portal-tab" data-filter="waiting_customer" role="tab">Aguardando</button>
+</div>
+
+<div style="overflow-x:auto">
+<table class="portal-table" id="ticketTable">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Assunto</th>
+      <th>Status</th>
+      <th style="text-align:center">Prioridade</th>
+      <th style="text-align:right">Data</th>
+    </tr>
+  </thead>
+  <tbody id="ticketBody">
+    <tr class="ticket-row" data-status="open" onclick="window.location='#/support/portal/tickets/a1'" style="cursor:pointer">
+    <td><span class="mono">SAC-2026-00412</span></td>
+    <td>
+      <div style="font-weight:500;color:var(--text)">Boleto da mensalidade de outubro não chegou</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">Financeiro</div>
+          </td>
+    <td><span class="badge-status badge-open">Aberto</span></td>
+    <td style="text-align:center">
+            <span class="badge-priority" style="background:color-mix(in oklab,#f59e0b 14%,transparent);color:#f59e0b">
+        Alta      </span>
+          </td>
+    <td style="text-align:right;font-size:12px;color:var(--fg-2);white-space:nowrap">2026-10-20</td>
+  </tr>
+    <tr class="ticket-row" data-status="in_progress" onclick="window.location='#/support/portal/tickets/a2'" style="cursor:pointer">
+    <td><span class="mono">SAC-2026-00398</span></td>
+    <td>
+      <div style="font-weight:500;color:var(--text)">Ajuste de frequência na turma 9º A</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">Secretaria</div>
+          </td>
+    <td><span class="badge-status badge-in_progress">Em andamento</span></td>
+    <td style="text-align:center">
+            <span class="badge-priority" style="background:color-mix(in oklab,#3b82f6 14%,transparent);color:#3b82f6">
+        Média      </span>
+          </td>
+    <td style="text-align:right;font-size:12px;color:var(--fg-2);white-space:nowrap">2026-10-17</td>
+  </tr>
+    <tr class="ticket-row" data-status="resolved" onclick="window.location='#/support/portal/tickets/a3'" style="cursor:pointer">
+    <td><span class="mono">SAC-2026-00351</span></td>
+    <td>
+      <div style="font-weight:500;color:var(--text)">Segunda via da declaração de matrícula</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">Documentos</div>
+          </td>
+    <td><span class="badge-status badge-resolved">Resolvido</span></td>
+    <td style="text-align:center">
+            <span class="badge-priority" style="background:color-mix(in oklab,#10b981 14%,transparent);color:#10b981">
+        Baixa      </span>
+          </td>
+    <td style="text-align:right;font-size:12px;color:var(--fg-2);white-space:nowrap">2026-10-08</td>
+  </tr>
+    <tr class="ticket-row" data-status="closed" onclick="window.location='#/support/portal/tickets/a4'" style="cursor:pointer">
+    <td><span class="mono">SAC-2026-00320</span></td>
+    <td>
+      <div style="font-weight:500;color:var(--text)">Acesso ao portal do responsável</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">Acesso</div>
+          </td>
+    <td><span class="badge-status badge-closed">Fechado</span></td>
+    <td style="text-align:center">
+            <span class="badge-priority" style="background:color-mix(in oklab,#3b82f6 14%,transparent);color:#3b82f6">
+        Média      </span>
+          </td>
+    <td style="text-align:right;font-size:12px;color:var(--fg-2);white-space:nowrap">2026-09-29</td>
+  </tr>
+    </tbody>
+</table>
+</div>
+</div><!-- /dashboardContent -->
+
+<style>
+/* Skeleton → Content transition */
+#dashboardContent.is-visible {
+  display: block;
+  animation: contentFadeIn .35s ease;
+}
+@keyframes contentFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Tab count badges */
+.tab-count {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:18px;
+  height:18px;
+  padding:0 5px;
+  border-radius:9999px;
+  font-size:10px;
+  font-weight:600;
+  background:var(--border);
+  color:var(--fg-2);
+  margin-left:5px;
+  line-height:1;
+  transition:background .15s,color .15s;
+}
+.portal-tab.active .tab-count {
+  background:var(--accent);
+  color:#fff;
+}
+.portal-tab:hover .tab-count {
+  background:var(--accent-border);
+  color:var(--accent);
+}
+</style>
+
+    </div>
+  </main>
+  <footer class="portal-footer">
+    <div class="portal-footer-links">
+      <a href="#/support/portal/dashboard">Atendimentos</a>
+      <a href="#/support/portal/kb">Base de Conhecimento</a>
+      <a href="#/legal/privacy">Privacidade</a>
+      <a href="#/legal/terms">Termos</a>
+      <a href="#/dpo/contact">DPO</a>
+      <a href="#/">Site Principal</a>
+    </div>
+    &copy; 2026 Portal de Atendimento. Todos os direitos reservados.  </footer>
+</div>
+
+<!-- Toast Container -->
+<div class="portal-toast" id="portalToasts"></div>
+
+<!-- Theme Toggle Script + Toast System -->
+<script>
+// ── View Transitions API helper for smooth theme changes ──
+function transitionTheme(fn, direction) {
+  // Graceful degradation: if API not supported or user prefers reduced motion, run immediately
+  if (!document.startViewTransition ||
+      (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+    fn();
+    return;
+  }
+  var html = document.documentElement;
+  // Set transition direction for CSS to pick up
+  html.setAttribute('data-transition-direction', direction || '');
+  // Disable existing CSS transitions during view transition to avoid snapshot mismatch
+  html.classList.add('view-transitioning');
+  try {
+    var vt = document.startViewTransition(function() {
+      fn();
+    });
+    // Re-enable CSS transitions when the view transition finishes (more precise than setTimeout)
+    vt.finished.then(function() {
+      html.classList.remove('view-transitioning');
+      html.removeAttribute('data-transition-direction');
+    });
+  } catch(e) {
+    // Fallback if startViewTransition throws
+    fn();
+    html.classList.remove('view-transitioning');
+    html.removeAttribute('data-transition-direction');
+  }
+}
+
+// ── Theme system (global functions for dropdown + cycle toggle) ──
+(function(){
+  var html = document.documentElement;
+
+  window.portalGetTheme = function() {
+    var v = localStorage.getItem('portal_theme');
+    if (v === 'light') return 'light';
+    if (v === 'dark') return 'dark';
+    return 'system';
+  };
+
+  window.portalApplyTheme = function(theme) {
+    html.setAttribute('data-theme', theme);
+    document.cookie = 'portal_theme=' + theme + ';path=/;max-age=31536000';
+  };
+
+  window.portalSetTheme = function(state) {
+    var current = html.getAttribute('data-theme') || 'light';
+    var next = state;
+    if (state === 'system') {
+      next = window.matchMedia && window.matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light';
+    }
+    var direction = next === 'dark' ? 'dark' : 'light';
+    transitionTheme(function() {
+      if (state === 'system') {
+        localStorage.removeItem('portal_theme');
+        var osDark = window.matchMedia && window.matchMedia('(prefers-color-scheme:dark)').matches;
+        window.portalApplyTheme(osDark ? 'dark' : 'light');
+      } else {
+        localStorage.setItem('portal_theme', state);
+        window.portalApplyTheme(state);
+      }
+      // Update dropdown active state and icon
+      if (typeof portalUpdateUI === 'function') portalUpdateUI();
+    });
+  };
+
+  // OS change listener — guard with getState() so it only fires while in system mode
+  if (window.matchMedia) {
+    var mq = window.matchMedia('(prefers-color-scheme: dark)');
+    mq.addEventListener('change', function(e) {
+      if (window.portalGetTheme() === 'system') {
+        var dir = e.matches ? 'dark' : 'light';
+        transitionTheme(function() {
+          window.portalApplyTheme(e.matches ? 'dark' : 'light');
+        }, dir);
+      }
+    });
+  }
+})();
+
+// ── Settings dropdown + theme selector UI ──
+(function(){
+  var dd = document.getElementById('settingsDropdown');
+  var toggle = document.getElementById('settingsToggle');
+  var menu = document.getElementById('settingsMenu');
+  var options = document.querySelectorAll('.portal-theme-option');
+
+  if (!dd || !toggle || !menu) return;
+
+  var ICONS = { light:'fa-light fa-sun', dark:'fa-light fa-moon', system:'fa-light fa-circle-half-stroke' };
+  // PHP text reaches JS only as JSON string literals (quotes, tags and ampersands escaped)
+  var THEME_TITLES = {"system":"Tema: seguindo o sistema (clique para alterar)","light":"Tema: claro (clique para alterar)","dark":"Tema: escuro (clique para alterar)"};
+
+  window.portalUpdateUI = function() {
+    var state = window.portalGetTheme();
+    // Dropdown: highlight active option
+    options.forEach(function(opt) {
+      var theme = opt.getAttribute('data-theme');
+      opt.classList.toggle('is-active', theme === state);
+    });
+    // Cycle toggle: update icon and tooltip
+    var icon = document.getElementById('themeIcon');
+    var btn = document.getElementById('themeToggle');
+    if (icon) icon.className = ICONS[state] || ICONS.system;
+    if (btn) btn.title = THEME_TITLES[state] || THEME_TITLES.system;
+  };
+
+  // Initialize active state
+  window.portalUpdateUI();
+
+  // Cycle toggle: Light → Dark → System → Light…
+  var cycleBtn = document.getElementById('themeToggle');
+  var MODES = ['light', 'dark', 'system'];
+  if (cycleBtn) {
+    cycleBtn.addEventListener('click', function() {
+      var current = window.portalGetTheme();
+      var next = MODES[(MODES.indexOf(current) + 1) % MODES.length];
+      window.portalSetTheme(next);
+    });
+  }
+
+  // Toggle dropdown
+  toggle.addEventListener('click', function(e) {
+    e.stopPropagation();
+    menu.classList.toggle('is-open');
+  });
+
+  // Theme option click
+  options.forEach(function(opt) {
+    opt.addEventListener('click', function() {
+      var theme = this.getAttribute('data-theme');
+      window.portalSetTheme(theme);
+      menu.classList.remove('is-open');
+    });
+  });
+
+  // Close dropdown on outside click
+  document.addEventListener('click', function(e) {
+    if (!dd.contains(e.target)) {
+      menu.classList.remove('is-open');
+    }
+  });
+})();
+
+// ── JS i18n: translations embedded from PHP ──
+window.__translations = {"sending":"Enviando...","operation_completed":"Operação concluída com sucesso!","error_processing":"Erro ao processar solicitação","connection_error":"Erro de conexão. Tente novamente.","confirm_delete_detail":"Esta ação não pode ser desfeita.","new_ticket_created_toast":"Novo ticket criado","new_message_toast":"Nova mensagem","cancel":"Cancelar","confirm":"Confirmar","confirm_delete":"Confirmar Exclusão"};
+// Same signature as the PHP helper: __(key, group, fallback). Keys not embedded above
+// fall back to the English text passed by the caller instead of the raw key.
+window.__ = function(key, group, fallback) {
+  if (window.__translations && window.__translations[key]) {
+    return window.__translations[key];
+  }
+  return fallback || key;
+};
+
+// ── Global Toast System ──
+window.portalToast = function(message, type, duration) {
+  type = type || 'info';
+  duration = duration || 4000;
+
+  var container = document.getElementById('portalToasts');
+  if (!container) return;
+
+  var icons = {
+    success: 'fa-check-circle',
+    error: 'fa-circle-exclamation',
+    warning: 'fa-triangle-exclamation',
+    info: 'fa-circle-info'
+  };
+
+  var toast = document.createElement('div');
+  toast.className = 'portal-toast-item toast-' + type;
+  toast.innerHTML = '<i class="fa-light ' + (icons[type] || icons.info) + '"></i> ' +
+    '<span style="flex:1">' + escapeHtml(message) + '</span>' +
+    '<button onclick="this.closest(\'.portal-toast-item\').classList.add(\'toast-out\');setTimeout(function(e){e.remove()},250,this.closest(\'.portal-toast-item\'))" style="background:none;border:none;color:inherit;cursor:pointer;font-size:16px;line-height:1;padding:0;margin-left:4px;opacity:.6">&times;</button>';
+
+  container.appendChild(toast);
+
+  // Auto-remove after duration
+  setTimeout(function() {
+    if (toast.parentNode) {
+      toast.classList.add('toast-out');
+      setTimeout(function() { if (toast.parentNode) toast.remove(); }, 250);
+    }
+  }, duration);
+
+  function escapeHtml(t) {
+    if (t == null) return '';
+    return String(t).replace(/[&<>"']/g, function(s) {
+      return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[s] || s;
+    });
+  }
+};
+
+// ── SSE: Real-time push notifications ──
+(function(){
+  var es = null;
+  var enabled = typeof window.portalToast === 'function';
+  if (!enabled) return;
+
+  function connectSSE() {
+    if (es && es.readyState !== EventSource.CLOSED) return;
+    // Only connect SSE on authenticated pages (not the login page)
+    var path = window.location.pathname;
+    if (path === '/support/portal' || path === '/support/portal/') return;
+
+    return; /* Starter Kit: SSE desligado (sem servidor). Real: es = new EventSource('/support/portal/api/events'); */
+
+    es.addEventListener('connected', function() {
+      // Connection established silently
+    });
+
+    es.addEventListener('ticket.created', function(e) {
+      try {
+        var d = JSON.parse(e.data);
+        window.portalToast(d.title || window.__('new_ticket_created_toast'), 'success', 5000);
+      } catch(_) {}
+    });
+
+    es.addEventListener('ticket.message', function(e) {
+      try {
+        var d = JSON.parse(e.data);
+        window.portalToast(d.title || window.__('new_message_toast'), 'info', 5000);
+      } catch(_) {}
+    });
+
+    // Agent typing indicator — dispatches to page-level handler if registered
+    es.addEventListener('ticket.typing', function(e) {
+      try {
+        var d = JSON.parse(e.data);
+        if (typeof window.onPortalTyping === 'function') {
+          window.onPortalTyping(d);
+        }
+      } catch(_) {}
+    });
+
+    // Stop typing indicator on SSE reconnect
+    es.addEventListener('ticket.typing_stop', function(e) {
+      if (typeof window.onPortalTyping === 'function') {
+        window.onPortalTyping({ stopped: true });
+      }
+    });
+
+    es.addEventListener('error', function() {
+      // EventSource auto-reconnects on error — stop any active typing indicator
+      if (typeof window.onPortalTyping === 'function') {
+        window.onPortalTyping({ error: true });
+      }
+      if (es) es.close();
+      setTimeout(connectSSE, 5000);
+    });
+  }
+
+  connectSSE();
+})();
+
+// ── Navigation Progress Bar ──
+(function(){
+  var bar = document.getElementById('navProgress');
+  if (!bar) return;
+  var timer;
+
+  function showProgress() {
+    clearTimeout(timer);
+    bar.classList.add('is-loading');
+    bar.style.width = '30%';
+    // Simulate progress to 90%
+    setTimeout(function() { bar.style.width = '60%'; }, 200);
+    setTimeout(function() { bar.style.width = '85%'; }, 500);
+  }
+
+  function finishProgress() {
+    bar.style.width = '100%';
+    timer = setTimeout(function() {
+      bar.classList.remove('is-loading');
+      bar.style.width = '0';
+    }, 400);
+  }
+
+  // Intercept all internal navigation links
+  document.addEventListener('click', function(e) {
+      if (!(e.target instanceof Element)) return;
+    var link = e.target.closest('a[href]');
+    if (!link) return;
+    var href = link.getAttribute('href');
+    if (!href || href.startsWith('#') || href.startsWith('javascript:') || href.startsWith('http') || href.startsWith('//')) return;
+    // Skip same-page anchors
+    if (href.startsWith('?') && !href.includes('filter=') && !href.includes('category=') && !href.includes('q=')) return;
+    showProgress();
+  });
+
+  // Finish on page load
+  if (document.readyState === 'complete') {
+    finishProgress();
+  } else {
+    window.addEventListener('load', finishProgress);
+  }
+})();
+
+// ── Mobile Menu Toggle ──
+(function(){
+  var toggle = document.getElementById('mobileMenuToggle');
+  var menu = document.getElementById('mobileMenu');
+  if (!toggle || !menu) return;
+
+  toggle.addEventListener('click', function() {
+    menu.classList.toggle('is-open');
+    var icon = this.querySelector('i');
+    if (icon) {
+      icon.className = menu.classList.contains('is-open') ? 'fa-light fa-xmark' : 'fa-light fa-bars';
+    }
+  });
+
+  // Close menu when clicking a link
+  menu.querySelectorAll('.nav-link').forEach(function(link) {
+    link.addEventListener('click', function() {
+      menu.classList.remove('is-open');
+      var icon = toggle.querySelector('i');
+      if (icon) icon.className = 'fa-light fa-bars';
+    });
+  });
+})();
+</script>
+
+<script>
+(function(){
+  var skeleton = document.getElementById('dashboardSkeleton');
+  var content  = document.getElementById('dashboardContent');
+  if (!skeleton || !content) return;
+
+  // New ticket button loading state
+  var newBtn = document.getElementById('newTicketBtn');
+  if (newBtn) {
+    newBtn.addEventListener('click', function() {
+      this.innerHTML = '<span class="portal-spinner"></span>';
+    });
+  }
+
+  // Minimum display time for skeleton (ms) — ensures the animation is seen
+  var minDisplay = 250;
+  var start = Date.now();
+
+  function showContent() {
+    var elapsed = Date.now() - start;
+    var delay = Math.max(0, minDisplay - elapsed);
+
+    setTimeout(function() {
+      if (skeleton.style.display === 'none') return; // Already shown
+      skeleton.style.display = 'none';
+      skeleton.removeAttribute('aria-hidden');
+      content.style.display = 'block';
+      // Force reflow for animation
+      content.offsetHeight;
+      content.classList.add('is-visible');
+    }, delay);
+  }
+
+  // Since data is SSR'd, use DOMContentLoaded (not window.load)
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', showContent);
+  } else {
+    showContent();
+  }
+  // Fallback: show after 1s max even if DOMContentLoaded stalls
+  setTimeout(showContent, 1000);
+
+  // ── Status filter tabs with URL persistence ──
+  var tabs = document.querySelectorAll('.portal-tab');
+  var rows = document.querySelectorAll('.ticket-row');
+
+  function getFilterFromUrl() {
+    var params = new URLSearchParams(window.location.search);
+    return params.get('filter') || 'all';
+  }
+
+  function applyFilter(filter) {
+    tabs.forEach(function(t){ t.classList.toggle('active', t.dataset.filter === filter); });
+    rows.forEach(function(row){
+      var status = row.dataset.status;
+      if (filter === 'all') {
+        row.style.display = '';
+      } else if (filter === 'open') {
+        row.style.display = (status !== 'resolved' && status !== 'closed') ? '' : 'none';
+      } else {
+        row.style.display = (status === filter) ? '' : 'none';
+      }
+    });
+  }
+
+  // Apply filter from URL on load
+  var urlFilter = getFilterFromUrl();
+  if (urlFilter !== 'all') {
+    applyFilter(urlFilter);
+  }
+
+  tabs.forEach(function(tab){
+    tab.addEventListener('click', function(){
+      var filter = this.dataset.filter;
+      applyFilter(filter);
+      // Update URL without page reload
+      var url = new URL(window.location);
+      if (filter === 'all') {
+        url.searchParams.delete('filter');
+      } else {
+        url.searchParams.set('filter', filter);
+      }
+      window.history.replaceState({}, '', url);
+    });
+  });
+})();
+</script>
+<style>
+/* Supabase cookie consent — works in both light and dark modes */
+#cookieConsentBanner .cookie-banner-inner {
+  background: var(--bg, #fcfcfc);
+  border-top: 1px solid var(--border, #e5e5e5);
+  box-shadow: 0 -4px 24px rgba(0,0,0,0.06);
+}
+.dark #cookieConsentBanner .cookie-banner-inner {
+  background: var(--sb-surface, #1c1c1c);
+  border-top-color: var(--sb-border, #2e2e2e);
+  box-shadow: 0 -4px 24px rgba(0,0,0,0.4);
+}
+
+#cookieConsentBanner .cookie-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  background: rgba(62,207,142,0.12);
+  color: #3ecf8e;
+}
+
+#cookiePreferencesModal .cookie-pref-card {
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--border, #e5e5e5);
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15);
+}
+.dark #cookiePreferencesModal .cookie-pref-card {
+  background: var(--sb-surface, #1c1c1c);
+  border-color: var(--sb-border, #2e2e2e);
+}
+
+#cookiePreferencesModal .cookie-pref-header {
+  border-bottom: 1px solid var(--border-soft, #ebebeb);
+}
+.dark #cookiePreferencesModal .cookie-pref-header {
+  border-bottom-color: var(--sb-border-subtle, #242424);
+}
+
+#cookiePreferencesModal .cookie-pref-footer {
+  border-top: 1px solid var(--border-soft, #ebebeb);
+}
+.dark #cookiePreferencesModal .cookie-pref-footer {
+  border-top-color: var(--sb-border-subtle, #242424);
+}
+
+/* Supabase button — green accent in both modes */
+.cookie-ttsc-btn-primary {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 0.375rem; height: 36px; padding: 0 20px;
+  font-size: 0.8125rem; font-weight: 600; line-height: 1;
+  font-family: "Inter", system-ui, sans-serif;
+  border-radius: 8px; border: 1px solid transparent;
+  cursor: pointer; white-space: nowrap;
+  transition: all 0.15s ease;
+  background: #3ecf8e; color: #0f0f0f;
+}
+.cookie-ttsc-btn-primary:hover { opacity: 0.85; }
+
+.cookie-ttsc-btn-outline {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 0.375rem; height: 36px; padding: 0 16px;
+  font-size: 0.8125rem; font-weight: 500; line-height: 1;
+  font-family: "Inter", system-ui, sans-serif;
+  border-radius: 8px; border: 1px solid var(--border, #e2e8f0);
+  cursor: pointer; white-space: nowrap;
+  transition: all 0.15s ease;
+  background: transparent; color: var(--fg-2, #4d4d4d);
+}
+.cookie-ttsc-btn-outline:hover {
+  border-color: var(--border-strong, #cbd5e1);
+  background: var(--surface-2, #f8fafc);
+  color: var(--fg, #1c1c1c);
+}
+.dark .cookie-ttsc-btn-outline {
+  border-color: var(--sb-border, #2e2e2e);
+  color: var(--sb-text-secondary, #b4b4b4);
+  background: transparent;
+}
+.dark .cookie-ttsc-btn-outline:hover {
+  border-color: var(--sb-border-prominent, #363636);
+  background: rgba(255,255,255,0.04);
+  color: var(--sb-text, #fafafa);
+}
+
+.cookie-btn-soft {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 0.375rem; height: 36px; padding: 0 16px;
+  font-size: 0.8125rem; font-weight: 500; line-height: 1;
+  font-family: "Inter", system-ui, sans-serif;
+  border-radius: 8px; border: 1px solid transparent;
+  cursor: pointer; white-space: nowrap;
+  transition: all 0.15s ease;
+  background: rgba(0,0,0,0.04); color: #64748b;
+}
+.cookie-btn-soft:hover {
+  background: rgba(0,0,0,0.08);
+  color: #1e293b;
+}
+.dark .cookie-btn-soft {
+  background: rgba(255,255,255,0.04);
+  color: var(--sb-text-secondary, #b4b4b4);
+}
+.dark .cookie-btn-soft:hover {
+  background: rgba(255,255,255,0.08);
+  color: var(--sb-text, #fafafa);
+}
+
+/* Category row */
+.cookie-cat-row {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 14px; border-radius: 12px;
+  border: 1px solid var(--border-soft, #ebebeb);
+  transition: background 0.15s ease;
+}
+.cookie-cat-row:hover {
+  background: rgba(0,0,0,0.02);
+}
+.dark .cookie-cat-row {
+  border-color: var(--sb-border-subtle, #242424);
+}
+.dark .cookie-cat-row:hover {
+  background: rgba(255,255,255,0.02);
+}
+
+/* Checkbox — always uses accent green */
+.cookie-cat-row input[type="checkbox"] {
+  accent-color: #3ecf8e;
+  width: 16px; height: 16px; border-radius: 4px;
+  cursor: pointer; margin-top: 2px;
+}
+.cookie-cat-row input[type="checkbox"]:disabled {
+  cursor: not-allowed; opacity: 0.7;
+}
+
+/* Badge "Sempre ativo" */
+.cookie-badge-essential {
+  display: inline-flex; align-items: center;
+  padding: 2px 8px; border-radius: 9999px;
+  font-size: 0.625rem; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.3px; line-height: 1; white-space: nowrap;
+  background: rgba(62,207,142,0.12);
+  color: #059669;
+  flex-shrink: 0; margin-top: 1px;
+}
+.dark .cookie-badge-essential {
+  background: rgba(62,207,142,0.15);
+  color: #3ecf8e;
+}
+
+/* Scrollbar for preferences list */
+.cookie-scroll::-webkit-scrollbar { width: 4px; }
+.cookie-scroll::-webkit-scrollbar-track { background: transparent; }
+.cookie-scroll::-webkit-scrollbar-thumb { background: var(--meta, #b4b4b4); border-radius: 10px; }
+.dark .cookie-scroll::-webkit-scrollbar-thumb { background: var(--sb-border, #2e2e2e); }
+
+/* Close button */
+.cookie-close-ttsc-btn {
+  width: 32px; height: 32px; border-radius: 8px;
+  border: none; background: transparent;
+  color: var(--muted, #6b6b6b);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s ease;
+}
+.cookie-close-ttsc-btn:hover {
+  background: rgba(0,0,0,0.04); color: var(--fg, #1c1c1c);
+}
+.dark .cookie-close-ttsc-btn { color: var(--sb-text-muted, #898989); }
+.dark .cookie-close-ttsc-btn:hover {
+  background: rgba(255,255,255,0.06);
+  color: var(--sb-text, #fafafa);
+}
+
+/* Layout utilities used by this partial, scoped to its two roots. The partial is
+   included by layouts without Tailwind (web/layouts/portal.php, auth/layouts/main.php):
+   without these rules .hidden did not hide and .fixed did not position, so the banner
+   and the preferences modal rendered open at the end of every page. Values mirror Tailwind. */
+#cookieConsentBanner.hidden, #cookiePreferencesModal.hidden { display: none !important; }
+:is(#cookieConsentBanner,#cookiePreferencesModal).fixed, :is(#cookieConsentBanner,#cookiePreferencesModal) .fixed { position: fixed; }
+:is(#cookieConsentBanner,#cookiePreferencesModal).inset-0, :is(#cookieConsentBanner,#cookiePreferencesModal) .inset-0 { inset: 0; }
+:is(#cookieConsentBanner,#cookiePreferencesModal).bottom-0 { bottom: 0; }
+:is(#cookieConsentBanner,#cookiePreferencesModal).left-0 { left: 0; }
+:is(#cookieConsentBanner,#cookiePreferencesModal).right-0 { right: 0; }
+#cookieConsentBanner.z-\[9999\] { z-index: 9999; }
+#cookiePreferencesModal.z-\[9998\] { z-index: 9998; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .flex { display: flex; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .flex-1 { flex: 1 1 0%; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .flex-col { flex-direction: column; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .items-center { align-items: center; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .items-start { align-items: flex-start; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .justify-between { justify-content: space-between; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .justify-center { justify-content: center; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .shrink-0 { flex-shrink: 0; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .min-w-0 { min-width: 0; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .w-full { width: 100%; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .gap-2 { gap: .5rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .gap-3 { gap: .75rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .space-y-2 > :not(:last-child) { margin-bottom: .5rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .max-w-5xl { max-width: 64rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .max-w-xl { max-width: 36rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .max-h-\[85vh\] { max-height: 85vh; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .mx-auto { margin-left: auto; margin-right: auto; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .ml-3 { margin-left: .75rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .mt-1 { margin-top: .25rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .p-4 { padding: 1rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .px-5 { padding-left: 1.25rem; padding-right: 1.25rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .py-3 { padding-top: .75rem; padding-bottom: .75rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .overflow-hidden { overflow: hidden; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .overflow-y-auto { overflow-y: auto; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .border-b { border-bottom-width: 1px; border-bottom-style: solid; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .text-xs { font-size: .75rem; line-height: 1rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .text-sm { font-size: .875rem; line-height: 1.25rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .text-base { font-size: 1rem; line-height: 1.5rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .font-semibold { font-weight: 600; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) p, :is(#cookieConsentBanner,#cookiePreferencesModal) h3 { margin: 0; }
+@media (max-width: 640px) {
+  #cookieConsentBanner .flex.items-start { flex-wrap: wrap; }
+  #cookieConsentBanner .ml-3 { margin-left: 0; width: 100%; justify-content: flex-end; }
+}
+</style>
+
+<div id="cookieConsentBanner"
+     class="fixed bottom-0 left-0 right-0 z-[9999] hidden"
+     role="alert"
+     aria-live="polite"
+     data-config-url="#/privacy/consent-config"
+     data-decisions-url="#/privacy/consent-decisions">
+    <div class="cookie-banner-inner">
+        <div class="max-w-5xl mx-auto px-5 py-4">
+            <div class="flex items-start gap-3">
+                <div class="cookie-icon">
+                    <i class="fa-light fa-shield-halved text-sm"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h3 class="text-sm font-semibold" style="color:var(--fg,#1c1c1c);margin:0" id="consentBannerTitle">Privacidade em Primeiro Lugar</h3>
+                    <p class="text-xs mt-1" style="color:var(--muted,#6b6b6b);line-height:1.5;margin:0" id="consentBannerText">
+                        Utilizamos cookies e tecnologias semelhantes para melhorar sua experiência, personalizar conteúdo e analisar nosso tráfego.                    </p>
+                </div>
+                <div class="flex items-center gap-2 shrink-0 ml-3">
+                    <button type="button" data-consent-action="reject" class="cookie-ttsc-btn-outline" id="consentRejectAll">Rejeitar</button>
+                    <button type="button" data-consent-action="customize" class="cookie-btn-soft" id="consentCustomize">Personalizar</button>
+                    <button type="button" data-consent-action="accept-all" class="cookie-ttsc-btn-primary" id="consentAcceptAll">Aceitar Todos</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="cookiePreferencesModal" class="fixed inset-0 z-[9998] hidden" role="dialog" aria-modal="true" aria-labelledby="cookiePrefTitle">
+    <div class="fixed inset-0" style="background:rgba(0,0,0,0.5);backdrop-filter:blur(4px)" data-consent-action="close-preferences"></div>
+    <div class="fixed inset-0 flex items-center justify-center p-4">
+        <div class="cookie-pref-card w-full max-w-xl max-h-[85vh] flex flex-col overflow-hidden">
+            <div class="cookie-pref-header flex items-center justify-between px-5 py-4 shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="cookie-icon" style="width:32px;height:32px;border-radius:8px">
+                        <i class="fa-light fa-sliders text-xs"></i>
+                    </div>
+                    <h3 id="cookiePrefTitle" class="text-base font-semibold" style="color:var(--fg,#1c1c1c);margin:0">Preferências de Cookies</h3>
+                </div>
+                <button type="button" data-consent-action="close-preferences" class="cookie-close-ttsc-btn" aria-label="Fechar">
+                    <i class="fa-light fa-xmark"></i>
+                </button>
+            </div>
+            <div class="px-5 py-3 border-b shrink-0" style="border-color:var(--border-soft,#ebebeb)">
+                <p class="text-xs" style="color:var(--muted,#6b6b6b);line-height:1.5;margin:0">
+                    Personalize suas preferências de cookies. Categorias <strong style="color:var(--fg,#1c1c1c);font-weight:500">essenciais</strong> estão sempre ativos para o funcionamento do sistema.                </p>
+            </div>
+            <div class="flex-1 overflow-y-auto cookie-scroll px-5 py-4 space-y-2" id="cookiePreferencesList">
+            </div>
+            <div class="cookie-pref-footer flex items-center justify-between gap-3 px-5 py-4 shrink-0">
+                <button type="button" data-consent-action="reject" class="cookie-ttsc-btn-outline">Rejeitar não essenciais</button>
+                <div class="flex items-center gap-2">
+                    <button type="button" data-consent-action="save-preferences" class="cookie-btn-soft">Salvar preferências</button>
+                    <button type="button" data-consent-action="accept-all" class="cookie-ttsc-btn-primary">Aceitar todos</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="assets/js/consent-cookie.js"></script>
+</body>
+</html>

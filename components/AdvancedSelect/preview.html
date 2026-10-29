@@ -1,0 +1,63 @@
+<!-- @dsCard group="Componentes" height=460 subtitle="TTSCSelect (assets/js/ttsc.select.js) · categoria, ícones, busca automática > 6 opções, ação no rodapé, compacto" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>AdvancedSelect</title>
+<style>
+  .as { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px 20px; padding: 20px; align-items: start; }
+  .as-f label { display: block; font-size: 12px; font-weight: 600; color: var(--ttsc-text, #0f172a); margin-bottom: 6px; }
+  .as-f small { display: block; margin-top: 6px; font-size: 11px; color: var(--ttsc-text-2, #64748b); }
+</style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased">
+<div class="as">
+  <div class="as-f">
+    <label for="as-unit">Unidade</label>
+    <select id="as-unit" name="unit_uuid" data-category="Unidades da instituição" data-action-label="Nova Unidade">
+      <option value="u1" selected>Sede Matriz</option>
+      <option value="u2">Filial Centro</option>
+      <option value="u3">Filial Zona Norte</option>
+    </select>
+    <small>Ícones automáticos pelo texto (matriz, filial) e ação no rodapé via <code>data-action-label</code>.</small>
+  </div>
+  <div class="as-f">
+    <label for="as-course">Curso</label>
+    <select id="as-course" name="course_uuid" data-category="Cursos ativos">
+      <option value="c1" data-icon="fa-light fa-graduation-cap" selected>Ensino Médio</option>
+      <option value="c2" data-icon="fa-light fa-graduation-cap">Fundamental II</option>
+      <option value="c3" data-icon="fa-light fa-graduation-cap">Fundamental I</option>
+      <option value="c4" data-icon="fa-light fa-laptop-code">Técnico em Informática</option>
+      <option value="c5" data-icon="fa-light fa-stethoscope">Técnico em Enfermagem</option>
+      <option value="c6" data-icon="fa-light fa-briefcase">Administração</option>
+      <option value="c7" data-icon="fa-light fa-chalkboard-user">Pedagogia</option>
+    </select>
+    <small>Mais de 6 opções: campo "Filtrar opções..." aparece sozinho. Ícone por opção com <code>data-icon</code>.</small>
+  </div>
+  <div class="as-f">
+    <label for="as-freq">Frequência de cobrança</label>
+    <select id="as-freq" name="billing_frequency" data-compact-select>
+      <option value="monthly" selected>Mensal</option>
+      <option value="annual">Anual</option>
+      <option value="one-time">Única</option>
+    </select>
+    <small><code>data-compact-select</code>: sem cabeçalho, busca nem rodapé.</small>
+  </div>
+  <div class="as-f">
+    <label for="as-native">Campo fora do motor</label>
+    <select id="as-native" class="ttsc-select" data-no-custom>
+      <option>Nativo (data-no-custom)</option>
+      <option>Outra opção</option>
+    </select>
+    <small><code>data-no-custom</code> ou <code>.no-custom-select</code>: o TTSCSelect não toca no campo.</small>
+  </div>
+</div>
+<script>
+  /* Abre o segundo campo para mostrar o painel (o motor já foi aplicado pelo bundle no DOMContentLoaded). */
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      var w = document.querySelector('.ttsc-select-wrapper[data-target-select="as-course"] button');
+      if (w) w.click();
+    }, 150);
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!-- @dsCard group="Formulários" height=410 subtitle="TTSCDatepicker · input type=date ttsc-input, popup aberto (hoje, selecionado, fora do mês, min/max), intervalo de/até, erro, desabilitado" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>DatePicker</title>
+<style>
+  input[type="date"].ttsc-dp-input { appearance: none; -webkit-appearance: none; cursor: pointer; color-scheme: light dark; }
+  input[type="date"].ttsc-dp-input::-webkit-calendar-picker-indicator { display: none; }
+  .dp-field { position: relative; }
+  .dp-field > i { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: var(--ttsc-text-muted); pointer-events: none; font-size: 13px; }
+  .dp-field .ttsc-input { padding-right: 30px; }
+  .ttsc-dp { position: fixed; z-index: 1100; box-sizing: border-box; width: 280px; padding: 10px; background: var(--ttsc-surface); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); box-shadow: var(--ttsc-shadow-popover); color: var(--ttsc-text); font-size: 12px; line-height: 1.4; }
+  .ttsc-dp[hidden] { display: none; }
+  .ttsc-dp__head { display: flex; align-items: center; gap: 4px; margin-bottom: 6px; }
+  .ttsc-dp__title { flex: 1; text-align: center; font-size: 12.5px; white-space: nowrap; }
+  .ttsc-dp__month { font-weight: 700; color: var(--ttsc-text); }
+  .ttsc-dp__year { font-weight: 500; color: var(--ttsc-text-muted); }
+  .ttsc-dp__nav { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; border: 0; border-radius: var(--ttsc-radius-sm); background: transparent; color: var(--ttsc-text-muted); font-size: 11px; cursor: pointer; }
+  .ttsc-dp__nav:hover { background: var(--ttsc-canvas-2); color: var(--ttsc-accent-text); }
+  .ttsc-dp__weekdays, .ttsc-dp__grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+  .ttsc-dp__weekdays span { display: flex; justify-content: center; height: 18px; font-size: 10px; font-weight: 700; color: var(--ttsc-text-muted); }
+  .ttsc-dp__day { height: 32px; border: 0; border-radius: var(--ttsc-radius-sm); background: transparent; color: var(--ttsc-text); font: 500 12px/1 inherit; font-variant-numeric: tabular-nums; cursor: pointer; }
+  .ttsc-dp__day:hover { background: var(--ttsc-canvas-2); }
+  .ttsc-dp__day.is-outside { opacity: .38; }
+  .ttsc-dp__day.is-today { background: var(--ttsc-accent-soft); color: var(--ttsc-accent-text); font-weight: 700; box-shadow: inset 0 0 0 1px var(--ttsc-accent-border); }
+  .ttsc-dp__day.is-selected, .ttsc-dp__day.is-selected:hover { background: var(--ttsc-accent); color: var(--ttsc-accent-on); font-weight: 700; box-shadow: none; opacity: 1; }
+  .ttsc-dp__day.is-focus { outline: 2px solid var(--ttsc-accent); outline-offset: 1px; }
+  .ttsc-dp__day[disabled] { opacity: .3; cursor: not-allowed; background: transparent; }
+  .ttsc-dp__foot { display: flex; justify-content: space-between; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--ttsc-border-soft); }
+  .ttsc-dp__foot button { border: 0; background: transparent; padding: 4px 8px; border-radius: var(--ttsc-radius-sm); font: 600 12px/1 inherit; cursor: pointer; }
+  .ttsc-dp__foot button:hover { background: var(--ttsc-canvas-2); }
+  .ttsc-dp__clear { color: var(--ttsc-text-muted); } .ttsc-dp__today { color: var(--ttsc-accent-text); }
+  .dp-grid { display: grid; grid-template-columns: 300px 1fr; gap: 24px; }
+  .ttsc-form-message { color: var(--ttsc-danger-text); }
+  .ttsc-form-description { color: var(--ttsc-text-muted); }
+</style>
+</head>
+<body>
+<div class="ds-pad">
+  <div class="dp-grid">
+    <div class="ttsc-form-item">
+      <label class="ttsc-form-label" for="enrollment-date">Data da matrícula</label>
+      <div class="dp-field"><input type="date" class="ttsc-input" id="enrollment-date" name="enrollment_date" value="2026-03-16" min="2026-02-02" max="2026-07-10" aria-describedby="ed-hint"><i class="fa-light fa-calendar" aria-hidden="true"></i></div>
+      <div class="ttsc-form-description" id="ed-hint">Período 2026/1: 02/02 a 10/07.</div>
+    </div>
+    <div class="ds-stack" style="gap:14px">
+      <div class="ttsc-form-item">
+        <span class="ttsc-form-label" id="lbl-range">Agenda: de / até</span>
+        <div class="grid grid-cols-2 gap-3" data-ttsc-date-range role="group" aria-labelledby="lbl-range">
+          <div class="dp-field"><input type="date" class="ttsc-input" name="from" aria-label="Data inicial" value="2026-03-01" data-range-start><i class="fa-light fa-calendar" aria-hidden="true"></i></div>
+          <div class="dp-field"><input type="date" class="ttsc-input" name="to" aria-label="Data final" value="2026-03-31" data-range-end><i class="fa-light fa-calendar" aria-hidden="true"></i></div>
+        </div>
+      </div>
+      <div class="ttsc-form-item">
+        <label class="ttsc-form-label" for="due-date">Vencimento da 1ª mensalidade</label>
+        <div class="dp-field"><input type="date" class="ttsc-input" id="due-date" value="" required aria-invalid="true" aria-describedby="due-err"><i class="fa-light fa-calendar" aria-hidden="true"></i></div>
+        <div class="ttsc-form-message" id="due-err" role="alert">Informe o vencimento.</div>
+      </div>
+      <div class="ttsc-form-item">
+        <label class="ttsc-form-label" for="birth">Nascimento (bloqueado)</label>
+        <div class="dp-field"><input type="date" class="ttsc-input" id="birth" value="2004-08-21" disabled><i class="fa-light fa-calendar" aria-hidden="true"></i></div>
+      </div>
+      <div class="ds-note" id="dp-log" aria-live="polite">change → 2026-03-16</div>
+    </div>
+  </div>
+</div>
+<script>
+/* TTSCDatepicker — versão condensada de assets/js/ttsc.datepicker.js (mesmas classes, mesmo contrato) */
+(function (w, d) {
+  var MONTHS = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  var WD = ['D','S','T','Q','Q','S','S'], panel, refs, openInput = null, cursor, view;
+  var fmt = new Intl.DateTimeFormat('pt-BR', { dateStyle: 'full' });
+  function pad(n) { return n < 10 ? '0' + n : '' + n; }
+  function iso(x) { return x.getFullYear() + '-' + pad(x.getMonth() + 1) + '-' + pad(x.getDate()); }
+  function parse(v) { var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v || ''); return m ? new Date(+m[1], +m[2] - 1, +m[3]) : null; }
+  function today() { var t = new Date(); t.setHours(0, 0, 0, 0); return t; }
+  function ensure() {
+    if (panel) return;
+    panel = d.createElement('div'); panel.className = 'ttsc-dp'; panel.setAttribute('role', 'dialog'); panel.setAttribute('aria-label', 'Selecionar data'); panel.hidden = true;
+    panel.innerHTML = '<div class="ttsc-dp__head"><button type="button" class="ttsc-dp__nav" data-dp-action="prev-year" aria-label="Ano anterior" tabindex="-1"><i class="fa-light fa-angles-left"></i></button><button type="button" class="ttsc-dp__nav" data-dp-action="prev-month" aria-label="Mês anterior" tabindex="-1"><i class="fa-light fa-chevron-left"></i></button><div class="ttsc-dp__title" aria-live="polite"><span class="ttsc-dp__month"></span><span class="ttsc-dp__year"></span></div><button type="button" class="ttsc-dp__nav" data-dp-action="next-month" aria-label="Próximo mês" tabindex="-1"><i class="fa-light fa-chevron-right"></i></button><button type="button" class="ttsc-dp__nav" data-dp-action="next-year" aria-label="Próximo ano" tabindex="-1"><i class="fa-light fa-angles-right"></i></button></div><div class="ttsc-dp__weekdays">' + WD.map(function (x) { return '<span>' + x + '</span>'; }).join('') + '</div><div class="ttsc-dp__grid" role="grid"></div><div class="ttsc-dp__foot"><button type="button" class="ttsc-dp__clear" data-dp-action="clear" tabindex="-1">Limpar</button><button type="button" class="ttsc-dp__today" data-dp-action="today" tabindex="-1">Hoje</button></div>';
+    refs = { m: panel.querySelector('.ttsc-dp__month'), y: panel.querySelector('.ttsc-dp__year'), g: panel.querySelector('.ttsc-dp__grid') };
+    d.body.appendChild(panel);
+    panel.addEventListener('mousedown', function (e) { if (e.target.closest('button')) e.preventDefault(); });
+    panel.addEventListener('click', function (e) {
+      var t = e.target.closest('[data-dp-action]'); if (!t || !openInput) return; var a = t.getAttribute('data-dp-action');
+      if (a === 'prev-month') go(-1); else if (a === 'next-month') go(1); else if (a === 'prev-year') go(-12); else if (a === 'next-year') go(12);
+      else if (a === 'today') commit(today()); else if (a === 'clear') { setValue(openInput, ''); render(); }
+      else if (a === 'day') commit(parse(t.getAttribute('data-date')));
+    });
+  }
+  function render() {
+    refs.m.textContent = MONTHS[view.m]; refs.y.textContent = ' de ' + view.y;
+    var sel = openInput.value || '', tIso = iso(today()), cIso = iso(cursor), first = new Date(view.y, view.m, 1), html = '';
+    for (var i = 0; i < 42; i++) {
+      var day = new Date(view.y, view.m, 1 - first.getDay() + i), di = iso(day), cls = 'ttsc-dp__day';
+      if (day.getMonth() !== view.m) cls += ' is-outside'; if (di === tIso) cls += ' is-today'; if (di === sel) cls += ' is-selected'; if (di === cIso) cls += ' is-focus';
+      var dis = (openInput.min && di < openInput.min) || (openInput.max && di > openInput.max);
+      html += '<button type="button" role="gridcell" tabindex="-1" class="' + cls + '" data-dp-action="day" data-date="' + di + '" aria-selected="' + (di === sel) + '" aria-label="' + fmt.format(day) + '"' + (dis ? ' disabled' : '') + '>' + day.getDate() + '</button>';
+    }
+    refs.g.innerHTML = html;
+  }
+  function position() { var r = openInput.getBoundingClientRect(); panel.style.left = Math.max(8, Math.min(r.left, innerWidth - 8 - panel.offsetWidth)) + 'px'; var top = r.bottom + 6; if (top + panel.offsetHeight > innerHeight - 8 && r.top - 6 - panel.offsetHeight > 8) top = r.top - 6 - panel.offsetHeight; panel.style.top = top + 'px'; }
+  function go(months) { cursor = new Date(cursor.getFullYear(), cursor.getMonth() + months, Math.min(cursor.getDate(), 28)); view = { y: cursor.getFullYear(), m: cursor.getMonth() }; render(); }
+  function setValue(input, v) { if (input.value === v) return; input.value = v; input.dispatchEvent(new Event('input', { bubbles: true })); input.dispatchEvent(new Event('change', { bubbles: true })); }
+  function commit(x) { var i = openInput; setValue(i, iso(x)); close(true); }
+  function open(input) {
+    if (!input || input.disabled) return; if (openInput === input) return; if (openInput) close(false);
+    ensure(); openInput = input; cursor = parse(input.value) || today(); view = { y: cursor.getFullYear(), m: cursor.getMonth() };
+    panel.hidden = false; render(); position(); input.setAttribute('aria-expanded', 'true');
+  }
+  function close(refocus) { if (!openInput) return; var i = openInput; openInput = null; panel.hidden = true; i.setAttribute('aria-expanded', 'false'); if (refocus) i.focus({ preventScroll: true }); }
+  function key(e) {
+    if (!openInput) return; var k = e.key, c = cursor;
+    if (k === 'Tab') return close(false); if (k === 'Escape') { e.preventDefault(); return close(true); }
+    if (k === 'Enter') { e.preventDefault(); return commit(c); }
+    var map = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 };
+    if (k in map) cursor = new Date(c.getFullYear(), c.getMonth(), c.getDate() + map[k]);
+    else if (k === 'PageUp' || k === 'PageDown') { go((k === 'PageUp' ? -1 : 1) * (e.shiftKey ? 12 : 1)); e.preventDefault(); return; }
+    else return;
+    e.preventDefault(); view = { y: cursor.getFullYear(), m: cursor.getMonth() }; render();
+  }
+  function enhance(input) {
+    if (input.dataset.ttscDpEnhanced || input.hasAttribute('data-no-datepicker')) return;
+    input.dataset.ttscDpEnhanced = 'true'; input.classList.add('ttsc-dp-input'); input.setAttribute('aria-haspopup', 'dialog'); input.setAttribute('aria-expanded', 'false');
+    input.addEventListener('click', function (e) { e.preventDefault(); open(input); }); input.addEventListener('focus', function () { open(input); }); input.addEventListener('keydown', key);
+  }
+  d.addEventListener('mousedown', function (e) { if (openInput && !panel.contains(e.target) && e.target !== openInput) close(false); }, true);
+  function initAll(root) { (root || d).querySelectorAll('input[type="date"]').forEach(enhance); }
+  initAll();
+  w.TTSCDatepicker = { initAll: initAll, enhance: enhance, open: open, closeAll: function () { close(false); }, isOpen: function () { return !!openInput; }, version: '1.0.0' };
+})(window, document);
+
+TTSC.init();
+document.querySelectorAll('[data-ttsc-date-range]').forEach(function (root) {
+  var s = root.querySelector('[data-range-start]'), e = root.querySelector('[data-range-end]');
+  e.min = s.value; s.max = e.value;
+  s.addEventListener('change', function () { e.min = s.value || ''; if (e.value && s.value && e.value < s.value) { e.value = s.value; e.dispatchEvent(new Event('change', { bubbles: true })); } });
+  e.addEventListener('change', function () { s.max = e.value || ''; });
+});
+document.addEventListener('change', function (ev) {
+  if (ev.target.type !== 'date') return;
+  if (ev.target.required) ev.target.setAttribute('aria-invalid', ev.target.value ? 'false' : 'true');
+  document.getElementById('dp-log').textContent = 'change → ' + (ev.target.name || ev.target.id) + ' = ' + (ev.target.value || '(vazio)');
+});
+TTSCDatepicker.open(document.getElementById('enrollment-date'));
+</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!-- @dsCard group="Componentes" height=265 subtitle="data-ttsc-toggle · class (hidden), attribute, activeClass, ttsc-toggle-active:rotate-180, eventos toggle/toggled" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Toggle</title>
+<style>
+  .pv-cols { display: grid; grid-template-columns: 1fr 1fr; gap: var(--ttsc-space-6); align-items: start; }
+  .pv-panel { border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); background: var(--ttsc-surface); padding: var(--ttsc-space-3) var(--ttsc-space-4); display: flex; flex-direction: column; gap: var(--ttsc-space-2); font-size: 12px; color: var(--ttsc-text-2); }
+  .pv-panel b { color: var(--ttsc-text); font-weight: 600; }
+  [data-ttsc-toggle] i.ttsc-toggle-active\:rotate-180 { transition: rotate .2s ease; }
+  /* Alvo controlado por atributo: data-compact presente = lista densa */
+  .pv-list { list-style: none; margin: 0; padding: 0; border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); background: var(--ttsc-surface); overflow: hidden; }
+  .pv-list li { display: flex; justify-content: space-between; padding: 10px var(--ttsc-space-4); border-bottom: 1px solid var(--ttsc-border-soft); font-size: 13px; color: var(--ttsc-text); }
+  .pv-list li span { color: var(--ttsc-text-muted); font-size: 12px; }
+  .pv-list li:last-child { border-bottom: 0; }
+  .pv-list[data-compact] li { padding-block: 4px; font-size: 12px; }
+  .pv-log { font-size: 12px; color: var(--ttsc-text-muted); }
+  .pv-log code { color: var(--ttsc-text); }
+</style>
+</head>
+<body>
+<div class="ds-pad pv-cols">
+  <div class="ds-stack">
+    <div class="ds-label">class · mostrar/ocultar (class="hidden")</div>
+    <div class="ds-row">
+      <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-sm" id="btn-filters"
+              data-ttsc-toggle="#advanced-filters" data-ttsc-toggle-class="hidden"
+              aria-controls="advanced-filters" aria-expanded="true">
+        <i class="fa-light fa-sliders"></i> Filtros avançados
+        <i class="fa-light fa-chevron-down ttsc-toggle-active:rotate-180"></i>
+      </button>
+    </div>
+    <div class="pv-panel" id="advanced-filters">
+      <span><b>Situação financeira:</b> Em dia · Inadimplente</span>
+      <span><b>Bolsa:</b> Integral · Parcial · Sem bolsa</span>
+      <span><b>Ingresso:</b> 2024 · 2025 · 2026</span>
+    </div>
+    <div class="pv-log" aria-live="polite">evento: <code id="log">—</code></div>
+  </div>
+  <div class="ds-stack">
+    <div class="ds-label">attribute · modo compacto (data-compact)</div>
+    <div class="ds-row">
+      <button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-sm" id="btn-compact"
+              data-ttsc-toggle="#students" data-ttsc-toggle-attribute="data-compact"
+              data-ttsc-toggle-active-class="ttsc-btn-secondary" aria-pressed="false">
+        <i class="fa-light fa-list"></i> Lista compacta
+      </button>
+    </div>
+    <ul class="pv-list" id="students">
+      <li>Ana Beatriz Moreira <span>2026001</span></li>
+      <li>Carlos Eduardo Lima <span>2026002</span></li>
+      <li>Juliana Ferreira Santos <span>2026003</span></li>
+      <li>Rafael Oliveira Prado <span>2026004</span></li>
+    </ul>
+  </div>
+</div>
+<script>
+  TTSC.init();
+  // Estado inicial: o painel de filtros já aberto — marcamos o gatilho como ativo
+  document.getElementById('btn-filters').classList.add('active');
+  var log = document.getElementById('log');
+  document.getElementById('btn-filters').addEventListener('toggled', function () {
+    var open = !document.getElementById('advanced-filters').classList.contains('hidden');
+    this.setAttribute('aria-expanded', String(open));
+    log.textContent = 'toggled · ' + (open ? 'aberto' : 'fechado');
+  });
+  document.getElementById('btn-compact').addEventListener('toggled', function () {
+    this.setAttribute('aria-pressed', String(document.getElementById('students').hasAttribute('data-compact')));
+  });
+</script>
+</body>
+</html>

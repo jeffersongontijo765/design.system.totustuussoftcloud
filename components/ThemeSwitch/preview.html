@@ -1,0 +1,82 @@
+<!-- @dsCard group="Componentes" height=230 subtitle="ttscui theme-switch · data-ttsc-theme-switch-toggle, -set light/dark/system, evento changed, data-theme" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>ThemeSwitch</title>
+<style>
+  .pv-cols { display: grid; grid-template-columns: 1fr 1.2fr; gap: var(--ttsc-space-6); align-items: start; }
+  .pv-seg { display: inline-flex; padding: 3px; gap: 2px; border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-control); background: var(--ttsc-canvas-2); }
+  .pv-seg button { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px; border: 0; border-radius: var(--ttsc-radius-sm); background: transparent; color: var(--ttsc-text-2); font: inherit; font-size: 12px; cursor: pointer; }
+  .pv-seg button[aria-pressed="true"] { background: var(--ttsc-surface); color: var(--ttsc-text); box-shadow: var(--ttsc-shadow-xs); font-weight: 600; }
+  .pv-seg button:focus-visible { outline: 2px solid var(--ttsc-accent); outline-offset: 1px; }
+  .pv-info { font-size: 12px; color: var(--ttsc-text-2); line-height: 1.6; }
+  .pv-info code { color: var(--ttsc-text); }
+  /* Miniatura do app: recebe data-theme local para mostrar o resultado sem trocar o tema do catálogo */
+  .pv-app { border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); background: var(--ttsc-canvas); color: var(--ttsc-text); overflow: hidden; }
+  .pv-app-top { height: 40px; display: flex; align-items: center; justify-content: space-between; padding: 0 var(--ttsc-space-3); background: var(--ttsc-surface); border-bottom: 1px solid var(--ttsc-border); font-size: 12px; font-weight: 600; }
+  .pv-app-top .pv-logo { display: inline-flex; align-items: center; gap: 8px; }
+  .pv-app-top .pv-dot { width: 18px; height: 18px; border-radius: var(--ttsc-radius-xs); background: var(--ttsc-accent); }
+  .pv-app-body { padding: var(--ttsc-space-3); display: grid; grid-template-columns: 1fr 1fr; gap: var(--ttsc-space-2); }
+  .pv-kpi { background: var(--ttsc-surface); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-sm); padding: var(--ttsc-space-2) var(--ttsc-space-3); }
+  .pv-kpi small { display: block; font-size: 11px; color: var(--ttsc-text-muted); }
+  .pv-kpi strong { font-size: 16px; color: var(--ttsc-text); }
+  .pv-kpi .ok { font-size: 11px; color: var(--ttsc-accent-text); }
+  .pv-icon-btn { width: 28px; height: 28px; border-radius: var(--ttsc-radius-sm); border: 1px solid var(--ttsc-border); background: var(--ttsc-surface); color: var(--ttsc-text-2); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="ds-pad pv-cols">
+  <div class="ds-stack">
+    <div class="ds-label">Escolha do tema (-set)</div>
+    <div class="pv-seg" role="group" aria-label="Tema da interface">
+      <button type="button" data-ttsc-theme-switch-set="light" aria-pressed="false"><i class="fa-light fa-sun"></i> Claro</button>
+      <button type="button" data-ttsc-theme-switch-set="dark" aria-pressed="false"><i class="fa-light fa-moon"></i> Escuro</button>
+      <button type="button" data-ttsc-theme-switch-set="system" aria-pressed="false"><i class="fa-light fa-desktop"></i> Sistema</button>
+    </div>
+    <div class="ds-label">Alternar (-toggle)</div>
+    <div class="ds-row">
+      <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-sm" data-ttsc-theme-switch-toggle="true"><i class="fa-light fa-circle-half-stroke"></i> Alternar claro/escuro</button>
+    </div>
+    <div class="pv-info" aria-live="polite">modo: <code id="out-mode">—</code> · aplicado: <code id="out-current">—</code><br>evento <code>changed</code> no <code>&lt;html&gt;</code></div>
+  </div>
+  <div class="pv-app" id="pv-app">
+    <div class="pv-app-top">
+      <span class="pv-logo"><span class="pv-dot"></span>TotusTuus · Secretaria</span>
+      <button type="button" class="pv-icon-btn" data-ttsc-theme-switch-toggle="true" aria-label="Alternar tema"><i class="fa-light fa-moon" id="pv-top-icon"></i></button>
+    </div>
+    <div class="pv-app-body">
+      <div class="pv-kpi"><small>Matrículas ativas</small><strong>1.284</strong> <span class="ok">+3,2%</span></div>
+      <div class="pv-kpi"><small>Frequência média</small><strong>91%</strong></div>
+      <div class="pv-kpi"><small>Mensalidades em aberto</small><strong>R$ 48.320</strong></div>
+      <div class="pv-kpi"><small>Turmas</small><strong>42</strong></div>
+    </div>
+  </div>
+</div>
+<script>
+  // O catálogo controla o tema do frame; limpamos o que o ttscui gravou para não vazar entre previews
+  function cleanup() {
+    try { localStorage.removeItem('ttsc-theme'); } catch (e) {}
+    document.documentElement.classList.remove('dark', 'light');
+  }
+  var app = document.getElementById('pv-app');
+  var html = document.documentElement;
+  var frameTheme = html.getAttribute('data-theme') || 'light';
+  TTSC.init();
+  var ts = TTSC.ThemeSwitch.getInstance();
+
+  function render() {
+    var mode = ts._mode || frameTheme;
+    var current = ts._currentMode || frameTheme;
+    app.setAttribute('data-theme', current);
+    document.getElementById('out-mode').textContent = mode;
+    document.getElementById('out-current').textContent = current;
+    document.getElementById('pv-top-icon').className = 'fa-light ' + (current === 'dark' ? 'fa-sun' : 'fa-moon');
+    document.querySelectorAll('[data-ttsc-theme-switch-set]').forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-ttsc-theme-switch-set') === mode));
+    });
+    cleanup();
+  }
+  html.addEventListener('changed', render);
+  ts.setMode(frameTheme);
+</script>
+</body>
+</html>

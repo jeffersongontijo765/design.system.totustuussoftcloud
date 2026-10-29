@@ -1,0 +1,64 @@
+<!-- @dsCard group="Formulários" height=300 subtitle="ttsc-switch · sm/padrão/lg, com rótulo e descrição, desabilitado, autosave" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Switch</title>
+<style>
+  .ttsc-label { color: var(--ttsc-text); font-size: 13px; }
+  .ttsc-switch-row { display: grid; grid-template-columns: auto 1fr; column-gap: var(--ttsc-space-3); align-items: start; cursor: pointer; }
+  .ttsc-switch-row .ttsc-form-description { grid-column: 2; margin-top: 2px; color: var(--ttsc-text-muted); }
+  .ttsc-switch[aria-busy="true"] { animation: pv-pulse 1s ease-in-out infinite; }
+  @keyframes pv-pulse { 50% { opacity: .55; } }
+  .pv-card { border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); background: var(--ttsc-surface); padding: var(--ttsc-space-4); display: flex; flex-direction: column; gap: var(--ttsc-space-4); }
+  .pv-cols { display: grid; grid-template-columns: 1.3fr 1fr; gap: var(--ttsc-space-5); }
+  .pv-status { font-size: 12px; color: var(--ttsc-text-muted); min-height: 16px; }
+</style>
+</head>
+<body>
+<div class="ds-pad pv-cols">
+  <div class="pv-card">
+    <div class="ds-label">Preferências de notificação</div>
+    <label class="ttsc-switch-row">
+      <input type="checkbox" role="switch" class="ttsc-switch" data-autosave checked>
+      <span class="ttsc-label">Notificações acadêmicas</span>
+      <span class="ttsc-form-description">Notas, faltas e avisos de turma.</span>
+    </label>
+    <label class="ttsc-switch-row">
+      <input type="checkbox" role="switch" class="ttsc-switch" data-autosave checked>
+      <span class="ttsc-label">Notificações financeiras</span>
+      <span class="ttsc-form-description">Boletos de mensalidade e confirmações de pagamento.</span>
+    </label>
+    <label class="ttsc-switch-row">
+      <input type="checkbox" role="switch" class="ttsc-switch" data-autosave>
+      <span class="ttsc-label">Novidades e campanhas</span>
+    </label>
+    <label class="ttsc-switch-row">
+      <input type="checkbox" role="switch" class="ttsc-switch" checked disabled>
+      <span class="ttsc-label">Alertas de segurança (obrigatório)</span>
+    </label>
+    <div class="pv-status" id="pv-status" aria-live="polite"></div>
+  </div>
+  <div class="ds-stack">
+    <div class="ds-label">Tamanhos</div>
+    <div class="ds-row gap-4">
+      <input type="checkbox" role="switch" class="ttsc-switch ttsc-switch-sm" checked aria-label="Pequeno">
+      <input type="checkbox" role="switch" class="ttsc-switch" checked aria-label="Padrão">
+      <input type="checkbox" role="switch" class="ttsc-switch ttsc-switch-lg" checked aria-label="Grande">
+      <input type="checkbox" role="switch" class="ttsc-switch ttsc-switch-lg" aria-label="Grande desligado">
+    </div>
+    <div class="ds-label">Coluna "Ativo"</div>
+    <div class="ds-row"><input type="checkbox" role="switch" class="ttsc-switch ttsc-switch-sm" checked aria-label="Ensino Médio ativo"><span class="ttsc-label">EM-01 · Ensino Médio</span></div>
+    <div class="ds-row"><input type="checkbox" role="switch" class="ttsc-switch ttsc-switch-sm" aria-label="Curso de Férias ativo"><span class="ttsc-label">LIV-03 · Curso de Férias</span></div>
+  </div>
+</div>
+<script>
+  TTSC.init();
+  var statusEl = document.getElementById('pv-status');
+  document.addEventListener('change', function (e) {
+    var sw = e.target.closest('.ttsc-switch[data-autosave]');
+    if (!sw) return;
+    sw.disabled = true; sw.setAttribute('aria-busy', 'true'); statusEl.textContent = 'Salvando…';
+    setTimeout(function () { sw.disabled = false; sw.removeAttribute('aria-busy'); statusEl.textContent = 'Preferência salva.'; }, 700);
+  });
+</script>
+</body>
+</html>

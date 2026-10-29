@@ -1,0 +1,58 @@
+<!-- @dsCard group="Componentes" height=200 subtitle="data-ttsc-reparent · mode prepend/append, target, responsivo via --ttsc-reparent-target" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Reparent</title>
+<style>
+  /* Responsivo real: no viewport estreito o bloco vai para a área mobile */
+  @media (max-width: 640px) { #filters { --ttsc-reparent-target: #slot-mobile; --ttsc-reparent-mode: prepend; } }
+  /* Simulação do preview (mesma técnica, aplicada por classe) */
+  .pv-sim-mobile #filters { --ttsc-reparent-target: #slot-mobile; --ttsc-reparent-mode: prepend; }
+  .pv-layout { display: grid; grid-template-columns: 1.4fr 1fr; gap: var(--ttsc-space-3); }
+  .pv-slot { min-height: 120px; padding: var(--ttsc-space-3); border: 1px dashed var(--ttsc-border-strong); border-radius: var(--ttsc-radius-surface); background: var(--ttsc-canvas-2); display: flex; flex-direction: column; gap: var(--ttsc-space-2); }
+  .pv-slot-title { font-size: 12px; font-weight: 600; color: var(--ttsc-text-2); display: flex; align-items: center; gap: 6px; }
+  .pv-chip { font-size: 12px; color: var(--ttsc-text-muted); }
+  #filters { display: flex; flex-wrap: wrap; gap: var(--ttsc-space-2); padding: var(--ttsc-space-3); border: 1px solid var(--ttsc-accent-border); background: var(--ttsc-surface); border-radius: var(--ttsc-radius-control); box-shadow: var(--ttsc-shadow-sm); }
+  #filters .pv-tag { font-size: 12px; color: var(--ttsc-text); padding: 2px 8px; border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-pill); }
+  .pv-status { font-size: 12px; color: var(--ttsc-text-2); }
+  .pv-status code { color: var(--ttsc-text); }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="ds-row">
+    <span class="ds-label">Viewport simulado</span>
+    <div class="ttsc-toggle-group" role="group" aria-label="Viewport simulado">
+      <button type="button" class="ttsc-btn ttsc-btn-sm active" data-vp="desktop" aria-pressed="true"><i class="fa-light fa-desktop"></i> Desktop</button>
+      <button type="button" class="ttsc-btn ttsc-btn-sm" data-vp="mobile" aria-pressed="false"><i class="fa-light fa-mobile"></i> Mobile</button>
+    </div>
+    <span class="pv-status" id="status" aria-live="polite">pai atual: <code>#slot-toolbar</code></span>
+  </div>
+  <div class="pv-layout" id="layout">
+    <div class="pv-slot" id="slot-toolbar">
+      <div class="pv-slot-title"><i class="fa-light fa-table-list"></i> Toolbar da listagem de matrículas (desktop)</div>
+      <div id="filters" data-ttsc-reparent="true" data-ttsc-reparent-mode="append" data-ttsc-reparent-target="#slot-toolbar">
+        <span class="pv-tag">Curso: Ensino Médio</span>
+        <span class="pv-tag">Turno: Manhã</span>
+        <span class="pv-tag">Status: Ativa</span>
+      </div>
+    </div>
+    <div class="pv-slot" id="slot-mobile">
+      <span class="pv-chip">Drawer de filtros (mobile) — o bloco entra no topo (prepend)</span>
+    </div>
+  </div>
+</div>
+<script>
+  TTSC.init();
+  var filters = document.getElementById('filters');
+  var statusEl = document.getElementById('status');
+  document.querySelectorAll('[data-vp]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('[data-vp]').forEach(function (b) { b.classList.toggle('active', b === btn); b.setAttribute('aria-pressed', String(b === btn)); });
+      document.getElementById('layout').classList.toggle('pv-sim-mobile', btn.dataset.vp === 'mobile');
+      TTSC.Reparent.getInstance(filters).update();
+      statusEl.innerHTML = 'pai atual: <code>#' + filters.parentElement.id + '</code>';
+    });
+  });
+</script>
+</body>
+</html>

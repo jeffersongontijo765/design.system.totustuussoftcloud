@@ -1,0 +1,638 @@
+/* ════════════════════════════════════════════════════════════════
+   ttsc.rtl.css — RTL Direction Overrides
+   Activated when <html dir="rtl"> (Arabic locale)
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── Base Direction ─────────────────────────────────────── */
+[dir="rtl"] body {
+  direction: rtl;
+  text-align: right;
+}
+
+/* ── Font / Typography ──────────────────────────────────── */
+[dir="rtl"] body,
+[dir="rtl"] input,
+[dir="rtl"] textarea,
+[dir="rtl"] select,
+[dir="rtl"] button {
+  font-family: var(--font-sans);
+}
+
+/* ── Sidebar (Rail) ─────────────────────────────────────── */
+[dir="rtl"] .sb-rail,
+[dir="rtl"] .sidebar {
+  left: auto;
+  right: 0;
+  border-right: none;
+  border-left: 1px solid var(--border);
+}
+
+[dir="rtl"] .sb-rail .sb-logo {
+  padding-right: 16px;
+  padding-left: 0;
+}
+
+[dir="rtl"] .sb-rail .sb-nav-item .sb-nav-icon {
+  margin-left: 10px;
+  margin-right: 0;
+}
+
+[dir="rtl"] .sb-rail .sb-nav-item .sb-chevron {
+  margin-left: 0;
+  margin-right: auto;
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] .sb-rail .sb-nav-item.is-open > .sb-nav-link .sb-chevron {
+  transform: scaleX(-1) rotate(90deg);
+}
+
+[dir="rtl"] .sb-rail .sb-section-title {
+  padding-right: 16px;
+  padding-left: 0;
+}
+
+[dir="rtl"] .sb-rail .sb-footer {
+  left: auto;
+  right: 0;
+}
+
+/* ── Sub-Sidebar (Secondary navigation) ─────────────────── */
+[dir="rtl"] .sub-sidebar {
+  left: auto;
+  right: var(--sb-w, 240px);
+  border-right: none;
+  border-left: 1px solid var(--border);
+}
+
+[dir="rtl"] .sub-sidebar .sub-nav-item .sub-nav-icon {
+  margin-left: 8px;
+  margin-right: 0;
+}
+
+[dir="rtl"] .sub-sidebar .sub-nav-item .sub-chevron {
+  transform: scaleX(-1);
+}
+
+/* ── Header / Topnav ────────────────────────────────────── */
+[dir="rtl"] .header,
+[dir="rtl"] .topnav {
+  left: auto;
+  right: var(--sb-w, 240px);
+  padding-right: 20px;
+  padding-left: 20px;
+}
+
+[dir="rtl"] .header .header-left {
+  margin-right: 0;
+  margin-left: auto;
+}
+
+[dir="rtl"] .header .header-right {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+[dir="rtl"] .header .header-search .search-icon {
+  left: auto;
+  right: 12px;
+}
+
+[dir="rtl"] .header .header-search input {
+  padding-left: 12px;
+  padding-right: 36px;
+}
+
+/* ── Auth Theme Toggle (positioned top-right, flip to top-left) ── */
+[dir="rtl"] .auth-theme-toggle {
+  right: auto !important;
+  left: 20px !important;
+}
+
+/* ── Breadcrumb ─────────────────────────────────────────── */
+[dir="rtl"] .breadcrumb {
+  direction: rtl;
+}
+
+[dir="rtl"] .breadcrumb-item + .breadcrumb-item {
+  padding-right: 8px;
+  padding-left: 0;
+}
+
+[dir="rtl"] .breadcrumb-item + .breadcrumb-item::before {
+  padding-right: 0;
+  padding-left: 8px;
+  transform: scaleX(-1);
+  display: inline-block;
+}
+
+/* ── Tables (keep body text RTL, but data stays LTR) ────── */
+[dir="rtl"] th,
+[dir="rtl"] td {
+  text-align: right;
+}
+
+/* Numeric/monospace cells should stay LTR */
+[dir="rtl"] td.mono,
+[dir="rtl"] th.mono,
+[dir="rtl"] [class*="numeric"],
+[dir="rtl"] .text-mono {
+  direction: ltr;
+  text-align: right;
+}
+
+/* Actions column (usually last) stays left-aligned in RTL too */
+[dir="rtl"] td:last-child:has(.row-actions, .action-btns, [class*="action"]),
+[dir="rtl"] th:last-child {
+  text-align: left !important;
+}
+
+/* ── DataTables ─────────────────────────────────────────── */
+[dir="rtl"] .dataTables_wrapper .dataTables_filter {
+  float: left;
+}
+
+[dir="rtl"] .dataTables_wrapper .dataTables_length {
+  float: right;
+}
+
+/* ── Forms ──────────────────────────────────────────────── */
+[dir="rtl"] .sb-input,
+[dir="rtl"] .portal-input,
+[dir="rtl"] input:not([type="radio"]):not([type="checkbox"]),
+[dir="rtl"] select,
+[dir="rtl"] textarea {
+  text-align: right;
+  direction: rtl;
+}
+
+/* OTP/code inputs stay LTR */
+[dir="rtl"] .code-input,
+[dir="rtl"] .verify-code-input,
+[dir="rtl"] input[inputmode="numeric"],
+[dir="rtl"] input[pattern="[0-9]"] {
+  direction: ltr;
+  text-align: center;
+}
+
+[dir="rtl"] .input-wrap {
+  direction: rtl;
+}
+
+[dir="rtl"] .input-wrap svg,
+[dir="rtl"] .input-wrap i,
+[dir="rtl"] .input-icon {
+  left: auto;
+  right: 12px;
+}
+
+[dir="rtl"] .input-wrap input,
+[dir="rtl"] .has-icon-left input {
+  padding-left: 12px;
+  padding-right: 36px;
+}
+
+[dir="rtl"] select {
+  background-position: left 12px center;
+  padding-right: 12px;
+  padding-left: 32px;
+}
+
+[dir="rtl"] .checkbox-label,
+[dir="rtl"] .radio-label {
+  padding-right: 28px;
+  padding-left: 0;
+}
+
+[dir="rtl"] .checkbox-label::before,
+[dir="rtl"] .radio-label::before {
+  left: auto;
+  right: 0;
+}
+
+/* ── Drawers (slide from left instead of right) ──────────── */
+[dir="rtl"] .drawer {
+  right: auto;
+  left: -100%;
+  transition: left 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+}
+
+[dir="rtl"] .drawer.is-open,
+[dir="rtl"] .drawer.open {
+  left: 0;
+  right: auto;
+  box-shadow: 4px 0 32px rgba(0, 0, 0, 0.12);
+}
+
+[dir="rtl"] .drawer-head {
+  direction: rtl;
+}
+
+[dir="rtl"] .drawer-close {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+/* ── Notifications Center Drawer ────────────────────────── */
+[dir="rtl"] .notif-center-drawer {
+  right: auto;
+  left: -420px;
+  transform: none;
+  transition: left 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+  border-left: none;
+  border-right: 1px solid var(--border);
+}
+
+[dir="rtl"] .notif-center-drawer.open {
+  left: 0;
+  right: auto;
+  transform: none;
+  box-shadow: 8px 0 30px rgba(0, 0, 0, 0.12);
+}
+
+/* ── Chat Widget (slide from left) ──────────────────────── */
+[dir="rtl"] #ttsc-chat-panel {
+  right: auto;
+  left: -380px;
+  transition: left 0.3s ease, box-shadow 0.3s ease;
+}
+
+[dir="rtl"] #ttsc-chat-panel.is-open {
+  left: 0;
+  right: auto;
+  box-shadow: 4px 0 32px rgba(0, 0, 0, 0.15);
+}
+
+/* ── Dropdown Menus ─────────────────────────────────────── */
+[dir="rtl"] .dropdown-menu,
+[dir="rtl"] .portal-dropdown-menu {
+  left: auto;
+  right: 0;
+  text-align: right;
+}
+
+[dir="rtl"] .dropdown-menu-right {
+  right: auto;
+  left: 0;
+}
+
+[dir="rtl"] .dropdown-item {
+  text-align: right;
+}
+
+[dir="rtl"] .dropdown-item i,
+[dir="rtl"] .dropdown-item svg {
+  margin-right: 0;
+  margin-left: 8px;
+}
+
+/* ── Toolbar / Filter Bars ──────────────────────────────── */
+[dir="rtl"] .toolbar {
+  direction: rtl;
+}
+
+[dir="rtl"] .toolbar .spacer {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+[dir="rtl"] .filter-select {
+  background-position: left 10px center;
+  padding-right: 10px;
+  padding-left: 28px;
+}
+
+/* ── Pagination ─────────────────────────────────────────── */
+[dir="rtl"] .pagination {
+  direction: rtl;
+}
+
+[dir="rtl"] .pagination .page-item:first-child .page-link {
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+[dir="rtl"] .pagination .page-item:last-child .page-link {
+  border-radius: var(--radius) 0 0 var(--radius);
+}
+
+[dir="rtl"] .pagination .page-link .fa-chevron-right,
+[dir="rtl"] .pagination .page-link .fa-chevron-left {
+  transform: scaleX(-1);
+}
+
+/* ── Modals ─────────────────────────────────────────────── */
+[dir="rtl"] .modal-header {
+  direction: rtl;
+}
+
+[dir="rtl"] .modal-header .modal-close {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+[dir="rtl"] .modal-body {
+  text-align: right;
+}
+
+[dir="rtl"] .modal-footer {
+  direction: rtl;
+  justify-content: flex-start;
+}
+
+/* ── Card / Widget Headers ──────────────────────────────── */
+[dir="rtl"] .tb-card-head {
+  direction: rtl;
+}
+
+[dir="rtl"] .tb-card-head .l {
+  margin-right: 0;
+}
+
+/* ── Alerts ─────────────────────────────────────────────── */
+[dir="rtl"] .alert,
+[dir="rtl"] .portal-alert {
+  direction: rtl;
+  text-align: right;
+}
+
+[dir="rtl"] .alert i,
+[dir="rtl"] .portal-alert i {
+  margin-right: 0;
+  margin-left: 8px;
+}
+
+/* ── Directional icon flips using transform (scoped to known contexts) ── */
+[dir="rtl"] .sidebar .fa-chevron-down,
+[dir="rtl"] .sidebar .fa-chevron-up,
+[dir="rtl"] .sidebar .fa-chevron-right,
+[dir="rtl"] .sidebar .fa-chevron-left {
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] .pagination .fa-chevron-right,
+[dir="rtl"] .pagination .fa-chevron-left {
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] .breadcrumb .fa-chevron-right,
+[dir="rtl"] .breadcrumb .fa-chevron-left {
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] .accordion .fa-chevron-down,
+[dir="rtl"] .accordion .fa-chevron-right {
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] .fa-arrow-right-to-bracket {
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] .fa-arrow-left-from-bracket {
+  transform: scaleX(-1);
+}
+
+/* ── Toast Notifications ────────────────────────────────── */
+[dir="rtl"] .toast-container,
+[dir="rtl"] #toast-container {
+  right: auto;
+  left: 20px;
+}
+
+[dir="rtl"] .portal-toast {
+  right: auto;
+  left: 24px;
+}
+
+/* ── Auth Pages ─────────────────────────────────────────── */
+[dir="rtl"] .sb-login-container {
+  direction: rtl;
+}
+
+[dir="rtl"] .sb-login-form {
+  text-align: right;
+}
+
+[dir="rtl"] .sb-login-brand {
+  border-radius: 24px 0 0 24px;
+}
+
+[dir="rtl"] .sb-login-feature svg {
+  margin-right: 0;
+  margin-left: 10px;
+}
+
+/* ── Sort Icons ─────────────────────────────────────────── */
+[dir="rtl"] .is-sortable {
+  text-align: right !important;
+}
+
+/* ── Tabs ───────────────────────────────────────────────── */
+[dir="rtl"] .portal-tabs,
+[dir="rtl"] .tabs {
+  direction: rtl;
+}
+
+/* ── Stats Grid ─────────────────────────────────────────── */
+[dir="rtl"] .stats-row {
+  direction: rtl;
+}
+
+/* ── KPI Tiles ──────────────────────────────────────────── */
+[dir="rtl"] .scell {
+  text-align: right;
+}
+
+[dir="rtl"] .scell .ms-auto {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+/* ── Margin/Padding utility swap using logical properties ── */
+[dir="rtl"] .ml-auto {
+  margin-left: 0 !important;
+  margin-right: auto !important;
+}
+
+[dir="rtl"] .mr-auto {
+  margin-right: 0 !important;
+  margin-left: auto !important;
+}
+
+[dir="rtl"] .ml-1 { margin-left: 0 !important; margin-right: 0.25rem !important; }
+[dir="rtl"] .ml-2 { margin-left: 0 !important; margin-right: 0.5rem !important; }
+[dir="rtl"] .ml-3 { margin-left: 0 !important; margin-right: 0.75rem !important; }
+[dir="rtl"] .ml-4 { margin-left: 0 !important; margin-right: 1rem !important; }
+[dir="rtl"] .ml-5 { margin-left: 0 !important; margin-right: 1.25rem !important; }
+[dir="rtl"] .ml-6 { margin-left: 0 !important; margin-right: 1.5rem !important; }
+[dir="rtl"] .ml-8 { margin-left: 0 !important; margin-right: 2rem !important; }
+[dir="rtl"] .ml-10 { margin-left: 0 !important; margin-right: 2.5rem !important; }
+[dir="rtl"] .ml-12 { margin-left: 0 !important; margin-right: 3rem !important; }
+[dir="rtl"] .ml-16 { margin-left: 0 !important; margin-right: 4rem !important; }
+[dir="rtl"] .ml-20 { margin-left: 0 !important; margin-right: 5rem !important; }
+[dir="rtl"] .ml-24 { margin-left: 0 !important; margin-right: 6rem !important; }
+
+[dir="rtl"] .mr-1 { margin-right: 0 !important; margin-left: 0.25rem !important; }
+[dir="rtl"] .mr-2 { margin-right: 0 !important; margin-left: 0.5rem !important; }
+[dir="rtl"] .mr-3 { margin-right: 0 !important; margin-left: 0.75rem !important; }
+[dir="rtl"] .mr-4 { margin-right: 0 !important; margin-left: 1rem !important; }
+[dir="rtl"] .mr-5 { margin-right: 0 !important; margin-left: 1.25rem !important; }
+[dir="rtl"] .mr-6 { margin-right: 0 !important; margin-left: 1.5rem !important; }
+[dir="rtl"] .mr-8 { margin-right: 0 !important; margin-left: 2rem !important; }
+[dir="rtl"] .mr-10 { margin-right: 0 !important; margin-left: 2.5rem !important; }
+[dir="rtl"] .mr-12 { margin-right: 0 !important; margin-left: 3rem !important; }
+[dir="rtl"] .mr-16 { margin-right: 0 !important; margin-left: 4rem !important; }
+[dir="rtl"] .mr-20 { margin-right: 0 !important; margin-left: 5rem !important; }
+[dir="rtl"] .mr-24 { margin-right: 0 !important; margin-left: 6rem !important; }
+
+[dir="rtl"] .pl-1 { padding-left: 0 !important; padding-right: 0.25rem !important; }
+[dir="rtl"] .pl-2 { padding-left: 0 !important; padding-right: 0.5rem !important; }
+[dir="rtl"] .pl-3 { padding-left: 0 !important; padding-right: 0.75rem !important; }
+[dir="rtl"] .pl-4 { padding-left: 0 !important; padding-right: 1rem !important; }
+[dir="rtl"] .pl-5 { padding-left: 0 !important; padding-right: 1.25rem !important; }
+[dir="rtl"] .pl-6 { padding-left: 0 !important; padding-right: 1.5rem !important; }
+[dir="rtl"] .pl-8 { padding-left: 0 !important; padding-right: 2rem !important; }
+[dir="rtl"] .pl-10 { padding-left: 0 !important; padding-right: 2.5rem !important; }
+[dir="rtl"] .pl-12 { padding-left: 0 !important; padding-right: 3rem !important; }
+[dir="rtl"] .pl-16 { padding-left: 0 !important; padding-right: 4rem !important; }
+[dir="rtl"] .pl-20 { padding-left: 0 !important; padding-right: 5rem !important; }
+[dir="rtl"] .pl-24 { padding-left: 0 !important; padding-right: 6rem !important; }
+
+[dir="rtl"] .pr-1 { padding-right: 0 !important; padding-left: 0.25rem !important; }
+[dir="rtl"] .pr-2 { padding-right: 0 !important; padding-left: 0.5rem !important; }
+[dir="rtl"] .pr-3 { padding-right: 0 !important; padding-left: 0.75rem !important; }
+[dir="rtl"] .pr-4 { padding-right: 0 !important; padding-left: 1rem !important; }
+[dir="rtl"] .pr-5 { padding-right: 0 !important; padding-left: 1.25rem !important; }
+[dir="rtl"] .pr-6 { padding-right: 0 !important; padding-left: 1.5rem !important; }
+[dir="rtl"] .pr-8 { padding-right: 0 !important; padding-left: 2rem !important; }
+[dir="rtl"] .pr-10 { padding-right: 0 !important; padding-left: 2.5rem !important; }
+[dir="rtl"] .pr-12 { padding-right: 0 !important; padding-left: 3rem !important; }
+[dir="rtl"] .pr-16 { padding-right: 0 !important; padding-left: 4rem !important; }
+[dir="rtl"] .pr-20 { padding-right: 0 !important; padding-left: 5rem !important; }
+[dir="rtl"] .pr-24 { padding-right: 0 !important; padding-left: 6rem !important; }
+
+/* ── Portal ─────────────────────────────────────────────── */
+[dir="rtl"] .portal-nav .logo i {
+  margin-right: 0;
+  margin-left: 8px;
+}
+
+[dir="rtl"] .portal-nav-links {
+  direction: rtl;
+}
+
+[dir="rtl"] .portal-nav .fa-arrow-left {
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] .page-header {
+  direction: rtl;
+}
+
+[dir="rtl"] .page-header .portal-btn {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+[dir="rtl"] .portal-footer {
+  direction: rtl;
+}
+
+/* ── Progress Bars (keep LTR so they fill left-to-right) ── */
+[dir="rtl"] .progress-track,
+[dir="rtl"] .progress-bar {
+  direction: ltr;
+}
+
+/* ── Kanban ─────────────────────────────────────────────── */
+[dir="rtl"] .kanban-board {
+  direction: rtl;
+}
+
+[dir="rtl"] .kanban-card {
+  text-align: right;
+}
+
+/* ── Accordion ──────────────────────────────────────────── */
+[dir="rtl"] .accordion-header {
+  direction: rtl;
+}
+
+/* ── Timeline ───────────────────────────────────────────── */
+[dir="rtl"] .timeline-item {
+  padding-left: 0;
+  padding-right: 24px;
+}
+
+[dir="rtl"] .timeline-dot {
+  left: auto;
+  right: 0;
+}
+
+/* ── Notification badges ────────────────────────────────── */
+[dir="rtl"] .notif-badge {
+  right: auto;
+  left: -4px;
+}
+
+/* ── Search icon ────────────────────────────────────────── */
+[dir="rtl"] .fa-magnifying-glass {
+  transform: scaleX(-1);
+}
+
+/* ── Cookie Consent Banner & Modal ─────────────────────── */
+[dir="rtl"] #cookieConsentBanner .cookie-banner-inner .flex {
+  direction: rtl;
+}
+
+[dir="rtl"] #cookieConsentBanner .cookie-banner-inner .flex .ml-3 {
+  margin-left: 0 !important;
+  margin-right: auto;
+}
+
+[dir="rtl"] #cookieConsentBanner .cookie-icon {
+  margin-right: 0;
+  margin-left: 12px;
+}
+
+/* Preferences modal — close button on left in RTL */
+[dir="rtl"] #cookiePreferencesModal .cookie-pref-header {
+  direction: rtl;
+}
+
+[dir="rtl"] #cookiePreferencesModal .cookie-pref-footer {
+  direction: rtl;
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] #cookiePreferencesModal .cookie-pref-footer .flex.items-center.gap-2 {
+  direction: rtl;
+}
+
+[dir="rtl"] .cookie-cat-row {
+  direction: rtl;
+}
+
+[dir="rtl"] .cookie-cat-row .cookie-badge-essential {
+  margin-right: 0;
+  margin-left: auto;
+}
+
+/* ── Responsive Sidebar (mobile) ────────────────────────── */
+@media (max-width: 768px) {
+  [dir="rtl"] .sb-rail {
+    left: auto;
+    right: -280px;
+    transition: right 0.3s ease;
+  }
+
+  [dir="rtl"] .sb-rail.is-open {
+    left: auto;
+    right: 0;
+  }
+
+  [dir="rtl"] .header {
+    left: auto;
+    right: 0;
+  }
+}

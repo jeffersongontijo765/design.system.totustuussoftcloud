@@ -1,0 +1,75 @@
+<!-- @dsCard group="Formulários" height=200 subtitle="data-ttsc-toggle-password · trigger, permanent, eventos toggle/toggled, inválido, desabilitado" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>TogglePassword</title>
+<style>
+  [data-ttsc-toggle-password] .ttsc-tp-hide { display: none; }
+  [data-ttsc-toggle-password].active .ttsc-tp-show { display: none; }
+  [data-ttsc-toggle-password].active .ttsc-tp-hide { display: inline-block; }
+  [data-ttsc-toggle-password] [data-ttsc-toggle-password-trigger] { color: var(--ttsc-text-muted); }
+  [data-ttsc-toggle-password] [data-ttsc-toggle-password-trigger]:hover { color: var(--ttsc-text); }
+  [data-ttsc-toggle-password] [data-ttsc-toggle-password-trigger] i { color: inherit; }
+  .ttsc-input:has(input[aria-invalid="true"]) { border-color: var(--ttsc-danger); }
+  .ttsc-form-label { color: var(--ttsc-text); }
+  .ttsc-form-description { color: var(--ttsc-text-muted); }
+  .ttsc-form-message { color: var(--ttsc-danger-text); }
+  .pv-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ttsc-space-4) var(--ttsc-space-5); }
+  .pv-log { font-size: 12px; color: var(--ttsc-text-2); font-family: ui-monospace, monospace; }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="pv-cols">
+    <div class="ttsc-form-item">
+      <label class="ttsc-form-label" for="pv-login">Senha (login)</label>
+      <div class="ttsc-input ttsc-input-lg" data-ttsc-toggle-password="true">
+        <input type="password" id="pv-login" autocomplete="current-password" value="Matricula@2026">
+        <button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon ttsc-btn-sm -me-1.5" data-ttsc-toggle-password-trigger aria-label="Mostrar senha" aria-pressed="false">
+          <i class="fa-light fa-eye ttsc-tp-show" aria-hidden="true"></i><i class="fa-light fa-eye-slash ttsc-tp-hide" aria-hidden="true"></i>
+        </button>
+      </div>
+      <p class="ttsc-form-description">Padrão: ao digitar com a senha visível, ela volta a ser ocultada.</p>
+    </div>
+    <div class="ttsc-form-item">
+      <label class="ttsc-form-label" for="pv-new">Nova senha (permanent)</label>
+      <div class="ttsc-input ttsc-input-lg active" data-ttsc-toggle-password="true" data-ttsc-toggle-password-permanent="true" id="pv-new-wrap">
+        <input type="text" id="pv-new" autocomplete="new-password" minlength="12" value="Ana2026" aria-invalid="true" aria-describedby="pv-new-msg">
+        <button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon ttsc-btn-sm -me-1.5" data-ttsc-toggle-password-trigger aria-label="Ocultar senha" aria-pressed="true">
+          <i class="fa-light fa-eye ttsc-tp-show" aria-hidden="true"></i><i class="fa-light fa-eye-slash ttsc-tp-hide" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div class="ttsc-form-message" id="pv-new-msg">Mínimo de 12 caracteres.</div>
+    </div>
+    <div class="ttsc-form-item">
+      <label class="ttsc-form-label" for="pv-smtp">Senha SMTP (desabilitado)</label>
+      <div class="ttsc-input" data-ttsc-toggle-password="true">
+        <input type="password" id="pv-smtp" value="segredo-smtp" disabled>
+        <button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon ttsc-btn-sm -me-1.5" data-ttsc-toggle-password-trigger aria-label="Mostrar senha" aria-pressed="false" disabled>
+          <i class="fa-light fa-eye ttsc-tp-show" aria-hidden="true"></i><i class="fa-light fa-eye-slash ttsc-tp-hide" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+    <div class="ttsc-form-item">
+      <span class="ttsc-form-label">Eventos</span>
+      <div class="pv-log" id="pv-log" aria-live="polite">clique no olho para ver toggle → toggled</div>
+    </div>
+  </div>
+</div>
+<script>
+  TTSC.init();
+  var log = document.getElementById('pv-log');
+  document.querySelectorAll('[data-ttsc-toggle-password]').forEach(function (c) {
+    var t = c.querySelector('[data-ttsc-toggle-password-trigger]');
+    var sync = function () {
+      var v = c.classList.contains('active');
+      t.setAttribute('aria-pressed', String(v));
+      t.setAttribute('aria-label', v ? 'Ocultar senha' : 'Mostrar senha');
+    };
+    c.addEventListener('toggle', function (e) { if (c.querySelector('input').disabled) e.detail.payload.cancel = true; log.textContent = 'toggle (cancelável)'; });
+    c.addEventListener('toggled', function () { sync(); log.textContent = 'toggle → toggled · visível=' + c.classList.contains('active'); });
+  });
+  var nw = document.getElementById('pv-new');
+  nw.addEventListener('input', function () { nw.setAttribute('aria-invalid', nw.value.length >= 12 ? 'false' : 'true'); });
+</script>
+</body>
+</html>

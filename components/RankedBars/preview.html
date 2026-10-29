@@ -1,0 +1,69 @@
+<!-- @dsCard group="Componentes" height=367 subtitle="Ranking com posição, valor absoluto, percentual e barra por estado" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>RankedBars</title>
+<style>
+  html,body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font-family:Inter,system-ui,sans-serif;font-size:13px;-webkit-font-smoothing:antialiased}
+  .demo{padding:16px;display:grid;gap:14px;max-width:1100px}
+  .card{background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-surface);padding:16px}
+  .card-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+  .card-t{margin:0;font-size:14px;font-weight:600;color:var(--ttsc-text)}
+  .card-s{margin:2px 0 0;font-size:11px;color:var(--ttsc-text-muted)}
+  .pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:var(--ttsc-radius-pill);border:1px solid var(--ttsc-border);color:var(--ttsc-text-2);white-space:nowrap;background:var(--ttsc-surface)}
+  .pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+  .pill-ok{color:var(--ttsc-success);border-color:color-mix(in srgb,var(--ttsc-success) 40%,transparent)}
+  .pill-warn{color:var(--ttsc-warning-text);border-color:color-mix(in srgb,var(--ttsc-warning) 45%,transparent)}
+  .pill-bad{color:var(--ttsc-danger-text);border-color:color-mix(in srgb,var(--ttsc-danger) 40%,transparent)}
+  .pill-info{color:var(--ttsc-info-text);border-color:color-mix(in srgb,var(--ttsc-info) 40%,transparent)}
+  .av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text);flex-shrink:0}
+  .ib{width:30px;height:30px;border-radius:8px;border:1px solid var(--ttsc-border);background:var(--ttsc-surface);display:grid;place-items:center;color:var(--ttsc-text-2);cursor:pointer}
+  .ib:hover{background:var(--ttsc-canvas-2)}
+  .ib-ok:hover{color:var(--ttsc-success)} .ib-no:hover{color:var(--ttsc-danger-text)}
+  .muted{color:var(--ttsc-text-muted)} .tnum{font-variant-numeric:tabular-nums}
+  :focus-visible{outline:2px solid var(--ttsc-accent);outline-offset:2px}
+
+  .ranked{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+  .ranked li{display:grid;grid-template-columns:26px minmax(0,1fr) auto;gap:6px 10px;align-items:center}
+  .ranked-pos{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;background:var(--ttsc-surface-2);color:var(--ttsc-text-2)}
+  .ranked li:first-child .ranked-pos{background:var(--ttsc-accent);color:var(--ttsc-accent-on)}
+  .ranked-name{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ttsc-text)}
+  .ranked-name small{display:block;font-size:11px;color:var(--ttsc-text-muted)}
+  .ranked-value{font-weight:600;font-variant-numeric:tabular-nums;color:var(--ttsc-text);text-align:right}
+  .ranked-value small{display:block;font-weight:400;font-size:11px;color:var(--ttsc-text-muted)}
+  .ranked-bar{grid-column:2/-1;height:6px;border-radius:var(--ttsc-radius-pill);background:var(--ttsc-surface-2);overflow:hidden}
+  .ranked-bar i{display:block;height:100%;width:calc(var(--p) * 1%);background:var(--ttsc-accent);border-radius:inherit}
+  .ranked li.is-warn .ranked-bar i{background:var(--ttsc-warning)}
+  .ranked li.is-bad .ranked-bar i{background:var(--ttsc-danger)}
+</style>
+</head>
+<body>
+<main class="demo">
+
+  <section class="card" aria-labelledby="rk-t">
+    <div class="card-h">
+      <div><h2 id="rk-t" class="card-t">Ocupação das turmas</h2><p class="card-s">Matrículas ativas sobre a capacidade, período 2026.2</p></div>
+      <span class="pill pill-ok">Média 84%</span>
+    </div>
+    <ol class="ranked">
+      <li><span class="ranked-pos">1</span>
+        <span class="ranked-name">1º A · Manhã<small>Ensino Médio · Sede Matriz</small></span>
+        <span class="ranked-value">38/40<small>95%</small></span>
+        <div class="ranked-bar" style="--p:95" role="img" aria-label="Ocupação 95%"><i></i></div></li>
+      <li><span class="ranked-pos">2</span>
+        <span class="ranked-name">2º B · Tarde<small>Fundamental II · Filial Centro</small></span>
+        <span class="ranked-value">34/40<small>85%</small></span>
+        <div class="ranked-bar" style="--p:85" role="img" aria-label="Ocupação 85%"><i></i></div></li>
+      <li class="is-warn"><span class="ranked-pos">3</span>
+        <span class="ranked-name">3º A · Noite<small>Técnico em Informática</small></span>
+        <span class="ranked-value">21/40<small>53%</small></span>
+        <div class="ranked-bar" style="--p:53" role="img" aria-label="Ocupação 53%"><i></i></div></li>
+      <li class="is-bad"><span class="ranked-pos">4</span>
+        <span class="ranked-name">Turma INF-26-2<small>Curso livre · Filial Norte</small></span>
+        <span class="ranked-value">6/20<small>30%</small></span>
+        <div class="ranked-bar" style="--p:30" role="img" aria-label="Ocupação 30%"><i></i></div></li>
+    </ol>
+  </section>
+
+</main>
+</body>
+</html>

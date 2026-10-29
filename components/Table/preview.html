@@ -1,0 +1,80 @@
+<!-- @dsCard group="Componentes" height=465 subtitle="ttsc-table · wrapper, highlight, zebra, sticky header, linha selecionada, ações, borda, compacta" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Table</title>
+<style>
+  .ttsc-table-sticky thead th { position: sticky; top: 0; z-index: 1; background-color: var(--ttsc-canvas-2); }
+  .ttsc-table-zebra tbody tr:nth-child(even) { background-color: var(--ttsc-canvas); }
+  .ttsc-table-compact tbody td { padding-block: 6px; }
+  .ttsc-table-compact thead th { height: var(--ttsc-row-compact); }
+  .ttsc-table tbody tr.checked { background-color: var(--ttsc-accent-soft) !important; box-shadow: inset 3px 0 0 var(--ttsc-accent); }
+  .ttsc-table td.num, .ttsc-table th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .pv-box { border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); background: var(--ttsc-surface); overflow: hidden; }
+  .pv-toolbar { display: flex; align-items: center; justify-content: space-between; padding: var(--ttsc-space-2) var(--ttsc-space-4); border-bottom: 1px solid var(--ttsc-border); font-size: 12px; color: var(--ttsc-text-2); }
+  .pv-scroll { max-height: 250px; overflow: auto; }
+  .pv-sub { display: block; font-size: 11px; color: var(--ttsc-text-muted); }
+  .pv-actions { display: flex; justify-content: flex-end; gap: 2px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .pv-cols { display: grid; grid-template-columns: 1fr; gap: var(--ttsc-space-3); }
+</style>
+</head>
+<body>
+<div class="ds-pad pv-cols">
+  <div class="pv-box">
+    <div class="pv-toolbar"><span id="sel-count" aria-live="polite">1 turma selecionada</span><span>Ensino Médio · 2026/1</span></div>
+    <div class="ttsc-table-wrapper pv-scroll" tabindex="0" role="region" aria-label="Turmas">
+      <table class="ttsc-table ttsc-table-highlight ttsc-table-zebra ttsc-table-sticky">
+        <thead>
+          <tr>
+            <th style="width:36px"><input type="checkbox" class="ttsc-checkbox ttsc-checkbox-sm" id="chk-all" aria-label="Selecionar todas"></th>
+            <th>Turma</th><th>Turno</th><th class="num">Matrículas</th><th class="num">Vagas</th><th>Situação</th><th class="num"><span class="sr-only">Ações</span></th>
+          </tr>
+        </thead>
+        <tbody id="tb"></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="ds-label">Compacta com bordas</div>
+  <div class="ttsc-table-wrapper">
+    <table class="ttsc-table ttsc-table-border ttsc-table-compact">
+      <thead><tr><th>Curso</th><th class="num">Turmas</th><th class="num">Matrículas</th></tr></thead>
+      <tbody>
+        <tr><td>Ensino Médio</td><td class="num">6</td><td class="num">184</td></tr>
+        <tr><td>Técnico em Administração</td><td class="num">2</td><td class="num">61</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<script>
+  var rows = [
+    ['1º A', 'Manhã', 34, 35, 'success', 'Aberta'], ['1º B', 'Tarde', 35, 35, 'warning', 'Lotada'],
+    ['2º A', 'Manhã', 30, 35, 'success', 'Aberta'], ['2º B', 'Tarde', 22, 35, 'success', 'Aberta'],
+    ['3º A', 'Manhã', 32, 35, 'success', 'Aberta'], ['3º B', 'Noite', 12, 30, 'destructive', 'Baixa adesão']
+  ];
+  document.getElementById('tb').innerHTML = rows.map(function (r, i) {
+    return '<tr' + (i === 2 ? ' class="checked" aria-selected="true"' : '') + '>' +
+      '<td><input type="checkbox" class="ttsc-checkbox ttsc-checkbox-sm row-chk" aria-label="Selecionar ' + r[0] + '"' + (i === 2 ? ' checked' : '') + '></td>' +
+      '<td><b>' + r[0] + '</b><span class="pv-sub">Ensino Médio</span></td><td>' + r[1] + '</td>' +
+      '<td class="num">' + r[2] + '</td><td class="num">' + r[3] + '</td>' +
+      '<td><span class="ttsc-badge ttsc-badge-sm ttsc-badge-outline ttsc-badge-' + r[4] + '">' + r[5] + '</span></td>' +
+      '<td class="num"><div class="pv-actions">' +
+        '<button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon ttsc-btn-sm" aria-label="Editar turma ' + r[0] + '"><i class="fa-light fa-pen"></i></button>' +
+        '<button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon ttsc-btn-sm" aria-label="Ver alunos da turma ' + r[0] + '"><i class="fa-light fa-users"></i></button>' +
+      '</div></td></tr>';
+  }).join('');
+  function sync() {
+    var all = document.querySelectorAll('.row-chk'), n = 0;
+    all.forEach(function (c) { var tr = c.closest('tr'); tr.classList.toggle('checked', c.checked); tr.setAttribute('aria-selected', String(c.checked)); if (c.checked) n++; });
+    document.getElementById('chk-all').checked = n === all.length;
+    document.getElementById('chk-all').indeterminate = n > 0 && n < all.length;
+    document.getElementById('sel-count').textContent = n === 1 ? '1 turma selecionada' : n + ' turmas selecionadas';
+  }
+  document.getElementById('tb').addEventListener('change', sync);
+  document.getElementById('chk-all').addEventListener('change', function () {
+    var v = this.checked; document.querySelectorAll('.row-chk').forEach(function (c) { c.checked = v; }); sync();
+  });
+  TTSC.init();
+  sync();
+</script>
+</body>
+</html>

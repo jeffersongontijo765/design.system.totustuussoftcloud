@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-br" dir="ltr" data-theme="light">
+<head>
+<meta charset="utf-8"><script>
+/* Starter Kit: segue o tema do preview (frame pai) e grava as chaves reais de tema de cada layout:
+   app/web/erros = html.dark + data-theme + localStorage 'ttsc-theme'; auth = 'od-theme'; portal de suporte = 'portal_theme'. */
+(function () {
+  function apply() {
+    var p = null; try { p = parent.document.documentElement.getAttribute('data-theme'); } catch (e) {}
+    var t = p === 'dark' ? 'dark' : 'light', h = document.documentElement;
+    h.setAttribute('data-theme', t); h.classList.toggle('dark', t === 'dark'); h.classList.toggle('light', t !== 'dark');
+    try { ['ttsc-theme', 'od-theme', 'theme', 'portal_theme'].forEach(function (k) { localStorage.setItem(k, t); }); } catch (e) {}
+  }
+  apply();
+  try { if (parent !== window) new MutationObserver(apply).observe(parent.document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class'] }); } catch (e) {}
+})();
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Em manutenção — TotusTuus SoftCloud</title>
+
+    <!-- Theme FOUC Prevention -->
+    <script>
+        (function() {
+            try {
+                var html = document.documentElement;
+                var saved = localStorage.getItem('ttsc-theme');
+                var theme;
+                if (saved === 'light' || saved === 'dark') {
+                    theme = saved;
+                } else {
+                    theme = window.matchMedia && window.matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light';
+                }
+                html.setAttribute('data-theme', theme);
+            } catch(e) {}
+        })();
+    </script>
+
+    <!-- Google Fonts -->
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="assets/fa.css">
+
+    <!-- Error Layout Styles -->
+    <link rel="stylesheet" href="assets/css/error-layout.css">
+</head>
+<body>
+
+    <!-- Background Decorative Shapes -->
+    <div class="error-bg-shapes" aria-hidden="true">
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" id="themeToggle" aria-label="Alternar tema" title="Alternar modo claro/escuro">
+        <i class="fa-light fa-moon" id="themeIcon"></i>
+    </button>
+
+    <!-- Error Content -->
+    <div class="error-container">
+        
+        <!-- Error Code Badge -->
+        <div class="error-code _500">
+            <span class="dot"></span>
+            Status 503        </div>
+
+        <!-- Icon -->
+        <div class="error-icon _500">
+            <div class="glow"></div>
+            <i class="fa-light fa-triangle-exclamation"></i>
+        </div>
+
+        <!-- Title -->
+        <h1 class="error-title">Em manutenção</h1>
+
+        <!-- Description -->
+        <p class="error-desc">Estamos atualizando o sistema. Tente novamente em alguns minutos.</p>
+
+        <!-- Suggestions -->
+        <div class="error-suggestions">
+            <div class="error-suggestions-title">
+                <i class="fa-light fa-lightbulb" style="margin-right:6px;"></i>
+                Tente estas opções            </div>
+            <a class="error-suggestion-link" href="#/">
+                <i class="fa-light fa-house"></i>
+                Ir para a Página Inicial            </a>
+            <a class="error-suggestion-link" href="#/dashboard">
+                <i class="fa-light fa-gauge-high"></i>
+                Acessar Painel Administrativo            </a>
+            <a class="error-suggestion-link" href="#/contact">
+                <i class="fa-light fa-envelope"></i>
+                Contatar Suporte            </a>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="error-actions">
+            <button class="error-btn error-btn-secondary" onclick="window.history.back()">
+                <i class="fa-light fa-arrow-left"></i>
+                Voltar            </button>
+            <a href="#/" class="error-btn error-btn-primary">
+                <i class="fa-light fa-house"></i>
+                Início            </a>
+        </div>
+
+        <!-- Footer -->
+        <div class="error-footer">
+            <p class="error-footer-text">
+                ID do Erro: <code>DF92139D</code>
+                &middot;
+                &copy; 2026 TotusTuus SoftCloud. Todos os direitos reservados.            </p>
+        </div>
+    </div>
+
+    <!-- Theme Toggle Script -->
+    <script>
+        (function() {
+            var html = document.documentElement;
+            var btn = document.getElementById('themeToggle');
+            var icon = document.getElementById('themeIcon');
+
+            function getTheme() {
+                return html.getAttribute('data-theme') || 'light';
+            }
+
+            function updateIcon(theme) {
+                if (!icon) return;
+                if (theme === 'dark') {
+                    icon.className = 'fa-light fa-sun';
+                } else {
+                    icon.className = 'fa-light fa-moon';
+                }
+            }
+
+            function toggleTheme() {
+                var current = getTheme();
+                var next = current === 'dark' ? 'light' : 'dark';
+                html.setAttribute('data-theme', next);
+                localStorage.setItem('ttsc-theme', next);
+                updateIcon(next);
+            }
+
+            if (btn) {
+                btn.addEventListener('click', toggleTheme);
+            }
+
+            updateIcon(getTheme());
+
+            // Listen for OS theme changes
+            if (window.matchMedia) {
+                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
+                    var saved = localStorage.getItem('ttsc-theme');
+                    if (!saved) {
+                        var theme = e.matches ? 'dark' : 'light';
+                        html.setAttribute('data-theme', theme);
+                        updateIcon(theme);
+                    }
+                });
+            }
+        })();
+    </script>
+</body>
+</html>

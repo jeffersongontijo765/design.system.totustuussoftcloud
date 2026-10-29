@@ -1,0 +1,80 @@
+<!-- @dsCard group="Geral" height=260 subtitle="tiny-slider 2.9.4 (tns) · carrossel de avisos, 1/2/3 por vista, controles e nav próprios, autoplay com pausa, indexChanged" -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><title>Tiny Slider</title>
+<link rel="stylesheet" href="../../vendor/tiny-slider/tiny-slider.css">
+<style>
+  .ts-head { display: flex; align-items: center; gap: 8px; }
+  .ts-head h3 { margin: 0 auto 0 0; font-size: 14px; font-weight: 600; color: var(--ttsc-text); }
+  .ts-card { background: var(--ttsc-surface); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); padding: 14px; height: 168px; display: flex; flex-direction: column; gap: 8px; }
+  .ts-card h4 { margin: 0; font-size: 14px; font-weight: 600; color: var(--ttsc-text); line-height: 1.35; }
+  .ts-card p { margin: 0; font-size: 12px; color: var(--ttsc-text-2); line-height: 1.5; flex: 1; overflow: hidden; }
+  .ts-card .ts-meta { display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: var(--ttsc-text-muted); }
+  .ts-card a { color: var(--ttsc-accent-text); font-weight: 500; text-decoration: none; }
+  .ts-card a:hover { text-decoration: underline; }
+  .ts-nav { display: flex; justify-content: center; gap: 6px; margin-top: 10px; }
+  .ts-nav button { width: 8px; height: 8px; padding: 0; border: 0; border-radius: var(--ttsc-radius-pill); background: var(--ttsc-border-strong); cursor: pointer; transition: width .2s ease; }
+  .ts-nav button.tns-nav-active { width: 20px; background: var(--ttsc-accent); }
+  .ts-nav button:focus-visible, .ts-card a:focus-visible { outline: 2px solid var(--ttsc-accent); outline-offset: 2px; }
+  .ts-live { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <section aria-roledescription="carrossel" aria-label="Avisos da escola">
+    <div class="ts-head">
+      <h3>Avisos</h3>
+      <button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon ttsc-btn-sm" id="ts-play" aria-label="Pausar rotação automática"><i class="fa-light fa-pause"></i></button>
+      <div id="ts-controls" class="ds-row" style="gap:4px">
+        <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-icon ttsc-btn-sm" aria-label="Aviso anterior"><i class="fa-light fa-chevron-left"></i></button>
+        <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-icon ttsc-btn-sm" aria-label="Próximo aviso"><i class="fa-light fa-chevron-right"></i></button>
+      </div>
+    </div>
+    <div style="margin-top:12px">
+      <div class="ts-slider" id="ts-slider">
+        <div><article class="ts-card"><span class="ttsc-badge ttsc-badge-sm ttsc-badge-outline ttsc-badge-warning" style="align-self:flex-start">Prazo</span>
+          <h4>Rematrícula 2027 até 30/11</h4><p>Quite as mensalidades do ano e atualize o cadastro do responsável financeiro no portal.</p>
+          <div class="ts-meta"><span>20/10/2026</span><a href="#">Ver detalhes</a></div></article></div>
+        <div><article class="ts-card"><span class="ttsc-badge ttsc-badge-sm ttsc-badge-outline ttsc-badge-info" style="align-self:flex-start">Evento</span>
+          <h4>Feira de Ciências no ginásio</h4><p>Dia 28/10, das 9h às 12h. Projetos do 6º ao 9º ano e do Técnico em Informática.</p>
+          <div class="ts-meta"><span>18/10/2026</span><a href="#">Ver detalhes</a></div></article></div>
+        <div><article class="ts-card"><span class="ttsc-badge ttsc-badge-sm ttsc-badge-outline ttsc-badge-success" style="align-self:flex-start">Notícia</span>
+          <h4>Robótica: equipe do 9º B classificada</h4><p>A equipe disputa a etapa estadual em novembro. Parabéns aos alunos e à prof.ª Ingrid Monteiro.</p>
+          <div class="ts-meta"><span>15/10/2026</span><a href="#">Ver detalhes</a></div></article></div>
+        <div><article class="ts-card"><span class="ttsc-badge ttsc-badge-sm ttsc-badge-outline ttsc-badge-destructive" style="align-self:flex-start">Recesso</span>
+          <h4>Não haverá aula em 02/11 (Finados)</h4><p>A secretaria funciona em horário reduzido, das 8h às 12h.</p>
+          <div class="ts-meta"><span>14/10/2026</span><a href="#">Ver detalhes</a></div></article></div>
+        <div><article class="ts-card"><span class="ttsc-badge ttsc-badge-sm ttsc-badge-outline" style="align-self:flex-start">Secretaria</span>
+          <h4>Declarações agora pelo portal</h4><p>Declaração de matrícula e de frequência podem ser emitidas em Documentos › Solicitar.</p>
+          <div class="ts-meta"><span>10/10/2026</span><a href="#">Ver detalhes</a></div></article></div>
+      </div>
+    </div>
+    <div class="ts-nav" id="ts-nav" aria-label="Escolher aviso">
+      <button type="button" aria-label="Aviso 1"></button><button type="button" aria-label="Aviso 2"></button><button type="button" aria-label="Aviso 3"></button><button type="button" aria-label="Aviso 4"></button><button type="button" aria-label="Aviso 5"></button>
+    </div>
+    <div class="ts-live" id="ts-live" aria-live="polite"></div>
+  </section>
+</div>
+<script src="../../vendor/tiny-slider/tiny-slider.js"></script>
+<script>
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var slider = tns({
+    container: '#ts-slider', items: 1, slideBy: 1, gutter: 12, loop: false, rewind: true,
+    controlsContainer: '#ts-controls', navContainer: '#ts-nav',
+    autoplay: !reduce, autoplayTimeout: 6000, autoplayHoverPause: true, autoplayButtonOutput: false,
+    mouseDrag: true, speed: reduce ? 0 : 350, preventScrollOnTouch: 'auto',
+    responsive: { 560: { items: 2 }, 900: { items: 3 } }
+  });
+  slider.events.on('indexChanged', function (info) {
+    var first = info.displayIndex, last = Math.min(info.displayIndex + info.items - 1, info.slideCount);
+    document.getElementById('ts-live').textContent = 'Avisos ' + first + (last > first ? ' a ' + last : '') + ' de ' + info.slideCount;
+  });
+  var playing = !reduce, btn = document.getElementById('ts-play');
+  function syncBtn() { btn.setAttribute('aria-label', playing ? 'Pausar rotação automática' : 'Retomar rotação automática'); btn.innerHTML = '<i class="fa-light fa-' + (playing ? 'pause' : 'play') + '"></i>'; }
+  btn.addEventListener('click', function () { playing ? slider.pause() : slider.play(); playing = !playing; syncBtn(); });
+  syncBtn();
+  TTSC.init();
+</script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!-- @dsCard group="Componentes" height=283 subtitle="Três cenários (pessimista, base, otimista) com premissas e seleção" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>ScenarioCards</title>
+<style>
+  html,body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font-family:Inter,system-ui,sans-serif;font-size:13px;-webkit-font-smoothing:antialiased}
+  .demo{padding:16px;display:grid;gap:14px;max-width:1100px}
+  .card{background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-surface);padding:16px}
+  .card-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+  .card-t{margin:0;font-size:14px;font-weight:600;color:var(--ttsc-text)}
+  .card-s{margin:2px 0 0;font-size:11px;color:var(--ttsc-text-muted)}
+  .pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:var(--ttsc-radius-pill);border:1px solid var(--ttsc-border);color:var(--ttsc-text-2);white-space:nowrap;background:var(--ttsc-surface)}
+  .pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+  .pill-ok{color:var(--ttsc-success);border-color:color-mix(in srgb,var(--ttsc-success) 40%,transparent)}
+  .pill-warn{color:var(--ttsc-warning-text);border-color:color-mix(in srgb,var(--ttsc-warning) 45%,transparent)}
+  .pill-bad{color:var(--ttsc-danger-text);border-color:color-mix(in srgb,var(--ttsc-danger) 40%,transparent)}
+  .pill-info{color:var(--ttsc-info-text);border-color:color-mix(in srgb,var(--ttsc-info) 40%,transparent)}
+  .av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text);flex-shrink:0}
+  .ib{width:30px;height:30px;border-radius:8px;border:1px solid var(--ttsc-border);background:var(--ttsc-surface);display:grid;place-items:center;color:var(--ttsc-text-2);cursor:pointer}
+  .ib:hover{background:var(--ttsc-canvas-2)}
+  .ib-ok:hover{color:var(--ttsc-success)} .ib-no:hover{color:var(--ttsc-danger-text)}
+  .muted{color:var(--ttsc-text-muted)} .tnum{font-variant-numeric:tabular-nums}
+  :focus-visible{outline:2px solid var(--ttsc-accent);outline-offset:2px}
+
+  .scen{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+  .scen button{font:inherit;text-align:left;display:grid;gap:6px;padding:14px;border-radius:var(--ttsc-radius-surface);border:1px solid var(--ttsc-border);background:var(--ttsc-surface);color:var(--ttsc-text);cursor:pointer}
+  .scen button:hover{border-color:var(--ttsc-border-strong)}
+  .scen button[aria-pressed=true]{border-color:var(--ttsc-accent-border);box-shadow:inset 0 0 0 1px var(--ttsc-accent-border)}
+  .scen-label{font-size:12px;font-weight:600;color:var(--ttsc-text-2)}
+  .scen-value{font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--ttsc-text)}
+  .scen-delta{font-size:11px;font-variant-numeric:tabular-nums}
+  .scen-delta.up{color:var(--ttsc-success)} .scen-delta.down{color:var(--ttsc-danger-text)} .scen-delta.flat{color:var(--ttsc-text-muted)}
+  .scen-note{font-size:11px;color:var(--ttsc-text-muted);line-height:1.4}
+  .scen button.bad{background:color-mix(in srgb,var(--ttsc-danger) 8%,var(--ttsc-surface))}
+  .scen button.good{background:color-mix(in srgb,var(--ttsc-success) 8%,var(--ttsc-surface))}
+  @media (max-width:640px){.scen{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main class="demo">
+
+  <section class="card" aria-labelledby="sc-t">
+    <div class="card-h">
+      <div><h2 id="sc-t" class="card-t">Receita prevista do semestre</h2><p class="card-s">Três cenários com a mesma regra de cálculo; escolha um para ver as premissas</p></div>
+    </div>
+    <div class="scen" role="group" aria-label="Cenários de receita">
+      <button class="bad" type="button" aria-pressed="false">
+        <span class="scen-label">Pessimista</span>
+        <span class="scen-value">R$ 1,62 mi</span>
+        <span class="scen-delta down">↓ 7,4% vs. base</span>
+        <span class="scen-note">Inadimplência de 9,4%. Cancelamentos acima da média de 2025.</span>
+      </button>
+      <button type="button" aria-pressed="true">
+        <span class="scen-label">Base</span>
+        <span class="scen-value">R$ 1,75 mi</span>
+        <span class="scen-delta flat">Igual ao orçamento</span>
+        <span class="scen-note">Inadimplência de 6,1%, matrícula igual ao período anterior.</span>
+      </button>
+      <button class="good" type="button" aria-pressed="false">
+        <span class="scen-label">Otimista</span>
+        <span class="scen-value">R$ 1,84 mi</span>
+        <span class="scen-delta up">↑ 5,1% vs. base</span>
+        <span class="scen-note">Inadimplência de 3,2% e rematrícula de 92%.</span>
+      </button>
+    </div>
+  </section>
+
+</main>
+</body>
+</html>

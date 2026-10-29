@@ -1,0 +1,88 @@
+<!-- @dsCard group="Geral" height=270 subtitle="Implementação TTSC · data-ttsc-swapper com matchMedia por breakpoint, append/prepend, evento ttsc:swapper:moved, forçar alvo" -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><title>Swapper</title>
+<style>
+  .sw-grid { display: grid; grid-template-columns: 1fr 280px; gap: 12px; }
+  .sw-box { border: 1px dashed var(--ttsc-border-strong); border-radius: var(--ttsc-radius-surface); padding: 10px; background: var(--ttsc-canvas); min-height: 96px; display: flex; flex-direction: column; gap: 8px; }
+  .sw-box.is-target { border-style: solid; border-color: var(--ttsc-accent-border); background: var(--ttsc-accent-soft); }
+  .sw-box-title { font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; color: var(--ttsc-text-muted); display: flex; align-items: center; gap: 6px; }
+  .sw-filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; background: var(--ttsc-surface); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-control); padding: 8px; }
+  .sw-filters select { min-width: 150px; }
+  .sw-log { font-size: 12px; color: var(--ttsc-text-2); }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="ds-row">
+    <span class="ds-label">Simular viewport:</span>
+    <div class="ds-row" role="group" aria-label="Simular largura" style="gap:4px">
+      <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-sm" data-force="(min-width: 1024px)"><i class="fa-light fa-desktop"></i> Desktop ≥ 1024px</button>
+      <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-sm" data-force="default"><i class="fa-light fa-mobile"></i> Mobile</button>
+      <button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-sm" data-force="">Real (matchMedia)</button>
+    </div>
+  </div>
+  <div class="sw-grid">
+    <div class="sw-box" id="toolbar-slot"><div class="sw-box-title"><i class="fa-light fa-table-columns"></i> Toolbar da listagem (desktop)</div></div>
+    <div class="sw-box" id="drawer-slot"><div class="sw-box-title"><i class="fa-light fa-sidebar-flip"></i> Drawer de filtros (mobile)</div></div>
+  </div>
+  <form class="sw-filters" id="enrollment-filters" aria-label="Filtros de matrícula"
+        data-ttsc-swapper='{"(min-width: 1024px)": "#toolbar-slot", "default": "#drawer-slot"}' data-ttsc-swapper-mode="append">
+    <select class="ttsc-select ttsc-select-sm" name="course_uuid" aria-label="Curso"><option>Todos os cursos</option><option>Técnico em Informática</option><option>Ensino Médio</option></select>
+    <select class="ttsc-select ttsc-select-sm" name="status" aria-label="Status"><option>Ativas</option><option>Trancadas</option><option>Canceladas</option></select>
+    <button type="submit" class="ttsc-btn ttsc-btn-primary ttsc-btn-sm"><i class="fa-light fa-filter"></i> Filtrar</button>
+  </form>
+  <div class="sw-log" id="sw-log" aria-live="polite"></div>
+</div>
+<script>
+  /* assets/js/core/ttsc.swapper.js — implementação TTSC */
+  (function (w) {
+    function Swapper(el, options) {
+      this.el = el;
+      var raw = options && options.targets || el.getAttribute('data-ttsc-swapper') || '{}';
+      this.targets = typeof raw === 'string' ? JSON.parse(raw) : raw;           // { "<media query>": "#sel", "default": "#sel" }
+      this.mode = (options && options.mode) || el.getAttribute('data-ttsc-swapper-mode') || 'append';
+      this.forced = null; this.current = null;
+      this.queries = Object.keys(this.targets).filter(function (k) { return k !== 'default'; })
+        .map(function (q) { return w.matchMedia(q); });
+      var self = this; this._onChange = function () { self.update(); };
+      this.queries.forEach(function (mq) { mq.addEventListener('change', self._onChange); });
+      this.update();
+    }
+    Swapper.prototype.resolve = function () {
+      if (this.forced) return this.forced;
+      for (var i = 0; i < this.queries.length; i++) if (this.queries[i].matches) return this.queries[i].media;
+      return 'default';
+    };
+    Swapper.prototype.update = function () {
+      var key = this.resolve(), sel = this.targets[key] || this.targets['default'];
+      var target = sel && document.querySelector(sel);
+      if (!target || (key === this.current && this.el.parentElement === target)) return;
+      var hadFocus = this.el.contains(document.activeElement), focused = document.activeElement;
+      var from = this.el.parentElement;
+      this.mode === 'prepend' ? target.prepend(this.el) : target.append(this.el);
+      if (hadFocus && focused) focused.focus({ preventScroll: true });       // preserva o foco
+      this.current = key;
+      this.el.dispatchEvent(new CustomEvent('ttsc:swapper:moved', { bubbles: true, detail: { key: key, from: from, to: target } }));
+    };
+    Swapper.prototype.force = function (key) { this.forced = key || null; this.update(); };
+    Swapper.prototype.destroy = function () { var self = this; this.queries.forEach(function (mq) { mq.removeEventListener('change', self._onChange); }); };
+    Swapper.init = function (root) {
+      (root || document).querySelectorAll('[data-ttsc-swapper]').forEach(function (el) { if (!el._ttscSwapper) el._ttscSwapper = new Swapper(el); });
+    };
+    w.TTSC = w.TTSC || {}; w.TTSC.Swapper = Swapper;
+  })(window);
+
+  document.addEventListener('ttsc:swapper:moved', function (e) {
+    document.querySelectorAll('.sw-box').forEach(function (b) { b.classList.toggle('is-target', b === e.detail.to); });
+    document.getElementById('sw-log').textContent = 'Filtros movidos para ' + e.detail.to.id + ' (regra: ' + e.detail.key + ').';
+  });
+  TTSC.init();
+  TTSC.Swapper.init();
+  var sw = document.getElementById('enrollment-filters')._ttscSwapper;
+  document.querySelectorAll('[data-force]').forEach(function (b) { b.addEventListener('click', function () { sw.force(b.dataset.force); }); });
+  document.getElementById('enrollment-filters').addEventListener('submit', function (e) { e.preventDefault(); });
+</script>
+</body>
+</html>

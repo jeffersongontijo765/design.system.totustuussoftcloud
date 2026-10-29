@@ -1,0 +1,67 @@
+<!-- @dsCard group="Componentes" height=310 subtitle="data-ttsc-rating · interativo, somente leitura, max, heart, setValue, evento change" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Rating</title>
+<style>
+  /* Ponte TTSC: classes de cor que o JS do ttscui aplica e que não existem no runtime */
+  [data-ttsc-rating] .ttsc-rating { flex-direction: row-reverse; justify-content: flex-end; }
+  [data-ttsc-rating] .ttsc-rating > span,
+  [data-ttsc-rating] .ttsc-rating-label { display: inline-flex; padding: 1px; }
+  [data-ttsc-rating] .text-yellow-400 { color: var(--ttsc-warning); }
+  [data-ttsc-rating] .text-red-500 { color: var(--ttsc-danger); }
+  [data-ttsc-rating] [class*="text-muted-foreground"] { color: var(--ttsc-border-prominent); }
+  [data-ttsc-rating] .ttsc-rating:hover .ttsc-rating-label { color: var(--ttsc-border-prominent); }
+  [data-ttsc-rating] .ttsc-rating .ttsc-rating-label:hover,
+  [data-ttsc-rating] .ttsc-rating .ttsc-rating-label:hover ~ .ttsc-rating-label { color: var(--ttsc-warning); }
+  [data-ttsc-rating] input:focus-visible + .ttsc-rating-label { outline: 2px solid var(--ttsc-accent); outline-offset: 1px; border-radius: var(--ttsc-radius-xs); }
+  .pv-row { display: flex; align-items: center; justify-content: space-between; gap: var(--ttsc-space-4); padding: var(--ttsc-space-3) var(--ttsc-space-4); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); background: var(--ttsc-surface); }
+  .pv-row b { display: block; font-size: 13px; color: var(--ttsc-text); font-weight: 600; }
+  .pv-row small { font-size: 12px; color: var(--ttsc-text-muted); }
+  .pv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--ttsc-space-3); }
+  .pv-grid .pv-row:last-child { grid-column: 1 / -1; }
+  .pv-val { font-size: 12px; color: var(--ttsc-text-2); font-variant-numeric: tabular-nums; min-width: 92px; text-align: right; }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="ds-label">Interativo · avaliação do atendimento</div>
+  <div class="pv-row">
+    <div><b>Chamado #SAC-2026-0412</b><small>Segunda via do boletim · resolvido</small></div>
+    <div class="ds-row">
+      <div id="rate-ticket" data-ttsc-rating="true" data-ttsc-rating-value="4" data-ttsc-rating-max="5" data-ttsc-rating-name="rating"></div>
+      <span class="pv-val" id="rate-ticket-out" aria-live="polite">4 de 5</span>
+      <button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-sm" id="rate-clear">Limpar</button>
+    </div>
+  </div>
+  <div class="ds-label">Somente leitura · estrela, coração e escala de 10</div>
+  <div class="pv-grid">
+    <div class="pv-row">
+      <div><b>Média da unidade</b><small>4,0 · 128 avaliações</small></div>
+      <div data-ttsc-rating="true" data-ttsc-rating-value="4" data-ttsc-rating-readonly="true"></div>
+    </div>
+    <div class="pv-row">
+      <div><b>Satisfação (coração)</b><small>pesquisa com responsáveis</small></div>
+      <div data-ttsc-rating="true" data-ttsc-rating-value="3" data-ttsc-rating-symbol="heart" data-ttsc-rating-readonly="true"></div>
+    </div>
+    <div class="pv-row">
+      <div><b>NPS da secretaria</b><small>nota de 1 a 10</small></div>
+      <div data-ttsc-rating="true" data-ttsc-rating-value="8" data-ttsc-rating-max="10" data-ttsc-rating-readonly="true"></div>
+    </div>
+  </div>
+</div>
+<script>
+  TTSC.init();
+  var el = document.getElementById('rate-ticket');
+  var out = document.getElementById('rate-ticket-out');
+  el.addEventListener('ttsc.rating.change', function (e) {
+    var v = e.detail && e.detail.payload ? e.detail.payload.value : null;
+    out.textContent = v ? v + ' de 5' : 'Sem nota';
+  });
+  document.getElementById('rate-clear').addEventListener('click', function () {
+    var inst = TTSC.Rating.getInstance(el);
+    inst.setValue(null);
+    out.textContent = 'Sem nota';
+  });
+</script>
+</body>
+</html>

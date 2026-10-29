@@ -1,0 +1,1268 @@
+<!-- @dsCard group="Componentes do painel" height=682 width=1280 subtitle="Caixa de entrada embutida com conversas, thread, contexto e composer; digitação, resposta do assistente, teclado e ARIA" -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ChatPanel</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box}
+  html,body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font-family:Inter,system-ui,sans-serif;font-size:13px;line-height:1.45;-webkit-font-smoothing:antialiased}
+  button,input,textarea{font:inherit;color:inherit}
+  button{cursor:pointer}
+  button:disabled{cursor:not-allowed;opacity:.5}
+  .demo{padding:16px;max-width:1280px;margin:0 auto}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  :focus-visible{outline:2px solid var(--ttsc-accent);outline-offset:2px}
+
+  .inbox{background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-surface);box-shadow:var(--ttsc-shadow-sm);overflow:hidden}
+  .inbox-h{height:58px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 16px;border-bottom:1px solid var(--ttsc-border-soft);background:linear-gradient(180deg,color-mix(in srgb,var(--ttsc-accent) 4%,var(--ttsc-surface)),var(--ttsc-surface))}
+  .inbox-id{display:flex;align-items:center;gap:10px;min-width:0}
+  .inbox-mark{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:var(--ttsc-accent-soft);border:1px solid var(--ttsc-accent-border);color:var(--ttsc-accent-text);font-size:13px;flex-shrink:0}
+  .inbox-title{margin:0;font-size:14px;font-weight:600;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .inbox-sub{margin:1px 0 0;font-size:10.5px;color:var(--ttsc-text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .inbox-sub b{font-weight:600;color:var(--ttsc-text-2)}
+  .inbox-tools{display:flex;align-items:center;gap:10px;flex-shrink:0}
+  .agents{display:flex;align-items:center}
+  .agents span{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:8.5px;font-weight:700;background:var(--ttsc-surface-2);color:var(--ttsc-text-2);border:2px solid var(--ttsc-surface);margin-left:-6px}
+  .agents span:first-child{margin-left:0}
+  .agents span:last-child{background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text);font-size:8px}
+  .btn-new{height:30px;display:inline-flex;align-items:center;gap:6px;padding:0 11px;border:0;border-radius:var(--ttsc-radius-pill);background:var(--ttsc-accent);color:var(--ttsc-accent-on);font-size:11.5px;font-weight:700;white-space:nowrap;transition:background .15s}
+  .btn-new:hover{background:var(--ttsc-accent-hover)}
+  .btn-new i{font-size:10px}
+
+  .inbox-body{position:relative;display:grid;grid-template-columns:290px minmax(0,1fr) 250px;height:590px}
+
+  /* ── Lista de conversas ───────────────────────────────────────── */
+  .convs{display:flex;flex-direction:column;min-width:0;min-height:0;border-right:1px solid var(--ttsc-border-soft);background:var(--ttsc-surface)}
+  .convs-h{padding:12px 12px 8px;display:grid;gap:8px}
+  .convs-search-row{display:flex;align-items:center;gap:6px}
+  .convs-close{display:none;width:30px;height:30px;place-items:center;border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-sm);background:var(--ttsc-surface);color:var(--ttsc-text-2);font-size:10px;flex-shrink:0}
+  .convs-close:hover{border-color:var(--ttsc-border-strong);color:var(--ttsc-text)}
+  .search{position:relative;display:flex;align-items:center;flex:1;min-width:0}
+  .search i{position:absolute;left:10px;font-size:10.5px;color:var(--ttsc-text-muted);pointer-events:none}
+  .search input{width:100%;height:34px;padding:0 10px 0 29px;border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-control);background:var(--ttsc-canvas);font-size:11.5px;color:var(--ttsc-text);outline:none;transition:border-color .15s,box-shadow .15s}
+  .search input::placeholder{color:var(--ttsc-text-muted)}
+  .search input:focus{border-color:var(--ttsc-accent);box-shadow:0 0 0 3px var(--ttsc-accent-soft)}
+  .convs-label{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 2px;font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ttsc-text-muted)}
+  .convs-label b{font-weight:700;color:var(--ttsc-text-2);font-variant-numeric:tabular-nums}
+  .convs-scroll{flex:1;min-height:0;overflow-y:auto;padding:0 8px 8px;scrollbar-width:thin}
+  .convs-scroll::-webkit-scrollbar{width:8px}
+  .convs-scroll::-webkit-scrollbar-thumb{background:var(--ttsc-border);border-radius:8px}
+  .conv-list{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+  .conv{position:relative;display:grid;grid-template-columns:34px minmax(0,1fr);gap:9px;width:100%;padding:9px 8px;border:1px solid transparent;border-radius:var(--ttsc-radius-sm);background:transparent;text-align:left;transition:background .15s,border-color .15s}
+  .conv:hover{background:var(--ttsc-canvas-2)}
+  .conv.is-active{background:color-mix(in srgb,var(--ttsc-accent) 9%,var(--ttsc-surface));border-color:var(--ttsc-accent-border);box-shadow:inset 3px 0 0 var(--ttsc-accent)}
+  .conv-av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:10.5px;font-weight:700;background:var(--ttsc-surface-2);color:var(--ttsc-text-2);border:1px solid var(--ttsc-border);flex-shrink:0}
+  .conv.is-active .conv-av{background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text);border-color:var(--ttsc-accent-border)}
+  .conv-ai .conv-av{background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text);border-color:var(--ttsc-accent-border)}
+  .conv-main{min-width:0;display:grid;gap:1px}
+  .conv-top{display:flex;align-items:baseline;gap:8px;min-width:0}
+  .conv-name{flex:1;min-width:0;font-size:12px;font-weight:600;color:var(--ttsc-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .conv-time{flex-shrink:0;font-size:10px;color:var(--ttsc-text-muted);font-variant-numeric:tabular-nums}
+  .conv-prev{font-size:11px;color:var(--ttsc-text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .conv.is-active .conv-prev{color:var(--ttsc-text-2)}
+  .conv-foot{display:flex;align-items:center;gap:6px;min-width:0;margin-top:2px}
+  .chan{display:inline-flex;align-items:center;gap:4px;padding:1px 6px;border:1px solid var(--ttsc-border-soft);border-radius:var(--ttsc-radius-pill);background:var(--ttsc-canvas-2);color:var(--ttsc-text-muted);font-size:9.5px;font-weight:600;white-space:nowrap}
+  .chan i{font-size:8.5px}
+  .chan-ai{background:var(--ttsc-accent-soft);border-color:var(--ttsc-accent-border);color:var(--ttsc-accent-text)}
+  .unread{margin-left:auto;min-width:16px;height:16px;padding:0 4px;border-radius:var(--ttsc-radius-pill);display:inline-grid;place-items:center;background:var(--ttsc-accent);color:var(--ttsc-accent-on);font-size:9.5px;font-weight:700;font-variant-numeric:tabular-nums}
+  .conv-empty{padding:22px 12px;text-align:center;color:var(--ttsc-text-muted);font-size:11px}
+  .conv-empty i{display:block;font-size:18px;margin-bottom:6px;color:var(--ttsc-meta)}
+  .conv-empty button{margin-top:8px;border:0;background:transparent;color:var(--ttsc-accent-text);font-size:11px;font-weight:600;text-decoration:underline;text-underline-offset:2px}
+  .convs-tip{display:flex;gap:7px;margin:6px 12px 8px;padding:8px 9px;border:1px dashed var(--ttsc-border);border-radius:var(--ttsc-radius-sm);background:var(--ttsc-canvas);font-size:10px;line-height:1.4;color:var(--ttsc-text-muted)}
+  .convs-tip i{color:var(--ttsc-accent-text);margin-top:1px}
+  .convs-tip b{color:var(--ttsc-text-2);font-weight:600}
+  .convs-foot{padding:8px 12px 11px;border-top:1px solid var(--ttsc-border-soft)}
+  .ghost-link{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:4px 2px;border:0;background:transparent;color:var(--ttsc-text-2);font-size:10.5px;font-weight:600}
+  .ghost-link:hover{color:var(--ttsc-accent-text)}
+  .ghost-link i{font-size:9px;color:var(--ttsc-text-muted)}
+
+  /* ── Thread ──────────────────────────────────────────────────── */
+  .thread{display:flex;flex-direction:column;min-width:0;min-height:0;background:var(--ttsc-surface)}
+  .thread-h{position:relative;display:flex;align-items:center;gap:9px;height:58px;padding:0 14px;border-bottom:1px solid var(--ttsc-border-soft);flex-shrink:0;background:var(--ttsc-surface)}
+  .list-toggle{display:none;height:28px;padding:0 8px;border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-sm);background:var(--ttsc-surface);color:var(--ttsc-text-2);font-size:10.5px;font-weight:600;align-items:center;gap:4px;flex-shrink:0}
+  .list-toggle i{font-size:9px}
+  .thread-av{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text);border:1px solid var(--ttsc-accent-border);font-size:10.5px;font-weight:700;flex-shrink:0}
+  .thread-id{flex:1;min-width:0}
+  .thread-title{margin:0;font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
+  .thread-title:focus{outline:none}
+  .thread-title:focus-visible{outline:2px solid var(--ttsc-accent);outline-offset:2px;border-radius:2px}
+  .thread-status{display:flex;align-items:center;gap:4px;margin:1px 0 0;font-size:10px;color:var(--ttsc-text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .st-on,.st-ai{display:inline-flex;align-items:center;gap:4px;font-weight:600;color:var(--ttsc-text-2)}
+  .st-on .dot{width:6px;height:6px;border-radius:50%;background:var(--ttsc-success);flex-shrink:0}
+  .st-ai{color:var(--ttsc-accent-text)}
+  .st-ai i{font-size:9px}
+  .thread-actions{display:flex;align-items:center;gap:5px;flex-shrink:0}
+  .icon-btn{width:30px;height:30px;display:inline-grid;place-items:center;border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-sm);background:var(--ttsc-surface);color:var(--ttsc-text-2);font-size:11.5px;flex-shrink:0;transition:border-color .15s,background .15s,color .15s}
+  .icon-btn:hover{border-color:var(--ttsc-border-strong);background:var(--ttsc-canvas);color:var(--ttsc-text)}
+  .icon-btn[aria-expanded="true"]{border-color:var(--ttsc-accent-border);background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text)}
+  .menu-wrap{position:relative}
+  .thread-menu{position:absolute;right:0;top:calc(100% + 6px);z-index:40;min-width:196px;padding:4px;background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-sm);box-shadow:var(--ttsc-shadow-md)}
+  .thread-menu[hidden]{display:none}
+  .thread-menu button{display:flex;align-items:center;gap:8px;width:100%;padding:7px 8px;border:0;border-radius:6px;background:transparent;font-size:11px;color:var(--ttsc-text-2);text-align:left}
+  .thread-menu button:hover{background:var(--ttsc-canvas-2);color:var(--ttsc-text)}
+  .thread-menu button i{width:12px;text-align:center;font-size:10px;color:var(--ttsc-text-muted)}
+
+  .thread-log{flex:1;min-height:0;overflow-y:auto;padding:8px 16px 2px;display:flex;flex-direction:column;gap:6px;scroll-behavior:smooth;scrollbar-width:thin}
+  .thread-log::-webkit-scrollbar{width:8px}
+  .thread-log::-webkit-scrollbar-thumb{background:var(--ttsc-border);border-radius:8px}
+  .thread-log > :first-child{margin-top:auto}
+  .thread-log:focus-visible{outline:2px solid var(--ttsc-accent);outline-offset:-2px}
+  .day{display:flex;align-items:center;gap:8px;margin:0 0 2px;font-size:9.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ttsc-text-muted)}
+  .day::before,.day::after{content:"";height:1px;flex:1;background:var(--ttsc-border-soft)}
+  .msg{display:flex;gap:7px;align-items:flex-end;min-width:0}
+  .msg-in{justify-content:flex-start}
+  .msg-out{justify-content:flex-end}
+  .msg-av{width:23px;height:23px;border-radius:50%;display:grid;place-items:center;background:var(--ttsc-surface-2);border:1px solid var(--ttsc-border);color:var(--ttsc-text-2);font-size:8.5px;font-weight:700;flex-shrink:0;margin-bottom:16px}
+  .msg-av-ai{background:var(--ttsc-accent-soft);border-color:var(--ttsc-accent-border);color:var(--ttsc-accent-text)}
+  .msg-body{display:flex;flex-direction:column;gap:3px;min-width:0;max-width:min(78%,470px)}
+  .msg-out .msg-body{align-items:flex-end}
+  .msg-meta{display:flex;align-items:baseline;gap:6px;font-size:9.5px;color:var(--ttsc-text-muted);font-variant-numeric:tabular-nums}
+  .msg-author{font-weight:600;color:var(--ttsc-text-2)}
+  .msg-bubble{padding:6px 9px;border:1px solid var(--ttsc-border-soft);border-radius:12px;border-bottom-left-radius:4px;background:var(--ttsc-surface-2);font-size:12px;line-height:1.45;color:var(--ttsc-text);max-width:100%;overflow-wrap:anywhere}
+  .msg-out .msg-bubble{background:color-mix(in srgb,var(--ttsc-accent) 13%,var(--ttsc-surface));border-color:var(--ttsc-accent-border);border-bottom-left-radius:12px;border-bottom-right-radius:4px}
+  .msg-bubble p{margin:0}
+  .attach{display:flex;align-items:center;gap:8px;width:100%;min-width:230px;margin-top:7px;padding:6px 7px;border:1px solid var(--ttsc-border);border-radius:8px;background:var(--ttsc-surface);color:var(--ttsc-text);text-align:left}
+  .attach:hover{border-color:var(--ttsc-accent-border)}
+  .attach-ic{width:26px;height:26px;border-radius:6px;display:grid;place-items:center;background:color-mix(in srgb,var(--ttsc-danger) 12%,var(--ttsc-surface));color:var(--ttsc-danger-text);font-size:11px;flex-shrink:0}
+  .attach-txt{min-width:0;display:grid;line-height:1.2}
+  .attach-name{font-size:10.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .attach-size{font-size:9px;color:var(--ttsc-text-muted);margin-top:1px}
+  .attach-dl{margin-left:auto;color:var(--ttsc-text-muted);font-size:9.5px;flex-shrink:0}
+  .sys{display:flex;align-items:center;justify-content:center;gap:6px;padding:0 8px;text-align:center;font-size:9.5px;color:var(--ttsc-text-muted)}
+  .sys i{font-size:9px}
+  .sys strong{color:var(--ttsc-text-2);font-weight:600}
+
+  .typing{min-height:19px;display:flex;align-items:center;gap:6px;padding:0 16px 1px;font-size:10px;color:var(--ttsc-text-muted);transition:opacity .15s}
+  .typing.is-off{opacity:0;visibility:hidden}
+  .tdots{display:inline-flex;align-items:flex-end;gap:2px;height:10px}
+  .tdots i{width:4px;height:4px;border-radius:50%;background:var(--ttsc-text-muted);animation:tdot 1.15s infinite}
+  .tdots i:nth-child(2){animation-delay:.15s}
+  .tdots i:nth-child(3){animation-delay:.3s}
+  @keyframes tdot{0%,60%,100%{opacity:.35;transform:translateY(0)}30%{opacity:1;transform:translateY(-2px)}}
+
+  .composer{display:grid;gap:3px;padding:6px 12px 8px;border-top:1px solid var(--ttsc-border-soft);background:var(--ttsc-surface);flex-shrink:0}
+  .composer-box{display:grid;gap:4px;padding:5px 8px 4px;border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-control);background:var(--ttsc-canvas);transition:border-color .15s,box-shadow .15s}
+  .composer-box:focus-within{border-color:var(--ttsc-accent);box-shadow:0 0 0 3px var(--ttsc-accent-soft)}
+  .composer textarea{width:100%;min-height:28px;max-height:94px;padding:2px 3px;border:0;background:transparent;color:var(--ttsc-text);font-size:12px;line-height:1.45;resize:none;outline:none}
+  .composer textarea::placeholder{color:var(--ttsc-text-muted)}
+  .composer-bar{display:flex;align-items:center;gap:6px;min-width:0}
+  .composer-tools{display:flex;align-items:center;gap:2px;flex:1;min-width:0}
+  .tool{width:26px;height:26px;display:grid;place-items:center;border:0;border-radius:6px;background:transparent;color:var(--ttsc-text-muted);font-size:11.5px;flex-shrink:0}
+  .tool:hover{background:var(--ttsc-surface-2);color:var(--ttsc-text)}
+  .hint{margin-left:4px;font-size:9px;color:var(--ttsc-text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .send{height:27px;padding:0 11px;border:0;border-radius:var(--ttsc-radius-pill);display:inline-flex;align-items:center;gap:6px;background:var(--ttsc-accent);color:var(--ttsc-accent-on);font-size:11px;font-weight:700;flex-shrink:0;transition:background .15s}
+  .send:hover{background:var(--ttsc-accent-hover)}
+  .send i{font-size:10px}
+  .composer-error{margin:1px 2px 0;font-size:10px;color:var(--ttsc-danger-text)}
+  .composer-error[hidden]{display:none}
+  .pending{display:flex;align-items:center;gap:6px;padding:5px 7px;border:1px solid var(--ttsc-border);border-radius:6px;background:var(--ttsc-surface);font-size:10px;min-width:0}
+  .pending i{font-size:10px;color:var(--ttsc-danger-text)}
+  .pending span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pending button{margin-left:auto;width:20px;height:20px;border:0;border-radius:4px;background:transparent;color:var(--ttsc-text-muted);display:grid;place-items:center;font-size:9px;flex-shrink:0}
+  .pending button:hover{background:var(--ttsc-surface-2);color:var(--ttsc-text)}
+  .emoji-wrap{position:relative;display:flex}
+  .emoji-pop{position:absolute;left:-4px;bottom:calc(100% + 7px);z-index:35;display:grid;grid-template-columns:repeat(4,30px);gap:1px;padding:5px;background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-sm);box-shadow:var(--ttsc-shadow-md)}
+  .emoji-pop[hidden]{display:none}
+  .emoji-pop button{width:30px;height:28px;border:0;border-radius:5px;background:transparent;font-size:15px;line-height:1}
+  .emoji-pop button:hover{background:var(--ttsc-surface-2)}
+
+  /* ── Contexto ────────────────────────────────────────────────── */
+  .ctx{display:flex;flex-direction:column;gap:13px;min-height:0;overflow-y:auto;padding:14px;border-left:1px solid var(--ttsc-border-soft);background:var(--ttsc-surface);scrollbar-width:thin}
+  .ctx::-webkit-scrollbar{width:8px}
+  .ctx::-webkit-scrollbar-thumb{background:var(--ttsc-border);border-radius:8px}
+  .ctx-top{display:flex;align-items:center;gap:9px;min-width:0}
+  .ctx-av{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text);border:1px solid var(--ttsc-accent-border);font-size:12px;font-weight:700;flex-shrink:0}
+  .ctx-name{margin:0;font-size:12.5px;font-weight:600;line-height:1.3}
+  .ctx-org{margin:1px 0 0;font-size:10px;line-height:1.35;color:var(--ttsc-text-muted)}
+  .ctx-block{display:grid;gap:5px;min-width:0}
+  .ctx-h{margin:0;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ttsc-text-muted)}
+  .ctx-line{display:flex;align-items:flex-start;gap:7px;margin:0;font-size:10.5px;line-height:1.4;color:var(--ttsc-text-2);min-width:0;overflow-wrap:anywhere}
+  .ctx-line i{width:11px;text-align:center;margin-top:2px;font-size:9.5px;color:var(--ttsc-text-muted);flex-shrink:0}
+  .tags{display:flex;flex-wrap:wrap;gap:4px}
+  .tag{padding:2px 6px;border:1px solid var(--ttsc-border-soft);border-radius:var(--ttsc-radius-pill);background:var(--ttsc-canvas-2);color:var(--ttsc-text-2);font-size:9.5px;font-weight:600;white-space:nowrap}
+  .tag-accent{background:var(--ttsc-accent-soft);border-color:var(--ttsc-accent-border);color:var(--ttsc-accent-text)}
+  .tag-danger{background:color-mix(in srgb,var(--ttsc-danger) 10%,var(--ttsc-surface));border-color:color-mix(in srgb,var(--ttsc-danger) 30%,transparent);color:var(--ttsc-danger-text)}
+  .ai-card{display:grid;gap:6px;padding:9px 10px;border:1px solid var(--ttsc-accent-border);border-radius:var(--ttsc-radius-sm);background:color-mix(in srgb,var(--ttsc-accent) 6%,var(--ttsc-surface))}
+  .ai-h{display:flex;align-items:center;gap:5px;font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ttsc-accent-text)}
+  .ai-h i{font-size:10px}
+  .ai-card ul{margin:0;padding-left:13px;display:grid;gap:4px;font-size:10px;line-height:1.4;color:var(--ttsc-text-2)}
+  .ai-card li::marker{color:var(--ttsc-accent)}
+  .ai-note{margin:0;font-size:9px;line-height:1.4;color:var(--ttsc-text-muted)}
+  .ctx-actions{display:grid;gap:6px;margin-top:auto;padding-top:2px}
+  .ctx-btn{height:29px;display:flex;align-items:center;gap:7px;padding:0 9px;border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-sm);background:var(--ttsc-surface);color:var(--ttsc-text-2);font-size:10.5px;font-weight:600;text-align:left;transition:border-color .15s,background .15s,color .15s}
+  .ctx-btn:hover{border-color:var(--ttsc-border-strong);background:var(--ttsc-canvas);color:var(--ttsc-text)}
+  .ctx-btn i{width:11px;text-align:center;font-size:10px;color:var(--ttsc-text-muted)}
+
+  .conv-scrim{display:none}
+
+  @media (max-width:1099px){
+    .inbox-body{grid-template-columns:272px minmax(0,1fr)}
+    .ctx{display:none}
+  }
+  @media (max-width:819px){
+    .demo{padding:10px}
+    .inbox-body{display:block;height:580px}
+    .thread{height:100%}
+    .convs{position:absolute;inset:0 auto 0 0;z-index:5;width:min(304px,88%);border-right:1px solid var(--ttsc-border);box-shadow:var(--ttsc-shadow-lg);visibility:hidden;transform:translateX(-102%);transition:transform .2s cubic-bezier(.4,0,.2,1),visibility 0s .2s}
+    .inbox.is-list-open .convs{visibility:visible;transform:none;transition:transform .2s cubic-bezier(.4,0,.2,1),visibility 0s 0s}
+    .conv-scrim{display:block;position:absolute;inset:0;z-index:4;border:0;background:var(--ttsc-scrim);opacity:0;visibility:hidden;transition:opacity .2s,visibility 0s .2s}
+    .inbox.is-list-open .conv-scrim{opacity:1;visibility:visible;transition:opacity .2s,visibility 0s 0s}
+    .conv-scrim[hidden]{display:none}
+    .convs-close{display:grid}
+    .list-toggle{display:inline-flex}
+    .thread-h{gap:7px;padding:0 10px;height:56px}
+    .thread-av{display:none}
+    .thread-log{padding:8px 12px 2px;gap:5px}
+    .typing{padding-left:12px;padding-right:12px}
+    .composer{padding:7px 10px 9px}
+    .inbox-h{padding:0 12px}
+    .inbox-sub .hide-sm{display:none}
+    .agents{display:none}
+    .convs-tip{display:none}
+    .msg-body{max-width:86%}
+    .msg-bubble{font-size:11.5px}
+    .attach{min-width:0;width:100%}
+    .hint{display:none}
+  }
+  @media (max-width:560px){
+    .inbox-h{height:52px}
+    .inbox-mark{width:28px;height:28px;font-size:12px;border-radius:8px}
+    .inbox-title{font-size:12.5px}
+    .inbox-sub{font-size:9.5px}
+    .btn-new{width:28px;height:28px;padding:0;justify-content:center}
+    .btn-new span{display:none}
+    .inbox-body{height:574px}
+    .thread-title{font-size:11.5px}
+    .thread-status{font-size:9px}
+    .list-toggle{height:26px;font-size:9.5px}
+    .icon-btn{width:27px;height:27px}
+    .msg-av{display:none}
+    .msg-body{max-width:92%}
+    .send span{display:none}
+    .send{width:34px;height:30px;padding:0;justify-content:center;border-radius:50%}
+    .send i{font-size:12px}
+    .day{font-size:9px}
+  }
+  @media (max-width:380px){
+    .thread-actions .icon-btn:first-child{display:none}
+    .inbox-tools{gap:6px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+  }
+</style>
+</head>
+<body>
+<main class="demo">
+  <section class="inbox" id="chatInbox" aria-labelledby="inboxTitle">
+    <header class="inbox-h">
+      <div class="inbox-id">
+        <span class="inbox-mark" aria-hidden="true"><i class="fa-light fa-inbox"></i></span>
+        <div style="min-width:0">
+          <h2 class="inbox-title" id="inboxTitle">Atendimento · Caixa de entrada</h2>
+          <p class="inbox-sub" id="inboxMeta">4 conversas · <b id="metaUnread">2 não lidas</b><span class="hide-sm"> · SLA médio de resposta 3 min</span></p>
+        </div>
+      </div>
+      <div class="inbox-tools">
+        <div class="agents" aria-hidden="true"><span>CS</span><span>LA</span><span>+2</span></div>
+        <span class="sr-only">4 atendentes online.</span>
+        <button class="btn-new" type="button" id="newTicket"><i class="fa-light fa-plus" aria-hidden="true"></i><span>Novo atendimento</span></button>
+      </div>
+    </header>
+
+    <div class="inbox-body" id="inboxBody">
+      <aside class="convs" id="convPanel" aria-label="Conversas">
+        <div class="convs-h">
+          <div class="convs-search-row">
+            <div class="search">
+              <i class="fa-light fa-magnifying-glass" aria-hidden="true"></i>
+              <label class="sr-only" for="convSearch">Buscar conversa</label>
+              <input id="convSearch" type="search" placeholder="Buscar conversa..." autocomplete="off">
+            </div>
+            <button class="convs-close" id="convClose" type="button" aria-label="Fechar lista de conversas"><i class="fa-light fa-xmark" aria-hidden="true"></i></button>
+          </div>
+          <p class="convs-label"><span>Abertas</span><b id="openCount">4</b></p>
+        </div>
+
+        <div class="convs-scroll">
+          <ul class="conv-list" id="convList">
+            <li>
+              <button class="conv" type="button" data-conv="suporte" aria-current="false">
+                <span class="conv-av" aria-hidden="true">MR</span>
+                <span class="conv-main">
+                  <span class="conv-top"><span class="conv-name">Suporte · Financeiro</span><time class="conv-time" datetime="2026-10-26T08:47">08:47</time></span>
+                  <span class="conv-prev">Segunda via do boleto de outubro</span>
+                  <span class="conv-foot"><span class="chan"><i class="fa-light fa-envelope" aria-hidden="true"></i>E-mail</span><span class="unread" title="2 não lidas">2</span><span class="sr-only">2 mensagens não lidas.</span></span>
+                </span>
+              </button>
+            </li>
+            <li>
+              <button class="conv conv-ai" type="button" data-conv="ia" aria-current="false">
+                <span class="conv-av" aria-hidden="true">IA</span>
+                <span class="conv-main">
+                  <span class="conv-top"><span class="conv-name">Assistente IA · Insights</span><time class="conv-time" datetime="2026-10-26T09:01">09:01</time></span>
+                  <span class="conv-prev">Posso criar a tarefa para o time comercial.</span>
+                  <span class="conv-foot"><span class="chan chan-ai"><i class="fa-light fa-sparkles" aria-hidden="true"></i>Chat</span></span>
+                </span>
+              </button>
+            </li>
+            <li>
+              <button class="conv is-active" type="button" data-conv="comercial" aria-current="true">
+                <span class="conv-av" aria-hidden="true">TF</span>
+                <span class="conv-main">
+                  <span class="conv-top"><span class="conv-name">Comercial · Proposta 2041</span><time class="conv-time" datetime="2026-10-26T09:12">09:12</time></span>
+                  <span class="conv-prev" id="activePreview">Recebi. Vou levar para o jurídico e retorno ainda hoje.</span>
+                  <span class="conv-foot"><span class="chan"><i class="fa-light fa-comment" aria-hidden="true"></i>WhatsApp</span></span>
+                </span>
+              </button>
+            </li>
+            <li>
+              <button class="conv" type="button" data-conv="academico" aria-current="false">
+                <span class="conv-av" aria-hidden="true">LC</span>
+                <span class="conv-main">
+                  <span class="conv-top"><span class="conv-name">Acadêmico · Matrículas</span><time class="conv-time" datetime="2026-10-26T07:55">07:55</time></span>
+                  <span class="conv-prev">Ajuste de carga horária confirmado</span>
+                  <span class="conv-foot"><span class="chan"><i class="fa-light fa-message" aria-hidden="true"></i>Chat</span></span>
+                </span>
+              </button>
+            </li>
+          </ul>
+          <div class="conv-empty" id="convEmpty" hidden>
+            <i class="fa-light fa-magnifying-glass" aria-hidden="true"></i>
+            <span>Nenhuma conversa encontrada.</span><br>
+            <button type="button" id="clearSearch">Limpar busca</button>
+          </div>
+        </div>
+
+        <div class="convs-tip"><i class="fa-light fa-bolt" aria-hidden="true"></i><span>Digite <b>/atalho</b> para inserir uma resposta salva.</span></div>
+        <div class="convs-foot">
+          <button class="ghost-link" type="button" id="resolvedBtn"><span>Resolvidas hoje · 7</span><i class="fa-light fa-chevron-right" aria-hidden="true"></i></button>
+        </div>
+      </aside>
+
+      <button class="conv-scrim" id="convScrim" type="button" aria-label="Fechar lista de conversas" hidden></button>
+
+      <section class="thread" aria-labelledby="threadTitle">
+        <header class="thread-h">
+          <button class="list-toggle" id="listToggle" type="button" aria-expanded="false" aria-controls="convPanel">
+            <i class="fa-light fa-chevron-left" aria-hidden="true"></i> Conversas <span>(4)</span>
+          </button>
+          <span class="thread-av" id="threadAvatar" aria-hidden="true">TF</span>
+          <div class="thread-id">
+            <h3 class="thread-title" id="threadTitle" tabindex="-1">Comercial · Proposta 2041</h3>
+            <p class="thread-status" id="threadStatus">
+              <span class="st-on"><span class="dot" aria-hidden="true"></span>Online</span>
+              <span aria-hidden="true">·</span>
+              <span>WhatsApp · resposta em 2 min</span>
+            </p>
+          </div>
+          <div class="thread-actions">
+            <button class="icon-btn" id="callBtn" type="button" aria-label="Ligar para Tatiane Faria"><i class="fa-light fa-phone" aria-hidden="true"></i></button>
+            <div class="menu-wrap">
+              <button class="icon-btn" id="moreBtn" type="button" aria-label="Mais ações da conversa" aria-expanded="false" aria-haspopup="menu" aria-controls="threadMenu"><i class="fa-light fa-ellipsis" aria-hidden="true"></i></button>
+              <div class="thread-menu" id="threadMenu" role="menu" aria-label="Mais ações da conversa" hidden>
+                <button type="button" role="menuitem" data-action="resolver"><i class="fa-light fa-circle-check" aria-hidden="true"></i>Marcar como resolvida</button>
+                <button type="button" role="menuitem" data-action="transferir"><i class="fa-light fa-arrow-right-arrow-left" aria-hidden="true"></i>Transferir atendimento</button>
+                <button type="button" role="menuitem" data-action="exportar"><i class="fa-light fa-download" aria-hidden="true"></i>Exportar conversa</button>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div class="thread-log" id="threadLog" role="log" aria-live="polite" aria-relevant="additions" aria-label="Mensagens da conversa Comercial, Proposta 2041" tabindex="0">
+          <div class="day"><span>Hoje</span></div>
+
+          <div class="msg msg-out">
+            <div class="msg-body">
+              <div class="msg-meta"><time datetime="2026-10-26T08:58">08:58</time><span class="msg-author">Você · Comercial</span></div>
+              <div class="msg-bubble"><p>Bom dia, Tatiane. A proposta 2041 está em análise final.</p></div>
+            </div>
+          </div>
+
+          <div class="msg msg-in">
+            <span class="msg-av" aria-hidden="true">TF</span>
+            <div class="msg-body">
+              <div class="msg-meta"><span class="msg-author">Tatiane Faria</span><time datetime="2026-10-26T09:02">09:02</time></div>
+              <div class="msg-bubble"><p>Bom dia! O desconto por convênio da proposta 2041 foi aprovado?</p></div>
+            </div>
+          </div>
+
+          <div class="msg msg-out">
+            <div class="msg-body">
+              <div class="msg-meta"><time datetime="2026-10-26T09:05">09:05</time><span class="msg-author">Você · Comercial</span></div>
+              <div class="msg-bubble"><p>Sim, o desconto de 12% foi aprovado pela diretoria.</p></div>
+            </div>
+          </div>
+
+          <div class="msg msg-in">
+            <span class="msg-av" aria-hidden="true">TF</span>
+            <div class="msg-body">
+              <div class="msg-meta"><span class="msg-author">Tatiane Faria</span><time datetime="2026-10-26T09:07">09:07</time></div>
+              <div class="msg-bubble"><p>Ótimo. Pode enviar o contrato atualizado para assinatura?</p></div>
+            </div>
+          </div>
+
+          <div class="sys"><i class="fa-light fa-arrow-right-arrow-left" aria-hidden="true"></i><span>Atendimento assumido por <strong>você</strong> · Comercial · 09:08</span></div>
+
+          <div class="msg msg-out">
+            <div class="msg-body">
+              <div class="msg-meta"><time datetime="2026-10-26T09:10">09:10</time><span class="msg-author">Você · Comercial</span></div>
+              <div class="msg-bubble">
+                <p>Segue o contrato com desconto. Assinatura até 30/10.</p>
+                <button class="attach" type="button" aria-label="Abrir contrato.pdf, 248 KB">
+                  <span class="attach-ic" aria-hidden="true"><i class="fa-light fa-file-pdf"></i></span>
+                  <span class="attach-txt"><span class="attach-name">contrato.pdf</span><span class="attach-size">248 KB · PDF</span></span>
+                  <i class="fa-light fa-download attach-dl" aria-hidden="true"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="msg msg-in">
+            <span class="msg-av" aria-hidden="true">TF</span>
+            <div class="msg-body">
+              <div class="msg-meta"><span class="msg-author">Tatiane Faria</span><time datetime="2026-10-26T09:12">09:12</time></div>
+              <div class="msg-bubble"><p>Recebi. Vou levar para o jurídico e retorno ainda hoje.</p></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="typing" id="typingRow" role="status">
+          <span class="tdots" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span id="typingText">Tatiane está digitando…</span>
+        </div>
+
+        <form class="composer" id="chatComposer" novalidate>
+          <div class="composer-box">
+            <div class="pending" id="pendingFile" hidden>
+              <i class="fa-light fa-paperclip" aria-hidden="true"></i>
+              <span id="pendingName"></span>
+              <button type="button" id="removeFile" aria-label="Remover anexo"><i class="fa-light fa-xmark" aria-hidden="true"></i></button>
+            </div>
+            <label class="sr-only" for="msgInput" id="composerLabel">Mensagem para Tatiane Faria</label>
+            <textarea id="msgInput" rows="1" maxlength="2000" placeholder="Escreva uma resposta..." aria-describedby="composerHint composerError"></textarea>
+            <div class="composer-bar">
+              <div class="composer-tools">
+                <button class="tool" id="attachBtn" type="button" aria-label="Anexar arquivo"><i class="fa-light fa-paperclip" aria-hidden="true"></i></button>
+                <input type="file" id="fileInput" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx" hidden>
+                <div class="emoji-wrap">
+                  <button class="tool" id="emojiBtn" type="button" aria-label="Inserir emoji" aria-expanded="false" aria-controls="emojiPop"><i class="fa-light fa-face-smile" aria-hidden="true"></i></button>
+                  <div class="emoji-pop" id="emojiPop" hidden>
+                    <button type="button" data-emoji="😊" aria-label="Inserir emoji de sorriso">😊</button>
+                    <button type="button" data-emoji="👍" aria-label="Inserir emoji de joinha">👍</button>
+                    <button type="button" data-emoji="🙏" aria-label="Inserir emoji de agradecimento">🙏</button>
+                    <button type="button" data-emoji="✅" aria-label="Inserir emoji de confirmação">✅</button>
+                    <button type="button" data-emoji="📎" aria-label="Inserir emoji de anexo">📎</button>
+                    <button type="button" data-emoji="📅" aria-label="Inserir emoji de calendário">📅</button>
+                    <button type="button" data-emoji="💡" aria-label="Inserir emoji de ideia">💡</button>
+                    <button type="button" data-emoji="👋" aria-label="Inserir emoji de despedida">👋</button>
+                  </div>
+                </div>
+                <span class="hint" id="composerHint">Enter envia · Shift+Enter quebra linha</span>
+              </div>
+              <button class="send" type="submit" aria-label="Enviar mensagem"><i class="fa-light fa-paper-plane-top" aria-hidden="true"></i><span>Enviar</span></button>
+            </div>
+          </div>
+          <p class="composer-error" id="composerError" hidden></p>
+        </form>
+      </section>
+
+      <aside class="ctx" aria-label="Contexto do contato">
+        <div class="ctx-top">
+          <span class="ctx-av" id="ctxAvatar" aria-hidden="true">TF</span>
+          <div style="min-width:0">
+            <h3 class="ctx-name" id="ctxName">Tatiane Faria</h3>
+            <p class="ctx-org" id="ctxOrg">Empresa Alfa · cliente desde 2024</p>
+          </div>
+        </div>
+
+        <div class="ctx-block">
+          <p class="ctx-h">Contato</p>
+          <p class="ctx-line"><i class="fa-light fa-phone" aria-hidden="true"></i><span id="ctxPhone">(11) 98765-4321</span></p>
+          <p class="ctx-line"><i class="fa-light fa-envelope" aria-hidden="true"></i><span id="ctxEmail">tatiane@alfa.com.br</span></p>
+        </div>
+
+        <div class="ctx-block">
+          <p class="ctx-h">Tags</p>
+          <div class="tags" id="ctxTags">
+            <span class="tag tag-accent">Proposta 2041</span>
+            <span class="tag">Convênio</span>
+            <span class="tag tag-danger">Prioridade alta</span>
+          </div>
+        </div>
+
+        <div class="ai-card">
+          <div class="ai-h"><i class="fa-light fa-sparkles" aria-hidden="true"></i>Resumo da IA</div>
+          <ul id="ctxSummary">
+            <li>Desconto de convênio de 12% aprovado em 21/10.</li>
+            <li>Contrato pendente de assinatura até 30/10.</li>
+          </ul>
+          <p class="ai-note" id="ctxSources">Gerado a partir de 8 sinais. Revise antes de usar.</p>
+        </div>
+
+        <div class="ctx-block">
+          <p class="ctx-h">Atendimento</p>
+          <p class="ctx-line"><i class="fa-light fa-clock" aria-hidden="true"></i><span id="ctxOpened">Aberto há 1 h 12 min</span></p>
+          <p class="ctx-line"><i class="fa-light fa-stopwatch" aria-hidden="true"></i><span id="ctxSla">SLA de resposta: 4 h</span></p>
+        </div>
+
+        <div class="ctx-actions">
+          <button class="ctx-btn" type="button" id="createTask"><i class="fa-light fa-list-check" aria-hidden="true"></i>Criar tarefa</button>
+          <button class="ctx-btn" type="button" id="openRecord"><i class="fa-light fa-arrow-up-right-from-square" aria-hidden="true"></i>Abrir ficha</button>
+        </div>
+      </aside>
+    </div>
+  </section>
+  <p id="chatLive" class="sr-only" aria-live="polite" aria-atomic="true"></p>
+</main>
+
+<template id="tpl-suporte">
+  <div class="day"><span>Hoje</span></div>
+  <div class="msg msg-in">
+    <span class="msg-av" aria-hidden="true">MR</span>
+    <div class="msg-body">
+      <div class="msg-meta"><span class="msg-author">Marina Rocha</span><time>08:40</time></div>
+      <div class="msg-bubble"><p>Bom dia. Preciso da segunda via do boleto de outubro.</p></div>
+    </div>
+  </div>
+  <div class="msg msg-out">
+    <div class="msg-body">
+      <div class="msg-meta"><time>08:44</time><span class="msg-author">Você · Suporte</span></div>
+      <div class="msg-bubble"><p>Bom dia, Marina. Reenviei o boleto para o e-mail cadastrado na matrícula 2026-0412.</p></div>
+    </div>
+  </div>
+  <div class="msg msg-in">
+    <span class="msg-av" aria-hidden="true">MR</span>
+    <div class="msg-body">
+      <div class="msg-meta"><span class="msg-author">Marina Rocha</span><time>08:46</time></div>
+      <div class="msg-bubble"><p>Recebi, obrigada.</p></div>
+    </div>
+  </div>
+  <div class="sys"><i class="fa-light fa-circle-check" aria-hidden="true"></i><span>Segunda via enviada · <strong>Suporte</strong> · 08:47</span></div>
+</template>
+
+<template id="tpl-ia">
+  <div class="day"><span>Hoje</span></div>
+  <div class="sys"><i class="fa-light fa-sparkles" aria-hidden="true"></i><span>Copiloto conectado aos <strong>dados do tenant</strong> · somente leitura</span></div>
+  <div class="msg msg-out">
+    <div class="msg-body">
+      <div class="msg-meta"><time>08:58</time><span class="msg-author">Você · Comercial</span></div>
+      <div class="msg-bubble"><p>Quais turmas correm risco de ociosidade no próximo semestre?</p></div>
+    </div>
+  </div>
+  <div class="msg msg-in">
+    <span class="msg-av msg-av-ai" aria-hidden="true"><i class="fa-light fa-sparkles"></i></span>
+    <div class="msg-body">
+      <div class="msg-meta"><span class="msg-author">Assistente IA</span><time>09:00</time></div>
+      <div class="msg-bubble"><p>Cruzei ocupação, lista de espera e evasão das últimas seis semanas. Duas turmas de tecnologia estão acima de 90% e uma de gestão está em 41%.</p></div>
+    </div>
+  </div>
+  <div class="msg msg-out">
+    <div class="msg-body">
+      <div class="msg-meta"><time>09:01</time><span class="msg-author">Você · Comercial</span></div>
+      <div class="msg-bubble"><p>Sugira uma ação para a turma de gestão com 41% de ocupação.</p></div>
+    </div>
+  </div>
+  <div class="msg msg-in">
+    <span class="msg-av msg-av-ai" aria-hidden="true"><i class="fa-light fa-sparkles"></i></span>
+    <div class="msg-body">
+      <div class="msg-meta"><span class="msg-author">Assistente IA</span><time>09:01</time></div>
+      <div class="msg-bubble"><p>Recomendo abrir lista de espera e revisar a campanha do período noturno. Posso criar a tarefa para o time comercial.</p></div>
+    </div>
+  </div>
+</template>
+
+<template id="tpl-academico">
+  <div class="day"><span>Hoje</span></div>
+  <div class="msg msg-in">
+    <span class="msg-av" aria-hidden="true">LC</span>
+    <div class="msg-body">
+      <div class="msg-meta"><span class="msg-author">Lucas Campos</span><time>07:52</time></div>
+      <div class="msg-bubble"><p>Boa tarde. Consigo ajustar minha carga horária para o período noturno?</p></div>
+    </div>
+  </div>
+  <div class="msg msg-out">
+    <div class="msg-body">
+      <div class="msg-meta"><time>07:54</time><span class="msg-author">Você · Acadêmico</span></div>
+      <div class="msg-bubble"><p>Boa tarde, Lucas. O ajuste foi aprovado pela coordenação e já aparece no seu horário.</p></div>
+    </div>
+  </div>
+  <div class="msg msg-in">
+    <span class="msg-av" aria-hidden="true">LC</span>
+    <div class="msg-body">
+      <div class="msg-meta"><span class="msg-author">Lucas Campos</span><time>07:55</time></div>
+      <div class="msg-bubble"><p>Perfeito, obrigado.</p></div>
+    </div>
+  </div>
+</template>
+
+<script>
+(function () {
+  'use strict';
+
+  var DATA = {
+    suporte: {
+      name: 'Suporte · Financeiro',
+      contact: 'Marina Rocha',
+      initials: 'MR',
+      channel: 'E-mail',
+      response: '4 h',
+      assistant: false,
+      team: 'Suporte',
+      phone: '(11) 91234-5678',
+      email: 'marina.rocha@email.com',
+      org: 'Aluna · Administração · 3º semestre',
+      tags: [{ label: 'Financeiro', tone: 'accent' }, { label: 'Matrícula 2026-0412' }, { label: 'Boleto em aberto', tone: 'danger' }],
+      summary: ['Boleto de outubro em atraso desde 10/10.', 'Segunda via reenviada por e-mail em 26/10.'],
+      sources: 5,
+      opened: 'Aberto há 1 h 12 min',
+      sla: 'SLA de resposta: 4 h'
+    },
+    ia: {
+      name: 'Assistente IA · Insights',
+      contact: 'Copiloto TTSC',
+      initials: 'IA',
+      channel: 'Chat',
+      response: 'segundos',
+      assistant: true,
+      team: 'Comercial',
+      phone: 'Chat interno',
+      email: 'copiloto@totustuus.app',
+      org: 'Assistente de IA · somente leitura',
+      tags: [{ label: 'IA generativa', tone: 'accent' }, { label: 'Somente leitura' }, { label: 'LGPD' }],
+      summary: ['Consulta ocupação, lista de espera e evasão.', 'Nunca executa ações sem aprovação humana.'],
+      sources: 12,
+      opened: 'Sessão iniciada há 14 min',
+      sla: 'Escopo: dados do tenant',
+      canned: 'Recomendo abrir lista de espera e revisar a campanha do período noturno. Posso gerar a tarefa para o time comercial.'
+    },
+    comercial: {
+      name: 'Comercial · Proposta 2041',
+      contact: 'Tatiane Faria',
+      initials: 'TF',
+      channel: 'WhatsApp',
+      response: '2 min',
+      assistant: false,
+      team: 'Comercial',
+      phone: '(11) 98765-4321',
+      email: 'tatiane@alfa.com.br',
+      org: 'Empresa Alfa · cliente desde 2024',
+      tags: [{ label: 'Proposta 2041', tone: 'accent' }, { label: 'Convênio' }, { label: 'Prioridade alta', tone: 'danger' }],
+      summary: ['Desconto de convênio de 12% aprovado em 21/10.', 'Contrato pendente de assinatura até 30/10.'],
+      sources: 8,
+      opened: 'Aberto há 1 h 12 min',
+      sla: 'SLA de resposta: 4 h'
+    },
+    academico: {
+      name: 'Acadêmico · Matrículas',
+      contact: 'Lucas Campos',
+      initials: 'LC',
+      channel: 'Chat',
+      response: '10 min',
+      assistant: false,
+      team: 'Acadêmico',
+      phone: '(11) 99876-5432',
+      email: 'lucas.campos@email.com',
+      org: 'Aluno · Tecnologia · 2º semestre',
+      tags: [{ label: 'Acadêmico', tone: 'accent' }, { label: 'Carga horária' }],
+      summary: ['Pedido de ajuste de carga para o período noturno.', 'Ajuste aprovado e aplicado em 26/10.'],
+      sources: 4,
+      opened: 'Aberto há 38 min',
+      sla: 'SLA de resposta: 8 h'
+    }
+  };
+
+  function normalize(value) {
+    return (value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  }
+
+  function nowTime() {
+    return new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function formatSize(bytes) {
+    if (bytes >= 1024 * 1024) return (bytes / (1024 * 1024)).toFixed(1).replace('.', ',') + ' MB';
+    return Math.max(1, Math.round(bytes / 1024)) + ' KB';
+  }
+
+  function init(root, options) {
+    if (!root) return null;
+    if (root.__ttscChatPanel) return root.__ttscChatPanel;
+    var opts = Object.assign({ replyDelay: 900, contactTypingDelay: 1400, maxFileSize: 10 * 1024 * 1024 }, options || {});
+
+    var els = {
+      log: root.querySelector('#threadLog'),
+      title: root.querySelector('#threadTitle'),
+      status: root.querySelector('#threadStatus'),
+      avatar: root.querySelector('#threadAvatar'),
+      typing: root.querySelector('#typingRow'),
+      typingText: root.querySelector('#typingText'),
+      form: root.querySelector('#chatComposer'),
+      input: root.querySelector('#msgInput'),
+      label: root.querySelector('#composerLabel'),
+      hint: root.querySelector('#composerHint'),
+      error: root.querySelector('#composerError'),
+      live: document.getElementById('chatLive'),
+      metaUnread: root.querySelector('#metaUnread'),
+      openCount: root.querySelector('#openCount'),
+      empty: root.querySelector('#convEmpty'),
+      search: root.querySelector('#convSearch'),
+      list: root.querySelector('#convList'),
+      listToggle: root.querySelector('#listToggle'),
+      scrim: root.querySelector('#convScrim'),
+      menu: root.querySelector('#threadMenu'),
+      more: root.querySelector('#moreBtn'),
+      emoji: root.querySelector('#emojiPop'),
+      emojiBtn: root.querySelector('#emojiBtn'),
+      file: root.querySelector('#fileInput'),
+      pending: root.querySelector('#pendingFile'),
+      pendingName: root.querySelector('#pendingName'),
+      ctxAvatar: root.querySelector('#ctxAvatar'),
+      ctxName: root.querySelector('#ctxName'),
+      ctxOrg: root.querySelector('#ctxOrg'),
+      ctxPhone: root.querySelector('#ctxPhone'),
+      ctxEmail: root.querySelector('#ctxEmail'),
+      ctxTags: root.querySelector('#ctxTags'),
+      ctxSummary: root.querySelector('#ctxSummary'),
+      ctxSources: root.querySelector('#ctxSources'),
+      ctxOpened: root.querySelector('#ctxOpened'),
+      ctxSla: root.querySelector('#ctxSla')
+    };
+
+    var state = {
+      active: 'comercial',
+      threads: {},
+      timers: [],
+      file: null,
+      cleanup: []
+    };
+    state.threads.comercial = els.log.innerHTML;
+
+    function buttons() {
+      return Array.prototype.slice.call(root.querySelectorAll('.conv'));
+    }
+
+    function findButton(id) {
+      return buttons().filter(function (b) { return b.dataset.conv === id; })[0] || null;
+    }
+
+    function on(target, type, handler) {
+      target.addEventListener(type, handler);
+      state.cleanup.push(function () { target.removeEventListener(type, handler); });
+    }
+
+    function announce(text) {
+      if (!els.live) return;
+      els.live.textContent = '';
+      window.setTimeout(function () { els.live.textContent = text; }, 30);
+    }
+
+    function setTimer(fn, delay) {
+      var t = window.setTimeout(fn, delay);
+      state.timers.push(t);
+      return t;
+    }
+
+    function clearTimers() {
+      state.timers.forEach(function (t) { window.clearTimeout(t); });
+      state.timers = [];
+    }
+
+    function updateUnread() {
+      var total = 0;
+      buttons().forEach(function (b) {
+        var badge = b.querySelector('.unread');
+        if (badge) total += parseInt(badge.textContent, 10) || 0;
+      });
+      if (els.metaUnread) els.metaUnread.textContent = total ? total + ' não lidas' : 'tudo lido';
+      return total;
+    }
+
+    function setTyping(on, name) {
+      els.typing.classList.toggle('is-off', !on);
+      if (name) els.typingText.textContent = name + ' está digitando…';
+    }
+
+    function renderStatus(data) {
+      els.status.textContent = '';
+      var head = document.createElement('span');
+      if (data.assistant) {
+        head.className = 'st-ai';
+        var icon = document.createElement('i');
+        icon.className = 'fa-light fa-sparkles';
+        icon.setAttribute('aria-hidden', 'true');
+        head.appendChild(icon);
+        head.appendChild(document.createTextNode('Assistente IA'));
+      } else {
+        head.className = 'st-on';
+        var dot = document.createElement('span');
+        dot.className = 'dot';
+        dot.setAttribute('aria-hidden', 'true');
+        head.appendChild(dot);
+        head.appendChild(document.createTextNode('Online'));
+      }
+      els.status.appendChild(head);
+      var sep = document.createElement('span');
+      sep.setAttribute('aria-hidden', 'true');
+      sep.textContent = '·';
+      els.status.appendChild(sep);
+      var tail = document.createElement('span');
+      tail.textContent = data.channel + ' · resposta em ' + data.response;
+      els.status.appendChild(tail);
+    }
+
+    function loadThread(id) {
+      if (state.threads[id] != null) {
+        els.log.innerHTML = state.threads[id];
+      } else {
+        var tpl = document.getElementById('tpl-' + id);
+        els.log.innerHTML = tpl ? tpl.innerHTML : '';
+      }
+      scrollEnd();
+      window.requestAnimationFrame(scrollEnd);
+      if (document.fonts && document.fonts.ready && document.fonts.ready.then) {
+        document.fonts.ready.then(function () {
+          if (state.active === id) scrollEnd();
+        });
+      }
+    }
+
+    function scrollEnd() {
+      els.log.scrollTop = els.log.scrollHeight;
+    }
+
+    function setConversation(id, focusTitle) {
+      var btn = findButton(id);
+      var data = DATA[id];
+      if (!btn || !data) return;
+
+      if (state.active && state.active !== id) {
+        state.threads[state.active] = els.log.innerHTML;
+      }
+      clearTimers();
+      setTyping(false);
+      state.active = id;
+
+      buttons().forEach(function (b) {
+        var active = b === btn;
+        b.classList.toggle('is-active', active);
+        b.setAttribute('aria-current', active ? 'true' : 'false');
+      });
+
+      var badge = btn.querySelector('.unread');
+      var sr = btn.querySelector('.sr-only');
+      if (badge) badge.parentNode.removeChild(badge);
+      if (sr) sr.parentNode.removeChild(sr);
+      updateUnread();
+
+      els.title.textContent = data.name;
+      els.avatar.textContent = data.initials;
+      els.title.setAttribute('aria-label', data.name);
+      renderStatus(data);
+      els.log.setAttribute('aria-label', 'Mensagens da conversa ' + data.name);
+      if (els.label) els.label.textContent = 'Mensagem para ' + data.contact;
+      els.input.placeholder = 'Responder para ' + data.contact + '...';
+
+      els.ctxAvatar.textContent = data.initials;
+      els.ctxName.textContent = data.contact;
+      els.ctxOrg.textContent = data.org;
+      els.ctxPhone.textContent = data.phone;
+      els.ctxEmail.textContent = data.email;
+      els.ctxOpened.textContent = data.opened;
+      els.ctxSla.textContent = data.sla;
+      els.ctxSources.textContent = 'Gerado a partir de ' + data.sources + ' sinais. Revise antes de usar.';
+
+      els.ctxTags.textContent = '';
+      data.tags.forEach(function (tag) {
+        var span = document.createElement('span');
+        span.className = 'tag' + (tag.tone ? ' tag-' + tag.tone : '');
+        span.textContent = tag.label;
+        els.ctxTags.appendChild(span);
+      });
+
+      els.ctxSummary.textContent = '';
+      data.summary.forEach(function (line) {
+        var li = document.createElement('li');
+        li.textContent = line;
+        els.ctxSummary.appendChild(li);
+      });
+
+      loadThread(id);
+      els.typingText.textContent = data.contact + ' está digitando…';
+      closeList(false);
+
+      if (focusTitle) {
+        window.setTimeout(function () { els.title.focus(); }, 60);
+      }
+    }
+
+    function appendMessage(msg) {
+      var wrap = document.createElement('div');
+      wrap.className = 'msg ' + (msg.direction === 'out' ? 'msg-out' : 'msg-in');
+
+      if (msg.direction !== 'out') {
+        var avatar = document.createElement('span');
+        avatar.className = 'msg-av' + (msg.author === 'Assistente IA' ? ' msg-av-ai' : '');
+        avatar.setAttribute('aria-hidden', 'true');
+        if (msg.author === 'Assistente IA') {
+          avatar.innerHTML = '<i class="fa-light fa-sparkles"></i>';
+        } else {
+          avatar.textContent = DATA[state.active].initials;
+        }
+        wrap.appendChild(avatar);
+      }
+
+      var body = document.createElement('div');
+      body.className = 'msg-body';
+
+      var meta = document.createElement('div');
+      meta.className = 'msg-meta';
+      var time = document.createElement('time');
+      time.textContent = msg.time || nowTime();
+      var author = document.createElement('span');
+      author.className = 'msg-author';
+      author.textContent = msg.author || (msg.direction === 'out' ? 'Você · ' + DATA[state.active].team : DATA[state.active].contact);
+      if (msg.direction === 'out') {
+        meta.appendChild(time);
+        meta.appendChild(author);
+      } else {
+        meta.appendChild(author);
+        meta.appendChild(time);
+      }
+
+      var bubble = document.createElement('div');
+      bubble.className = 'msg-bubble';
+      var p = document.createElement('p');
+      p.textContent = msg.text || '';
+      bubble.appendChild(p);
+
+      if (msg.attachment) {
+        var attach = document.createElement('button');
+        attach.type = 'button';
+        attach.className = 'attach';
+        attach.setAttribute('aria-label', 'Abrir ' + msg.attachment.name + ', ' + msg.attachment.size);
+        attach.innerHTML = '<span class="attach-ic" aria-hidden="true"><i class="fa-light fa-file-pdf"></i></span>' +
+          '<span class="attach-txt"><span class="attach-name"></span><span class="attach-size"></span></span>' +
+          '<i class="fa-light fa-download attach-dl" aria-hidden="true"></i>';
+        attach.querySelector('.attach-name').textContent = msg.attachment.name;
+        attach.querySelector('.attach-size').textContent = msg.attachment.size + ' · ' + msg.attachment.type;
+        attach.addEventListener('click', function () { announce('Abrindo ' + msg.attachment.name + '.'); });
+        bubble.appendChild(attach);
+      }
+
+      body.appendChild(meta);
+      body.appendChild(bubble);
+      wrap.appendChild(body);
+      els.log.appendChild(wrap);
+      els.log.scrollTop = els.log.scrollHeight;
+      return wrap;
+    }
+
+    function updatePreview(text) {
+      var btn = findButton(state.active);
+      if (!btn) return;
+      var prev = btn.querySelector('.conv-prev');
+      var time = btn.querySelector('.conv-time');
+      if (prev) prev.textContent = text;
+      if (time) {
+        time.textContent = nowTime();
+        time.setAttribute('datetime', new Date().toISOString());
+      }
+    }
+
+    function showError(text) {
+      els.error.textContent = text;
+      els.error.hidden = false;
+      els.input.setAttribute('aria-invalid', 'true');
+      announce(text);
+    }
+
+    function hideError() {
+      els.error.hidden = true;
+      els.input.removeAttribute('aria-invalid');
+    }
+
+    function clearPending() {
+      state.file = null;
+      els.file.value = '';
+      els.pending.hidden = true;
+      els.pendingName.textContent = '';
+    }
+
+    function autoGrow() {
+      els.input.style.height = 'auto';
+      els.input.style.height = Math.min(els.input.scrollHeight, 94) + 'px';
+    }
+
+    function send() {
+      var text = els.input.value.trim();
+      if (!text && !state.file) {
+        showError('Escreva uma mensagem antes de enviar.');
+        els.input.focus();
+        return;
+      }
+      hideError();
+      var data = DATA[state.active];
+      var attachment = state.file ? { name: state.file.name, size: formatSize(state.file.size), type: (state.file.name.split('.').pop() || 'arquivo').toUpperCase() } : null;
+      appendMessage({ direction: 'out', text: text, attachment: attachment });
+      updatePreview(text || 'Arquivo enviado');
+      announce('Mensagem enviada para ' + data.contact + '.');
+      root.dispatchEvent(new CustomEvent('ttsc:chat:send', {
+        bubbles: true,
+        detail: { conversationId: state.active, text: text, attachment: attachment }
+      }));
+
+      els.input.value = '';
+      autoGrow();
+      clearPending();
+
+      if (data.assistant) {
+        setTyping(true, 'Assistente IA');
+        setTimer(function () {
+          setTyping(false);
+          appendMessage({ direction: 'in', author: 'Assistente IA', text: data.canned });
+          updatePreview(data.canned);
+          announce('O assistente respondeu.');
+        }, opts.replyDelay);
+      } else {
+        setTyping(true, data.contact.split(' ')[0]);
+        setTimer(function () { setTyping(false); }, opts.contactTypingDelay);
+      }
+    }
+
+    function openList() {
+      root.classList.add('is-list-open');
+      els.listToggle.setAttribute('aria-expanded', 'true');
+      els.scrim.hidden = false;
+      setBackgroundInert(true);
+      window.setTimeout(function () { els.search.focus(); }, 120);
+    }
+
+    function closeList(returnFocus) {
+      if (!root.classList.contains('is-list-open')) return;
+      root.classList.remove('is-list-open');
+      els.listToggle.setAttribute('aria-expanded', 'false');
+      setBackgroundInert(false);
+      var finish = function () { els.scrim.hidden = true; };
+      window.setTimeout(finish, 210);
+      if (returnFocus) els.listToggle.focus();
+    }
+
+    function setBackgroundInert(on) {
+      [root.querySelector('.thread'), root.querySelector('.ctx')].forEach(function (el) {
+        if (!el) return;
+        if ('inert' in el) el.inert = on;
+      });
+    }
+
+    function closeMenu() {
+      els.menu.hidden = true;
+      els.more.setAttribute('aria-expanded', 'false');
+    }
+
+    function closeEmoji() {
+      els.emoji.hidden = true;
+      els.emojiBtn.setAttribute('aria-expanded', 'false');
+    }
+
+    function runSearch() {
+      var q = normalize(els.search.value.trim());
+      var visible = 0;
+      buttons().forEach(function (b) {
+        var hit = !q || normalize(b.textContent).indexOf(q) !== -1;
+        b.parentNode.hidden = !hit;
+        if (hit) visible++;
+      });
+      els.openCount.textContent = String(visible);
+      els.empty.hidden = visible !== 0;
+    }
+
+    buttons().forEach(function (btn) {
+      on(btn, 'click', function () {
+        var wasList = root.classList.contains('is-list-open');
+        setConversation(btn.dataset.conv, wasList);
+      });
+    });
+
+    on(els.list, 'keydown', function (event) {
+      if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
+      var visible = buttons().filter(function (b) { return !b.parentNode.hidden; });
+      var index = visible.indexOf(document.activeElement);
+      if (index === -1) return;
+      event.preventDefault();
+      var next = event.key === 'ArrowDown' ? visible[index + 1] : visible[index - 1];
+      if (next) next.focus();
+    });
+
+    on(els.form, 'submit', function (event) {
+      event.preventDefault();
+      send();
+    });
+
+    on(els.input, 'keydown', function (event) {
+      if (event.key === 'Enter' && !event.shiftKey && !event.isComposing) {
+        event.preventDefault();
+        if (typeof els.form.requestSubmit === 'function') {
+          els.form.requestSubmit();
+        } else {
+          send();
+        }
+      }
+    });
+
+    on(els.input, 'input', autoGrow);
+    on(els.input, 'input', function () { if (!els.error.hidden) hideError(); });
+
+    on(els.listToggle, 'click', function () {
+      if (root.classList.contains('is-list-open')) {
+        closeList(true);
+      } else {
+        openList();
+      }
+    });
+    on(els.scrim, 'click', function () { closeList(true); });
+    on(root.querySelector('#convClose'), 'click', function () { closeList(true); });
+
+    on(els.search, 'input', runSearch);
+    on(root.querySelector('#clearSearch'), 'click', function () {
+      els.search.value = '';
+      runSearch();
+      els.search.focus();
+    });
+
+    on(els.more, 'click', function () {
+      var open = els.menu.hidden;
+      els.menu.hidden = !open;
+      els.more.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open) {
+        var item = els.menu.querySelector('[role="menuitem"]');
+        if (item) item.focus();
+      }
+    });
+
+    Array.prototype.forEach.call(els.menu.querySelectorAll('[role="menuitem"]'), function (item) {
+      on(item, 'click', function () {
+        var labels = {
+          resolver: 'Conversa marcada como resolvida.',
+          transferir: 'Transferência aberta para escolher a fila.',
+          exportar: 'Exportação da conversa preparada.'
+        };
+        closeMenu();
+        els.more.focus();
+        announce(labels[item.dataset.action] || 'Ação concluída.');
+      });
+    });
+
+    on(els.emojiBtn, 'click', function () {
+      var open = els.emoji.hidden;
+      els.emoji.hidden = !open;
+      els.emojiBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open) {
+        var first = els.emoji.querySelector('button');
+        if (first) first.focus();
+      }
+    });
+
+    Array.prototype.forEach.call(els.emoji.querySelectorAll('button'), function (b) {
+      on(b, 'click', function () {
+        var emoji = b.dataset.emoji;
+        var start = els.input.selectionStart || 0;
+        var end = els.input.selectionEnd || 0;
+        els.input.value = els.input.value.slice(0, start) + emoji + els.input.value.slice(end);
+        els.input.focus();
+        els.input.selectionStart = els.input.selectionEnd = start + emoji.length;
+        closeEmoji();
+        autoGrow();
+      });
+    });
+
+    on(document, 'click', function (event) {
+      if (!els.emoji.hidden && !event.target.closest('.emoji-wrap')) closeEmoji();
+      if (!els.menu.hidden && !event.target.closest('.menu-wrap')) closeMenu();
+    });
+
+    on(els.file, 'change', function () {
+      var file = els.file.files && els.file.files[0];
+      if (!file) return;
+      if (file.size > opts.maxFileSize) {
+        showError('O arquivo passa de 10 MB. Escolha um arquivo menor.');
+        clearPending();
+        return;
+      }
+      hideError();
+      state.file = file;
+      els.pendingName.textContent = file.name + ' · ' + formatSize(file.size);
+      els.pending.hidden = false;
+      announce('Anexo ' + file.name + ' pronto para envio.');
+    });
+
+    on(root.querySelector('#attachBtn'), 'click', function () { els.file.click(); });
+    on(root.querySelector('#removeFile'), 'click', function () {
+      clearPending();
+      els.input.focus();
+      announce('Anexo removido.');
+    });
+
+    on(root.querySelector('#callBtn'), 'click', function () {
+      announce('Chamada iniciada para ' + DATA[state.active].contact + '.');
+    });
+    on(root.querySelector('#newTicket'), 'click', function () {
+      announce('Novo atendimento criado em rascunho.');
+    });
+    on(root.querySelector('#resolvedBtn'), 'click', function () {
+      announce('Abrindo as 7 conversas resolvidas hoje.');
+    });
+    on(root.querySelector('#createTask'), 'click', function () {
+      announce('Tarefa criada para ' + DATA[state.active].contact + '.');
+    });
+    on(root.querySelector('#openRecord'), 'click', function () {
+      announce('Abrindo a ficha de ' + DATA[state.active].contact + '.');
+    });
+
+    Array.prototype.forEach.call(root.querySelectorAll('.attach'), function (a) {
+      on(a, 'click', function () { announce('Abrindo ' + a.getAttribute('aria-label').replace('Abrir ', '') + '.'); });
+    });
+
+    on(document, 'keydown', function (event) {
+      if (event.key !== 'Escape') return;
+      if (!els.emoji.hidden) {
+        closeEmoji();
+        els.emojiBtn.focus();
+        return;
+      }
+      if (!els.menu.hidden) {
+        closeMenu();
+        els.more.focus();
+        return;
+      }
+      if (root.classList.contains('is-list-open')) closeList(true);
+    });
+
+    updateUnread();
+    loadThread('comercial');
+
+    var api = {
+      setConversation: function (id, focusTitle) { setConversation(id, focusTitle !== false); return api; },
+      appendMessage: function (msg) { appendMessage(msg); return api; },
+      setTyping: function (on, name) { setTyping(!!on, name); return api; },
+      destroy: function () {
+        clearTimers();
+        state.cleanup.forEach(function (fn) { fn(); });
+        state.cleanup = [];
+        if (root.__ttscChatPanel === api) delete root.__ttscChatPanel;
+      }
+    };
+    root.__ttscChatPanel = api;
+    return api;
+  }
+
+  window.TTSCChatPanel = { init: init };
+
+  var mount = document.getElementById('chatInbox');
+  if (mount) init(mount);
+})();
+</script>
+</body>
+</html>

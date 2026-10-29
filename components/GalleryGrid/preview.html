@@ -1,0 +1,54 @@
+<!-- @dsCard group="Componentes" height=380 subtitle="GalleryGrid · gallery grid com estados, ações e acessibilidade (padrões de referência adaptados) " -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>GalleryGrid</title>
+<style>
+  html,body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font-family:Inter,system-ui,sans-serif;font-size:13px;-webkit-font-smoothing:antialiased}
+  .demo{padding:16px;display:grid;gap:14px;max-width:1100px}
+  .card{background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-surface);padding:16px}
+  .card-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+  .card-t{margin:0;font-size:14px;font-weight:600;color:var(--ttsc-text)}
+  .card-s{margin:2px 0 0;font-size:11px;color:var(--ttsc-text-muted)}
+  .pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:var(--ttsc-radius-pill);border:1px solid var(--ttsc-border);color:var(--ttsc-text-2);white-space:nowrap;background:var(--ttsc-surface)}
+  .pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+  .pill-ok{color:var(--ttsc-success);border-color:color-mix(in srgb,var(--ttsc-success) 40%,transparent)}
+  .pill-warn{color:var(--ttsc-warning-text);border-color:color-mix(in srgb,var(--ttsc-warning) 45%,transparent)}
+  .pill-bad{color:var(--ttsc-danger-text);border-color:color-mix(in srgb,var(--ttsc-danger) 40%,transparent)}
+  .pill-info{color:var(--ttsc-info-text);border-color:color-mix(in srgb,var(--ttsc-info) 40%,transparent)}
+  .av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text);flex-shrink:0}
+  .ib{width:30px;height:30px;border-radius:8px;border:1px solid var(--ttsc-border);background:var(--ttsc-surface);display:grid;place-items:center;color:var(--ttsc-text-2);cursor:pointer}
+  .ib:hover{background:var(--ttsc-canvas-2)}
+  .ib-ok:hover{color:var(--ttsc-success)} .ib-no:hover{color:var(--ttsc-danger-text)}
+  .muted{color:var(--ttsc-text-muted)} .tnum{font-variant-numeric:tabular-nums}
+  :focus-visible{outline:2px solid var(--ttsc-accent);outline-offset:2px}
+
+  .gg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:110px;gap:8px}
+  .gg-item{position:relative;border-radius:var(--ttsc-radius-control);overflow:hidden;background:var(--ttsc-surface-2);border:0;padding:0;cursor:pointer;text-align:left;min-width:0}
+  .gg-item.wide{grid-column:span 2}
+  .gg-item.tall{grid-row:span 2}
+  .gg-art{position:absolute;inset:0}
+  .gg-cap{position:absolute;left:0;right:0;bottom:0;padding:18px 10px 8px;background:linear-gradient(transparent,rgba(0,0,0,.6));color:#fff;font-size:12px;font-weight:600}
+  .gg-more{position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.45);color:#fff;font-size:18px;font-weight:700}
+  .gg-item:focus-visible{outline:2px solid var(--ttsc-accent);outline-offset:2px}
+  @media (max-width:640px){.gg{grid-template-columns:repeat(2,minmax(0,1fr))}.gg-item.wide{grid-column:span 2}}
+</style>
+</head>
+<body>
+<main class="demo">
+
+  <section aria-labelledby="gg-t">
+    <h2 id="gg-t" class="card-t" style="margin:0 0 10px">Fotos da Feira de Ciências 2026</h2>
+    <div class="gg" role="list">
+      <button class="gg-item wide" type="button" role="listitem" aria-label="Abrir foto: estande de robótica"><span class="gg-art" style="background:linear-gradient(120deg,#0ea5e9,#1e3a8a)"></span><span class="gg-cap">Estande de robótica</span></button>
+      <button class="gg-item" type="button" role="listitem" aria-label="Abrir foto: apresentação do 3º ano"><span class="gg-art" style="background:linear-gradient(120deg,#f59e0b,#b45309)"></span><span class="gg-cap">3º ano</span></button>
+      <button class="gg-item tall" type="button" role="listitem" aria-label="Abrir foto: painel de química"><span class="gg-art" style="background:linear-gradient(160deg,#10b981,#065f46)"></span><span class="gg-cap">Química</span></button>
+      <button class="gg-item" type="button" role="listitem" aria-label="Abrir foto: jurados"><span class="gg-art" style="background:linear-gradient(120deg,#a78bfa,#4c1d95)"></span><span class="gg-cap">Jurados</span></button>
+      <button class="gg-item" type="button" role="listitem" aria-label="Abrir foto: público"><span class="gg-art" style="background:linear-gradient(120deg,#f43f5e,#881337)"></span><span class="gg-cap">Público</span></button>
+      <button class="gg-item" type="button" role="listitem" aria-label="Abrir foto: montagem"><span class="gg-art" style="background:linear-gradient(120deg,#14b8a6,#134e4a)"></span><span class="gg-cap">Montagem</span></button>
+      <button class="gg-item" type="button" role="listitem" aria-label="Ver mais 12 fotos"><span class="gg-art" style="background:linear-gradient(120deg,#64748b,#1e293b)"></span><span class="gg-more">+12</span></button>
+    </div>
+  </section>
+
+</main>
+</body>
+</html>

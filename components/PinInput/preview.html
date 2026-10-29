@@ -1,0 +1,83 @@
+<!-- @dsCard group="Formulários" height=220 subtitle="data-ttsc-pin-input · MFA 6 dígitos, hidden input, complete, inválido, alfanumérico" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>PinInput</title>
+<style>
+  .ttsc-pin-cell { width: 44px; padding: 0; text-align: center; font-size: 18px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  [data-ttsc-pin-input].is-complete .ttsc-pin-cell { border-color: var(--ttsc-accent-border); }
+  [data-ttsc-pin-input][aria-busy="true"] .ttsc-pin-cell { background: var(--ttsc-canvas-2); color: var(--ttsc-text-2); }
+  .ttsc-form-label { color: var(--ttsc-text); }
+  .ttsc-form-description { color: var(--ttsc-text-muted); }
+  .ttsc-form-message { color: var(--ttsc-danger-text); }
+  .pv-sep { color: var(--ttsc-text-muted); }
+  .pv-cols { display: grid; grid-template-columns: 1.2fr 1fr; gap: var(--ttsc-space-6); }
+  .pv-out { font-family: ui-monospace, monospace; font-size: 12px; color: var(--ttsc-text-2); }
+</style>
+</head>
+<body>
+<div class="ds-pad pv-cols">
+  <form class="ds-stack" id="pv-mfa" onsubmit="return false">
+    <div class="ttsc-form-item">
+      <span class="ttsc-form-label" id="pv-mfa-label">Código de verificação</span>
+      <p class="ttsc-form-description">Enviamos 6 dígitos para a***@escola.com.br. Digite ou cole (ex.: 481 920; 000000 simula erro).</p>
+      <div class="flex items-center gap-2" role="group" aria-labelledby="pv-mfa-label" id="pv-pin"
+           data-ttsc-pin-input="true" data-ttsc-pin-input-name="mfa_code">
+        <input class="ttsc-input ttsc-input-lg ttsc-pin-cell" data-ttsc-pin-input-item inputmode="numeric" autocomplete="one-time-code" aria-label="Dígito 1 de 6">
+        <input class="ttsc-input ttsc-input-lg ttsc-pin-cell" data-ttsc-pin-input-item inputmode="numeric" aria-label="Dígito 2 de 6">
+        <input class="ttsc-input ttsc-input-lg ttsc-pin-cell" data-ttsc-pin-input-item inputmode="numeric" aria-label="Dígito 3 de 6">
+        <span class="pv-sep" aria-hidden="true">–</span>
+        <input class="ttsc-input ttsc-input-lg ttsc-pin-cell" data-ttsc-pin-input-item inputmode="numeric" aria-label="Dígito 4 de 6">
+        <input class="ttsc-input ttsc-input-lg ttsc-pin-cell" data-ttsc-pin-input-item inputmode="numeric" aria-label="Dígito 5 de 6">
+        <input class="ttsc-input ttsc-input-lg ttsc-pin-cell" data-ttsc-pin-input-item inputmode="numeric" aria-label="Dígito 6 de 6">
+      </div>
+      <div class="ttsc-form-message" role="alert">Código inválido ou expirado.</div>
+    </div>
+    <div class="ds-row">
+      <button type="submit" class="ttsc-btn ttsc-btn-primary" id="pv-submit" disabled>Verificar</button>
+      <button type="button" class="ttsc-btn ttsc-btn-ghost" id="pv-fill">Preencher 481920</button>
+    </div>
+    <div class="pv-out" id="pv-out">mfa_code="" · 0/6</div>
+  </form>
+  <div class="ds-stack">
+    <div class="ds-label">Alfanumérico · [0-9A-Z]</div>
+    <div class="flex gap-2" data-ttsc-pin-input="true" data-ttsc-pin-input-name="doc_code" data-ttsc-pin-input-available-chars="[0-9A-Z]" role="group" aria-label="Código do documento">
+      <input class="ttsc-input ttsc-pin-cell" data-ttsc-pin-input-item value="A" aria-label="Caractere 1">
+      <input class="ttsc-input ttsc-pin-cell" data-ttsc-pin-input-item value="7" aria-label="Caractere 2">
+      <input class="ttsc-input ttsc-pin-cell" data-ttsc-pin-input-item value="K" aria-label="Caractere 3">
+      <input class="ttsc-input ttsc-pin-cell" data-ttsc-pin-input-item aria-label="Caractere 4">
+    </div>
+    <div class="ds-label">PIN do totem · 4 dígitos, inválido</div>
+    <div class="flex gap-2" data-ttsc-pin-input="true" role="group" aria-label="PIN">
+      <input class="ttsc-input ttsc-pin-cell" data-ttsc-pin-input-item value="1" aria-invalid="true" aria-label="Dígito 1">
+      <input class="ttsc-input ttsc-pin-cell" data-ttsc-pin-input-item value="2" aria-invalid="true" aria-label="Dígito 2">
+      <input class="ttsc-input ttsc-pin-cell" data-ttsc-pin-input-item value="3" aria-invalid="true" aria-label="Dígito 3">
+      <input class="ttsc-input ttsc-pin-cell" data-ttsc-pin-input-item value="4" aria-invalid="true" aria-label="Dígito 4">
+    </div>
+  </div>
+</div>
+<script>
+  TTSC.init();
+  var group = document.getElementById('pv-pin');
+  var pin = ttscPinInput.getOrCreateInstance(group);
+  var submit = document.getElementById('pv-submit'), out = document.getElementById('pv-out');
+  function setInvalid(v) { group.querySelectorAll('[data-ttsc-pin-input-item]').forEach(function (c) { c.setAttribute('aria-invalid', v ? 'true' : 'false'); }); }
+  group.addEventListener('ttsc.pin-input.change', function (e) {
+    var p = e.detail.payload;
+    group.classList.toggle('is-complete', p.complete);
+    submit.disabled = !p.complete;
+    out.textContent = 'mfa_code="' + group.querySelector('[data-ttsc-pin-input-hidden]').value + '" · ' + p.filledCount + '/' + p.cellCount;
+    if (!p.complete) setInvalid(false);
+  });
+  group.addEventListener('ttsc.pin-input.complete', function (e) {
+    group.setAttribute('aria-busy', 'true');
+    setTimeout(function () {
+      group.removeAttribute('aria-busy');
+      if (e.detail.payload.value === '000000') { setInvalid(true); }
+      else { out.textContent += ' · verificado'; }
+    }, 600);
+  });
+  pin.setValue('481');
+  document.getElementById('pv-fill').addEventListener('click', function () { pin.setValue('481920'); });
+</script>
+</body>
+</html>

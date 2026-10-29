@@ -1,0 +1,60 @@
+<!-- @dsCard group="Componentes" height=346 subtitle="Aprovações com solicitante, valor e decisão aprovar ou recusar" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>ApprovalQueue</title>
+<style>
+  html,body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font-family:Inter,system-ui,sans-serif;font-size:13px;-webkit-font-smoothing:antialiased}
+  .demo{padding:16px;display:grid;gap:14px;max-width:1100px}
+  .card{background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-surface);padding:16px}
+  .card-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+  .card-t{margin:0;font-size:14px;font-weight:600;color:var(--ttsc-text)}
+  .card-s{margin:2px 0 0;font-size:11px;color:var(--ttsc-text-muted)}
+  .pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:var(--ttsc-radius-pill);border:1px solid var(--ttsc-border);color:var(--ttsc-text-2);white-space:nowrap;background:var(--ttsc-surface)}
+  .pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+  .pill-ok{color:var(--ttsc-success);border-color:color-mix(in srgb,var(--ttsc-success) 40%,transparent)}
+  .pill-warn{color:var(--ttsc-warning-text);border-color:color-mix(in srgb,var(--ttsc-warning) 45%,transparent)}
+  .pill-bad{color:var(--ttsc-danger-text);border-color:color-mix(in srgb,var(--ttsc-danger) 40%,transparent)}
+  .pill-info{color:var(--ttsc-info-text);border-color:color-mix(in srgb,var(--ttsc-info) 40%,transparent)}
+  .av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text);flex-shrink:0}
+  .ib{width:30px;height:30px;border-radius:8px;border:1px solid var(--ttsc-border);background:var(--ttsc-surface);display:grid;place-items:center;color:var(--ttsc-text-2);cursor:pointer}
+  .ib:hover{background:var(--ttsc-canvas-2)}
+  .ib-ok:hover{color:var(--ttsc-success)} .ib-no:hover{color:var(--ttsc-danger-text)}
+  .muted{color:var(--ttsc-text-muted)} .tnum{font-variant-numeric:tabular-nums}
+  :focus-visible{outline:2px solid var(--ttsc-accent);outline-offset:2px}
+
+  .appr{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+  .appr li{display:grid;grid-template-columns:30px minmax(0,1fr) auto auto;gap:12px;align-items:center;padding:10px 12px;border:1px solid var(--ttsc-border-soft);border-radius:var(--ttsc-radius-control)}
+  .appr-title{font-weight:600;color:var(--ttsc-text);font-size:13px}
+  .appr-meta{font-size:11px;color:var(--ttsc-text-muted)}
+  .appr-amount{font-variant-numeric:tabular-nums;font-weight:600;color:var(--ttsc-text);white-space:nowrap}
+  .appr-acts{display:flex;gap:6px}
+  @media (max-width:640px){.appr li{grid-template-columns:30px minmax(0,1fr)}.appr-amount,.appr-acts{grid-column:2}}
+</style>
+</head>
+<body>
+<main class="demo">
+
+  <section class="card" aria-labelledby="ap-t">
+    <div class="card-h">
+      <div><h2 id="ap-t" class="card-t">Aprovações pendentes</h2><p class="card-s">Decisão registrada com o nome de quem aprovou</p></div>
+      <span class="pill pill-warn">4 pendentes</span>
+    </div>
+    <ul class="appr">
+      <li><span class="av" aria-hidden="true">MR</span>
+        <div><div class="appr-title">Reembolso de taxa · Matrícula 2026-0412</div><div class="appr-meta">Marina Rocha · pedido há 2 dias · <span class="pill pill-info">Financeiro</span></div></div>
+        <span class="appr-amount">R$ 180,00</span>
+        <div class="appr-acts"><button class="ib ib-ok" type="button" aria-label="Aprovar reembolso de Marina Rocha"><i class="fa-light fa-check" aria-hidden="true"></i></button><button class="ib ib-no" type="button" aria-label="Recusar reembolso de Marina Rocha"><i class="fa-light fa-xmark" aria-hidden="true"></i></button></div></li>
+      <li><span class="av" aria-hidden="true">LC</span>
+        <div><div class="appr-title">Ajuste de carga horária · Turma 2º B</div><div class="appr-meta">Lucas Campos · hoje · <span class="pill pill-info">Acadêmico</span></div></div>
+        <span class="appr-amount">+ 8 h</span>
+        <div class="appr-acts"><button class="ib ib-ok" type="button" aria-label="Aprovar ajuste de Lucas Campos"><i class="fa-light fa-check" aria-hidden="true"></i></button><button class="ib ib-no" type="button" aria-label="Recusar ajuste de Lucas Campos"><i class="fa-light fa-xmark" aria-hidden="true"></i></button></div></li>
+      <li><span class="av" aria-hidden="true">TF</span>
+        <div><div class="appr-title">Desconto por convênio · Empresa Alfa</div><div class="appr-meta">Tatiane Faria · ontem · <span class="pill pill-info">Comercial</span></div></div>
+        <span class="appr-amount">R$ 1.240,00</span>
+        <div class="appr-acts"><button class="ib ib-ok" type="button" aria-label="Aprovar desconto de Tatiane Faria"><i class="fa-light fa-check" aria-hidden="true"></i></button><button class="ib ib-no" type="button" aria-label="Recusar desconto de Tatiane Faria"><i class="fa-light fa-xmark" aria-hidden="true"></i></button></div></li>
+    </ul>
+  </section>
+
+</main>
+</body>
+</html>

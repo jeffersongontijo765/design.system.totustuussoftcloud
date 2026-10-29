@@ -1,0 +1,83 @@
+<!-- @dsCard group="Componentes" height=215 subtitle="ttsc-kbd · preenchida, outline, xs/sm/md, Ctrl K / ⌘ K por plataforma, atalhos em menu e paleta" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Kbd</title>
+<style>
+  .ttsc-kbd { font-weight: 500; box-shadow: inset 0 -1px 0 var(--ttsc-border); }
+  .ttsc-kbd-outline { box-shadow: none; }
+  .ttsc-kbd-muted { color: var(--ttsc-text-muted); }
+  .ttsc-kbd-combo { display: inline-flex; align-items: center; gap: var(--ttsc-space-1); font: inherit; }
+  .ttsc-kbd i { font-size: 11px; }
+  .kb-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+  .kb-search { display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 8px 0 12px; border: 1px solid var(--ttsc-border-strong); border-radius: var(--ttsc-radius-sm); background: var(--ttsc-surface); color: var(--ttsc-text-muted); width: 100%; font: inherit; cursor: pointer; }
+  .kb-search span { flex: 1; text-align: start; }
+  .kb-menu { background: var(--ttsc-surface); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-sm); padding: 6px; }
+  .kb-menu a { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: var(--ttsc-radius-xs); color: var(--ttsc-text); text-decoration: none; }
+  .kb-menu a:hover { background: var(--ttsc-canvas-2); }
+  .kb-menu a i { color: var(--ttsc-text-muted); width: 16px; }
+  .kb-menu a > .ttsc-kbd, .kb-menu a > .ttsc-kbd-combo { margin-inline-start: auto; }
+  .kb-foot { display: flex; flex-wrap: wrap; gap: 14px; font-size: 12px; color: var(--ttsc-text-muted); }
+  .kb-foot span { display: inline-flex; align-items: center; gap: 4px; }
+  #kb-log { min-height: 16px; }
+</style>
+</head>
+<body>
+<div class="ds-pad kb-grid">
+  <div class="ds-stack">
+    <div class="ds-label">Estilos e tamanhos</div>
+    <div class="ds-row">
+      <kbd class="ttsc-kbd">Esc</kbd>
+      <kbd class="ttsc-kbd ttsc-kbd-sm">Tab</kbd>
+      <kbd class="ttsc-kbd ttsc-kbd-xs">N</kbd>
+      <kbd class="ttsc-kbd ttsc-kbd-outline">Shift</kbd>
+      <kbd class="ttsc-kbd ttsc-kbd-outline ttsc-kbd-sm" aria-label="Enter"><i class="fa-light fa-arrow-turn-down-left"></i></kbd>
+      <kbd class="ttsc-kbd-combo"><kbd class="ttsc-kbd">Ctrl</kbd><span class="ds-note">+</span><kbd class="ttsc-kbd">K</kbd></kbd>
+      <kbd class="ttsc-kbd-combo"><kbd class="ttsc-kbd" aria-label="Command">⌘</kbd><kbd class="ttsc-kbd">K</kbd></kbd>
+    </div>
+    <div class="ds-label">Busca global (tecla detectada pela plataforma)</div>
+    <button type="button" class="kb-search" id="kb-search" data-ttsc-shortcut="mod+k" aria-keyshortcuts="Control+K Meta+K">
+      <i class="fa-light fa-magnifying-glass"></i><span>Buscar alunos, cursos, turmas…</span>
+      <kbd class="ttsc-kbd-combo" data-ttsc-kbd="mod+k"></kbd>
+    </button>
+    <div class="ds-note" id="kb-log">Pressione o atalho com o foco nesta página.</div>
+  </div>
+  <div class="ds-stack">
+    <div class="ds-label">Menu com atalhos</div>
+    <div class="kb-menu">
+      <a href="#" data-ttsc-shortcut="n"><i class="fa-light fa-user-plus"></i>Nova matrícula<kbd class="ttsc-kbd ttsc-kbd-xs">N</kbd></a>
+      <a href="#"><i class="fa-light fa-floppy-disk"></i>Salvar<kbd class="ttsc-kbd-combo" data-ttsc-kbd="mod+s"></kbd></a>
+      <a href="#"><i class="fa-light fa-arrow-down-to-line"></i>Exportar CSV<kbd class="ttsc-kbd-combo" data-ttsc-kbd="mod+shift+e"></kbd></a>
+    </div>
+    <div class="kb-foot">
+      <span><kbd class="ttsc-kbd ttsc-kbd-xs" aria-label="Seta para cima">↑</kbd><kbd class="ttsc-kbd ttsc-kbd-xs" aria-label="Seta para baixo">↓</kbd> navegar</span>
+      <span><kbd class="ttsc-kbd ttsc-kbd-xs" aria-label="Enter"><i class="fa-light fa-arrow-turn-down-left"></i></kbd> abrir</span>
+      <span><kbd class="ttsc-kbd ttsc-kbd-xs">Esc</kbd> fechar</span>
+    </div>
+  </div>
+</div>
+<script>
+  TTSC.init();
+  (function () {
+    var IS_MAC = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
+    var LABEL = { mod: IS_MAC ? ['⌘', 'Command'] : ['Ctrl', 'Control'], shift: IS_MAC ? ['⇧', 'Shift'] : ['Shift', 'Shift'], alt: IS_MAC ? ['⌥', 'Option'] : ['Alt', 'Alt'] };
+    document.querySelectorAll('[data-ttsc-kbd]').forEach(function (el) {
+      el.dataset.ttscKbd.split('+').forEach(function (key) {
+        var l = LABEL[key] || [key.toUpperCase(), key.toUpperCase()];
+        var k = document.createElement('kbd');
+        k.className = 'ttsc-kbd ttsc-kbd-outline ttsc-kbd-xs';
+        k.textContent = l[0];
+        if (l[0] !== l[1]) k.setAttribute('aria-label', l[1]);
+        el.appendChild(k);
+      });
+    });
+    var log = document.getElementById('kb-log');
+    document.addEventListener('keydown', function (e) {
+      var mod = IS_MAC ? e.metaKey : e.ctrlKey;
+      if (mod && e.key.toLowerCase() === 'k') { e.preventDefault(); log.textContent = 'Atalho de busca acionado.'; document.getElementById('kb-search').focus(); }
+      else if (!mod && e.key.toLowerCase() === 'n' && !e.target.closest('input,textarea')) { log.textContent = 'Atalho “Nova matrícula” acionado.'; }
+    });
+    document.getElementById('kb-search').addEventListener('click', function () { log.textContent = 'Abriria a busca global.'; });
+  })();
+</script>
+</body>
+</html>

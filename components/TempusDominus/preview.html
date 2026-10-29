@@ -1,0 +1,99 @@
+<!-- @dsCard group="Formulários · Plugins" height=374 subtitle="Tempus Dominus 6.9.4 + Popper 2.11.8 · pt-BR · ícones FA light · inline e input com botão · tema por tokens" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>TempusDominus</title>
+<link rel="stylesheet" href="../../vendor/tempus-dominus/tempus-dominus.min.css">
+<script src="../../vendor/popper/popper.min.js"></script>
+<script src="../../vendor/tempus-dominus/tempus-dominus.min.js"></script>
+<style>
+  /* Tema TTSC: as variáveis "light" do plugin passam a ler tokens (que já trocam por data-theme) */
+  :root {
+    --td-widget-background: var(--ttsc-surface);
+    --td-font-color: var(--ttsc-text);
+    --td-active-bg: var(--ttsc-accent);
+    --td-active-color: var(--ttsc-accent-on);
+    --td-active-border-color: var(--ttsc-surface);
+    --td-range-bg: var(--ttsc-accent-soft);
+    --td-btn-hover-bg: var(--ttsc-canvas-2);
+    --td-disabled-color: var(--ttsc-meta);
+    --td-alternate-color: var(--ttsc-text-muted);
+    --td-secondary-border-color: var(--ttsc-border);
+    --td-secondary-border-color-rgba: var(--ttsc-border);
+    --td-primary-border-color: var(--ttsc-surface);
+    --td-dow-color: var(--ttsc-text-muted);
+    --td-text-shadow: none;
+    --td-border-radius: var(--ttsc-radius-xs);
+  }
+  .tempus-dominus-widget { font-family: inherit; font-size: 13px; border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-control);
+    box-shadow: var(--ttsc-shadow-popover); z-index: var(--ttsc-z-popover); }
+  .tempus-dominus-widget.inline { box-shadow: none; }
+  .tempus-dominus-widget .date-container-days .dow { font-size: 11px; text-transform: uppercase; }
+  .tempus-dominus-widget .date-container-days div.today::before { border-bottom-color: var(--ttsc-accent); }
+  .tempus-dominus-widget i { font-size: 14px; }
+  .tempus-dominus-widget .toolbar div i { color: var(--ttsc-text-2); }
+  .td-cols { display: grid; grid-template-columns: auto 1fr; gap: 24px; align-items: start; }
+  .td-field { display: flex; flex-direction: column; gap: 6px; }
+  .td-out { font-size: 12px; color: var(--ttsc-text-muted); }
+  .td-out b { color: var(--ttsc-text); font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="ds-pad td-cols">
+  <div>
+    <div class="ds-label" style="margin-bottom:6px">Inline · data e hora da prova</div>
+    <div id="td-inline"></div>
+  </div>
+  <div class="ds-stack">
+    <div class="td-field">
+      <label class="ttsc-form-label" for="td-exam">Data da avaliação</label>
+      <div class="ttsc-input-group" id="td-exam-group" data-td-target-input="nearest" data-td-target-toggle="nearest">
+        <input class="ttsc-input" id="td-exam" type="text" placeholder="dd/mm/aaaa hh:mm" data-td-target="#td-exam-group" autocomplete="off">
+        <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-icon" aria-label="Abrir calendário" data-td-target="#td-exam-group" data-td-toggle="datetimepicker">
+          <i class="fa-light fa-calendar"></i></button>
+      </div>
+    </div>
+    <div class="td-field">
+      <label class="ttsc-form-label" for="td-time">Horário de início da aula</label>
+      <input class="ttsc-input" id="td-time" type="text" placeholder="hh:mm" autocomplete="off">
+    </div>
+    <div class="td-out" id="td-out" role="status" aria-live="polite">Selecionado (inline): <b>—</b></div>
+    <div class="ds-note">Ícones FA light, rótulos em pt-BR, semana começando no domingo, formato 24 h. Datas antes de hoje desabilitadas.</div>
+  </div>
+</div>
+<script>
+  var td = window.tempusDominus;
+  var ptBR = {
+    locale: 'pt-BR', format: 'dd/MM/yyyy HH:mm', hourCycle: 'h23', startOfTheWeek: 0,
+    dayViewHeaderFormat: { month: 'long', year: 'numeric' },
+    today: 'Ir para hoje', clear: 'Limpar seleção', close: 'Fechar', selectMonth: 'Selecionar mês',
+    previousMonth: 'Mês anterior', nextMonth: 'Próximo mês', selectYear: 'Selecionar ano', previousYear: 'Ano anterior',
+    nextYear: 'Próximo ano', selectDecade: 'Selecionar década', previousDecade: 'Década anterior', nextDecade: 'Próxima década',
+    previousCentury: 'Século anterior', nextCentury: 'Próximo século', pickHour: 'Escolher hora', incrementHour: 'Mais uma hora',
+    decrementHour: 'Menos uma hora', pickMinute: 'Escolher minuto', incrementMinute: 'Mais um minuto', decrementMinute: 'Menos um minuto',
+    pickSecond: 'Escolher segundo', incrementSecond: 'Mais um segundo', decrementSecond: 'Menos um segundo',
+    toggleMeridiem: 'AM/PM', selectTime: 'Selecionar hora', selectDate: 'Selecionar data'
+  };
+  var faIcons = { type: 'icons', time: 'fa-light fa-clock', date: 'fa-light fa-calendar', up: 'fa-light fa-chevron-up', down: 'fa-light fa-chevron-down',
+    previous: 'fa-light fa-chevron-left', next: 'fa-light fa-chevron-right', today: 'fa-light fa-calendar-check', clear: 'fa-light fa-trash', close: 'fa-light fa-xmark' };
+  var base = { localization: ptBR, display: { icons: faIcons, theme: 'light', buttons: { today: true, clear: true, close: true } } };
+
+  var inline = new td.TempusDominus(document.getElementById('td-inline'), {
+    localization: ptBR,
+    display: { inline: true, icons: faIcons, theme: 'light', sideBySide: false, components: { clock: false } },
+    restrictions: { minDate: new td.DateTime(new Date().setHours(0, 0, 0, 0)) }
+  });
+  inline.subscribe(td.Namespace.events.change, function (e) {
+    document.querySelector('#td-out b').textContent = e.date ? e.date.format('dd/MM/yyyy') : '—';
+  });
+
+  new td.TempusDominus(document.getElementById('td-exam-group'), Object.assign({}, base, {
+    restrictions: { minDate: new td.DateTime(new Date().setHours(0, 0, 0, 0)) }
+  }));
+  new td.TempusDominus(document.getElementById('td-time'), {
+    localization: Object.assign({}, ptBR, { format: 'HH:mm' }),
+    display: { icons: faIcons, theme: 'light', viewMode: 'clock', components: { calendar: false, date: false, month: false, year: false, decades: false, clock: true, hours: true, minutes: true, seconds: false } },
+    stepping: 5
+  });
+</script>
+</body>
+</html>

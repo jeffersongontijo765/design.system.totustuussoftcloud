@@ -1,0 +1,74 @@
+<!-- @dsCard group="Modelos" height=460 width=1280 subtitle="Estado vazio do chassi (.ttsc-empty-state) · sem dados com Nova matrícula, sem resultado com Limpar filtros, erro de carregamento" -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>EmptyState</title>
+<style>
+  html, body { margin: 0; }
+  #main-viewport { padding: 14px 16px 24px; }
+  .es-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .es-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--ttsc-text-muted); margin: 0 0 4px; }
+  .es-grid section { display: flex; flex-direction: column; }
+  .es-grid .ttsc-empty-state { margin: 0; min-height: 15rem; flex: 1; }
+  .es-grid code { font-family: var(--ttsc-font-mono, ui-monospace, monospace); font-size: 11px; overflow-wrap: anywhere; }
+  /* Extensões por tokens documentadas no README: texto sobre o acento e variante de erro */
+  .ttsc-empty-state-action { color: var(--ttsc-accent-on); }
+  .ttsc-empty-state.is-error { border-color: color-mix(in srgb, var(--ttsc-danger) 45%, var(--ttsc-border)); }
+  .ttsc-empty-state.is-error .ttsc-empty-state-icon,
+  html.dark .ttsc-empty-state.is-error .ttsc-empty-state-icon {
+    color: var(--ttsc-danger-text);
+    background: color-mix(in srgb, var(--ttsc-danger) 10%, transparent);
+    border-color: color-mix(in srgb, var(--ttsc-danger) 30%, transparent);
+    box-shadow: none;
+  }
+</style>
+</head>
+<body>
+<main id="main-viewport" class="bg-slate-50">
+  <div class="es-grid">
+    <section>
+      <p class="es-label">Sem dados · is-no-data</p>
+      <div id="es-no-data"></div>
+    </section>
+    <section>
+      <p class="es-label">Sem resultado de busca · is-no-results</p>
+      <div class="ttsc-empty-state is-no-results" role="status" aria-live="polite">
+        <span class="ttsc-empty-state-icon"><i class="fa-light fa-magnifying-glass" aria-hidden="true"></i></span>
+        <h3 class="ttsc-empty-state-title">Nenhuma matrícula para “Ana Beatriz”</h3>
+        <p class="ttsc-empty-state-desc">Nenhum registro corresponde à busca e ao filtro Status: Em análise. Ajuste a busca ou limpe os filtros para ver as 48 matrículas.</p>
+        <button type="button" id="es-reset" class="whitespace-nowrap rounded-lg px-2.5 py-2 text-xs font-semibold text-emerald-700 hover:bg-emerald-50 focus:outline-none focus:ring-2 focus:ring-emerald-500/40">Limpar filtros</button>
+      </div>
+    </section>
+    <section>
+      <p class="es-label">Erro de carregamento · is-error</p>
+      <div class="ttsc-empty-state is-error" role="alert">
+        <span class="ttsc-empty-state-icon"><i class="fa-light fa-triangle-exclamation" aria-hidden="true"></i></span>
+        <h3 class="ttsc-empty-state-title">Não foi possível carregar as matrículas</h3>
+        <p class="ttsc-empty-state-desc">O servidor respondeu HTTP 503 em <code>GET /api/v1/domain/records/academic/enrollment/re-enrollment</code>. Os dados anteriores foram mantidos.</p>
+        <button type="button" id="es-retry" class="ttsc-empty-state-action"><i class="fa-light fa-arrows-rotate" aria-hidden="true"></i>Tentar novamente</button>
+      </div>
+    </section>
+  </div>
+</main>
+<script>
+  TTSCModelKit.syncTheme();
+  // Variação "sem dados": o renderizador real do kit (TTSCModelKit.blocks.empty) com a ação "Novo" do chassi/table.php
+  document.getElementById('es-no-data').outerHTML = TTSCModelKit.blocks.empty(
+    'fa-user-graduate',
+    'Nenhuma matrícula cadastrada',
+    'As matrículas do ano letivo 2026 aparecem aqui assim que a primeira for registrada.',
+    '<button type="button" class="ttsc-empty-state-action" data-action="open-create-drawer"><i class="fa-light fa-plus" aria-hidden="true"></i>Nova matrícula</button>'
+  );
+  document.getElementById('es-reset').addEventListener('click', function () {
+    var box = this.closest('.ttsc-empty-state');
+    box.querySelector('.ttsc-empty-state-title').textContent = 'Filtros limpos';
+    box.querySelector('.ttsc-empty-state-desc').textContent = 'Em produção a tabela volta a listar as 48 matrículas.';
+  });
+  document.getElementById('es-retry').addEventListener('click', function () {
+    this.setAttribute('aria-busy', 'true');
+    this.lastChild.textContent = 'Carregando…';
+  });
+</script>
+</body>
+</html>

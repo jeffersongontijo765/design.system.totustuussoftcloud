@@ -1,0 +1,53 @@
+<!-- @dsCard group="Navegação" height=310 subtitle="data-ttsc-sticky · target rolável, offset, top/start/width auto, zindex, class is-stuck, wrapper, evento change" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Sticky</title>
+<style>
+  .stk-scroll { position: relative; overflow-y: auto; height: 250px; border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); background: var(--ttsc-canvas-2); padding: 12px; }
+  .ttsc-sticky-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 8px 16px; background: var(--ttsc-surface); color: var(--ttsc-text); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-control); transition: box-shadow .15s ease; box-sizing: border-box; }
+  .ttsc-sticky-bar.is-stuck { border-color: var(--ttsc-border-strong); box-shadow: var(--ttsc-shadow-md); }
+  .stk-row { display: flex; align-items: center; gap: 10px; padding: 9px 12px; margin-top: 8px; background: var(--ttsc-surface); border: 1px solid var(--ttsc-border-soft); border-radius: var(--ttsc-radius-sm); font-size: 13px; color: var(--ttsc-text); }
+  .stk-row span:last-child { margin-left: auto; color: var(--ttsc-text-muted); font-size: 12px; }
+  .stk-state { font-size: 12px; color: var(--ttsc-text-muted); }
+  .stk-state b { color: var(--ttsc-accent-text); }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack" style="gap:8px">
+  <div class="ds-row" style="justify-content:space-between">
+    <span class="ds-label">Matrículas da turma ADM-2026-1N — role a lista</span>
+    <span class="stk-state" id="stk-state" aria-live="polite">change → <b>—</b></span>
+  </div>
+  <div class="stk-scroll" id="roster" tabindex="0" aria-label="Lista de matrículas">
+    <div data-ttsc-sticky-wrapper>
+      <div class="ttsc-sticky-bar" id="bulkbar" data-ttsc-sticky="true" data-ttsc-sticky-target="#roster" data-ttsc-sticky-offset="40" data-ttsc-sticky-start="auto" data-ttsc-sticky-width="auto" data-ttsc-sticky-zindex="20" data-ttsc-sticky-class="is-stuck">
+        <span class="text-sm" aria-live="polite"><b data-bulk-count>2</b> matrículas selecionadas</span>
+        <div class="flex items-center gap-2">
+          <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-sm"><i class="fa-light fa-lock"></i> Trancar</button>
+          <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-sm"><i class="fa-light fa-arrow-down-to-line"></i> Exportar</button>
+        </div>
+      </div>
+    </div>
+    <div id="rows"></div>
+  </div>
+</div>
+<script>
+  var names = ['Ana Beatriz Souza', 'Bruno Carvalho Lima', 'Camila Ferreira Rocha', 'Diego Martins Alves', 'Eduarda Nunes Pereira', 'Felipe Ribeiro Costa', 'Gabriela Teixeira', 'Henrique Barbosa', 'Isabela Moreira', 'João Pedro Cardoso', 'Larissa Gomes', 'Marcelo Dias'];
+  document.getElementById('rows').innerHTML = names.map(function (n, i) {
+    return '<label class="stk-row"><input type="checkbox" class="ttsc-checkbox ttsc-checkbox-sm"' + (i < 2 ? ' checked' : '') + ' aria-label="Selecionar ' + n + '"><span>' + n + '</span><span>MAT-2026-' + String(101 + i).padStart(6, '0') + '</span></label>';
+  }).join('');
+  var roster = document.getElementById('roster'), bar = document.getElementById('bulkbar');
+  // fixed é relativo ao viewport: o topo da barra fixada = topo interno do contêiner rolável
+  bar.setAttribute('data-ttsc-sticky-top', String(Math.round(roster.getBoundingClientRect().top + 1)));
+  TTSC.init();
+  bar.addEventListener('change', function (e) {
+    var p = e.detail && e.detail.payload; if (!p) return;
+    document.getElementById('stk-state').innerHTML = 'change → <b>' + (p.active ? 'fixada (active)' : 'liberada (release)') + '</b>';
+  });
+  document.getElementById('rows').addEventListener('change', function () {
+    bar.querySelector('[data-bulk-count]').textContent = document.querySelectorAll('#rows .ttsc-checkbox:checked').length;
+  });
+  setTimeout(function () { roster.scrollTop = 140; }, 150);
+</script>
+</body>
+</html>

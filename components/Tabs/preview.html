@@ -1,0 +1,68 @@
+<!-- @dsCard group="Navegação" height=190 subtitle="data-ttsc-tabs · ttsc-tabs-line com ícone e contagem, desabilitada, sub-abas em pílula, teclado e evento shown" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Tabs</title>
+<style>
+  .ttsc-tabs.ttsc-tabs-line .ttsc-tab-toggle { color: var(--ttsc-text-2); border-bottom: 2px solid transparent; background: none; border-top: 0; border-inline: 0; }
+  .ttsc-tabs.ttsc-tabs-line .ttsc-tab-toggle:hover { color: var(--ttsc-text); }
+  .ttsc-tabs.ttsc-tabs-line .ttsc-tab-toggle.active { color: var(--ttsc-accent-text); border-color: var(--ttsc-accent); }
+  .ttsc-tabs .ttsc-tab-toggle i { color: var(--ttsc-text-muted); }
+  .ttsc-tabs .ttsc-tab-toggle.active i { color: var(--ttsc-accent-text); }
+  .ttsc-tabs .ttsc-tab-toggle.active .ttsc-badge { background: var(--ttsc-accent-soft); border-color: var(--ttsc-accent-border); color: var(--ttsc-accent-text); }
+  .ttsc-tabs .ttsc-tab-toggle:focus-visible { outline: 2px solid var(--ttsc-accent); outline-offset: 2px; border-radius: var(--ttsc-radius-xs); }
+  .ttsc-tabs .ttsc-tab-toggle:disabled { opacity: .5; cursor: not-allowed; }
+  .ttsc-tabs.ttsc-tabs-pill { display: inline-flex; gap: 2px; padding: 3px; background: var(--ttsc-canvas-2); border-radius: var(--ttsc-radius-control); }
+  .ttsc-tabs-pill .ttsc-tab-toggle { padding: 4px 10px; font-size: 12px; font-weight: 500; color: var(--ttsc-text-2); border: 0; background: none; border-radius: var(--ttsc-radius-sm); cursor: pointer; }
+  .ttsc-tabs-pill .ttsc-tab-toggle.active { background: var(--ttsc-surface); color: var(--ttsc-text); box-shadow: var(--ttsc-shadow-xs); }
+  .tb-panel { padding: 12px 0 0; font-size: 13px; color: var(--ttsc-text-2); }
+  .tb-panel:focus-visible { outline: 2px solid var(--ttsc-accent); outline-offset: 2px; }
+  .tb-list { list-style: none; margin: 0; padding: 0; border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-control); background: var(--ttsc-surface); }
+  .tb-list li { display: flex; justify-content: space-between; padding: 8px 12px; border-top: 1px solid var(--ttsc-border-soft); color: var(--ttsc-text); }
+  .tb-list li:first-child { border-top: 0; }
+  .tb-list li span { color: var(--ttsc-text-muted); }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div>
+    <div class="ttsc-tabs ttsc-tabs-line" data-ttsc-tabs="true" role="tablist" aria-label="Ficha da aluna Ana Beatriz Souza" id="tabs-main">
+      <button type="button" class="ttsc-tab-toggle" id="t-enr" role="tab" aria-controls="tab-enrollments" data-ttsc-tab-toggle="#tab-enrollments"><i class="fa-light fa-graduation-cap"></i> Matrículas <span class="ttsc-badge ttsc-badge-sm ttsc-badge-outline">2</span></button>
+      <button type="button" class="ttsc-tab-toggle active" id="t-fin" role="tab" aria-controls="tab-billing" data-ttsc-tab-toggle="#tab-billing"><i class="fa-light fa-receipt"></i> Financeiro <span class="ttsc-badge ttsc-badge-sm ttsc-badge-outline">1</span></button>
+      <button type="button" class="ttsc-tab-toggle" id="t-att" role="tab" aria-controls="tab-attendance" data-ttsc-tab-toggle="#tab-attendance"><i class="fa-light fa-calendar-check"></i> Frequência</button>
+      <button type="button" class="ttsc-tab-toggle" id="t-doc" role="tab" disabled><i class="fa-light fa-folder"></i> Documentos</button>
+    </div>
+    <div id="tab-enrollments" class="tb-panel hidden" role="tabpanel" aria-labelledby="t-enr" tabindex="0">
+      <ul class="tb-list"><li>MAT-2026-000123 · Administração — ADM-2026-1N <span>Ativa desde 02/02/2026</span></li><li>MAT-2025-000877 · Extensão em Libras <span>Ativa desde 10/08/2025</span></li></ul>
+    </div>
+    <div id="tab-billing" class="tb-panel" role="tabpanel" aria-labelledby="t-fin" tabindex="0">
+      <div class="ttsc-tabs ttsc-tabs-pill" data-ttsc-tabs="true" role="tablist" aria-label="Mensalidades" id="tabs-sub">
+        <button type="button" class="ttsc-tab-toggle active" id="ts-open" role="tab" data-ttsc-tab-toggle="#sub-open">Em aberto</button>
+        <button type="button" class="ttsc-tab-toggle" id="ts-paid" role="tab" data-ttsc-tab-toggle="#sub-paid">Pagas</button>
+      </div>
+      <ul class="tb-list" id="sub-open" role="tabpanel" aria-labelledby="ts-open" style="margin-top:8px"><li>Mensalidade 11/2026 · R$ 1.290,00 <span>vence 10/11/2026</span></li></ul>
+      <ul class="tb-list hidden" id="sub-paid" role="tabpanel" aria-labelledby="ts-paid" style="margin-top:8px"><li>Mensalidade 10/2026 · R$ 1.290,00 <span>paga em 08/10/2026</span></li><li>Mensalidade 09/2026 · R$ 1.290,00 <span>paga em 09/09/2026</span></li></ul>
+    </div>
+    <div id="tab-attendance" class="tb-panel hidden" role="tabpanel" aria-labelledby="t-att" tabindex="0">
+      <ul class="tb-list"><li>Gestão Financeira <span>92% de presença</span></li><li>Marketing I <span>88% de presença</span></li><li>Contabilidade Geral <span>74% — abaixo do mínimo de 75%</span></li></ul>
+    </div>
+  </div>
+  <div class="ds-note" id="tb-log" aria-live="polite">Use ← → / Home / End com o foco nas abas.</div>
+</div>
+<script>
+  TTSC.init();
+  document.querySelectorAll('[data-ttsc-tabs]').forEach(function (list) {
+    var inst = ttscTabs.getOrCreateInstance(list);
+    function tabs() { return Array.prototype.filter.call(list.querySelectorAll(':scope > [data-ttsc-tab-toggle]'), function (t) { return !t.disabled; }); }
+    function sync() { list.querySelectorAll(':scope > [data-ttsc-tab-toggle]').forEach(function (t) { var on = t.classList.contains('active'); t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1; }); }
+    list.addEventListener('shown', function () { sync(); var a = list.querySelector(':scope > .active'); document.getElementById('tb-log').textContent = 'shown → ' + a.textContent.trim(); });
+    list.addEventListener('keydown', function (e) {
+      var all = tabs(), i = all.indexOf(document.activeElement); if (i < 0) return;
+      var map = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: all.length - 1 }, n = map[e.key];
+      if (n === undefined) return; e.preventDefault();
+      var tab = all[(n + all.length) % all.length]; tab.focus(); inst.show(tab);
+    });
+    sync();
+  });
+</script>
+</body>
+</html>

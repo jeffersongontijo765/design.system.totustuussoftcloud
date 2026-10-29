@@ -1,0 +1,86 @@
+<!-- @dsCard group="Componentes" height=340 subtitle="KpiGoalCard · KPI com meta · volume, barra até a meta e visualização de pontos ou etapas " -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>KpiGoalCard</title>
+<style>
+  html,body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font-family:Inter,system-ui,sans-serif;font-size:13px;-webkit-font-smoothing:antialiased}
+  .demo{padding:16px;display:grid;gap:14px;max-width:1100px}
+  .card{background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-surface);padding:16px}
+  .card-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+  .card-t{margin:0;font-size:14px;font-weight:600;color:var(--ttsc-text)}
+  .card-s{margin:2px 0 0;font-size:11px;color:var(--ttsc-text-muted)}
+  .pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:var(--ttsc-radius-pill);border:1px solid var(--ttsc-border);color:var(--ttsc-text-2);white-space:nowrap;background:var(--ttsc-surface)}
+  .pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+  .pill-ok{color:var(--ttsc-success);border-color:color-mix(in srgb,var(--ttsc-success) 40%,transparent)}
+  .pill-warn{color:var(--ttsc-warning-text);border-color:color-mix(in srgb,var(--ttsc-warning) 45%,transparent)}
+  .pill-bad{color:var(--ttsc-danger-text);border-color:color-mix(in srgb,var(--ttsc-danger) 40%,transparent)}
+  .pill-info{color:var(--ttsc-info-text);border-color:color-mix(in srgb,var(--ttsc-info) 40%,transparent)}
+  .av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text);flex-shrink:0}
+  .ib{width:30px;height:30px;border-radius:8px;border:1px solid var(--ttsc-border);background:var(--ttsc-surface);display:grid;place-items:center;color:var(--ttsc-text-2);cursor:pointer}
+  .ib:hover{background:var(--ttsc-canvas-2)}
+  .ib-ok:hover{color:var(--ttsc-success)} .ib-no:hover{color:var(--ttsc-danger-text)}
+  .muted{color:var(--ttsc-text-muted)} .tnum{font-variant-numeric:tabular-nums}
+  :focus-visible{outline:2px solid var(--ttsc-accent);outline-offset:2px}
+
+  .kg-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+  .kg{display:grid;gap:12px;padding:18px;border-radius:var(--ttsc-radius-surface);border:1px solid var(--ttsc-border);background:var(--ttsc-surface);margin:0;min-width:0}
+  .kg-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .kg-title{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500;color:var(--ttsc-text-2);margin:0}
+  .kg-ic{width:26px;height:26px;border-radius:999px;display:grid;place-items:center;background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text);font-size:11px}
+  .kg-delta{font-size:11px;font-weight:600;color:var(--ttsc-accent-text);white-space:nowrap;padding:2px 8px;border-radius:var(--ttsc-radius-pill);background:var(--ttsc-accent-soft)}
+  .kg-val{font-size:30px;font-weight:700;letter-spacing:-.01em;color:var(--ttsc-text);font-variant-numeric:tabular-nums;line-height:1.1}
+  .kg-val small{font-size:14px;font-weight:500;color:var(--ttsc-text-muted);margin-left:4px}
+  .kg-sub{font-size:11px;color:var(--ttsc-text-muted);margin:0}
+  .kg-goal{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--ttsc-text-2)}
+  .kg-goal b{color:var(--ttsc-accent-text);font-weight:600}
+  .kg-bar{height:6px;border-radius:999px;background:var(--ttsc-surface-2);overflow:hidden}
+  .kg-bar i{display:block;height:100%;width:calc(var(--p) * 1%);background:var(--ttsc-accent);border-radius:999px}
+  .kg-viz{padding-top:12px;border-top:1px solid var(--ttsc-border-soft)}
+  .kg-dots{display:grid;grid-template-columns:repeat(12,1fr);gap:6px}
+  .kg-dots i{aspect-ratio:1;border-radius:50%;background:var(--ttsc-surface-2)}
+  .kg-dots i.on{background:var(--ttsc-accent)}
+  .kg-chev{display:grid;grid-template-columns:repeat(4,1fr);list-style:none;margin:0;padding:0;border-radius:var(--ttsc-radius-control);overflow:hidden;border:1px solid var(--ttsc-border-soft)}
+  .kg-chev li{position:relative;padding:9px 12px;background:color-mix(in srgb,var(--ttsc-accent) calc(8% + var(--i) * 14%),var(--ttsc-surface));color:var(--ttsc-text);font-size:10px;display:grid;gap:2px;min-width:0}
+  .kg-chev li+li{border-left:1px solid var(--ttsc-surface)}
+  .kg-chev b{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--ttsc-text)}
+  .kg-chev li span{color:var(--ttsc-text-muted)}
+  @media (max-width:640px){.kg-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main class="demo">
+
+  <section class="kg-grid" aria-label="Indicadores com meta">
+    <article class="kg" aria-labelledby="kg-1">
+      <div class="kg-head"><p class="kg-title" id="kg-1"><span class="kg-ic" aria-hidden="true"><i class="fa-light fa-user-tie"></i></span>Professores ativos</p><span class="kg-delta">↑ 2</span></div>
+      <div class="kg-val">41<small>de 48</small></div>
+      <p class="kg-sub">Dados de 27/10 · 7 em licença</p>
+      <div class="kg-goal"><span>85% do quadro</span><b>faltam 7</b></div>
+      <div class="kg-bar" role="img" aria-label="41 de 48 professores ativos, 85%" style="--p:85"><i></i></div>
+      <div class="kg-viz" aria-hidden="true"><div class="kg-dots">
+        <i class="on"></i> <i class="on"></i> <i class="on"></i> <i class="on"></i> <i class="on"></i> <i class="on"></i> <i class="on"></i> <i class="on"></i> <i class="on"></i> <i class="on"></i> <i class="on"></i> <i class="on"></i>
+        <i class="on"></i> <i class="on"></i> <i class="on"></i> <i class="on"></i> <i class="on"></i> <i class="on"></i> <i class="on"></i> <i class="on"></i> <i class="on"></i> <i class="on"></i> <i class="on"></i> <i class="on"></i>
+        <i class="on"></i> <i class="on"></i> <i class="on"></i> <i class="on"></i> <i class="on"></i> <i class="on"></i> <i class="on"></i> <i class="on"></i> <i class="on"></i> <i class="on"></i> <i class="on"></i> <i class="on"></i>
+        <i class="on"></i> <i class="on"></i> <i class="on"></i> <i class="on"></i> <i class="on"></i> <i></i> <i></i> <i></i> <i></i> <i></i> <i></i> <i></i>
+      </div></div>
+    </article>
+    <article class="kg" aria-labelledby="kg-2">
+      <div class="kg-head"><p class="kg-title" id="kg-2"><span class="kg-ic" aria-hidden="true"><i class="fa-light fa-user-plus"></i></span>Pré-matrículas 2027</p><span class="kg-delta">↑ 9,3%</span></div>
+      <div class="kg-val">2.846</div>
+      <p class="kg-sub">184 novas esta semana</p>
+      <div class="kg-goal"><span>89% de 3.200</span><b>faltam 11%</b></div>
+      <div class="kg-bar" role="img" aria-label="2.846 de 3.200 pré-matrículas, 89%" style="--p:89"><i></i></div>
+      <div class="kg-viz">
+        <ol class="kg-chev" aria-label="Etapas da matrícula">
+          <li style="--i:0"><b>184</b><span>Interesse</span></li>
+          <li style="--i:1"><b>96</b><span>Visita</span></li>
+          <li style="--i:2"><b>41</b><span>Proposta</span></li>
+          <li style="--i:3"><b>18</b><span>Matriculados</span></li>
+        </ol>
+      </div>
+    </article>
+  </section>
+
+</main>
+</body>
+</html>

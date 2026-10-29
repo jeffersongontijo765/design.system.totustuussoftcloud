@@ -1,0 +1,98 @@
+<!-- @dsCard group="Navegação" height=415 subtitle="ttsc-menu ttsc-menu-default · item, link, icon, title, arrow, badge, bullet, heading, separator, accordion, ativo, desabilitado" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Menu</title>
+<style>
+  .pv-cols { display: grid; grid-template-columns: 280px 1fr; gap: var(--ttsc-space-6); align-items: start; }
+  .pv-panel { border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); background: var(--ttsc-surface); }
+  .ttsc-menu-default .ttsc-menu-title { font-size: 13px; }
+  .ttsc-menu-default .ttsc-menu-icon i { font-size: 16px; }
+  .ttsc-menu-heading { padding: 10px 16px 4px; font-size: 11px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--ttsc-text-muted); }
+  .ttsc-menu-default .ttsc-menu-item.active > .ttsc-menu-link .ttsc-menu-icon i { color: var(--ttsc-accent-text); }
+  .ttsc-menu-default .ttsc-menu-item.active > .ttsc-menu-link { box-shadow: inset 2px 0 0 var(--ttsc-accent); }
+  .ttsc-menu-arrow i { transition: rotate .2s ease; }
+  .ttsc-menu-item.show > .ttsc-menu-link .ttsc-menu-arrow i { rotate: 180deg; }
+  .ttsc-menu-bullet span { width: 5px; height: 5px; border-radius: var(--ttsc-radius-pill); background: var(--ttsc-border-prominent); display: inline-block; }
+  .ttsc-menu-item.active > .ttsc-menu-link .ttsc-menu-bullet span { background: var(--ttsc-accent); }
+  .ttsc-menu-link { text-decoration: none; }
+  .ttsc-menu-link:focus-visible { outline: 2px solid var(--ttsc-accent); outline-offset: -2px; }
+  .pv-info { font-size: 12px; color: var(--ttsc-text-2); }
+  .pv-info code { color: var(--ttsc-text); }
+</style>
+</head>
+<body>
+<div class="ds-pad pv-cols">
+  <nav class="pv-panel" aria-label="Secretaria acadêmica">
+    <div class="ttsc-menu ttsc-menu-default flex-col" id="menu" data-ttsc-menu="true">
+      <div class="ttsc-menu-heading">Secretaria</div>
+      <div class="ttsc-menu-item">
+        <a class="ttsc-menu-link" href="#"><span class="ttsc-menu-icon"><i class="fa-light fa-house"></i></span><span class="ttsc-menu-title">Visão geral</span></a>
+      </div>
+      <div class="ttsc-menu-item show" data-ttsc-menu-item-toggle="accordion">
+        <button type="button" class="ttsc-menu-link" aria-expanded="true" aria-controls="acc-enroll" style="border:0;background:none;font:inherit;text-align:start;width:calc(100% - 16px)">
+          <span class="ttsc-menu-icon"><i class="fa-light fa-user-graduate"></i></span><span class="ttsc-menu-title">Matrículas</span>
+          <span class="ttsc-menu-badge"><span class="ttsc-badge ttsc-badge-sm ttsc-badge-outline">1.284</span></span>
+          <span class="ttsc-menu-arrow"><i class="fa-light fa-chevron-down"></i></span>
+        </button>
+        <div class="ttsc-menu-accordion" id="acc-enroll">
+          <div class="ttsc-menu-item active"><a class="ttsc-menu-link" href="#" aria-current="page"><span class="ttsc-menu-bullet"><span></span></span><span class="ttsc-menu-title">Lista de matrículas</span></a></div>
+          <div class="ttsc-menu-item"><a class="ttsc-menu-link" href="#"><span class="ttsc-menu-bullet"><span></span></span><span class="ttsc-menu-title">Rematrícula 2027</span></a></div>
+          <div class="ttsc-menu-item"><a class="ttsc-menu-link" href="#"><span class="ttsc-menu-bullet"><span></span></span><span class="ttsc-menu-title">Lista de espera</span></a></div>
+        </div>
+      </div>
+      <div class="ttsc-menu-item" data-ttsc-menu-item-toggle="accordion">
+        <button type="button" class="ttsc-menu-link" aria-expanded="false" aria-controls="acc-classes" style="border:0;background:none;font:inherit;text-align:start;width:calc(100% - 16px)">
+          <span class="ttsc-menu-icon"><i class="fa-light fa-chalkboard-user"></i></span><span class="ttsc-menu-title">Turmas</span>
+          <span class="ttsc-menu-arrow"><i class="fa-light fa-chevron-down"></i></span>
+        </button>
+        <div class="ttsc-menu-accordion" id="acc-classes">
+          <div class="ttsc-menu-item"><a class="ttsc-menu-link" href="#"><span class="ttsc-menu-bullet"><span></span></span><span class="ttsc-menu-title">Quadro de turmas</span></a></div>
+          <div class="ttsc-menu-item"><a class="ttsc-menu-link" href="#"><span class="ttsc-menu-bullet"><span></span></span><span class="ttsc-menu-title">Diário de classe</span></a></div>
+        </div>
+      </div>
+      <div class="ttsc-menu-separator" role="separator"></div>
+      <div class="ttsc-menu-heading">Relatórios</div>
+      <div class="ttsc-menu-item">
+        <a class="ttsc-menu-link" href="#"><span class="ttsc-menu-icon"><i class="fa-light fa-clipboard-check"></i></span><span class="ttsc-menu-title">Frequência</span></a>
+      </div>
+      <div class="ttsc-menu-item disabled">
+        <a class="ttsc-menu-link" aria-disabled="true" tabindex="-1"><span class="ttsc-menu-icon"><i class="fa-light fa-file-certificate"></i></span><span class="ttsc-menu-title">Histórico escolar</span><span class="ttsc-menu-badge"><span class="ttsc-badge ttsc-badge-sm ttsc-badge-secondary">Em breve</span></span></a>
+      </div>
+    </div>
+  </nav>
+  <div class="ds-stack">
+    <div class="ds-label">Comportamento</div>
+    <div class="pv-info">Clique em <b>Matrículas</b>/<b>Turmas</b> para abrir/fechar o accordion (classe <code>show</code> no <code>.ttsc-menu-item</code>). Clique num subitem para torná-lo ativo (<code>.active</code> + <code>aria-current="page"</code>; o pai recebe <code>.here</code>).</div>
+    <div class="pv-info" aria-live="polite">Página atual: <code id="current">Lista de matrículas</code></div>
+  </div>
+</div>
+<script>
+  // Implementação TTSC (o ttscui não tem módulo menu): accordion + item ativo
+  (function () {
+    var menu = document.getElementById('menu');
+    menu.addEventListener('click', function (e) {
+      var toggle = e.target.closest('[data-ttsc-menu-item-toggle="accordion"] > .ttsc-menu-link');
+      if (toggle) {
+        var item = toggle.parentElement, open = !item.classList.contains('show');
+        item.classList.toggle('show', open);
+        toggle.setAttribute('aria-expanded', String(open));
+        return;
+      }
+      var link = e.target.closest('.ttsc-menu-link[href]');
+      if (!link) return;
+      e.preventDefault();
+      menu.querySelectorAll('.ttsc-menu-item.active, .ttsc-menu-item.here').forEach(function (i) { i.classList.remove('active', 'here'); });
+      menu.querySelectorAll('[aria-current]').forEach(function (a) { a.removeAttribute('aria-current'); });
+      var item = link.parentElement;
+      item.classList.add('active');
+      link.setAttribute('aria-current', 'page');
+      var parent = item.parentElement.closest('.ttsc-menu-item');
+      if (parent) parent.classList.add('here');
+      document.getElementById('current').textContent = link.textContent.trim();
+    });
+    menu.querySelector('.ttsc-menu-item.active').parentElement.closest('.ttsc-menu-item').classList.add('here');
+  })();
+  TTSC.init();
+</script>
+</body>
+</html>

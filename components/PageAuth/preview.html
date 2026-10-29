@@ -1,0 +1,173 @@
+<!-- @dsCard group="Arquétipos de página" height=866 width=1280 page subtitle="Auth · tela de login real (resources/views/auth) com ttsc.auth.css · painel da marca, formulário, alerta de erro, verificação humana (placeholder) e portais" -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="ds-theme-sync" content="off">
+<title>PageAuth</title>
+<link rel="stylesheet" href="../../vendor/app/auth/ttsc.auth.css">
+<style>
+  html, body { margin: 0; }
+  .sb-login-page { min-height: 740px; }
+  /* Verificação humana: placeholder estático no lugar do widget reCAPTCHA (sem rede externa) */
+  .ttsc-captcha-placeholder {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 10px 12px; margin: 0 0 16px; border: 1px dashed var(--sb-border-2); border-radius: 8px;
+    background: var(--sb-surface-2); color: var(--sb-text-2); font-size: 13px;
+  }
+  .ttsc-captcha-placeholder label { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; }
+  .ttsc-captcha-placeholder input { width: 18px; height: 18px; accent-color: var(--sb-accent); }
+  .ttsc-captcha-placeholder small { font-size: 11px; color: var(--sb-text-3); text-align: right; line-height: 1.3; }
+</style>
+</head>
+<body>
+  <a href="#main-content" class="sr-only sr-only-focusable">Ir para o conteúdo principal</a>
+
+  <div style="position:absolute;top:20px;right:20px;z-index:100;display:flex;gap:16px;align-items:center;">
+    <button class="auth-theme-toggle" id="auth-theme-toggle" type="button" title="Alternar tema" aria-label="Alternar tema de cores" style="margin-left: 8px;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+    </button>
+  </div>
+
+  <main id="main-content" class="sb-login-page">
+    <div class="sb-login-container">
+      <!-- Brand Panel (shared by all auth pages) -->
+      <div class="sb-login-brand">
+        <div class="sb-login-brand-content">
+          <div class="sb-login-logo">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NjYuNiA2MjUuOCIgZmlsbD0ibm9uZSI+PHBhdGggZmlsbD0iIzEwYjk4MSIgZD0iTTQyOCw3Ni40QzQyMS4xLDM3LjEsMzg0LjYsMy45LDM0NSwuN2MtNS4zLS4xLTEwLjctLjMtMTYtLjQtMS4zLDAtMi42LS4yLTQtLjItNDYuNywwLTkzLjQsMC0xNDAuMSwwLTcuMywwLTE0LjYsLjItMjEuOSwuM2gtNGMtMTguNS0uMS0zNy0uMy01NS40LS4yLTcuOCwwLTE1LjcsLjEtMjMuNCwxLjNDMzIuMyw4LjUtMi40LDUxLjksLjEsMTAwLjdjMi41LDQ4LjQsNDIuMyw4Ny45LDkwLjYsOTAsMi44LC4xLDMuOS0uOSw1LjMtMy4xLDcuMy0xMC43LDE0LjktMjEuMiwyMi40LTMxLjcsLjctMSwxLjYtMS45LDIuOC0zLjQtOC4zLDAtMTUuNywwLTIzLjIsMC0zLjcsMC03LjQsMC0xMS0uNS0yOS40LTQuNy01MC45LTMxLTQ4LjgtNTkuNSwyLjMtMzEuMiwyNi42LTU0LjEsNTcuNy01NC4yLDkuNywwLDE5LjMtLjEsMjktLjIsMi43LDAsNS40LDAsOCwwLDEuNywwLDMuMywwLDUsMCwxLjMsMCwyLjcsMCw0LDAsMjEuNSwwLDQzLC4yLDY0LjUsLjIsMzEuNSwwLDYzLS4xLDk0LjUtLjIsMS40LDAsMi43LDAsNC4xLDAsMiwwLDQsMCw1LjksMC0xLjItMS40LTIuNC0yLjgtMy42LTQuMywxLjIsMS40LDIuNCwyLjgsMy42LDQuMywyLjcsMCw1LjQsMCw4LjEsMGwuOS0xMi43aDBjLS4zLDQuMi0uNiw4LjUtLjksMTIuNyw2LjIsMCwxMi4zLDAsMTguNSwuMiwzNC40LDEuMyw2MC4zLDM0LjksNTMsNjguNS01LjUsMjUuMy0yMy44LDQxLjUtNTEuNSw0NS44aC0yYy00MS41LDAtODMsMC0xMjQuNSwwLS41LDAtMSwuMi0xLjQsLjMtLjQsMC0uOCwwLTEuMiwuMS0xMS4yLC4xLTIxLjgsMi43LTMxLjksNy4zLTMuNCwxLjctNi43LDMuMy0xMC4xLDUtOS44LDUuMy0xOC40LDEyLjEtMjUuMiwyMC45bC0xLjcsMi4xYy0xLjcsMi4zLTMuNCw0LjUtNS4xLDYuOGgwYy0uOSwxLjQtMS44LDIuOC0yLjgsNC4zLTEuMiwyLjMtMi40LDQuNS0zLjcsNi44LTIuMiw2LTQuNCwxMi4xLTYuNiwxOC4xLTEuMSw3LjctMywxNS40LTMuMSwyMy4xLS40LDI4LS4yLDU2LS4xLDg0LDAsNC41LC4yLDksLjksMTMuNCw4LjMsNTEuNSw1MS4zLDg1LjYsMTAzLjMsODEuNCwyMy4yLTEuOCw0My4yLTExLjQsNTkuMy0yOC41LDIuMi0yLjUsNC40LTUsNi42LTcuNCwxMy45LTE3LjIsMjAuNS0zNywyMC42LTU5LDAtMjYuNiwwLTUzLjIsMC03OS45LDAtMS44LDAtMy43LS4xLTUuNS0uNi05LjctMTEuNi0yMC43LTI1LjMtMTUuNi0zLjMsMi43LTYuNiw1LjQtOS45LDguMS0xLDMuOC0yLjgsNy41LTIuOCwxMS4zLS4zLDI3LjUsMCw1NC45LS4yLDgyLjQtLjIsMzQuOS0zMi41LDYxLjctNjYuOCw1NS41LTE3LjktMy4yLTMwLjktMTMuMi00MC40LTI4LjMtMS44LTQuMy0zLjUtOC41LTUuMy0xMi44LS4xLS40LS4zLS44LS40LTEuMiwwLS4zLS4xLS43LS4yLTEtLjQtNC4zLTEuMS04LjYtMS4xLTEyLjktLjEtMjcuOCwwLTU1LjYsMC04My40LDAtMjUuNSwxNi41LTQ3LjYsNDAuOS01NC43LDUuNS0xLjYsMTEuNC0xLjksMTcuMi0yLjgsMSwwLDIuMSwwLDMuMSwwLDEuOCwuMSwzLjYsLjMsNS41LC4zLDI0LjcsMCw0OS4zLDAsNzQsMCw1LjIsMCwxMC4zLS4yLDE1LjUtLjMsLjMsMCwuNywwLDEsMCwxLjQsMCwyLjcsMCw0LjEsMCwyLjMsMCw0LjYsMCw2LjksMCw3LjYtLjIsMTUuNCwuNCwyMi44LS45LDU1LjMtOS41LDg5LTU3LjksNzkuMi0xMTMuMlptLTExMS4yLDExMi42Yy40LC4zLDEuMSwuNCwyLjIsLjRoMGMtMSwwLTEuNy0uMS0yLjItLjRabTExLjEtMy43Yy0yLjUtMS4zLTQuOS0yLjQtNy4zLTEuNywxLjctLjUsMy44LS41LDYuNi0uNCwuNCwxLjMsMS4zLDIuNCwyLjYsMy4xLTEuMiwxLjItLjksMi0uNiwyLjgtLjUtMS40LS45LTIuNi0xLjMtMy44Wm02LjUsMmMuOCwwLDEuNiwwLDIuMi0uMi0uNiwuMS0xLjMsLjItMi4yLC4yWm03Ny42LTEwNS40aDBjMCwuNC0uMSwxLS4yLDEuNSwwLS41LC4yLTEsLjItMS41WiIvPjxwYXRoIGZpbGw9IiMxMGI5ODEiIGQ9Ik0zMzYuMiwxMTQuNGMxMC42LS44LDE4LjYtMTAuNywxNy4yLTIxLjItMS40LTEwLjUtOS4yLTE2LjktMjAuNi0xNi45LTc4LjMsMC0xNTYuNywwLTIzNSwwLTIuOSwwLTUuOSwuOC04LjgsMS4zLTcuMSwyLjktMTEuNyw3LjYtMTIuMSwxNS43LS4yLC44LS41LDEuNi0uNCwyLjQsLjQsMTEuNCw4LjYsMTguOCwyMC44LDE4LjgsNzYuOCwwLDE1My43LDAsMjMwLjUsMCwyLjgsMCw1LjcsLjEsOC41LDBabS0yNTUuOS0yMS44Yy4zLC4xLC42LC40LC44LC4zLS4yLDAtLjUtLjItLjgtLjNoMFoiLz48cGF0aCBmaWxsPSIjMTBiOTgxIiBkPSJNMjM0LDI0OC44YzAtMTEuNi04LjItMTkuOS0xOS4yLTE5LjgtMTEsMC0xOC45LDguNC0xOC45LDIwLjEsMCwyNywwLDUzLjksMCw4MC45LDAsMTIsOC4xLDIwLjQsMTkuMiwyMC4zLDEwLjksMCwxOC44LTguNCwxOC45LTIwLjEsMC0xMy41LDAtMjcsMC00MC40LDAtMTMuNiwwLTI3LjMsMC00MC45WiIvPjxwYXRoIGZpbGw9IiMxMGI5ODEiIGQ9Ik02NjQuOCwzOTcuNGgtMTA2LjdjMTYuMSwxMC4xLDMxLjYsMTkuMyw0Ni42LDI5LjEsNyw0LjYsMTQuMSw4LDIyLjcsNi43LC43LS4xLDEuNSwuMywyLjQsLjUsMCwxLjQsMCwyLjUsMCwzLjcsMCwxOC45LTUsMzYuNS0xMy4zLDUzLjJoMGMtMS4yLDIuMS0yLjUsNC4zLTMuNyw2LjRoMGMtMSwxLjYtMiwzLjEtMyw0LjctMS4zLDEuOC0yLjYsMy42LTMuOSw1LjMtLjQsLjYtLjksMS4yLTEuMywxLjctMi4zLDIuNy00LjYsNS41LTYuOSw4LjItMiwyLTQsNC4xLTYsNi4xLTcuNCw2LjItMTQuOCwxMi40LTIyLjEsMTguNy0xLC43LTIsMS4zLTMsMi0yLjMsMS42LTQuNywzLjItNyw0LjgtMi4yLDEuNC00LjQsMi44LTYuNiw0LjItLjgsLjUtMS43LDEtMi41LDEuNGgwYy0uNiwuMy0xLjMsLjUtMS44LC44LTIzLjcsMTMuNy00OC45LDI0LTc0LjgsMzIuNy0yLC43LTQuNywxLjEtNi42LC41LTI2LjQtOC43LTUyLjEtMTkuMS03Ni4yLTMzLjEtMzQuMy0yMC02My00NS4xLTc2LjUtODQuMS0uNC0xLjYtLjktMy4zLTEuMy00LjktMS4zLTEwLjMtMi42LTIwLjYtMy45LTMxLDAtMS44LC4yLTMuNiwuMi01LjUsMC01Mi43LDAtMTA1LjUsMC0xNTguMiwwLTMuOC0uMS03LjYtLjItMTEuNSwxLjctMSwzLjItMi4yLDUtMi45LDEzLjEtNS40LDI2LjMtMTAuNiwzOS40LTE1LjksNy42LTMsMTUuMi02LDIyLjktOC45LDI5LjUtMTEuNiw1OS4xLTIzLjEsODguNi0zNC44LDMuMi0xLjMsNS44LTEuMyw5LDAsMjUuOCwxMC4zLDUxLjcsMjAuMyw3Ny41LDMwLjUsMiwuOCwzLjksMS41LDUuOSwyLjMsMjIuNyw5LDQ1LjQsMTguMSw2OC4xLDI3LjEsMy4xLDEuMiw0LjMsMi42LDQuMiw2LjEtLjIsMTksMCwzOC0uMSw1NywwLDEuNC0uMiwyLjktLjMsNC4yaC0zNS43YzAtMTIuNywwLTI1LDAtMzcuNCwwLTIuOC0uOC00LjEtMy40LTUuMS0zOS4zLTE1LjQtNzguNi0zMS0xMTgtNDYuNC0xLjctLjYtNC0uNy01LjYsMC0zOS41LDE1LjUtNzksMzEtMTE4LjQsNDYuNy0xLjMsLjUtMi45LDIuNy0yLjksNC4yLS4yLDIwLjItLjIsNDAuMywwLDYwLjUsMCwxLjQsLjgsMy40LDEuOCw0LjEsMTMuOSw4LjgsMjgsMTcuNCw0MiwyNiwzLjgsMi40LDcuNyw0LjgsMTEuNSw3LjEsOS4yLDUuOSwxOC40LDExLjgsMjcuOCwxNy42LDIwLjYsMTIuOCw0MS4yLDI1LjUsNjEuOSwzOC4yLDQuMywyLjcsOC42LDUuNSwxMyw4LjIsMTIuMyw3LjgsMjQuNiwxNS41LDM3LjMsMjMuNS0yLjQsMi4yLTQuNSw0LjMtNi44LDYuMi0xOC42LDE1LjMtNDAuMiwyNS4zLTYyLjUsMzMuOS0xLjUsLjYtMy42LC4xLTUuMi0uNS03LjQtMy0xNC44LTYtMjItOS40LTE3LjgtOC40LTM0LjktMTguMS00OC40LTMyLjktOS4zLTEwLjItMTQuOS0yMS45LTE0LjQtMzYuMSwuMi02LDEuNy0xMi45LS44LTE3LjYtMi40LTQuNS05LjItNi42LTE0LjItOS43LTYuOC00LjMtMTMuNy04LjUtMjAuOC0xMywwLDE3LjUtLjUsMzQuMywuMiw1MS4xLC40LDExLjQsNC40LDIyLjIsMTAuMywzMiwxMy4yLDIyLjIsMzIuOCwzNy4zLDU1LDQ5LjQsMS40LS40LDIuOS0uOSw0LjMtMS4zLTEuNSwuNS0yLjksLjktNC4zLDEuMyw0LDIuMiw4LjEsNC4zLDEyLjEsNi41LDcuNCwzLjQsMTQuNiw3LjEsMjIuMSwxMC4yLDgsMy4zLDE2LjEsOC40LDI0LjIsOC40LDguMSwwLDE2LjMtNS4xLDI0LjItOC40LDI1LjQtMTAuNiw0OS44LTIzLjEsNzAuMS00Mi4zLDEwLjktMTAuMywxOS43LTIyLDI1LTM2LjIsLjgtMi4zLDEuMi0zLjgtMS4zLTUuMy0xOC42LTExLjMtMzcuMS0yMi44LTU1LjYtMzQuMy00LjEtMi42LTguMy01LjItMTIuNC03LjctLjQtLjMtLjctLjctMS4xLTEtMjkuNC0xOC4zLTU4LjctMzYuNi04OC4xLTU0LjgtMS4xLS43LTIuNC0xLTMuNi0xLjRoMGwtMS4xLS45Yy0zLTItNi00LTktNi0xMC43LTYuNy0yMS40LTEzLjQtMzItMjAuMy0xLjQtLjktMi44LTIuOS0yLjktNC41LS4zLTYuMy0uMS0xMi42LS4xLTE4LjgsLjctLjQsMS4xLS43LDEuNS0uOSwyOC0xMS4xLDU1LjktMjIuMiw4NC0zMy4xLDEuNy0uNyw0LjItLjMsNi4xLC40LDEyLjYsNC44LDI1LjEsOS44LDM3LjYsMTQuOCwxNS42LDYuMiwzMS4yLDEyLjMsNDcsMTguNnY1Mi41aDEwOHYtNzIuN2MwLTIuNywwLTUuMywwLTgsMC0xMS42LC4yLTIzLjMsLjItMzQuOXEwLTEwLjctOS44LTE0LjZjLTIzLjgtOS4zLTQ3LjYtMTguNy03MS40LTI4LTQtMS42LTgtMy4xLTEyLjEtNC43LS4xLS4xLS4yLS4zLS40LS4zLTMzLjUtMTMuMy02MS0yNi41LTk0LjUtMzkuNy0xLjItLjUtOS0uNi0xMC4yLS4xLTEzLjQsNS4zLTI2LjgsMTAuNy00MC4yLDE2LC4zLC4zLC41LC42LC44LC45LC4zLC4zLC41LC42LC44LC45LS4zLS4zLS41LS42LS44LS45LS4zLS4zLS41LS42LS44LS45LTMuNCwxLjQtNi44LDIuNy0xMC4yLDQuMS0uNiwuMS0xLjMsLjEtMS45LC40LTQ2LjQsMTguMy05Mi43LDM2LjYtMTM5LjEsNTUtMSwuNC0xLjgsMS4yLTIuNywxLjgsMCwuMywwLC43LS4xLDEsMCwuOC0uMiwxLjYtLjIsMi41LDAsNjYuMSwwLDEzMi4xLDAsMTk4LjIsMCwxNi45LDIuMiwzMy41LDguMyw0OS40LDEuMywzLjMsMi42LDYuNiwzLjksMTAsLjIsLjgsLjMsMS42LC43LDIuMywxMy43LDMwLjEsMzUuNyw1My4xLDYyLjIsNzIuMSwzMS40LDIyLjUsNjYuMywzNy45LDEwMi42LDUwLjZxMTguNyw2LjUsMzcuNSwwYzMuNi0xLjMsNy4yLTIuNSwxMC44LTMuOSwzNy42LTE0LDczLjMtMzEuNCwxMDQuOS01Ni43LDUyLjktNDIuMyw2OC4zLTk4LjQsNjAuNy0xNjNabS0yMzcuNywxMjguOGMuNSwwLDEtLjIsMS40LS4zLS41LC4xLS45LC4yLTEuNCwuM1ptMTQ3LjYtMzIyLjNzMCwwLDAsLjFjMCwwLDAsMCwwLS4xaDBabS44LDMuNmMuMSwuNiwuMiwxLjIsLjIsMS43LDAtLjUtLjEtMS4xLS4yLTEuN1ptLTE4OS45LTIuOWMtLjQsLjktLjgsMS44LTEuMiwyLjgsLjQtLjksLjgtMS44LDEuMi0yLjhoMFptMTY0LjUsMzU0LjVjLjMtMS4xLC41LTIuMiwuNS0zLjMsMCwxLjEtLjIsMi4yLS41LDMuMywwLC40LS4yLC43LS4zLDEuMSwuMS0uNCwuMi0uNywuMy0xLjFabS0uOCwyLjhjLS4xLC40LS4yLC43LS4zLDEuMSwwLS40LC4yLS43LC4zLTEuMVptNzkuNC02Ni44Yy0xLTEtMi0yLTMtM2gwYzEsMSwyLDIsMywzWiIvPjwvc3ZnPg==" alt="TotusTuus Logo" style="width:48px;height:48px;object-fit:contain">
+          </div>
+          <h1 class="sb-login-title">TotusTuus<br/>SoftCloud</h1>
+          <p class="sb-login-tagline">Plataforma unificada de gestão para instituições de ensino. Segura, escalável e feita para o futuro.</p>
+          <div class="sb-login-features">
+            <div class="sb-login-feature">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <span>Criptografia de ponta a ponta</span>
+            </div>
+            <div class="sb-login-feature">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+              <span>Autenticação multifator</span>
+            </div>
+            <div class="sb-login-feature">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <span>Controle de acesso baseado em papéis</span>
+            </div>
+            <div class="sb-login-feature">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              <span>Monitoramento de atividade 24/7</span>
+            </div>
+          </div>
+          <div class="sb-login-footer-text">
+            &copy; 2026 TotusTuus SoftCloud<br/>
+            <span>Todos os direitos reservados.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Panel -->
+      <div class="sb-login-form">
+        <div class="sb-login-form-inner">
+          <div class="sb-login-mobile-header">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true"><rect width="32" height="32" rx="8"/><path d="M10 22V10h4l4 8 4-8h4v12h-4V14l-4 8-4-8v8h-4Z"/></svg>
+            <span class="sb-login-mobile-brand">TotusTuus</span>
+          </div>
+
+          <div class="sb-login-alert sb-login-alert--error" role="alert">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span>E-mail ou senha inválidos. Após 3 tentativas a verificação humana é exigida.</span>
+          </div>
+
+          <div class="sb-login-form-header">
+            <h2>Bem-vindo de volta</h2>
+            <p>Entre na sua conta para continuar</p>
+          </div>
+
+          <form method="POST" action="#" id="loginForm" novalidate>
+            <input type="hidden" name="_token" value="preview">
+            <input type="hidden" name="portal" value="admin">
+
+            <div class="sb-field">
+              <label for="email">Endereço de e-mail</label>
+              <div class="sb-input-wrap">
+                <svg class="sb-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                <input type="email" id="email" name="email" class="sb-input" placeholder="seu@email.com" value="secretaria@colegiohorizonte.edu.br" required autocomplete="email">
+              </div>
+            </div>
+
+            <div class="sb-field">
+              <div class="sb-field-label-row">
+                <label for="password">Senha</label>
+                <a href="#" class="sb-forgot-link">Esqueceu a senha?</a>
+              </div>
+              <div class="sb-input-wrap">
+                <svg class="sb-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                <input type="password" id="password" name="password" class="sb-input" placeholder="Digite sua senha" required autocomplete="current-password">
+                <button type="button" class="sb-pw-toggle" id="pwToggle" aria-label="Alternar visibilidade da senha" tabindex="-1">
+                  <svg id="pwEye" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="ttsc-captcha-placeholder" data-captcha-placeholder>
+              <label><input type="checkbox" id="captchaCheck" name="captcha_ack"> Não sou um robô</label>
+              <small>Verificação humana<br>(placeholder do reCAPTCHA)</small>
+            </div>
+
+            <button type="submit" id="submitBtn" class="sb-btn sb-btn-primary sb-btn-full">
+              <span>Entrar</span>
+              <svg class="sb-btn-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+          </form>
+
+          <div class="sb-divider-text"><span>Acesso aos portais</span></div>
+
+          <div class="sb-portal-grid">
+            <a href="#" class="sb-portal-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>Desenvolvedor</a>
+            <a href="#" class="sb-portal-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.1 2.7 3 6 3s6-1.9 6-3v-5"/></svg>Aluno</a>
+            <a href="#" class="sb-portal-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>Professor</a>
+            <a href="#" class="sb-portal-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/></svg>Responsáveis</a>
+            <a href="#" class="sb-portal-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Terceiros</a>
+          </div>
+
+          <div class="sb-login-register">
+            <span>Não tem uma conta?</span>
+            <a href="#">Criar conta</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+<script>
+  /* Sem TTSCModelKit.syncTheme(): a tela de login real (auth/layouts/main.php) tema só por <html data-theme>
+     e nunca recebe html.dark; com html.dark as regras escuras do shell (inputs, botões) vazariam para o formulário. */
+  document.documentElement.classList.remove('dark');
+  (function () {
+    /* Mesmo script de resources/views/auth/pages/login.php */
+    var toggle = document.getElementById('pwToggle');
+    var input = document.getElementById('password');
+    var eye = document.getElementById('pwEye');
+    toggle.addEventListener('click', function () {
+      var isPassword = input.type === 'password';
+      input.type = isPassword ? 'text' : 'password';
+      eye.innerHTML = isPassword
+        ? '<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24M1 1l22 22"/>'
+        : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+    });
+    var form = document.getElementById('loginForm');
+    var btn = document.getElementById('submitBtn');
+    form.addEventListener('submit', function (ev) {
+      ev.preventDefault();   /* preview: não envia */
+      btn.disabled = true;
+      btn.innerHTML = '<svg class="sb-spinner" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-dasharray="31.4 31.4" stroke-linecap="round"/></svg><span>Entrando...</span>';
+      setTimeout(function () { btn.disabled = false; btn.innerHTML = '<span>Entrar</span>'; }, 1500);
+    });
+    /* Mesmo toggle de resources/views/auth/layouts/main.php (sem gravar od-theme no preview) */
+    document.getElementById('auth-theme-toggle').addEventListener('click', function () {
+      var html = document.documentElement;
+      html.setAttribute('data-theme', html.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+    });
+  })();
+</script>
+</body>
+</html>

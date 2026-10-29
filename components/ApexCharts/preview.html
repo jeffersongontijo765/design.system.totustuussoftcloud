@@ -1,0 +1,152 @@
+<!-- @dsCard group="Gráficos" height=690 subtitle="ApexCharts 8.5.0 · área (frequência %), barras, donut, sparkline de KPI, theme.mode por data-theme, cores de tokens" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>ApexCharts</title>
+<link rel="stylesheet" href="../../vendor/apexcharts/apexcharts.css">
+<style>
+  .ax-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .ax-card { border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); background: var(--ttsc-surface); box-shadow: var(--ttsc-shadow-sm); padding: 14px 16px 6px; min-width: 0; margin: 0; }
+  .ax-card h3 { margin: 0; font-size: 14px; font-weight: 600; color: var(--ttsc-text); }
+  .ax-card p { margin: 2px 0 0; font-size: 12px; color: var(--ttsc-text-muted); }
+  .ax-wide { grid-column: span 2; }
+  .ax-kpi { display: flex; flex-direction: column; gap: 2px; padding-bottom: 0; }
+  .ax-kpi .lbl { font-size: 11px; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; color: var(--ttsc-text-muted); }
+  .ax-kpi .val { font-size: 24px; font-weight: 700; color: var(--ttsc-text); font-variant-numeric: tabular-nums; }
+  .ax-kpi .delta { font-size: 12px; color: var(--ttsc-accent-text); display: inline-flex; gap: 4px; align-items: center; }
+  .ax-kpi .delta.down { color: var(--ttsc-danger-text); }
+  .apexcharts-tooltip.apexcharts-theme-light, .apexcharts-tooltip.apexcharts-theme-dark { background: var(--ttsc-surface) !important; color: var(--ttsc-text) !important; border: 1px solid var(--ttsc-border) !important; box-shadow: var(--ttsc-shadow-popover) !important; border-radius: var(--ttsc-radius-sm); }
+  .apexcharts-tooltip .apexcharts-tooltip-title { background: var(--ttsc-canvas-2) !important; border-bottom: 1px solid var(--ttsc-border) !important; color: var(--ttsc-text-2); }
+  .apexcharts-xaxistooltip { background: var(--ttsc-surface); border-color: var(--ttsc-border); color: var(--ttsc-text); }
+  .apexcharts-legend-text { color: var(--ttsc-text-2) !important; }
+  /* Barra de catálogo oficial */
+  .ax-demos { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 0 0 14px; padding: 9px 12px; border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-control); background: var(--ttsc-surface); }
+  .ax-demos i { color: var(--ttsc-accent-text); font-size: 12px; }
+  .ax-demos a { color: var(--ttsc-accent-text); font-weight: 600; font-size: 13px; text-decoration: underline; text-underline-offset: 3px; }
+  .ax-demos a:hover { color: var(--ttsc-accent-hover); }
+  .ax-demos a:focus-visible { outline: 2px solid var(--ttsc-accent); outline-offset: 2px; border-radius: var(--ttsc-radius-xs); }
+  .ax-demos-txt { font-size: 12px; color: var(--ttsc-text-2); }
+  .ax-demos-micro { margin-left: auto; font-size: 11px; color: var(--ttsc-text-muted); }
+  @media (max-width: 760px) { .ax-grid { grid-template-columns: 1fr; } .ax-wide { grid-column: auto; } }
+</style>
+</head>
+<body>
+<div class="ds-pad">
+  <div class="ax-demos">
+    <i class="fa-light fa-arrow-up-right-from-square" aria-hidden="true"></i>
+    <a href="https://apexcharts.com/javascript-chart-demos/" target="_blank" rel="noopener">Demos oficiais do ApexCharts</a>
+    <span class="ax-demos-txt">— catálogo completo com código ao vivo</span>
+    <span class="ax-demos-micro">site oficial na versão atual; bundle vendorizado: 8.5.0</span>
+  </div>
+  <div class="ax-grid">
+    <figure class="ax-card ax-wide">
+      <h3>Frequência média por semana</h3><p>2º semestre de 2026 · meta 75%</p>
+      <div id="ax-area" role="img" aria-label="Gráfico de área: frequência média semanal entre 81% e 93%, acima da meta de 75%."></div>
+    </figure>
+    <div class="ds-stack" style="gap:14px">
+      <figure class="ax-card ax-kpi">
+        <span class="lbl">Frequência média</span><span class="val">88,4%</span>
+        <span class="delta"><i class="fa-light fa-arrow-trend-up"></i> +2,1 p.p. vs. semestre anterior</span>
+        <div id="ax-spark-1" role="img" aria-label="Tendência de alta nas últimas 12 semanas."></div>
+      </figure>
+      <figure class="ax-card ax-kpi">
+        <span class="lbl">Faltas não justificadas</span><span class="val">312</span>
+        <span class="delta down"><i class="fa-light fa-arrow-trend-up"></i> +8% nas últimas 4 semanas</span>
+        <div id="ax-spark-2" role="img" aria-label="Faltas em alta nas últimas 12 semanas."></div>
+      </figure>
+    </div>
+    <figure class="ax-card ax-wide">
+      <h3>Frequência por turma</h3><p>Semana atual · % de presença</p>
+      <div id="ax-bar" role="img" aria-label="Barras: 9º A 94%, 9º B 89%, 1ª série A 86%, 1ª série B 79%, 2ª série A 72%."></div>
+    </figure>
+    <figure class="ax-card">
+      <h3>Registros de chamada</h3><p>Últimos 30 dias</p>
+      <div id="ax-donut" role="img" aria-label="Rosca: presente 86%, ausente 9%, justificado 5%."></div>
+    </figure>
+  </div>
+</div>
+<script>
+TTSC.init();
+// ApexCharts 8.5.0 (npm) vendorizada em vendor/apexcharts; a cópia de assets/vendors foi reinstalada limpa em 27/10/2026 (ver README).
+var apex = document.createElement('script');
+apex.src = '../../vendor/apexcharts/apexcharts.min.js';
+apex.onload = renderCharts;
+document.head.appendChild(apex);
+function renderCharts() {
+var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+var cs = getComputedStyle(document.documentElement);
+function t(n) { return cs.getPropertyValue(n).trim(); }
+var C = {
+  accent: t('--ttsc-accent'), p700: t('--ttsc-primary-700'), p200: t('--ttsc-primary-200'), p400: t('--ttsc-primary-400'),
+  danger: t('--ttsc-danger'), warning: t('--ttsc-warning'), muted: t('--ttsc-text-muted'), text2: t('--ttsc-text-2'),
+  border: t('--ttsc-border'), surface: t('--ttsc-surface'), text: t('--ttsc-text')
+};
+var pct = function (v) { return v.toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + '%'; };
+var base = {
+  chart: { fontFamily: 'Inter, system-ui, sans-serif', foreColor: C.muted, background: 'transparent', toolbar: { show: false }, zoom: { enabled: false }, animations: { speed: 400 },
+           defaultLocale: 'pt-br', locales: [{ name: 'pt-br', options: {
+             months: ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'],
+             shortMonths: ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'],
+             days: ['domingo','segunda','terça','quarta','quinta','sexta','sábado'], shortDays: ['dom','seg','ter','qua','qui','sex','sáb'],
+             toolbar: { download: 'Baixar SVG', selection: 'Selecionar', selectionZoom: 'Zoom', zoomIn: 'Ampliar', zoomOut: 'Reduzir', pan: 'Mover', reset: 'Restaurar' } } }] },
+  theme: { mode: dark ? 'dark' : 'light' },
+  grid: { borderColor: C.border, strokeDashArray: 3, padding: { left: 4, right: 8 } },
+  dataLabels: { enabled: false },
+  tooltip: { theme: dark ? 'dark' : 'light' },
+  legend: { labels: { colors: C.text2 }, fontSize: '12px' }
+};
+function merge(a, b) { var o = JSON.parse(JSON.stringify(a)); for (var k in b) o[k] = (typeof b[k] === 'object' && !Array.isArray(b[k]) && o[k]) ? Object.assign(o[k], b[k]) : b[k]; return o; }
+
+var weeks = ['S1','S2','S3','S4','S5','S6','S7','S8','S9','S10','S11','S12'];
+var freq = [86.2, 88.1, 87.4, 90.3, 92.6, 91.8, 89.5, 84.1, 81.3, 87.9, 90.6, 88.4];
+new ApexCharts(document.getElementById('ax-area'), merge(base, {
+  chart: Object.assign({}, base.chart, { type: 'area', height: 210 }),
+  series: [{ name: 'Frequência', data: freq }],
+  colors: [C.accent],
+  stroke: { curve: 'smooth', width: 2 },
+  fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.35, opacityTo: 0.02, stops: [0, 100] } },
+  xaxis: { categories: weeks, axisBorder: { show: false }, axisTicks: { show: false }, labels: { style: { colors: C.muted } } },
+  yaxis: { min: 60, max: 100, tickAmount: 4, labels: { formatter: function (v) { return v + '%'; }, style: { colors: C.muted } } },
+  annotations: { yaxis: [{ y: 75, borderColor: C.warning, strokeDashArray: 4, label: { text: 'Meta 75%', position: 'left', textAnchor: 'start', offsetX: 6, style: { background: C.surface, color: C.text2, fontSize: '11px' }, borderColor: C.warning } }] },
+  tooltip: Object.assign({}, base.tooltip, { y: { formatter: pct } })
+})).render();
+
+function spark(id, data, color) {
+  new ApexCharts(document.getElementById(id), {
+    chart: { type: 'area', height: 48, background: 'transparent', sparkline: { enabled: true }, animations: { speed: 400 } },
+    series: [{ name: 'Valor', data: data }], colors: [color], stroke: { curve: 'smooth', width: 2 },
+    fill: { type: 'gradient', gradient: { opacityFrom: 0.3, opacityTo: 0 } },
+    tooltip: { enabled: false }, theme: { mode: dark ? 'dark' : 'light' }
+  }).render();
+}
+spark('ax-spark-1', [82, 84, 83, 86, 85, 87, 86, 88, 87, 89, 88, 88.4], C.accent);
+spark('ax-spark-2', [21, 18, 22, 25, 19, 23, 27, 24, 26, 29, 31, 30], C.danger);
+
+new ApexCharts(document.getElementById('ax-bar'), merge(base, {
+  chart: Object.assign({}, base.chart, { type: 'bar', height: 200 }),
+  series: [{ name: 'Presença', data: [94, 89, 86, 79, 72] }],
+  plotOptions: { bar: { horizontal: true, borderRadius: 4, barHeight: '58%', distributed: true } },
+  colors: [dark ? C.p400 : C.accent, dark ? C.p400 : C.accent, dark ? C.p400 : C.accent, C.warning, C.danger],
+  legend: { show: false },
+  dataLabels: { enabled: true, formatter: pct, style: { fontSize: '11px', fontWeight: 600, colors: [t('--ttsc-accent-on')] } },
+  xaxis: { categories: ['9º ano A', '9º ano B', '1ª série A', '1ª série B', '2ª série A'], min: 0, max: 100, labels: { formatter: function (v) { return v + '%'; }, style: { colors: C.muted } } },
+  yaxis: { labels: { style: { colors: C.text2, fontSize: '12px' } } },
+  tooltip: Object.assign({}, base.tooltip, { y: { formatter: pct } })
+})).render();
+
+new ApexCharts(document.getElementById('ax-donut'), merge(base, {
+  chart: Object.assign({}, base.chart, { type: 'donut', height: 220 }),
+  series: [1804, 189, 105],
+  labels: ['Presente', 'Ausente', 'Justificado'],
+  colors: [dark ? C.p400 : C.accent, C.danger, C.warning],
+  stroke: { colors: [C.surface], width: 2 },
+  legend: { position: 'bottom', labels: { colors: C.text2 }, itemMargin: { horizontal: 6, vertical: 0 } },
+  plotOptions: { pie: { donut: { size: '66%', labels: { show: true,
+    value: { color: C.text, fontSize: '18px', fontWeight: 700, formatter: function (v) { return Number(v).toLocaleString('pt-BR'); } },
+    name: { color: C.muted, fontSize: '11px' },
+    total: { show: true, label: 'Registros', color: C.muted, fontSize: '11px', fontWeight: 500, formatter: function (w) { return w.globals.seriesTotals.reduce(function (a, b) { return a + b; }, 0).toLocaleString('pt-BR'); } } } } } },
+  tooltip: Object.assign({}, base.tooltip, { y: { formatter: function (v) { return v.toLocaleString('pt-BR') + ' registros'; } } })
+})).render();
+}
+</script>
+</body>
+</html>

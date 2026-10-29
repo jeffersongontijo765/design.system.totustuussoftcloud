@@ -1,0 +1,96 @@
+<!-- @dsCard group="Editores" height=370 subtitle="Quill 2.0.3 · tema snow com tokens, toolbar e tooltip de link em pt-BR, contador, Delta → HTML" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Quill</title>
+<link rel="stylesheet" href="../../vendor/quill/quill.snow.css">
+<script src="../../vendor/quill/quill.js"></script>
+<style>
+  .ttsc-quill { border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-control); background: var(--ttsc-surface); }
+  .ttsc-quill:focus-within { border-color: var(--ttsc-accent); box-shadow: 0 0 0 3px var(--ttsc-accent-soft); }
+  .ttsc-quill .ql-toolbar.ql-snow { border: 0; border-bottom: 1px solid var(--ttsc-border); background: var(--ttsc-canvas-2); border-radius: var(--ttsc-radius-control) var(--ttsc-radius-control) 0 0; padding: 6px 8px; font-family: inherit; }
+  .ttsc-quill .ql-container.ql-snow { border: 0; font-family: inherit; font-size: 13px; }
+  .ttsc-quill .ql-editor { min-height: 150px; max-height: 260px; color: var(--ttsc-text); line-height: 1.6; padding: 12px 14px; }
+  .ttsc-quill .ql-editor.ql-blank::before { color: var(--ttsc-text-muted); font-style: normal; }
+  .ttsc-quill .ql-editor h2 { font-size: 16px; font-weight: 600; }
+  .ttsc-quill .ql-editor h3 { font-size: 14px; font-weight: 600; }
+  .ttsc-quill .ql-editor blockquote { border-inline-start: 3px solid var(--ttsc-accent); color: var(--ttsc-text-2); padding-inline-start: 12px; }
+  .ttsc-quill .ql-editor a { color: var(--ttsc-accent-text); }
+  .ttsc-quill .ql-snow .ql-stroke { stroke: var(--ttsc-text-2); }
+  .ttsc-quill .ql-snow .ql-fill { fill: var(--ttsc-text-2); }
+  .ttsc-quill .ql-snow .ql-picker { color: var(--ttsc-text-2); }
+  .ttsc-quill .ql-snow button { border-radius: 6px; }
+  .ttsc-quill .ql-snow button:hover, .ttsc-quill .ql-snow .ql-picker-label:hover { background: var(--ttsc-surface-2); }
+  .ttsc-quill .ql-snow button:hover .ql-stroke, .ttsc-quill .ql-snow .ql-picker-label:hover .ql-stroke { stroke: var(--ttsc-text); }
+  .ttsc-quill .ql-snow button.ql-active { background: var(--ttsc-accent-soft); }
+  .ttsc-quill .ql-snow button.ql-active .ql-stroke, .ttsc-quill .ql-snow .ql-picker-label.ql-active .ql-stroke { stroke: var(--ttsc-accent-text); }
+  .ttsc-quill .ql-snow button.ql-active .ql-fill { fill: var(--ttsc-accent-text); }
+  .ttsc-quill .ql-snow button:focus-visible { outline: 2px solid var(--ttsc-accent); outline-offset: 1px; }
+  .ttsc-quill .ql-snow .ql-picker-options { background: var(--ttsc-surface); border: 1px solid var(--ttsc-border) !important; border-radius: var(--ttsc-radius-sm); box-shadow: var(--ttsc-shadow-md); }
+  .ttsc-quill .ql-snow .ql-picker-item:hover, .ttsc-quill .ql-snow .ql-picker-item.ql-selected { color: var(--ttsc-accent-text); }
+  .ttsc-quill .ql-snow .ql-picker.ql-header { width: 112px; }
+  .ttsc-quill .ql-snow .ql-picker.ql-header .ql-picker-label::before, .ttsc-quill .ql-snow .ql-picker.ql-header .ql-picker-item::before { content: 'Parágrafo'; }
+  .ttsc-quill .ql-snow .ql-picker.ql-header [data-value="2"]::before { content: 'Título' !important; }
+  .ttsc-quill .ql-snow .ql-picker.ql-header [data-value="3"]::before { content: 'Subtítulo' !important; }
+  /* Tooltip de link em pt-BR */
+  .ttsc-quill .ql-snow .ql-tooltip { background: var(--ttsc-surface); color: var(--ttsc-text); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-sm); box-shadow: var(--ttsc-shadow-popover); z-index: 2; }
+  .ttsc-quill .ql-snow .ql-tooltip::before { content: 'Abrir:'; color: var(--ttsc-text-muted); }
+  .ttsc-quill .ql-snow .ql-tooltip[data-mode=link]::before { content: 'Link:'; }
+  .ttsc-quill .ql-snow .ql-tooltip a.ql-action::after { content: 'Editar'; color: var(--ttsc-accent-text); }
+  .ttsc-quill .ql-snow .ql-tooltip a.ql-remove::before { content: 'Remover'; color: var(--ttsc-danger-text); }
+  .ttsc-quill .ql-snow .ql-tooltip.ql-editing a.ql-action::after { content: 'Salvar'; }
+  .ttsc-quill .ql-snow .ql-tooltip a.ql-preview { color: var(--ttsc-accent-text); }
+  .ttsc-quill .ql-snow .ql-tooltip input[type=text] { background: var(--ttsc-canvas-2); color: var(--ttsc-text); border: 1px solid var(--ttsc-border-strong); border-radius: 6px; }
+  .q-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+  .q-head label { font-size: 13px; font-weight: 500; color: var(--ttsc-text); }
+  .q-out { font-family: var(--font-mono, monospace); font-size: 11px; color: var(--ttsc-text-2); background: var(--ttsc-surface-2); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-sm); padding: 8px 10px; white-space: pre-wrap; word-break: break-all; max-height: 84px; overflow: auto; }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="q-head"><label id="lbl-notice">Comunicado aos responsáveis · Turma 9º ano A</label><span class="ds-note" id="q-count" aria-live="polite"></span></div>
+  <div class="ttsc-quill">
+    <div id="q-toolbar">
+      <span class="ql-formats"><select data-no-custom class="ql-header" aria-label="Estilo do parágrafo"><option selected></option><option value="2"></option><option value="3"></option></select></span>
+      <span class="ql-formats">
+        <button class="ql-bold" aria-label="Negrito"></button><button class="ql-italic" aria-label="Itálico"></button>
+        <button class="ql-underline" aria-label="Sublinhado"></button><button class="ql-link" aria-label="Inserir link"></button>
+      </span>
+      <span class="ql-formats">
+        <button class="ql-list" value="ordered" aria-label="Lista numerada"></button><button class="ql-list" value="bullet" aria-label="Lista com marcadores"></button>
+        <button class="ql-blockquote" aria-label="Citação"></button>
+      </span>
+      <span class="ql-formats"><button class="ql-clean" aria-label="Limpar formatação"></button></span>
+    </div>
+    <div id="q-editor" aria-labelledby="lbl-notice"></div>
+  </div>
+  <div class="ds-label">getSemanticHTML() — enviado ao servidor</div>
+  <div class="q-out" id="q-out"></div>
+</div>
+<script>
+TTSC.init();
+var quill = new Quill('#q-editor', {
+  theme: 'snow',
+  modules: { toolbar: '#q-toolbar', history: { delay: 1000, maxStack: 100 } },
+  placeholder: 'Escreva o comunicado...'
+});
+quill.root.setAttribute('role', 'textbox');
+quill.root.setAttribute('aria-multiline', 'true');
+quill.root.setAttribute('aria-labelledby', 'lbl-notice');
+quill.setContents([
+  { insert: 'Reunião de pais e mestres' }, { insert: '\n', attributes: { header: 2 } },
+  { insert: 'Convidamos os responsáveis para a reunião do ' }, { insert: '3º bimestre', attributes: { bold: true } },
+  { insert: ' no dia 28/10/2026, às 19h, no auditório da unidade Centro.\n' },
+  { insert: 'Entrega dos boletins' }, { insert: '\n', attributes: { list: 'bullet' } },
+  { insert: 'Apresentação do projeto de ' }, { insert: 'Feira de Ciências', attributes: { link: 'https://colegiototus.edu.br/feira' } },
+  { insert: '\n', attributes: { list: 'bullet' } }
+]);
+function sync() {
+  var text = quill.getText().trim();
+  document.getElementById('q-count').textContent = (text ? text.split(/\s+/).length : 0) + ' palavras · ' + quill.getLength() + ' caracteres';
+  // Quill 2.0.3 troca espaços por &nbsp; em getSemanticHTML(): normalize
+  document.getElementById('q-out').textContent = quill.getSemanticHTML().replace(/&nbsp;/g, ' ');
+}
+quill.on('text-change', sync); sync();
+</script>
+</body>
+</html>

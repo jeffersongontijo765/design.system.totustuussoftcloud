@@ -1,0 +1,166 @@
+<!-- @dsCard group="Formulários · Plugins" height=360 subtitle="ttsc-mss · select multiple com optgroup dividido em grupo → itens, contadores, busca, sincronização com o select" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>MultiSelectSplitter</title>
+<style>
+  .ttsc-mss { display: grid; grid-template-columns: minmax(180px, 2fr) 3fr; border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-control); background: var(--ttsc-surface); overflow: hidden; }
+  .ttsc-mss-col { display: flex; flex-direction: column; min-width: 0; }
+  .ttsc-mss-col + .ttsc-mss-col { border-inline-start: 1px solid var(--ttsc-border); }
+  .ttsc-mss-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 12px; border-bottom: 1px solid var(--ttsc-border); font-size: 11px; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; color: var(--ttsc-text-muted); background: var(--ttsc-canvas-2); min-height: 40px; }
+  .ttsc-mss-list { list-style: none; margin: 0; padding: 4px; overflow-y: auto; max-height: 232px; }
+  .ttsc-mss-group { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 8px; padding: 8px 10px; border: 0; border-radius: var(--ttsc-radius-sm); background: transparent; color: var(--ttsc-text-2); font: inherit; text-align: start; cursor: pointer; }
+  .ttsc-mss-group:hover { background: var(--ttsc-canvas-2); }
+  .ttsc-mss-group:focus-visible { outline: 2px solid var(--ttsc-accent); outline-offset: -2px; }
+  .ttsc-mss-group[aria-selected="true"] { background: var(--ttsc-accent-soft); color: var(--ttsc-text); font-weight: 500; }
+  .ttsc-mss-group .ttsc-mss-count { font-size: 11px; min-width: 22px; text-align: center; padding: 1px 6px; border-radius: var(--ttsc-radius-pill); background: var(--ttsc-surface-2); color: var(--ttsc-text-2); }
+  .ttsc-mss-group .ttsc-mss-count.has { background: var(--ttsc-accent); color: var(--ttsc-accent-on); }
+  .ttsc-mss-item { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: var(--ttsc-radius-sm); color: var(--ttsc-text); cursor: pointer; }
+  .ttsc-mss-item:hover { background: var(--ttsc-canvas-2); }
+  .ttsc-mss-item small { margin-inline-start: auto; color: var(--ttsc-text-muted); font-variant-numeric: tabular-nums; }
+  .ttsc-mss-search { padding: 8px; border-bottom: 1px solid var(--ttsc-border-soft); }
+  .ttsc-mss-search .ttsc-input { height: 30px; }
+  .ttsc-mss-empty { padding: 16px; color: var(--ttsc-text-muted); font-size: 12px; }
+  .ttsc-mss-link { border: 0; background: none; padding: 0; font: inherit; text-transform: none; letter-spacing: 0; font-size: 12px; color: var(--ttsc-accent-text); cursor: pointer; }
+  .mss-out { font-family: var(--font-mono, monospace); font-size: 12px; color: var(--ttsc-text-2); }
+  @media (max-width: 640px) { .ttsc-mss { grid-template-columns: 1fr; } .ttsc-mss-col + .ttsc-mss-col { border-inline-start: 0; border-top: 1px solid var(--ttsc-border); } }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="ds-label">Disciplinas da turma · curso → disciplinas da matriz</div>
+  <select data-no-custom multiple name="subject_uuids[]" id="subjects" data-ttsc-mss aria-label="Disciplinas da turma"
+          data-ttsc-mss-group-label="Curso" data-ttsc-mss-item-label="Disciplinas">
+    <optgroup label="Administração">
+      <option value="sub-adm-101" data-meta="60 h" selected>Teoria Geral da Administração</option>
+      <option value="sub-adm-102" data-meta="60 h" selected>Contabilidade Introdutória</option>
+      <option value="sub-adm-103" data-meta="40 h">Matemática Financeira</option>
+      <option value="sub-adm-104" data-meta="80 h">Gestão de Pessoas</option>
+      <option value="sub-adm-105" data-meta="40 h">Marketing</option>
+    </optgroup>
+    <optgroup label="Pedagogia">
+      <option value="sub-ped-101" data-meta="60 h" selected>Didática</option>
+      <option value="sub-ped-102" data-meta="60 h">Psicologia da Educação</option>
+      <option value="sub-ped-103" data-meta="40 h">Alfabetização e Letramento</option>
+    </optgroup>
+    <optgroup label="Direito">
+      <option value="sub-dir-101" data-meta="80 h">Introdução ao Estudo do Direito</option>
+      <option value="sub-dir-102" data-meta="60 h">Direito Constitucional I</option>
+      <option value="sub-dir-103" data-meta="40 h">Ciência Política</option>
+    </optgroup>
+    <optgroup label="Ensino Médio · 1ª série">
+      <option value="sub-em-101" data-meta="120 h">Língua Portuguesa</option>
+      <option value="sub-em-102" data-meta="120 h">Matemática</option>
+    </optgroup>
+  </select>
+  <div class="mss-out" id="mss-out" aria-live="polite"></div>
+</div>
+<script>
+(function (w) {
+  'use strict';
+  var uid = 0;
+  function TTSCMultiSelectSplitter(select, opts) {
+    if (select.ttscMss) return select.ttscMss;
+    this.select = select;
+    this.o = Object.assign({
+      groupLabel: select.dataset.ttscMssGroupLabel || 'Grupo',
+      itemLabel: select.dataset.ttscMssItemLabel || 'Itens',
+      search: select.options.length > 8,
+      emptyText: 'Nenhum item encontrado.'
+    }, opts || {});
+    this.id = 'ttsc-mss-' + (++uid);
+    this.groups = Array.prototype.slice.call(select.querySelectorAll('optgroup'));
+    this.active = this.groups.findIndex(function (g) { return g.querySelector('option:checked'); });
+    if (this.active < 0) this.active = 0;
+    this.query = '';
+    this.build();
+    select.hidden = true;
+    select.ttscMss = this;
+  }
+  TTSCMultiSelectSplitter.prototype.build = function () {
+    var self = this, root = document.createElement('div');
+    root.className = 'ttsc-mss';
+    root.innerHTML =
+      '<div class="ttsc-mss-col"><div class="ttsc-mss-head" id="' + this.id + '-g">' + this.o.groupLabel + '</div>' +
+      '<ul class="ttsc-mss-list" role="listbox" aria-labelledby="' + this.id + '-g" data-groups></ul></div>' +
+      '<div class="ttsc-mss-col"><div class="ttsc-mss-head"><span id="' + this.id + '-i"></span>' +
+      '<button type="button" class="ttsc-mss-link" data-toggle-all></button></div>' +
+      (this.o.search ? '<div class="ttsc-mss-search"><input type="search" class="ttsc-input" placeholder="Buscar disciplina..." aria-label="Buscar"></div>' : '') +
+      '<ul class="ttsc-mss-list" role="group" aria-labelledby="' + this.id + '-i" data-items></ul></div>';
+    this.select.after(root);
+    this.root = root;
+    this.gList = root.querySelector('[data-groups]');
+    this.iList = root.querySelector('[data-items]');
+    this.gList.addEventListener('click', function (e) { var b = e.target.closest('[data-index]'); if (b) self.activate(+b.dataset.index, true); });
+    this.gList.addEventListener('keydown', function (e) {
+      var d = { ArrowDown: 1, ArrowUp: -1 }[e.key];
+      if (d) { e.preventDefault(); self.activate((self.active + d + self.groups.length) % self.groups.length, true); }
+    });
+    this.iList.addEventListener('change', function (e) {
+      var opt = self.select.querySelector('option[value="' + CSS.escape(e.target.value) + '"]');
+      opt.selected = e.target.checked; self.sync();
+    });
+    root.querySelector('[data-toggle-all]').addEventListener('click', function () {
+      var opts = self.visibleOptions(), all = opts.every(function (o) { return o.selected; });
+      opts.forEach(function (o) { o.selected = !all; }); self.render(); self.sync();
+    });
+    var s = root.querySelector('input[type=search]');
+    if (s) s.addEventListener('input', function () { self.query = s.value.trim().toLowerCase(); self.renderItems(); });
+    this.render();
+  };
+  TTSCMultiSelectSplitter.prototype.visibleOptions = function () {
+    var q = this.query;
+    return Array.prototype.filter.call(this.groups[this.active].children, function (o) { return !q || o.text.toLowerCase().indexOf(q) > -1; });
+  };
+  TTSCMultiSelectSplitter.prototype.render = function () {
+    var self = this;
+    this.gList.innerHTML = this.groups.map(function (g, i) {
+      var n = g.querySelectorAll('option:checked').length;
+      return '<li><button type="button" role="option" class="ttsc-mss-group" data-index="' + i + '" aria-selected="' + (i === self.active) + '" tabindex="' + (i === self.active ? 0 : -1) + '">' +
+        '<span>' + g.label + '</span><span class="ttsc-mss-count' + (n ? ' has' : '') + '" aria-label="' + n + ' selecionadas">' + n + '</span></button></li>';
+    }).join('');
+    this.renderItems();
+  };
+  TTSCMultiSelectSplitter.prototype.renderItems = function () {
+    var opts = this.visibleOptions(), g = this.groups[this.active];
+    this.root.querySelector('#' + this.id + '-i').textContent = this.o.itemLabel + ' · ' + g.label;
+    this.root.querySelector('[data-toggle-all]').textContent = opts.length && opts.every(function (o) { return o.selected; }) ? 'Desmarcar todas' : 'Marcar todas';
+    this.iList.innerHTML = opts.length ? opts.map(function (o) {
+      return '<li><label class="ttsc-mss-item"><input type="checkbox" class="ttsc-checkbox ttsc-checkbox-sm" value="' + o.value + '"' + (o.selected ? ' checked' : '') + (o.disabled ? ' disabled' : '') + '>' +
+        '<span>' + o.text + '</span>' + (o.dataset.meta ? '<small>' + o.dataset.meta + '</small>' : '') + '</label></li>';
+    }).join('') : '<li class="ttsc-mss-empty">' + this.o.emptyText + '</li>';
+  };
+  TTSCMultiSelectSplitter.prototype.activate = function (i, focus) {
+    this.active = i; this.render();
+    if (focus) this.gList.querySelector('[data-index="' + i + '"]').focus();
+  };
+  TTSCMultiSelectSplitter.prototype.sync = function () {
+    var self = this;
+    this.groups.forEach(function (g, i) {
+      var n = g.querySelectorAll('option:checked').length, c = self.gList.querySelector('[data-index="' + i + '"] .ttsc-mss-count');
+      c.textContent = n; c.classList.toggle('has', n > 0); c.setAttribute('aria-label', n + ' selecionadas');
+    });
+    this.renderItems();
+    this.select.dispatchEvent(new Event('change', { bubbles: true }));
+  };
+  TTSCMultiSelectSplitter.prototype.getValues = function () {
+    return Array.prototype.map.call(this.select.selectedOptions, function (o) { return o.value; });
+  };
+  TTSCMultiSelectSplitter.prototype.setValues = function (values) {
+    Array.prototype.forEach.call(this.select.options, function (o) { o.selected = values.indexOf(o.value) > -1; });
+    this.render(); this.select.dispatchEvent(new Event('change', { bubbles: true }));
+  };
+  TTSCMultiSelectSplitter.prototype.destroy = function () { this.root.remove(); this.select.hidden = false; delete this.select.ttscMss; };
+  TTSCMultiSelectSplitter.init = function (root) {
+    (root || document).querySelectorAll('select[multiple][data-ttsc-mss]').forEach(function (s) { new TTSCMultiSelectSplitter(s); });
+  };
+  w.TTSCMultiSelectSplitter = TTSCMultiSelectSplitter;
+})(window);
+
+TTSC.init();
+TTSCMultiSelectSplitter.init();
+var sel = document.getElementById('subjects');
+function out() { document.getElementById('mss-out').textContent = 'subject_uuids[] = ' + JSON.stringify(sel.ttscMss.getValues()); }
+sel.addEventListener('change', out); out();
+</script>
+</body>
+</html>

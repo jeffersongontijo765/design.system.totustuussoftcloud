@@ -1,0 +1,84 @@
+<!-- @dsCard group="Navegação" height=220 subtitle="ttsc-breadcrumb · ícone, separador chevron e barra, recolhida com reticências, compacta" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Breadcrumb</title>
+<style>
+  .ttsc-breadcrumb-separator { color: var(--ttsc-meta); font-size: 10px; display: inline-flex; }
+  .ttsc-breadcrumb .hidden { display: none; }
+  .ttsc-breadcrumb-link { border-radius: var(--ttsc-radius-xs); }
+  .ttsc-breadcrumb-link:focus-visible, .ttsc-breadcrumb-ellipsis:focus-visible { outline: 2px solid var(--ttsc-accent); outline-offset: 2px; }
+  .ttsc-breadcrumb-ellipsis { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border: 0; background: transparent; cursor: pointer; color: var(--ttsc-text-muted); border-radius: var(--ttsc-radius-xs); }
+  .ttsc-breadcrumb-ellipsis:hover { background: var(--ttsc-canvas-2); color: var(--ttsc-text); }
+  .ttsc-breadcrumb-page { font-weight: 500; }
+  .bc-slash { color: var(--ttsc-meta); }
+  .bc-box { border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-control); background: var(--ttsc-surface); padding: 10px 12px; }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="ds-label">Padrão com ícone</div>
+  <nav aria-label="Trilha de navegação">
+    <ol class="ttsc-breadcrumb">
+      <li class="ttsc-breadcrumb-item"><a class="ttsc-breadcrumb-link" href="#"><i class="fa-light fa-graduation-cap"></i> Acadêmico</a></li>
+      <li class="ttsc-breadcrumb-separator" aria-hidden="true"><i class="fa-light fa-chevron-right"></i></li>
+      <li class="ttsc-breadcrumb-item"><a class="ttsc-breadcrumb-link" href="#">Cursos</a></li>
+      <li class="ttsc-breadcrumb-separator" aria-hidden="true"><i class="fa-light fa-chevron-right"></i></li>
+      <li class="ttsc-breadcrumb-item"><a class="ttsc-breadcrumb-link" href="#">Administração</a></li>
+      <li class="ttsc-breadcrumb-separator" aria-hidden="true"><i class="fa-light fa-chevron-right"></i></li>
+      <li class="ttsc-breadcrumb-item"><span class="ttsc-breadcrumb-page" aria-current="page">Turma ADM-2026-1N</span></li>
+    </ol>
+  </nav>
+  <div class="ds-label">Separador barra</div>
+  <nav aria-label="Trilha de navegação (financeiro)">
+    <ol class="ttsc-breadcrumb">
+      <li class="ttsc-breadcrumb-item"><a class="ttsc-breadcrumb-link" href="#">Financeiro</a></li>
+      <li class="ttsc-breadcrumb-separator bc-slash" aria-hidden="true">/</li>
+      <li class="ttsc-breadcrumb-item"><a class="ttsc-breadcrumb-link" href="#">Mensalidades</a></li>
+      <li class="ttsc-breadcrumb-separator bc-slash" aria-hidden="true">/</li>
+      <li class="ttsc-breadcrumb-item"><span class="ttsc-breadcrumb-page" aria-current="page">Outubro de 2026</span></li>
+    </ol>
+  </nav>
+  <div class="ds-label">Recolhida (clique nas reticências) e compacta em drawer</div>
+  <div class="ds-row" style="gap:16px;align-items:flex-start">
+    <nav aria-label="Trilha de navegação (diário)">
+      <ol class="ttsc-breadcrumb" id="bc-long">
+        <li class="ttsc-breadcrumb-item"><a class="ttsc-breadcrumb-link" href="#">Acadêmico</a></li>
+        <li class="ttsc-breadcrumb-separator" aria-hidden="true"><i class="fa-light fa-chevron-right"></i></li>
+        <li class="ttsc-breadcrumb-item"><button type="button" class="ttsc-breadcrumb-ellipsis" data-ttsc-breadcrumb-expand aria-label="Mostrar níveis ocultos" aria-expanded="false"><i class="fa-light fa-ellipsis"></i></button></li>
+        <li class="ttsc-breadcrumb-item hidden" data-ttsc-breadcrumb-collapsed><a class="ttsc-breadcrumb-link" href="#">Cursos</a></li>
+        <li class="ttsc-breadcrumb-separator hidden" data-ttsc-breadcrumb-collapsed aria-hidden="true"><i class="fa-light fa-chevron-right"></i></li>
+        <li class="ttsc-breadcrumb-item hidden" data-ttsc-breadcrumb-collapsed><a class="ttsc-breadcrumb-link" href="#">Administração</a></li>
+        <li class="ttsc-breadcrumb-separator hidden" data-ttsc-breadcrumb-collapsed aria-hidden="true"><i class="fa-light fa-chevron-right"></i></li>
+        <li class="ttsc-breadcrumb-item hidden" data-ttsc-breadcrumb-collapsed><a class="ttsc-breadcrumb-link" href="#">Turma ADM-2026-1N</a></li>
+        <li class="ttsc-breadcrumb-separator" aria-hidden="true"><i class="fa-light fa-chevron-right"></i></li>
+        <li class="ttsc-breadcrumb-item"><span class="ttsc-breadcrumb-page" aria-current="page">Diário de classe</span></li>
+      </ol>
+    </nav>
+    <div class="bc-box">
+      <nav aria-label="Trilha de navegação (drawer)">
+        <ol class="ttsc-breadcrumb text-xs">
+          <li class="ttsc-breadcrumb-item"><a class="ttsc-breadcrumb-link" href="#">Matrículas</a></li>
+          <li class="ttsc-breadcrumb-separator" aria-hidden="true"><i class="fa-light fa-chevron-right"></i></li>
+          <li class="ttsc-breadcrumb-item"><span class="ttsc-breadcrumb-page" aria-current="page">MAT-2026-000123 · Ana Beatriz Souza</span></li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+</div>
+<script>
+  TTSC.init();
+  document.querySelectorAll('[data-ttsc-breadcrumb-expand]').forEach(function (button) {
+    button.addEventListener('click', function () {
+      var list = button.closest('.ttsc-breadcrumb');
+      var items = Array.prototype.slice.call(list.querySelectorAll('[data-ttsc-breadcrumb-collapsed]'));
+      items.forEach(function (i) { i.classList.remove('hidden'); });
+      button.setAttribute('aria-expanded', 'true');
+      button.closest('.ttsc-breadcrumb-item').classList.add('hidden');
+      var first = list.querySelector('[data-ttsc-breadcrumb-collapsed] a'); if (first) first.focus();
+      list.dispatchEvent(new CustomEvent('ttsc.breadcrumb.expand', { bubbles: true, detail: { items: items } }));
+    });
+  });
+  document.querySelectorAll('a[href="#"]').forEach(function (a) { a.addEventListener('click', function (e) { e.preventDefault(); }); });
+</script>
+</body>
+</html>

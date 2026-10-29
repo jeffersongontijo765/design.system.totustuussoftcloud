@@ -1,0 +1,796 @@
+<!-- @dsCard group="Componentes do painel" height=678 width=1280 subtitle="Pedido de venda — catálogo, busca, carrinho, desconto, pagamento e total; estados vazio/sucesso" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>OrderBuilder</title>
+<style>
+  html,body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font-family:Inter,system-ui,sans-serif;font-size:13px;-webkit-font-smoothing:antialiased}
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  .demo{padding:16px;max-width:1280px;margin:0 auto}
+  .ob-card{position:relative;background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-surface);box-shadow:var(--ttsc-shadow-sm);padding:16px;min-width:0}
+  :focus-visible{outline:2px solid var(--ttsc-accent);outline-offset:2px}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  .tnum{font-variant-numeric:tabular-nums}
+
+  /* cabeçalho do card */
+  .ob-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:14px}
+  .ob-id{display:flex;align-items:center;gap:11px;min-width:0}
+  .ob-icon{width:36px;height:36px;flex-shrink:0;display:grid;place-items:center;border-radius:11px;border:1px solid var(--ttsc-accent-border);background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text);font-size:15px}
+  .ob-eyebrow{display:flex;align-items:center;gap:6px;margin:0 0 3px;font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ttsc-text-muted);white-space:nowrap}
+  .ob-eyebrow .dot{width:5px;height:5px;border-radius:50%;background:var(--ttsc-accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--ttsc-accent) 18%,transparent)}
+  .ob-title{margin:0;font-size:17px;line-height:24px;font-weight:600;letter-spacing:-.01em;color:var(--ttsc-text)}
+  .ob-sub{margin:2px 0 0;font-size:12px;line-height:16px;color:var(--ttsc-text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ob-sub strong{font-weight:600;color:var(--ttsc-text-2)}
+
+  .ob-head-actions{display:flex;align-items:flex-end;gap:8px;flex-shrink:0;min-width:0}
+  .ob-field{min-width:0}
+  .ob-field>label{display:block;margin:0 0 4px 2px;font-size:9.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ttsc-text-muted)}
+  .ob-select{position:relative;display:flex;align-items:center;gap:7px;height:32px;padding:0 9px;border:1px solid var(--ttsc-border);border-radius:9px;background:var(--ttsc-canvas-2);transition:border-color .15s,background-color .15s}
+  .ob-select:hover{border-color:var(--ttsc-border-strong);background:var(--ttsc-surface)}
+  .ob-select:focus-within{border-color:var(--ttsc-accent-border);background:var(--ttsc-surface);box-shadow:0 0 0 3px var(--ttsc-accent-soft)}
+  .ob-select .lead{font-size:11px;color:var(--ttsc-text-muted);flex-shrink:0}
+  .ob-select select{appearance:none;border:0;background:transparent;font:inherit;font-size:11.5px;font-weight:600;color:var(--ttsc-text);padding:0 17px 0 0!important;cursor:pointer;max-width:176px;text-overflow:ellipsis}
+  .ob-select select:focus{outline:none}
+  .ob-select .chev{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:8px;color:var(--ttsc-text-muted);pointer-events:none}
+  .ob-draft{display:inline-flex;align-items:center;gap:5px;height:32px;padding:0 10px;border:1px solid var(--ttsc-border);border-radius:9px;background:var(--ttsc-surface);font-size:10.5px;font-weight:600;color:var(--ttsc-text-muted);white-space:nowrap;transition:color .15s,border-color .15s,background-color .15s}
+  .ob-draft i{font-size:9.5px}
+  .ob-draft.is-done{color:var(--ttsc-accent-text);border-color:var(--ttsc-accent-border);background:var(--ttsc-accent-soft)}
+
+  /* corpo */
+  .ob-body{display:grid;grid-template-columns:minmax(0,1fr) 384px;gap:14px;align-items:stretch;min-width:0}
+
+  /* catálogo */
+  .ob-catalog{min-width:0;display:flex;flex-direction:column;gap:10px}
+  .cat-head{display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:0}
+  .cat-title{display:flex;align-items:center;gap:7px;min-width:0}
+  .cat-title h3{margin:0;font-size:12px;line-height:16px;font-weight:600;letter-spacing:.01em;color:var(--ttsc-text)}
+  .cat-note{font-size:10px;font-weight:500;color:var(--ttsc-text-muted);font-variant-numeric:tabular-nums}
+  .cat-hint{display:inline-flex;align-items:center;gap:5px;font-size:10px;color:var(--ttsc-text-muted);white-space:nowrap}
+  .cat-hint i{font-size:9px}
+
+  .ob-search{position:relative;display:flex;align-items:center;gap:8px;height:34px;padding:0 9px;border:1px solid var(--ttsc-border);border-radius:10px;background:var(--ttsc-canvas-2);transition:border-color .15s,background-color .15s,box-shadow .15s}
+  .ob-search:hover{border-color:var(--ttsc-border-strong)}
+  .ob-search:focus-within{border-color:var(--ttsc-accent-border);background:var(--ttsc-surface);box-shadow:0 0 0 3px var(--ttsc-accent-soft)}
+  .ob-search>i{font-size:11px;color:var(--ttsc-text-muted);flex-shrink:0}
+  .ob-search input{flex:1;min-width:0;height:100%;border:0;background:transparent;font:inherit;font-size:12px;color:var(--ttsc-text);outline:none}
+  .ob-search input::placeholder{color:var(--ttsc-text-muted)}
+  .ob-search input::-webkit-search-cancel-button{display:none}
+  .ob-search .clear{flex-shrink:0;display:grid;place-items:center;width:24px;height:24px;border:0;border-radius:50%;background:transparent;color:var(--ttsc-text-muted);font-size:11px;cursor:pointer}
+  .ob-search .clear:hover{background:var(--ttsc-surface-2);color:var(--ttsc-text)}
+  .ob-search kbd{flex-shrink:0;display:grid;place-items:center;min-width:17px;height:17px;padding:0 4px;border:1px solid var(--ttsc-border-strong);border-bottom-width:2px;border-radius:4px;background:var(--ttsc-surface);font-family:var(--font-mono,monospace);font-size:9.5px;line-height:1;color:var(--ttsc-text-muted)}
+
+  /* categorias */
+  .chips{display:flex;align-items:center;gap:6px;min-width:0;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;padding:1px}
+  .chips::-webkit-scrollbar{display:none}
+  .chip{display:inline-flex;align-items:center;gap:5px;flex-shrink:0;height:26px;padding:0 10px;border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-pill);background:var(--ttsc-surface);color:var(--ttsc-text-2);font:inherit;font-size:11px;font-weight:500;cursor:pointer;transition:background-color .15s,border-color .15s,color .15s}
+  .chip:hover{border-color:var(--ttsc-border-strong);color:var(--ttsc-text);background:var(--ttsc-canvas-2)}
+  .chip .n{font-size:9.5px;font-weight:600;color:var(--ttsc-text-muted);font-variant-numeric:tabular-nums}
+  .chip[aria-pressed="true"]{background:var(--ttsc-accent-soft);border-color:var(--ttsc-accent-border);color:var(--ttsc-accent-text)}
+  .chip[aria-pressed="true"] .n{color:var(--ttsc-accent-text);opacity:.78}
+
+  /* grade de produtos */
+  .prod-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;min-width:0}
+  .prod{position:relative;display:grid;grid-template-columns:32px minmax(0,1fr);gap:9px;align-items:start;min-width:0;padding:10px;border:1px solid var(--ttsc-border);border-radius:12px;background:var(--ttsc-surface);font:inherit;color:inherit;text-align:left;cursor:pointer;transition:border-color .15s,background-color .15s,box-shadow .15s,transform .15s}
+  .prod:hover{border-color:var(--ttsc-accent-border);background:color-mix(in srgb,var(--ttsc-accent) 4%,var(--ttsc-surface));box-shadow:var(--ttsc-shadow-xs)}
+  .prod:active{transform:scale(.995)}
+  .prod-icon{width:32px;height:32px;display:grid;place-items:center;border-radius:9px;border:1px solid var(--ttsc-border-soft);background:var(--ttsc-canvas-2);color:var(--ttsc-text-2);font-size:12px;transition:background-color .15s,color .15s,border-color .15s}
+  .prod:hover .prod-icon{background:var(--ttsc-accent-soft);border-color:var(--ttsc-accent-border);color:var(--ttsc-accent-text)}
+  .prod-main{min-width:0;display:block}
+  .prod-name-row{display:flex;align-items:center;gap:6px;min-width:0}
+  .prod-name{display:block;min-width:0;font-size:12.5px;line-height:16px;font-weight:600;color:var(--ttsc-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .prod-in{display:none;flex-shrink:0;margin-left:auto;padding:1px 6px;border-radius:var(--ttsc-radius-pill);background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text);font-size:9px;font-weight:700;letter-spacing:.02em;font-variant-numeric:tabular-nums}
+  .prod.in-cart .prod-in{display:inline-block}
+  .prod-desc{display:-webkit-box;margin-top:1px;font-size:10.5px;line-height:13.5px;color:var(--ttsc-text-muted);-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .prod-foot{display:flex;align-items:center;gap:6px;margin-top:6px;min-width:0}
+  .prod-price{font-size:12px;line-height:15px;font-weight:600;color:var(--ttsc-text);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .prod-price small{margin-left:4px;font-size:9px;font-weight:500;color:var(--ttsc-text-muted)}
+  .avail{display:inline-flex;align-items:center;gap:3px;margin-left:auto;font-size:9px;line-height:12px;color:var(--ttsc-text-muted);white-space:nowrap;overflow:hidden}
+  .avail i{font-size:6px;flex-shrink:0}
+  .avail.ok i{color:var(--ttsc-success)}
+  .avail.warn i{color:var(--ttsc-warning)}
+  .avail.info i{color:var(--ttsc-info)}
+  .prod-add{flex-shrink:0;width:21px;height:21px;display:grid;place-items:center;border:1px solid var(--ttsc-border);border-radius:7px;background:var(--ttsc-surface);color:var(--ttsc-text-muted);font-size:9px;transition:background-color .15s,color .15s,border-color .15s}
+  .prod:hover .prod-add{background:var(--ttsc-accent);border-color:transparent;color:var(--ttsc-accent-on)}
+  .prod.just-added .prod-icon{animation:prodPop .34s cubic-bezier(.4,0,.2,1)}
+  .prod.just-added .prod-add{animation:addPulse .34s cubic-bezier(.4,0,.2,1)}
+  @keyframes prodPop{0%{transform:scale(.86)}55%{transform:scale(1.06)}100%{transform:scale(1)}}
+  @keyframes addPulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--ttsc-accent) 45%,transparent)}100%{box-shadow:0 0 0 6px transparent}}
+
+  .cat-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:30px 14px;border:1px dashed var(--ttsc-border-strong);border-radius:12px;text-align:center}
+  .cat-empty .ce-ico{width:32px;height:32px;display:grid;place-items:center;border-radius:50%;background:var(--ttsc-canvas-2);color:var(--ttsc-text-muted);font-size:12px;margin-bottom:2px}
+  .cat-empty p{margin:0;font-size:12px;font-weight:600;color:var(--ttsc-text)}
+  .cat-empty span{font-size:11px;color:var(--ttsc-text-muted)}
+  .cat-empty button{margin-top:6px;border:1px solid var(--ttsc-border);background:var(--ttsc-surface);border-radius:8px;height:27px;padding:0 10px;font:inherit;font-size:11px;font-weight:600;color:var(--ttsc-text);cursor:pointer}
+  .cat-empty button:hover{border-color:var(--ttsc-border-strong);background:var(--ttsc-canvas-2)}
+
+  /* painel do carrinho — recibo sobre superfície rebaixada */
+  .ob-cart{position:relative;display:flex;flex-direction:column;min-width:0;padding:14px;border:1px solid var(--ttsc-border-soft);border-radius:14px;background-color:var(--ttsc-canvas-2);background-image:linear-gradient(180deg,color-mix(in srgb,var(--ttsc-accent) 5%,transparent),transparent 130px)}
+  .cart-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 1px 9px;border-bottom:1px dashed var(--ttsc-border-strong);min-width:0}
+  .cart-title{display:flex;align-items:center;gap:7px;min-width:0}
+  .cart-ico{width:23px;height:23px;flex-shrink:0;display:grid;place-items:center;border-radius:7px;border:1px solid var(--ttsc-accent-border);background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text);font-size:9.5px}
+  .cart-title h3{margin:0;font-size:13px;line-height:18px;font-weight:600;letter-spacing:.01em;color:var(--ttsc-text);white-space:nowrap}
+  .cart-title h3:focus{outline:none}
+  .cart-count{flex-shrink:0;min-width:18px;height:18px;padding:0 5px;display:grid;place-items:center;border-radius:9px;background:var(--ttsc-accent);color:var(--ttsc-accent-on);font-size:9.5px;font-weight:700;font-variant-numeric:tabular-nums}
+  .cart-count.bump{animation:bump .32s cubic-bezier(.4,0,.2,1)}
+  @keyframes bump{0%{transform:scale(.78)}58%{transform:scale(1.14)}100%{transform:scale(1)}}
+  .ghost-btn{display:inline-flex;align-items:center;gap:5px;flex-shrink:0;min-height:24px;border:0;background:transparent;border-radius:6px;padding:3px 6px;font:inherit;font-size:10.5px;font-weight:600;color:var(--ttsc-text-muted);cursor:pointer;transition:color .15s,background-color .15s}
+  .ghost-btn:hover{color:var(--ttsc-accent-text);background:var(--ttsc-accent-soft)}
+  .ghost-btn i{font-size:9px}
+
+  .cart-live{display:flex;align-items:center;gap:5px;margin:7px 0 0;min-height:14px;font-size:10px;line-height:14px;color:var(--ttsc-text-muted);min-width:0}
+  .cart-live i{flex-shrink:0;font-size:8.5px;color:var(--ttsc-success)}
+  .cart-live span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cart-live.is-flash span{animation:liveIn .28s ease-out}
+  @keyframes liveIn{0%{opacity:.25;transform:translateY(2px)}100%{opacity:1;transform:none}}
+
+  .cart-core{display:flex;flex-direction:column;min-width:0;flex:1}
+  .cart-items{list-style:none;margin:0;padding:0;min-width:0}
+  .ci{display:grid;grid-template-columns:28px minmax(0,1fr) auto;grid-template-rows:auto auto;column-gap:8px;row-gap:5px;padding:9px 0;border-bottom:1px dashed var(--ttsc-border);min-width:0}
+  .ci:last-child{border-bottom:0;padding-bottom:7px}
+  .ci-ico{grid-row:1/3;width:28px;height:28px;display:grid;place-items:center;border-radius:8px;border:1px solid var(--ttsc-border-soft);background:var(--ttsc-surface);color:var(--ttsc-text-2);font-size:10px}
+  .ci-main{min-width:0}
+  .ci-name{display:flex;align-items:baseline;gap:5px;margin:0;font-size:11.5px;line-height:15px;font-weight:600;color:var(--ttsc-text);min-width:0}
+  .ci-name span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ci-name small{flex-shrink:0;font-size:9px;font-weight:500;color:var(--ttsc-text-muted)}
+  .ci-unit{margin:2px 0 0;font-size:9.5px;line-height:12px;color:var(--ttsc-text-muted);font-variant-numeric:tabular-nums}
+  .ci-line{grid-column:3;grid-row:1;align-self:start;font-size:11.5px;line-height:15px;font-weight:600;color:var(--ttsc-text);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .ci-qty{grid-column:2;grid-row:2;display:inline-flex;align-items:center;width:max-content;height:24px;border:1px solid var(--ttsc-border);border-radius:7px;background:var(--ttsc-surface);overflow:hidden}
+  .ci-qty button{appearance:none;border:0;background:transparent;width:24px;height:100%;display:grid;place-items:center;color:var(--ttsc-text-muted);font:inherit;font-size:9px;cursor:pointer}
+  .ci-qty button:hover{background:var(--ttsc-canvas-2);color:var(--ttsc-text)}
+  .ci-qty button:disabled{opacity:.4;cursor:not-allowed}
+  .ci-qty .n{width:24px;text-align:center;font-size:10.5px;font-weight:600;color:var(--ttsc-text);font-variant-numeric:tabular-nums}
+  .ci-remove{grid-column:3;grid-row:2;align-self:center;justify-self:end;width:24px;height:24px;display:grid;place-items:center;border:0;border-radius:6px;background:transparent;color:var(--ttsc-text-muted);font-size:9px;cursor:pointer;transition:background-color .15s,color .15s}
+  .ci-remove:hover{background:color-mix(in srgb,var(--ttsc-danger) 12%,transparent);color:var(--ttsc-danger-text)}
+
+  .cart-totals{margin-top:7px;padding-top:1px}
+  .trow{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:21px;font-size:11px;color:var(--ttsc-text-muted)}
+  .trow dd{margin:0;display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:600;color:var(--ttsc-text-2);font-variant-numeric:tabular-nums}
+  .disc-amt{font-size:10.5px;font-weight:600;color:var(--ttsc-success);font-variant-numeric:tabular-nums}
+  .disc-amt.is-zero{color:var(--ttsc-text-muted)}
+  .disc-sel{position:relative;display:inline-flex;align-items:center}
+  .disc-sel select{appearance:none;width:48px;height:24px;padding:0 15px 0 7px!important;border:1px solid var(--ttsc-border);border-radius:6px;background:var(--ttsc-surface);font:inherit;font-size:10px;font-weight:600;color:var(--ttsc-text);cursor:pointer}
+  .disc-sel select:hover{border-color:var(--ttsc-border-strong)}
+  .disc-sel i{position:absolute;right:5px;top:50%;transform:translateY(-50%);font-size:6.5px;color:var(--ttsc-text-muted);pointer-events:none}
+  .trow.grand{min-height:31px;margin-top:3px;padding-top:5px;border-top:1px solid var(--ttsc-border);font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ttsc-text-muted)}
+  .trow.grand dd{font-size:19px;line-height:24px;font-weight:700;letter-spacing:-.02em;color:var(--ttsc-text)}
+  .total-note{margin:1px 0 0;font-size:9.5px;line-height:13px;color:var(--ttsc-text-muted);text-align:right}
+
+  .pay{margin:10px 0 0;padding:0;border:0;min-width:0}
+  .pay legend{padding:0;margin:0 0 5px;font-size:9.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ttsc-text-muted)}
+  .pay-opts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+  .pay-opt{position:relative;min-width:0}
+  .ob-card .pay-opt>input[type="radio"]{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;display:block!important;margin:0!important;opacity:0;cursor:pointer;z-index:1;appearance:none;border:0;background:transparent}
+  .pay-face{display:flex;align-items:center;justify-content:center;gap:4px;height:29px;border:1px solid var(--ttsc-border);border-radius:8px;background:var(--ttsc-surface);font-size:10.5px;font-weight:600;color:var(--ttsc-text-muted);transition:background-color .15s,border-color .15s,color .15s;white-space:nowrap}
+  .pay-face i{font-size:10px}
+  .pay-opt:hover .pay-face{border-color:var(--ttsc-border-strong);color:var(--ttsc-text)}
+  .pay-opt input:checked + .pay-face{background:var(--ttsc-accent-soft);border-color:var(--ttsc-accent-border);color:var(--ttsc-accent-text)}
+  .pay-opt input:focus-visible + .pay-face{outline:2px solid var(--ttsc-accent);outline-offset:2px}
+  .pay-note{display:flex;align-items:center;gap:5px;margin:6px 0 0;min-height:13px;font-size:9.5px;line-height:13px;color:var(--ttsc-text-muted)}
+  .pay-note i{flex-shrink:0;font-size:8.5px;color:var(--ttsc-info-text)}
+
+  .btn-primary{display:flex;align-items:center;gap:7px;width:100%;height:37px;margin-top:10px;padding:0 12px;border:0;border-radius:10px;background:linear-gradient(135deg,var(--ttsc-accent),var(--ttsc-accent-hover));color:var(--ttsc-accent-on);font:inherit;font-size:12.5px;font-weight:700;letter-spacing:-.005em;cursor:pointer;transition:filter .15s,box-shadow .15s}
+  .btn-primary:hover{filter:brightness(.97);box-shadow:0 4px 10px color-mix(in srgb,var(--ttsc-accent) 26%,transparent)}
+  .btn-primary:active{filter:brightness(.93)}
+  .btn-primary:disabled{opacity:.5;cursor:not-allowed;box-shadow:none;filter:none}
+  .btn-primary>i{font-size:10px}
+  .btn-primary .amt{margin-left:auto;padding-left:10px;border-left:1px solid color-mix(in srgb,var(--ttsc-accent-on) 24%,transparent);font-size:12px;font-weight:600;font-variant-numeric:tabular-nums}
+
+  .cart-foot{display:flex;align-items:center;justify-content:center;gap:5px;margin:8px 0 0;font-size:9.5px;line-height:13px;color:var(--ttsc-text-muted);text-align:center}
+  .cart-foot i{font-size:8.5px}
+
+  /* estados do carrinho */
+  .cart-empty,.cart-success{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;gap:5px;padding:18px 10px;text-align:center;animation:stateIn .3s ease-out}
+  .empty-ico{width:44px;height:44px;display:grid;place-items:center;border-radius:13px;border:1px dashed var(--ttsc-border-strong);background:var(--ttsc-surface);color:var(--ttsc-text-muted);font-size:16px;margin-bottom:2px}
+  .empty-title{margin:0;font-size:13px;font-weight:600;color:var(--ttsc-text)}
+  .empty-text{margin:0;max-width:214px;font-size:11px;line-height:15px;color:var(--ttsc-text-muted)}
+  .btn-ghost{display:inline-flex;align-items:center;justify-content:center;gap:5px;height:30px;margin-top:8px;padding:0 11px;border:1px solid var(--ttsc-border);border-radius:8px;background:var(--ttsc-surface);font:inherit;font-size:11px;font-weight:600;color:var(--ttsc-text);cursor:pointer;transition:background-color .15s,border-color .15s}
+  .btn-ghost:hover{border-color:var(--ttsc-border-strong);background:var(--ttsc-canvas-2)}
+  .btn-ghost i{font-size:9px}
+  .success-ico{width:46px;height:46px;display:grid;place-items:center;border-radius:50%;border:1px solid color-mix(in srgb,var(--ttsc-success) 32%,transparent);background:color-mix(in srgb,var(--ttsc-success) 16%,transparent);color:var(--ttsc-success);font-size:18px;margin-bottom:4px}
+  .success-eyebrow{margin:0;font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ttsc-accent-text)}
+  .success-number{margin:0;font-size:15px;line-height:20px;font-weight:700;letter-spacing:.01em;color:var(--ttsc-text);font-variant-numeric:tabular-nums}
+  .success-total{display:flex;align-items:baseline;gap:7px;margin:7px 0 0;font-size:9.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ttsc-text-muted)}
+  .success-total strong{font-size:18px;line-height:22px;font-weight:700;letter-spacing:-.02em;color:var(--ttsc-text);font-variant-numeric:tabular-nums}
+  .success-note{margin:3px 0 0;max-width:220px;font-size:10.5px;line-height:14px;color:var(--ttsc-text-muted)}
+  .cart-success .btn-primary{max-width:230px;margin-top:12px}
+  @keyframes stateIn{0%{opacity:0;transform:translateY(4px)}100%{opacity:1;transform:none}}
+
+  /* responsivo */
+  @media (max-width:900px){
+    .ob-body{grid-template-columns:minmax(0,1fr)}
+    .cart-empty,.cart-success{min-height:240px}
+  }
+  @media (max-width:760px){
+    .ob-head{flex-direction:column;align-items:stretch;gap:10px}
+    .ob-head-actions{justify-content:space-between}
+    .ob-sub{white-space:normal}
+    .ob-select select{max-width:100%}
+  }
+  @media (max-width:560px){
+    .demo{padding:10px}
+    .ob-card{padding:12px}
+    .prod-grid{grid-template-columns:minmax(0,1fr)}
+    .ob-search kbd{display:none}
+    .cat-hint{display:none}
+    .pay-face{font-size:10px}
+    .cart-empty,.cart-success{min-height:220px}
+  }
+  @media (max-width:420px){
+    .ob-head-actions{flex-direction:column-reverse;align-items:stretch;gap:7px}
+    .ob-draft{align-self:flex-start}
+    .ob-select{width:100%}
+    .ob-select select{max-width:100%;flex:1}
+    .cart-head .ghost-btn span{display:none}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  }
+</style>
+</head>
+<body>
+<main class="demo">
+  <section class="ob-card" aria-labelledby="ob-title">
+    <header class="ob-head">
+      <div class="ob-id">
+        <span class="ob-icon" aria-hidden="true"><i class="fa-light fa-cart-shopping"></i></span>
+        <div>
+          <p class="ob-eyebrow"><span class="dot" aria-hidden="true"></span>Pedido de venda · <span id="ob-number">#PED-2026-0187</span></p>
+          <h2 class="ob-title" id="ob-title">Novo pedido</h2>
+          <p class="ob-sub">Cliente: <strong id="ob-client-name">Colégio Horizonte</strong> · Tabela de preços 2026</p>
+        </div>
+      </div>
+      <div class="ob-head-actions">
+        <div class="ob-field">
+          <label for="ob-client">Cliente</label>
+          <div class="ob-select">
+            <i class="fa-light fa-building lead" aria-hidden="true"></i>
+            <select id="ob-client" data-no-custom aria-label="Cliente do pedido">
+              <option value="Colégio Horizonte" selected>Colégio Horizonte</option>
+              <option value="Escola Vila Verde">Escola Vila Verde</option>
+              <option value="Instituto Aurora">Instituto Aurora</option>
+            </select>
+            <i class="fa-light fa-chevron-down chev" aria-hidden="true"></i>
+          </div>
+        </div>
+        <span class="ob-draft" id="ob-status" aria-label="Pedido em rascunho"><i class="fa-light fa-pen" aria-hidden="true"></i><span>Rascunho</span></span>
+      </div>
+    </header>
+
+    <div class="ob-body">
+      <section class="ob-catalog" aria-labelledby="ob-cat-title">
+        <div class="cat-head">
+          <div class="cat-title"><h3 id="ob-cat-title">Catálogo</h3><span class="cat-note" id="ob-cat-count">10 produtos</span></div>
+          <span class="cat-hint"><i class="fa-light fa-hand-pointer" aria-hidden="true"></i>Clique para adicionar</span>
+        </div>
+
+        <div class="ob-search" role="search">
+          <i class="fa-light fa-magnifying-glass" aria-hidden="true"></i>
+          <input id="ob-search" type="search" placeholder="Buscar produto, módulo ou serviço..." aria-label="Buscar no catálogo" autocomplete="off" spellcheck="false">
+          <button type="button" class="clear" id="ob-clear" aria-label="Limpar busca" hidden><i class="fa-light fa-circle-xmark" aria-hidden="true"></i></button>
+          <kbd aria-hidden="true">/</kbd>
+        </div>
+
+        <div class="chips" role="group" aria-label="Filtrar o catálogo por categoria" id="ob-chips">
+          <button type="button" class="chip" data-cat="Todos" aria-pressed="true">Todos <span class="n">10</span></button>
+          <button type="button" class="chip" data-cat="Planos" aria-pressed="false">Planos <span class="n">3</span></button>
+          <button type="button" class="chip" data-cat="Módulos" aria-pressed="false">Módulos <span class="n">3</span></button>
+          <button type="button" class="chip" data-cat="Serviços" aria-pressed="false">Serviços <span class="n">2</span></button>
+          <button type="button" class="chip" data-cat="Suporte" aria-pressed="false">Suporte <span class="n">2</span></button>
+        </div>
+
+        <div class="prod-grid" id="ob-products"></div>
+        <div class="cat-empty" id="ob-cat-empty" hidden>
+          <span class="ce-ico" aria-hidden="true"><i class="fa-light fa-magnifying-glass"></i></span>
+          <p>Nenhum produto encontrado</p>
+          <span id="ob-cat-empty-text">Ajuste a busca ou escolha outra categoria.</span>
+          <button type="button" id="ob-cat-reset">Limpar filtros</button>
+        </div>
+        <noscript><p class="cat-note">Ative o JavaScript para carregar o catálogo e o carrinho.</p></noscript>
+      </section>
+
+      <aside class="ob-cart" aria-labelledby="ob-cart-title">
+        <div class="cart-head" id="ob-cart-head">
+          <div class="cart-title">
+            <span class="cart-ico" aria-hidden="true"><i class="fa-light fa-basket-shopping"></i></span>
+            <h3 id="ob-cart-title" tabindex="-1">Carrinho</h3>
+            <span class="cart-count" id="ob-count" aria-label="2 itens no pedido">2</span>
+          </div>
+          <button type="button" class="ghost-btn" id="ob-new"><i class="fa-light fa-rotate-left" aria-hidden="true"></i><span>Novo pedido</span></button>
+        </div>
+
+        <p class="cart-live" id="ob-live" aria-hidden="true"><i class="fa-light fa-circle-check"></i><span>2 itens no pedido. Revise antes de finalizar.</span></p>
+
+        <div class="cart-core" id="ob-core">
+          <ul class="cart-items" id="ob-items" aria-label="Itens do pedido">
+            <li class="ci" data-id="profissional">
+              <span class="ci-ico" aria-hidden="true"><i class="fa-light fa-briefcase"></i></span>
+              <div class="ci-main">
+                <p class="ci-name"><span>Plano Profissional</span><small>mensal</small></p>
+                <p class="ci-unit">R$ 549,00 cada</p>
+              </div>
+              <span class="ci-line">R$ 549,00</span>
+              <div class="ci-qty" role="group" aria-label="Quantidade de Plano Profissional">
+                <button type="button" data-act="dec" data-id="profissional" aria-label="Diminuir quantidade de Plano Profissional"><i class="fa-light fa-minus" aria-hidden="true"></i></button>
+                <span class="n">1</span>
+                <button type="button" data-act="inc" data-id="profissional" aria-label="Aumentar quantidade de Plano Profissional"><i class="fa-light fa-plus" aria-hidden="true"></i></button>
+              </div>
+              <button type="button" class="ci-remove" data-act="remove" data-id="profissional" aria-label="Remover Plano Profissional do pedido"><i class="fa-light fa-xmark" aria-hidden="true"></i></button>
+            </li>
+            <li class="ci" data-id="financeiro">
+              <span class="ci-ico" aria-hidden="true"><i class="fa-light fa-coins"></i></span>
+              <div class="ci-main">
+                <p class="ci-name"><span>Módulo Financeiro</span><small>mensal</small></p>
+                <p class="ci-unit">R$ 189,00 cada</p>
+              </div>
+              <span class="ci-line">R$ 189,00</span>
+              <div class="ci-qty" role="group" aria-label="Quantidade de Módulo Financeiro">
+                <button type="button" data-act="dec" data-id="financeiro" aria-label="Diminuir quantidade de Módulo Financeiro"><i class="fa-light fa-minus" aria-hidden="true"></i></button>
+                <span class="n">1</span>
+                <button type="button" data-act="inc" data-id="financeiro" aria-label="Aumentar quantidade de Módulo Financeiro"><i class="fa-light fa-plus" aria-hidden="true"></i></button>
+              </div>
+              <button type="button" class="ci-remove" data-act="remove" data-id="financeiro" aria-label="Remover Módulo Financeiro do pedido"><i class="fa-light fa-xmark" aria-hidden="true"></i></button>
+            </li>
+          </ul>
+
+          <dl class="cart-totals">
+            <div class="trow"><dt>Subtotal</dt><dd id="ob-subtotal">R$ 738,00</dd></div>
+            <div class="trow">
+              <dt>Desconto</dt>
+              <dd>
+                <span class="disc-amt" id="ob-disc-amt">−R$ 36,90</span>
+                <span class="disc-sel">
+                  <select id="ob-discount" data-no-custom aria-label="Desconto do pedido">
+                    <option value="0">0%</option>
+                    <option value="5" selected>5%</option>
+                    <option value="10">10%</option>
+                  </select>
+                  <i class="fa-light fa-chevron-down" aria-hidden="true"></i>
+                </span>
+              </dd>
+            </div>
+            <div class="trow grand"><dt>Total</dt><dd id="ob-total">R$ 701,10</dd></div>
+          </dl>
+          <p class="total-note" id="ob-total-note">2 itens · 5% de desconto aplicado</p>
+
+          <fieldset class="pay">
+            <legend>Forma de pagamento</legend>
+            <div class="pay-opts">
+              <label class="pay-opt"><input type="radio" name="ob-pay" value="pix" checked><span class="pay-face"><i class="fa-light fa-qrcode" aria-hidden="true"></i>Pix</span></label>
+              <label class="pay-opt"><input type="radio" name="ob-pay" value="boleto"><span class="pay-face"><i class="fa-light fa-barcode" aria-hidden="true"></i>Boleto</span></label>
+              <label class="pay-opt"><input type="radio" name="ob-pay" value="cartao"><span class="pay-face"><i class="fa-light fa-credit-card" aria-hidden="true"></i>Cartão</span></label>
+            </div>
+          </fieldset>
+          <p class="pay-note" id="ob-pay-note"><i class="fa-light fa-bolt" aria-hidden="true"></i><span>Aprovação imediata e sem taxas.</span></p>
+
+          <button type="button" class="btn-primary" id="ob-finish">
+            <i class="fa-light fa-lock" aria-hidden="true"></i><span>Finalizar pedido</span><span class="amt" id="ob-btn-total">R$ 701,10</span>
+          </button>
+          <p class="cart-foot"><i class="fa-light fa-shield-check" aria-hidden="true"></i>Rascunho salvo · 21/10/2026 14:30</p>
+        </div>
+
+        <div class="cart-empty" id="ob-empty" hidden>
+          <span class="empty-ico" aria-hidden="true"><i class="fa-light fa-basket-shopping"></i></span>
+          <p class="empty-title">Carrinho vazio</p>
+          <p class="empty-text">Escolha produtos no catálogo para montar o pedido.</p>
+          <button type="button" class="btn-ghost" id="ob-add-items"><i class="fa-light fa-plus" aria-hidden="true"></i>Adicionar itens</button>
+        </div>
+
+        <div class="cart-success" id="ob-success" role="status" tabindex="-1" hidden>
+          <span class="success-ico" aria-hidden="true"><i class="fa-light fa-check"></i></span>
+          <p class="success-eyebrow">Pedido confirmado</p>
+          <p class="success-number" id="ob-success-number">#PED-2026-0187</p>
+          <p class="success-total"><span>Total</span><strong id="ob-success-total">R$ 701,10</strong></p>
+          <p class="success-note" id="ob-success-note">Pix · pedido enviado para o financeiro.</p>
+          <button type="button" class="btn-primary" id="ob-reset"><i class="fa-light fa-rotate-left" aria-hidden="true"></i><span>Novo pedido</span></button>
+          <p class="cart-foot"><i class="fa-light fa-envelope" aria-hidden="true"></i>Comprovante enviado para o cliente.</p>
+        </div>
+      </aside>
+    </div>
+    <p class="sr-only" id="ob-announce" role="status" aria-live="polite"></p>
+  </section>
+</main>
+<script>
+(function () {
+  'use strict';
+
+  var CATALOG = [
+    { id: 'essencial', name: 'Plano Essencial', desc: 'Gestão acadêmica e financeira para escolas em crescimento.', price: 29900, cycle: 'mensal', suffix: '/mês', cat: 'Planos', icon: 'fa-box', avail: 'Disponível', tone: 'ok' },
+    { id: 'profissional', name: 'Plano Profissional', desc: 'Rotina completa, relatórios e integrações do dia a dia.', price: 54900, cycle: 'mensal', suffix: '/mês', cat: 'Planos', icon: 'fa-briefcase', avail: 'Disponível', tone: 'ok' },
+    { id: 'enterprise', name: 'Plano Enterprise', desc: 'Operação multiunidade com governança e SLA dedicado.', price: 129000, cycle: 'mensal', suffix: '/mês', cat: 'Planos', icon: 'fa-building-columns', avail: 'Disponível', tone: 'ok' },
+    { id: 'financeiro', name: 'Módulo Financeiro', desc: 'Cobranças, conciliação e fluxo de caixa por unidade.', price: 18900, cycle: 'mensal', suffix: '/mês', cat: 'Módulos', icon: 'fa-coins', avail: 'Disponível', tone: 'ok' },
+    { id: 'academico', name: 'Módulo Acadêmico', desc: 'Matrículas, turmas, diário de classe e histórico.', price: 24900, cycle: 'mensal', suffix: '/mês', cat: 'Módulos', icon: 'fa-graduation-cap', avail: 'Disponível', tone: 'ok' },
+    { id: 'comercial', name: 'Módulo Comercial', desc: 'Funil de matrículas, propostas e metas da equipe.', price: 21900, cycle: 'mensal', suffix: '/mês', cat: 'Módulos', icon: 'fa-chart-line', avail: 'Disponível', tone: 'ok' },
+    { id: 'implantacao', name: 'Implantação', desc: 'Configuração assistida e ajuste do plano de contas.', price: 148000, cycle: 'único', suffix: 'único', cat: 'Serviços', icon: 'fa-screwdriver-wrench', avail: 'Sob demanda', tone: 'info' },
+    { id: 'treinamento', name: 'Treinamento', desc: 'Turma ao vivo para secretaria e coordenação.', price: 118000, cycle: 'por turma', suffix: '/turma', cat: 'Serviços', icon: 'fa-chalkboard-user', avail: 'Últimas vagas', tone: 'warn' },
+    { id: 'suporte', name: 'Suporte Premium', desc: 'Atendimento prioritário com gerente de conta.', price: 34900, cycle: 'mensal', suffix: '/mês', cat: 'Suporte', icon: 'fa-headset', avail: 'Disponível', tone: 'ok' },
+    { id: 'migracao', name: 'Migração de dados', desc: 'Importação validada de alunos, notas e financeiro.', price: 89000, cycle: 'único', suffix: 'único', cat: 'Suporte', icon: 'fa-database', avail: 'Sob demanda', tone: 'info' }
+  ];
+
+  var PAY = {
+    pix: { label: 'Pix', note: 'Aprovação imediata e sem taxas.', icon: 'fa-bolt', success: 'Pix · pagamento aprovado e pedido enviado ao financeiro.' },
+    boleto: { label: 'Boleto', note: 'Vencimento em 5 dias úteis após a emissão.', icon: 'fa-calendar-clock', success: 'Boleto · pedido enviado; o faturamento ocorre após a compensação.' },
+    cartao: { label: 'Cartão', note: 'Até 3x sem juros no cartão corporativo.', icon: 'fa-credit-card', success: 'Cartão · pagamento autorizado e pedido enviado ao financeiro.' }
+  };
+
+  var MAP = {};
+  CATALOG.forEach(function (p) { MAP[p.id] = p; });
+
+  var state = { cat: 'Todos', q: '', discount: 5, payment: 'pix', view: 'draft', order: 187 };
+  var cart = [{ id: 'profissional', qty: 1 }, { id: 'financeiro', qty: 1 }];
+  var lastTotal = 0;
+
+  var $ = function (id) { return document.getElementById(id); };
+  var search = $('ob-search');
+  var clearBtn = $('ob-clear');
+  var chipsEl = $('ob-chips');
+  var productsEl = $('ob-products');
+  var catEmpty = $('ob-cat-empty');
+  var catEmptyText = $('ob-cat-empty-text');
+  var catCount = $('ob-cat-count');
+  var itemsEl = $('ob-items');
+  var countEl = $('ob-count');
+  var liveEl = $('ob-live');
+  var liveText = liveEl.querySelector('span');
+  var core = $('ob-core');
+  var emptyEl = $('ob-empty');
+  var successEl = $('ob-success');
+  var cartHead = $('ob-cart-head');
+  var newBtn = $('ob-new');
+  var cartTitle = $('ob-cart-title');
+  var subtotalEl = $('ob-subtotal');
+  var discAmt = $('ob-disc-amt');
+  var discountSel = $('ob-discount');
+  var totalEl = $('ob-total');
+  var totalNote = $('ob-total-note');
+  var btnTotal = $('ob-btn-total');
+  var payer = $('ob-pay-note');
+  var clientSel = $('ob-client');
+  var clientName = $('ob-client-name');
+  var headerNumber = $('ob-number');
+  var addItemsBtn = $('ob-add-items');
+  var successNumber = $('ob-success-number');
+  var successTotal = $('ob-success-total');
+  var successNote = $('ob-success-note');
+  var statusEl = $('ob-status');
+  var sr = $('ob-announce');
+
+  function money(cents) {
+    var n = (Math.round(cents) / 100).toFixed(2).split('.');
+    return 'R$ ' + n[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ',' + n[1];
+  }
+  function pad(n) { return String(n).padStart(4, '0'); }
+  function orderCode() { return '#PED-2026-' + pad(state.order); }
+  function rowOf(id) {
+    for (var i = 0; i < cart.length; i++) { if (cart[i].id === id) return cart[i]; }
+    return null;
+  }
+  function qtyOf(id) { var r = rowOf(id); return r ? r.qty : 0; }
+  function itemCount() { return cart.reduce(function (s, r) { return s + r.qty; }, 0); }
+  function subtotalCents() {
+    return cart.reduce(function (s, r) { return s + MAP[r.id].price * r.qty; }, 0);
+  }
+  function say(msg, announce) {
+    liveText.textContent = msg;
+    liveEl.classList.remove('is-flash');
+    void liveEl.offsetWidth;
+    liveEl.classList.add('is-flash');
+    if (announce !== false) sr.textContent = msg;
+  }
+
+  function prodHTML(p) {
+    var n = qtyOf(p.id);
+    var label = 'Adicionar ' + p.name + ' por ' + money(p.price) +
+      (p.cycle === 'mensal' ? ' ao mês' : '') + '.' + (n ? ' ' + n + ' no pedido.' : '');
+    return '<button type="button" class="prod' + (n ? ' in-cart' : '') + '" data-id="' + p.id + '" aria-label="' + label + '">' +
+      '<span class="prod-icon" aria-hidden="true"><i class="fa-light ' + p.icon + '"></i></span>' +
+      '<span class="prod-main">' +
+        '<span class="prod-name-row"><span class="prod-name">' + p.name + '</span>' +
+          '<span class="prod-in" aria-hidden="true">' + (n ? n + ' no pedido' : '') + '</span></span>' +
+        '<span class="prod-desc">' + p.desc + '</span>' +
+        '<span class="prod-foot"><span class="prod-price">' + money(p.price) + '<small>' + p.suffix + '</small></span>' +
+          '<span class="avail ' + p.tone + '"><i class="fa-light fa-circle" aria-hidden="true"></i>' + p.avail + '</span>' +
+          '<span class="prod-add" aria-hidden="true"><i class="fa-light fa-plus"></i></span></span>' +
+      '</span></button>';
+  }
+
+  function renderCatalog() {
+    var q = state.q.toLowerCase();
+    var list = CATALOG.filter(function (p) {
+      var okCat = state.cat === 'Todos' || p.cat === state.cat;
+      var okQ = !q || (p.name + ' ' + p.desc + ' ' + p.cat).toLowerCase().indexOf(q) > -1;
+      return okCat && okQ;
+    });
+    productsEl.innerHTML = list.map(prodHTML).join('');
+    catEmpty.hidden = list.length > 0;
+    catCount.textContent = list.length === CATALOG.length
+      ? CATALOG.length + ' produtos'
+      : list.length + ' de ' + CATALOG.length + ' produtos';
+    clearBtn.hidden = !state.q;
+    if (!list.length) {
+      catEmptyText.textContent = state.q
+        ? 'Nenhum resultado para "' + state.q + '".'
+        : 'Nenhum produto nesta categoria.';
+    }
+    Array.prototype.forEach.call(chipsEl.querySelectorAll('.chip'), function (b) {
+      b.setAttribute('aria-pressed', String(b.dataset.cat === state.cat));
+    });
+  }
+
+  function paintBadges() {
+    Array.prototype.forEach.call(productsEl.querySelectorAll('.prod'), function (btn) {
+      var p = MAP[btn.dataset.id];
+      var n = qtyOf(p.id);
+      btn.classList.toggle('in-cart', n > 0);
+      var badge = btn.querySelector('.prod-in');
+      if (badge) badge.textContent = n ? n + ' no pedido' : '';
+      btn.setAttribute('aria-label', 'Adicionar ' + p.name + ' por ' + money(p.price) +
+        (p.cycle === 'mensal' ? ' ao mês' : '') + '.' + (n ? ' ' + n + ' no pedido.' : ''));
+    });
+  }
+
+  function itemHTML(r) {
+    var p = MAP[r.id];
+    return '<li class="ci" data-id="' + p.id + '">' +
+      '<span class="ci-ico" aria-hidden="true"><i class="fa-light ' + p.icon + '"></i></span>' +
+      '<div class="ci-main">' +
+        '<p class="ci-name"><span>' + p.name + '</span><small>' + p.cycle + '</small></p>' +
+        '<p class="ci-unit">' + money(p.price) + ' cada</p>' +
+      '</div>' +
+      '<span class="ci-line">' + money(p.price * r.qty) + '</span>' +
+      '<div class="ci-qty" role="group" aria-label="Quantidade de ' + p.name + '">' +
+        '<button type="button" data-act="dec" data-id="' + p.id + '" aria-label="Diminuir quantidade de ' + p.name + '"' + (r.qty <= 1 ? ' disabled' : '') + '><i class="fa-light fa-minus" aria-hidden="true"></i></button>' +
+        '<span class="n" aria-live="off">' + r.qty + '</span>' +
+        '<button type="button" data-act="inc" data-id="' + p.id + '" aria-label="Aumentar quantidade de ' + p.name + '"' + (r.qty >= 9 ? ' disabled' : '') + '><i class="fa-light fa-plus" aria-hidden="true"></i></button>' +
+      '</div>' +
+      '<button type="button" class="ci-remove" data-act="remove" data-id="' + p.id + '" aria-label="Remover ' + p.name + ' do pedido"><i class="fa-light fa-xmark" aria-hidden="true"></i></button>' +
+    '</li>';
+  }
+
+  function paintPayment() {
+    var pay = PAY[state.payment];
+    payer.querySelector('i').className = 'fa-light ' + pay.icon;
+    payer.querySelector('span').textContent = pay.note;
+  }
+
+  function renderCart() {
+    var count = itemCount();
+    var sub = subtotalCents();
+    var disc = Math.round(sub * state.discount / 100);
+    var total = sub - disc;
+    lastTotal = total;
+
+    countEl.textContent = String(count);
+    countEl.setAttribute('aria-label', count === 0 ? 'Nenhum item no pedido' : (count === 1 ? '1 item no pedido' : count + ' itens no pedido'));
+    headerNumber.textContent = orderCode();
+
+    var isSuccess = state.view === 'success';
+    var isEmpty = !isSuccess && count === 0;
+
+    cartHead.hidden = isSuccess;
+    liveEl.hidden = isSuccess;
+    core.hidden = isSuccess || isEmpty;
+    emptyEl.hidden = !isEmpty;
+    successEl.hidden = !isSuccess;
+    newBtn.hidden = isEmpty || isSuccess;
+    countEl.hidden = isSuccess || count === 0;
+
+    statusEl.classList.toggle('is-done', isSuccess);
+    statusEl.querySelector('i').className = 'fa-light ' + (isSuccess ? 'fa-circle-check' : 'fa-pen');
+    statusEl.querySelector('span').textContent = isSuccess ? 'Confirmado' : 'Rascunho';
+    statusEl.setAttribute('aria-label', isSuccess ? 'Pedido confirmado' : 'Pedido em rascunho');
+
+    if (isEmpty) {
+      liveText.textContent = 'Nenhum item no pedido. Escolha produtos no catálogo.';
+    }
+
+    itemsEl.innerHTML = cart.map(itemHTML).join('');
+
+    subtotalEl.textContent = money(sub);
+    discAmt.textContent = state.discount ? '−' + money(disc) : money(0);
+    discAmt.classList.toggle('is-zero', !state.discount);
+    totalEl.textContent = money(total);
+    btnTotal.textContent = money(total);
+    totalNote.textContent = (count === 1 ? '1 item' : count + ' itens') +
+      (state.discount ? ' · ' + state.discount + '% de desconto aplicado' : ' · sem desconto');
+
+    if (isSuccess) {
+      successNumber.textContent = orderCode();
+      successTotal.textContent = money(lastTotal);
+      successNote.textContent = PAY[state.payment].success;
+    }
+  }
+
+  function bumpCount() {
+    countEl.classList.remove('bump');
+    void countEl.offsetWidth;
+    countEl.classList.add('bump');
+  }
+
+  function flashProduct(id) {
+    var btn = productsEl.querySelector('.prod[data-id="' + id + '"]');
+    if (!btn) return;
+    btn.classList.remove('just-added');
+    void btn.offsetWidth;
+    btn.classList.add('just-added');
+    window.setTimeout(function () { btn.classList.remove('just-added'); }, 420);
+  }
+
+  function syncControls() {
+    Array.prototype.forEach.call(document.querySelectorAll('input[name="ob-pay"]'), function (r) {
+      r.checked = r.value === state.payment;
+    });
+    discountSel.value = String(state.discount);
+  }
+
+  function addItem(id, allowReset) {
+    var p = MAP[id];
+    if (!p) return;
+    if (allowReset !== false && state.view === 'success') {
+      cart = [];
+      state.order += 1;
+      state.discount = 0;
+      state.payment = 'pix';
+      state.view = 'draft';
+      syncControls();
+      paintPayment();
+    }
+    var row = rowOf(id);
+    if (row) {
+      if (row.qty >= 9) { say('Limite de 9 unidades por item.'); return; }
+      row.qty += 1;
+    } else {
+      cart.push({ id: id, qty: 1 });
+    }
+    paintBadges();
+    renderCart();
+    bumpCount();
+    say(p.name + ' adicionado ao pedido.');
+    flashProduct(id);
+  }
+
+  function resetOrder() {
+    cart = [];
+    state.view = 'draft';
+    state.order += 1;
+    state.discount = 0;
+    state.payment = 'pix';
+    syncControls();
+    paintPayment();
+    paintBadges();
+    renderCart();
+    var msg = 'Novo pedido ' + orderCode() + ' iniciado com o carrinho vazio.';
+    liveText.textContent = 'Novo pedido iniciado. Adicione itens do catálogo.';
+    sr.textContent = msg;
+    window.requestAnimationFrame(function () { addItemsBtn.focus({ preventScroll: true }); });
+  }
+
+  /* catálogo */
+  search.addEventListener('input', function () {
+    state.q = search.value.trim();
+    renderCatalog();
+  });
+  search.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && search.value) {
+      e.preventDefault();
+      search.value = '';
+      state.q = '';
+      renderCatalog();
+      liveText.textContent = 'Busca limpa. Todos os produtos disponíveis.';
+    }
+  });
+  clearBtn.addEventListener('click', function () {
+    search.value = '';
+    state.q = '';
+    renderCatalog();
+    search.focus();
+  });
+  chipsEl.addEventListener('click', function (e) {
+    var chip = e.target.closest('.chip');
+    if (!chip) return;
+    state.cat = chip.dataset.cat;
+    renderCatalog();
+    liveText.textContent = 'Categoria: ' + state.cat + '.';
+  });
+  productsEl.addEventListener('click', function (e) {
+    var btn = e.target.closest('.prod');
+    if (btn) addItem(btn.dataset.id);
+  });
+  $('ob-cat-reset').addEventListener('click', function () {
+    state.cat = 'Todos';
+    state.q = '';
+    search.value = '';
+    renderCatalog();
+    search.focus();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== '/' || e.ctrlKey || e.metaKey || e.altKey) return;
+    var t = e.target;
+    var tag = (t.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea' || tag === 'select' || t.isContentEditable) return;
+    e.preventDefault();
+    search.focus();
+  });
+
+  /* carrinho */
+  itemsEl.addEventListener('click', function (e) {
+    var btn = e.target.closest('button[data-act]');
+    if (!btn) return;
+    var id = btn.dataset.id;
+    var act = btn.dataset.act;
+    var p = MAP[id];
+    var row = rowOf(id);
+    if (!p || !row) return;
+
+    if (act === 'remove') {
+      cart = cart.filter(function (r) { return r.id !== id; });
+      paintBadges();
+      renderCart();
+      sr.textContent = p.name + ' removido do pedido.';
+      liveText.textContent = p.name + ' removido do pedido.';
+      cartTitle.focus({ preventScroll: true });
+      return;
+    }
+    if (act === 'inc' && row.qty < 9) row.qty += 1;
+    if (act === 'dec' && row.qty > 1) row.qty -= 1;
+    paintBadges();
+    renderCart();
+    sr.textContent = 'Quantidade de ' + p.name + ' alterada para ' + row.qty + '.';
+    liveText.textContent = p.name + ': ' + row.qty + (row.qty === 1 ? ' unidade.' : ' unidades.');
+    var again = itemsEl.querySelector('button[data-act="' + act + '"][data-id="' + id + '"]');
+    if (again && !again.disabled) again.focus({ preventScroll: true });
+  });
+
+  discountSel.addEventListener('change', function () {
+    state.discount = Number(discountSel.value);
+    renderCart();
+    var msg = state.discount
+      ? 'Desconto de ' + state.discount + '% aplicado ao pedido.'
+      : 'Desconto removido do pedido.';
+    liveText.textContent = msg;
+    sr.textContent = msg;
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll('input[name="ob-pay"]'), function (r) {
+    r.addEventListener('change', function () {
+      if (!r.checked) return;
+      state.payment = r.value;
+      paintPayment();
+      if (state.view === 'success') successNote.textContent = PAY[state.payment].success;
+      sr.textContent = 'Forma de pagamento: ' + PAY[state.payment].label + '.';
+      liveText.textContent = 'Forma de pagamento: ' + PAY[state.payment].label + '.';
+    });
+  });
+
+  clientSel.addEventListener('change', function () {
+    clientName.textContent = clientSel.value;
+    sr.textContent = 'Cliente alterado para ' + clientSel.value + '.';
+    liveText.textContent = 'Cliente do pedido: ' + clientSel.value + '.';
+  });
+
+  $('ob-finish').addEventListener('click', function () {
+    if (!cart.length) return;
+    state.view = 'success';
+    renderCart();
+    window.requestAnimationFrame(function () { successEl.focus({ preventScroll: true }); });
+  });
+
+  newBtn.addEventListener('click', resetOrder);
+  $('ob-reset').addEventListener('click', resetOrder);
+
+  addItemsBtn.addEventListener('click', function () {
+    state.cat = 'Todos';
+    state.q = '';
+    search.value = '';
+    renderCatalog();
+    search.focus();
+    liveText.textContent = 'Escolha produtos no catálogo para montar o pedido.';
+  });
+
+  syncControls();
+  paintPayment();
+  renderCatalog();
+  renderCart();
+})();
+</script>
+</body>
+</html>

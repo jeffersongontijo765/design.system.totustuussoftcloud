@@ -1,0 +1,81 @@
+<!-- @dsCard group="Base" height=250 subtitle="ttsc-symbol · quadrado/círculo · ícone ou iniciais · xs–xl · cores light/solid · grupo empilhado +N" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Symbol</title>
+<style>
+  .ttsc-symbol { --ttsc-symbol-size: 40px; --ttsc-symbol-bg: var(--ttsc-canvas-2); --ttsc-symbol-fg: var(--ttsc-text-2);
+    position: relative; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+    width: var(--ttsc-symbol-size); height: var(--ttsc-symbol-size); border-radius: var(--ttsc-radius-sm);
+    background: var(--ttsc-symbol-bg); color: var(--ttsc-symbol-fg); font-weight: 600; line-height: 1;
+    font-size: calc(var(--ttsc-symbol-size) * .38); text-transform: uppercase; user-select: none; }
+  .ttsc-symbol > i { font-size: calc(var(--ttsc-symbol-size) * .45); }
+  .ttsc-symbol-circle { border-radius: var(--ttsc-radius-pill); }
+  .ttsc-symbol-xs { --ttsc-symbol-size: 20px; border-radius: var(--ttsc-radius-xs); }
+  .ttsc-symbol-sm { --ttsc-symbol-size: 28px; border-radius: var(--ttsc-radius-xs); }
+  .ttsc-symbol-lg { --ttsc-symbol-size: 52px; border-radius: var(--ttsc-radius-control); }
+  .ttsc-symbol-xl { --ttsc-symbol-size: 68px; border-radius: var(--ttsc-radius-surface); }
+  .ttsc-symbol-circle.ttsc-symbol-xs, .ttsc-symbol-circle.ttsc-symbol-sm, .ttsc-symbol-circle.ttsc-symbol-lg, .ttsc-symbol-circle.ttsc-symbol-xl { border-radius: var(--ttsc-radius-pill); }
+  .ttsc-symbol-accent  { --ttsc-symbol-bg: var(--ttsc-accent-soft); --ttsc-symbol-fg: var(--ttsc-accent-text); }
+  .ttsc-symbol-info    { --ttsc-symbol-bg: color-mix(in oklab, var(--ttsc-info) 14%, transparent);    --ttsc-symbol-fg: var(--ttsc-info-text); }
+  .ttsc-symbol-warning { --ttsc-symbol-bg: color-mix(in oklab, var(--ttsc-warning) 16%, transparent); --ttsc-symbol-fg: var(--ttsc-warning-text); }
+  .ttsc-symbol-danger  { --ttsc-symbol-bg: color-mix(in oklab, var(--ttsc-danger) 12%, transparent);  --ttsc-symbol-fg: var(--ttsc-danger-text); }
+  .ttsc-symbol-solid   { --ttsc-symbol-bg: var(--ttsc-accent); --ttsc-symbol-fg: var(--ttsc-accent-on); }
+  .ttsc-symbol-mono    { --ttsc-symbol-bg: var(--ttsc-text); --ttsc-symbol-fg: var(--ttsc-surface); }
+  .ttsc-symbol-outline { --ttsc-symbol-bg: var(--ttsc-surface); box-shadow: inset 0 0 0 1px var(--ttsc-border-strong); }
+  .ttsc-symbol-badge { position: absolute; right: -2px; bottom: -2px; width: 10px; height: 10px; border-radius: var(--ttsc-radius-pill); background: var(--ttsc-success); box-shadow: 0 0 0 2px var(--ttsc-surface); }
+  .ttsc-symbol-group { display: inline-flex; align-items: center; }
+  .ttsc-symbol-group > .ttsc-symbol { box-shadow: 0 0 0 2px var(--ttsc-surface); background: linear-gradient(var(--ttsc-symbol-bg), var(--ttsc-symbol-bg)), var(--ttsc-surface); font-size: 11px; }
+  .ttsc-symbol-group > .ttsc-symbol + .ttsc-symbol { margin-left: calc(var(--ttsc-symbol-size) * -.15); }
+  .ttsc-symbol-group > .ttsc-symbol:hover { z-index: 1; }
+  .sy-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .sy-box { border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-sm); background: var(--ttsc-surface); padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+  .sy-item { display: flex; align-items: center; gap: 10px; }
+  .sy-t { color: var(--ttsc-text); font-weight: 600; }
+  .sy-m { font-size: 12px; color: var(--ttsc-text-muted); }
+</style>
+</head>
+<body>
+<div class="ds-pad sy-cols">
+  <div class="sy-box">
+    <div class="ds-label">Tamanhos · quadrado e círculo</div>
+    <div class="ds-row" style="gap:12px">
+      <span class="ttsc-symbol ttsc-symbol-xs ttsc-symbol-accent" aria-hidden="true">E</span>
+      <span class="ttsc-symbol ttsc-symbol-sm ttsc-symbol-accent" aria-hidden="true">EN</span>
+      <span class="ttsc-symbol ttsc-symbol-accent" aria-hidden="true">ENF</span>
+      <span class="ttsc-symbol ttsc-symbol-lg ttsc-symbol-accent" aria-hidden="true"><i class="fa-light fa-graduation-cap"></i></span>
+      <span class="ttsc-symbol ttsc-symbol-xl ttsc-symbol-accent" aria-hidden="true"><i class="fa-light fa-building-columns"></i></span>
+      <span class="ttsc-symbol ttsc-symbol-sm ttsc-symbol-circle ttsc-symbol-info" aria-hidden="true">JL</span>
+      <span class="ttsc-symbol ttsc-symbol-circle ttsc-symbol-info" aria-hidden="true">JL</span>
+      <span class="ttsc-symbol ttsc-symbol-lg ttsc-symbol-circle ttsc-symbol-info" aria-hidden="true">JL</span>
+    </div>
+    <div class="ds-label">Cores</div>
+    <div class="ds-row" style="gap:10px">
+      <span class="ttsc-symbol" aria-hidden="true"><i class="fa-light fa-folder"></i></span>
+      <span class="ttsc-symbol ttsc-symbol-accent" aria-hidden="true"><i class="fa-light fa-file-check"></i></span>
+      <span class="ttsc-symbol ttsc-symbol-info" aria-hidden="true"><i class="fa-light fa-calendar"></i></span>
+      <span class="ttsc-symbol ttsc-symbol-warning" aria-hidden="true"><i class="fa-light fa-clock"></i></span>
+      <span class="ttsc-symbol ttsc-symbol-danger" aria-hidden="true"><i class="fa-light fa-file-pdf"></i></span>
+      <span class="ttsc-symbol ttsc-symbol-solid" aria-hidden="true">TT</span>
+      <span class="ttsc-symbol ttsc-symbol-mono" aria-hidden="true">UC</span>
+      <span class="ttsc-symbol ttsc-symbol-outline" aria-hidden="true"><i class="fa-light fa-plus"></i></span>
+    </div>
+  </div>
+  <div class="sy-box">
+    <div class="ds-label">Em lista</div>
+    <div class="sy-item"><span class="ttsc-symbol ttsc-symbol-accent" aria-hidden="true">ENF</span><div><div class="sy-t">Enfermagem</div><div class="sy-m">Técnico · 4 turmas</div></div></div>
+    <div class="sy-item"><span class="ttsc-symbol ttsc-symbol-info" aria-hidden="true"><i class="fa-light fa-school"></i><span class="ttsc-symbol-badge"></span></span><div><div class="sy-t">Unidade Centro</div><div class="sy-m">Sede · ativa</div></div></div>
+    <div class="ds-label">Grupo empilhado · professores da turma</div>
+    <div class="sy-item">
+      <div class="ttsc-symbol-group" role="group" aria-label="Professores: Marina Alves, Carlos Souza, Paula Nunes, Rafael Dias e mais 3">
+        <span class="ttsc-symbol ttsc-symbol-sm ttsc-symbol-circle ttsc-symbol-accent" title="Marina Alves">MA</span>
+        <span class="ttsc-symbol ttsc-symbol-sm ttsc-symbol-circle ttsc-symbol-info" title="Carlos Souza">CS</span>
+        <span class="ttsc-symbol ttsc-symbol-sm ttsc-symbol-circle ttsc-symbol-warning" title="Paula Nunes">PN</span>
+        <span class="ttsc-symbol ttsc-symbol-sm ttsc-symbol-circle ttsc-symbol-danger" title="Rafael Dias">RD</span>
+        <span class="ttsc-symbol ttsc-symbol-sm ttsc-symbol-circle ttsc-symbol-mono">+3</span>
+      </div>
+      <span class="sy-m">ENF-1A · 7 professores</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>

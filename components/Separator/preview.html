@@ -1,0 +1,45 @@
+<!-- @dsCard group="Componentes" height=240 subtitle="ttsc-separator · horizontal, vertical, com texto, em lista e toolbar" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Separator</title>
+<style>
+  .ttsc-separator-label { display: flex; align-items: center; gap: var(--ttsc-space-3); font-size: 11px; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; color: var(--ttsc-text-muted); }
+  .ttsc-separator-label > .ttsc-separator { flex: 1 1 0; width: auto; }
+  .pv-cols { display: grid; grid-template-columns: 1fr 1fr; gap: var(--ttsc-space-6); }
+  .pv-card { border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); background: var(--ttsc-surface); padding: var(--ttsc-space-4); display: flex; flex-direction: column; gap: var(--ttsc-space-3); }
+  .pv-t { font-size: 13px; font-weight: 600; color: var(--ttsc-text); }
+  .pv-s { font-size: 12px; color: var(--ttsc-text-2); }
+  .pv-bar { display: flex; align-items: center; gap: var(--ttsc-space-3); height: 32px; font-size: 12px; color: var(--ttsc-text-2); }
+  .pv-item { display: flex; justify-content: space-between; font-size: 12px; color: var(--ttsc-text-2); }
+  .pv-item b { color: var(--ttsc-text); font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="ds-pad pv-cols">
+  <div class="pv-card">
+    <div><div class="pv-t">Matrícula 2026001</div><div class="pv-s">Ana Beatriz Moreira · Ensino Médio</div></div>
+    <div class="ttsc-separator" role="separator"></div>
+    <div class="pv-item"><span>Turma</span><b>3º A · Manhã</b></div>
+    <div class="pv-item"><span>Mensalidade</span><b>R$ 1.280,00</b></div>
+    <div class="ttsc-separator-label" role="separator" aria-label="Responsáveis"><span class="ttsc-separator"></span>Responsáveis<span class="ttsc-separator"></span></div>
+    <div class="pv-item"><span>Financeiro</span><b>Marcos Moreira</b></div>
+  </div>
+  <div class="ds-stack">
+    <div class="ds-label">Vertical (toolbar)</div>
+    <div class="pv-bar">
+      <span><i class="fa-light fa-users"></i> 32 alunos</span>
+      <div class="ttsc-separator ttsc-separator-vertical" role="separator" aria-orientation="vertical"></div>
+      <span><i class="fa-light fa-calendar"></i> 2026/1</span>
+      <div class="ttsc-separator ttsc-separator-vertical" role="separator" aria-orientation="vertical"></div>
+      <span><i class="fa-light fa-location-dot"></i> Unidade Centro</span>
+    </div>
+    <div class="ds-label">Com texto (agrupamento por data)</div>
+    <div class="ttsc-separator-label" role="separator" aria-label="Hoje"><span class="ttsc-separator"></span>Hoje<span class="ttsc-separator"></span></div>
+    <div class="pv-item"><span>Nova matrícula · Carlos Eduardo Lima</span><b>09:42</b></div>
+    <div class="ttsc-separator-label" role="separator" aria-label="Ontem"><span class="ttsc-separator"></span>Ontem<span class="ttsc-separator"></span></div>
+    <div class="pv-item"><span>Rematrícula · Juliana Ferreira Santos</span><b>16:10</b></div>
+  </div>
+</div>
+<script>TTSC.init();</script>
+</body>
+</html>

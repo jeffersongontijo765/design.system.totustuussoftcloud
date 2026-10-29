@@ -1,0 +1,51 @@
+<!-- @dsCard group="Formulários · Plugins" height=300 subtitle="autosize 6.0.1 · textarea[data-ttsc-autosize] · com conteúdo, vazio, max-height com rolagem · evento autosize:resized" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Autosize</title>
+<script src="../../vendor/autosize/autosize.min.js"></script>
+<style>
+  textarea[data-ttsc-autosize] { resize: none; min-height: 64px; line-height: 20px; overflow-y: hidden; }
+  textarea[data-ttsc-autosize].ttsc-autosize-max { max-height: 104px; }
+  .as-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+  .as-field { display: flex; flex-direction: column; gap: 6px; }
+  .as-help { display: flex; justify-content: space-between; font-size: 12px; color: var(--ttsc-text-muted); }
+</style>
+</head>
+<body>
+<div class="ds-pad as-cols">
+  <div class="as-field">
+    <label class="ttsc-form-label" for="notes">Observações da matrícula</label>
+    <textarea class="ttsc-textarea" id="notes" rows="2" data-ttsc-autosize>Aluna transferida da Escola Estadual Dom Pedro II em 12/08/2026.
+Apresentou histórico com aprovação em todas as disciplinas do 1º ano.
+Pendente: declaração de vacinação atualizada (prazo 30/10).
+Responsável financeiro: Marcos Rocha (pai).</textarea>
+    <div class="as-help"><span>Cresce com o conteúdo</span><span id="notes-h"></span></div>
+  </div>
+  <div class="ds-stack">
+    <div class="as-field">
+      <label class="ttsc-form-label" for="justification">Justificativa de falta</label>
+      <textarea class="ttsc-textarea" id="justification" rows="1" data-ttsc-autosize placeholder="Digite e veja o campo crescer…"></textarea>
+      <div class="as-help"><span>Vazio · 1 linha inicial</span></div>
+    </div>
+    <div class="as-field">
+      <label class="ttsc-form-label" for="feedback">Parecer do conselho (máx. 5 linhas)</label>
+      <textarea class="ttsc-textarea ttsc-autosize-max" id="feedback" rows="1" data-ttsc-autosize>Aluno demonstrou evolução no 3º bimestre.
+Recomenda-se acompanhamento em Matemática.
+Frequência regular.
+Participação ativa nos projetos.
+Encaminhar para monitoria às quartas.
+Reavaliar no conselho de dezembro.</textarea>
+      <div class="as-help"><span>Acima de max-height, rola</span></div>
+    </div>
+  </div>
+</div>
+<script>
+  var fields = document.querySelectorAll('textarea[data-ttsc-autosize]');
+  autosize(fields);
+  var notes = document.getElementById('notes'), out = document.getElementById('notes-h');
+  function show() { out.textContent = notes.offsetHeight + 'px'; }
+  notes.addEventListener('autosize:resized', show);
+  show();
+</script>
+</body>
+</html>

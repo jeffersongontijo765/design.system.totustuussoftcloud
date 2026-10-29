@@ -1,0 +1,51 @@
+<!-- @dsCard group="Navegação" height=290 subtitle="data-ttsc-scrollto · chips e link com parent rolável, offset negativo, voltar ao topo, destaque de chegada" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Scrollto</title>
+<style>
+  .ttsc-scroll-panel { position: relative; overflow-y: auto; height: 220px; padding: 12px; border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); background: var(--ttsc-canvas-2); display: flex; flex-direction: column; gap: 10px; }
+  .st-card { padding: 12px 14px; border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-control); background: var(--ttsc-surface); outline: none; }
+  .st-card h3 { margin: 0 0 4px; font-size: 13px; font-weight: 600; color: var(--ttsc-text); }
+  .st-card p { margin: 0; font-size: 12px; color: var(--ttsc-text-2); }
+  .ttsc-scrollto-flash { animation: st-flash 1.2s ease-out; }
+  @keyframes st-flash { from { background: var(--ttsc-accent-soft); box-shadow: 0 0 0 2px var(--ttsc-accent-border); } to { background: var(--ttsc-surface); box-shadow: none; } }
+  .st-top { position: sticky; bottom: 0; align-self: flex-end; background: var(--ttsc-surface); box-shadow: var(--ttsc-shadow-md); }
+  button.ttsc-badge { cursor: pointer; color: var(--ttsc-text-2); }
+  button.ttsc-badge:hover { border-color: var(--ttsc-accent-border); color: var(--ttsc-accent-text); }
+  button.ttsc-badge:focus-visible, .st-link:focus-visible { outline: 2px solid var(--ttsc-accent); outline-offset: 2px; }
+  .st-link { color: var(--ttsc-accent-text); font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack" id="page-top">
+  <div class="ds-row" style="justify-content:space-between">
+    <div class="ds-row">
+      <span class="ds-label">Ir para a turma</span>
+      <button type="button" class="ttsc-badge ttsc-badge-outline" data-ttsc-scrollto="#turma-adm-2026-1n" data-ttsc-scrollto-parent="#course-body" data-ttsc-scrollto-offset="-12">ADM-2026-1N · 42/50</button>
+      <button type="button" class="ttsc-badge ttsc-badge-outline" data-ttsc-scrollto="#turma-adm-2026-1m" data-ttsc-scrollto-parent="#course-body" data-ttsc-scrollto-offset="-12">ADM-2026-1M · 35/50</button>
+      <button type="button" class="ttsc-badge ttsc-badge-outline" data-ttsc-scrollto="#turma-adm-2025-1n" data-ttsc-scrollto-parent="#course-body" data-ttsc-scrollto-offset="-12">ADM-2025-1N · 50/50</button>
+    </div>
+    <a class="ttsc-link st-link" href="#turma-adm-2025-2n" data-ttsc-scrollto="#turma-adm-2025-2n" data-ttsc-scrollto-parent="#course-body" data-ttsc-scrollto-offset="-12"><i class="fa-light fa-triangle-exclamation"></i> Ver turma com pendência</a>
+  </div>
+  <div id="course-body" class="ttsc-scroll-panel" aria-label="Turmas do curso Administração">
+    <article class="st-card" id="turma-adm-2026-1n" tabindex="-1"><h3>ADM-2026-1N · Noturno</h3><p>42 de 50 vagas ocupadas · início 02/02/2026 · coordenação Profa. Helena Martins</p></article>
+    <article class="st-card" id="turma-adm-2026-1m" tabindex="-1"><h3>ADM-2026-1M · Matutino</h3><p>35 de 50 vagas ocupadas · início 02/02/2026 · coordenação Prof. Ricardo Alves</p></article>
+    <article class="st-card" id="turma-adm-2025-2n" tabindex="-1"><h3>ADM-2025-2N · Noturno</h3><p>48 de 50 vagas · 3 alunos com documentação pendente</p></article>
+    <article class="st-card" id="turma-adm-2025-1n" tabindex="-1"><h3>ADM-2025-1N · Noturno</h3><p>Turma lotada (50/50) · lista de espera com 6 candidatos</p></article>
+    <article class="st-card" id="turma-adm-2024-2n" tabindex="-1"><h3>ADM-2024-2N · Noturno</h3><p>Em andamento · 4º semestre</p></article>
+    <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-icon ttsc-btn-sm st-top" data-ttsc-scrollto="#turma-adm-2026-1n" data-ttsc-scrollto-parent="#course-body" data-ttsc-scrollto-offset="-12" aria-label="Voltar ao topo"><i class="fa-light fa-arrow-up"></i></button>
+  </div>
+</div>
+<script>
+  TTSC.init();
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('[data-ttsc-scrollto]'); if (!t) return;
+    var target = document.querySelector(t.getAttribute('data-ttsc-scrollto')); if (!target) return;
+    setTimeout(function () {
+      target.focus({ preventScroll: true });
+      target.classList.remove('ttsc-scrollto-flash'); void target.offsetWidth; target.classList.add('ttsc-scrollto-flash');
+    }, 350);
+  });
+</script>
+</body>
+</html>

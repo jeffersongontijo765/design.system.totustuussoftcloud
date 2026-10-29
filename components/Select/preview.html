@@ -1,0 +1,148 @@
+<!-- @dsCard group="Formulários" height=1500 subtitle="select nativo + TTSCSelect (ttsc.select.js) · aberto, dependente, inválido, nativo (data-no-custom)" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Select</title>
+<style>
+  .pv-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 20px; padding: 20px; }
+  .pv-grid label { display: block; font-size: 12px; font-weight: 600; color: var(--ttsc-text, #0f172a); margin-bottom: 6px; }
+  .pv-msg { margin-top: 6px; font-size: 11px; color: var(--ttsc-danger-text, #dc2626); }
+  .pv-hint { margin-top: 6px; font-size: 11px; color: var(--ttsc-text-2, #64748b); }
+  .pv-feat-h { padding: 8px 20px 0; font-size: 13px; font-weight: 600; color: var(--ttsc-text, #0f172a); }
+  .pv-feat { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 20px; padding: 12px 20px 20px; }
+  .pv-feat-card { min-width: 0; border: 1px solid var(--ttsc-border-soft, #e2e8f0); border-radius: 10px; padding: 12px; background: var(--ttsc-surface, #fff); }
+  .pv-feat-card h4 { margin: 0 0 8px; font-size: 12px; font-weight: 600; color: var(--ttsc-text, #0f172a); }
+  .pv-feat-card .pv-hint { margin-top: 6px; }
+  .pv-na { list-style: disc; padding-left: 18px; margin: 0; font-size: 12px; color: var(--ttsc-text-2, #64748b); line-height: 1.7; }
+  .pv-clip { height: 70px; overflow: hidden; border: 1px dashed var(--ttsc-border, #cbd5e1); border-radius: 8px; padding: 10px; }
+</style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased">
+<div class="pv-grid">
+  <div>
+    <label for="pv-course">Curso *</label>
+    <select id="pv-course" name="course_uuid" required data-category="Cursos">
+      <option value="em" selected>EM-01 · Ensino Médio</option>
+      <option value="ef">EF-02 · Ensino Fundamental II</option>
+      <option value="tec">TEC-07 · Técnico em Informática</option>
+    </select>
+  </div>
+  <div>
+    <label for="pv-class">Turma</label>
+    <select id="pv-class" name="class_uuid" data-category="Turmas do curso"><option value="">Selecione a turma</option></select>
+    <div class="pv-hint">Recarregada ao trocar o curso; o <code>change</code> redesenha o painel.</div>
+  </div>
+  <div>
+    <label for="pv-period">Período letivo *</label>
+    <select id="pv-period" name="period_uuid" required aria-invalid="true" data-category="Períodos letivos">
+      <option value="" selected>Selecione o período</option>
+      <option value="2026-1">2026/1</option><option value="2026-2">2026/2</option>
+    </select>
+    <div class="pv-msg">Informe o período letivo.</div>
+  </div>
+  <div>
+    <label for="pv-native">Ordenar por</label>
+    <select id="pv-native" class="ttsc-select" data-no-custom>
+      <option>Nome (A–Z)</option><option>Mais recentes</option>
+    </select>
+    <div class="pv-hint">Nativo: <code>data-no-custom</code>.</div>
+  </div>
+</div>
+<div class="pv-feat-h">Features</div>
+<div class="pv-feat">
+  <div class="pv-feat-card">
+    <h4>Basic Usage</h4>
+    <select id="fe-basic"><option>Manhã</option><option>Tarde</option><option>Noite</option></select>
+    <div class="pv-hint">Um <code>&lt;select&gt;</code> comum.</div>
+  </div>
+  <div class="pv-feat-card">
+    <h4>Placeholder Text</h4>
+    <select id="fe-ph"><option value="">Selecione o turno</option><option>Manhã</option><option>Tarde</option></select>
+    <div class="pv-hint">Primeira opção vazia vira o texto do gatilho.</div>
+  </div>
+  <div class="pv-feat-card">
+    <h4>Disabled Select</h4>
+    <select id="fe-dis" disabled><option>Manhã</option></select>
+    <div class="pv-hint"><code>disabled</code> no select.</div>
+  </div>
+  <div class="pv-feat-card">
+    <h4>Disabled Option</h4>
+    <select id="fe-disopt"><option>Administração</option><option disabled>Enfermagem (sem vagas)</option><option>Direito</option></select>
+    <div class="pv-hint">Opção desabilitada não pode ser escolhida.</div>
+  </div>
+  <div class="pv-feat-card">
+    <h4>Size Variants</h4>
+    <select id="fe-compact" data-compact-select><option>Nome (A–Z)</option><option>Mais recentes</option></select>
+    <div class="pv-hint">Variante compacta: <code>data-compact-select</code>.</div>
+  </div>
+  <div class="pv-feat-card">
+    <h4>Multiple Selection</h4>
+    <select id="fe-multi" multiple name="turnos[]" data-placeholder="Selecione os turnos"><option>Manhã</option><option>Tarde</option><option>Noite</option></select>
+    <div class="pv-hint">Caixas de seleção; o painel fica aberto.</div>
+  </div>
+  <div class="pv-feat-card">
+    <h4>Pre-selected Tags</h4>
+    <select id="fe-pre" multiple data-placeholder="Selecione os turnos"><option selected>Manhã</option><option selected>Noite</option><option>Tarde</option></select>
+    <div class="pv-hint">Opções com <code>selected</code> aparecem já escolhidas.</div>
+  </div>
+  <div class="pv-feat-card">
+    <h4>Tags: selected count</h4>
+    <select id="fe-count" multiple data-placeholder="Selecione os turnos"><option selected>Manhã</option><option selected>Tarde</option><option selected>Noite</option><option>Integral</option></select>
+    <div class="pv-hint">Com três ou mais escolhas, o gatilho mostra a contagem.</div>
+  </div>
+  <div class="pv-feat-card">
+    <h4>Search &amp; Filtering</h4>
+    <select id="fe-search"><option>Matemática</option><option>Português</option><option>História</option><option>Geografia</option><option>Física</option><option>Química</option><option>Educação Física</option></select>
+    <div class="pv-hint">Com mais de 6 opções, o painel tem o campo de filtro.</div>
+  </div>
+  <div class="pv-feat-card">
+    <h4>Search</h4>
+    <select id="fe-search2"><option>Matemática</option><option>Português</option><option>História</option><option>Geografia</option><option>Física</option><option>Química</option><option>Educação Física</option></select>
+    <div class="pv-hint">Digite <code>matematica</code>: a busca ignora acentos.</div>
+  </div>
+  <div class="pv-feat-card">
+    <h4>Icons</h4>
+    <select id="fe-icons"><option data-icon="fa-light fa-book-open">Português</option><option data-icon="fa-light fa-calculator">Matemática</option><option data-icon="fa-light fa-flask">Química</option></select>
+    <div class="pv-hint"><code>data-icon</code> em cada opção.</div>
+  </div>
+  <div class="pv-feat-card">
+    <h4>Multiple Icons</h4>
+    <select id="fe-multi-icons" multiple data-placeholder="Selecione as disciplinas"><option data-icon="fa-light fa-book-open" selected>Português</option><option data-icon="fa-light fa-calculator" selected>Matemática</option><option data-icon="fa-light fa-flask">Química</option></select>
+    <div class="pv-hint">No múltiplo, o gatilho mostra <code>fa-list-check</code>.</div>
+  </div>
+  <div class="pv-feat-card">
+    <h4>Modal Integration</h4>
+    <div class="pv-clip"><select id="fe-modal"><option>Manhã</option><option>Tarde</option><option>Noite</option></select></div>
+    <div class="pv-hint">O painel sai do contêiner com <code>overflow: hidden</code>.</div>
+  </div>
+  <div class="pv-feat-card">
+    <h4>Não suportado no Select nativo</h4>
+    <ul class="pv-na"><li>Maximum Selection → Select2</li><li>Enhanced Tags → Tagify</li><li>Tags with Icons → Select2</li><li>Basic Tags → Select2</li><li>Remote Data → Select2 (AJAX)</li><li>Avatar → Select2</li><li>Country Selection → Select2</li><li>Description → Select2</li><li>Template Customization → Select2</li></ul>
+  </div>
+</div>
+<script>
+  var classes = {
+    em: [['1A', '1º ano A · Manhã'], ['1B', '1º ano B · Tarde']],
+    ef: [['6A', '6º ano A · Manhã']],
+    tec: [['T1', 'Turma 1 · Noite'], ['T2', 'Turma 2 · Noite']]
+  };
+  function load() {
+    var course = document.getElementById('pv-course'), cls = document.getElementById('pv-class');
+    var rows = classes[course.value] || [];
+    cls.replaceChildren(new Option(rows.length ? 'Selecione a turma' : 'Nenhuma turma ativa', ''));
+    rows.forEach(function (r) { cls.add(new Option(r[1], r[0])); });
+    cls.dispatchEvent(new Event('change', { bubbles: true }));
+  }
+  document.addEventListener('change', function (e) {
+    if (e.target.id === 'pv-course') load();
+    if (e.target.id === 'pv-period') e.target.setAttribute('aria-invalid', e.target.value ? 'false' : 'true');
+  });
+  window.addEventListener('load', function () {
+    load();
+    setTimeout(function () {
+      var b = document.querySelector('.ttsc-select-wrapper[data-target-select="pv-course"] button');
+      if (b) b.click();
+    }, 150);
+  });
+</script>
+</body>
+</html>

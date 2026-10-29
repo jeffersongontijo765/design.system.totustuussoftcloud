@@ -1,0 +1,97 @@
+<!-- @dsCard group="Navegação" height=230 subtitle="ttsc-pagination · rodapé completo (faixa, por página, janela 1 … p … N), atual, desabilitado, só páginas, vazio" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Pagination</title>
+<style>
+  .ttsc-pagination-standard { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 16px; min-height: 54px; padding: 10px var(--ttsc-space-4); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); background: var(--ttsc-surface); color: var(--ttsc-text-muted); font-size: 12px; line-height: 18px; }
+  .ttsc-pagination-standard .info b { color: var(--ttsc-text); font-weight: 600; }
+  .ttsc-pagination-standard .per-page { display: inline-flex; align-items: center; gap: 8px; }
+  .ttsc-pagination-standard .per-page select { width: 76px; height: 30px; padding: 0 10px; font-size: 12px; font-weight: 600; border-radius: var(--ttsc-radius-sm); }
+  .ttsc-pagination-item .ttsc-btn { width: 28px; height: 28px; padding: 0; border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-sm); background: var(--ttsc-surface); color: var(--ttsc-text-2); font-size: 12px; font-weight: 500; box-shadow: var(--ttsc-shadow-xs); justify-content: center; }
+  .ttsc-pagination-item .ttsc-btn:hover:not(:disabled) { border-color: var(--ttsc-accent-border); background: var(--ttsc-accent-soft); color: var(--ttsc-accent-text); }
+  .ttsc-pagination-item .ttsc-btn[aria-current="page"] { border-color: var(--ttsc-accent); background: var(--ttsc-accent); color: var(--ttsc-accent-on); font-weight: 600; }
+  .ttsc-pagination-item .ttsc-btn:disabled { opacity: .45; cursor: not-allowed; box-shadow: none; }
+  .ttsc-pagination-ellipsis { width: 20px; height: 28px; color: var(--ttsc-text-muted); }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="ds-label">Rodapé completo — 52 matrículas (interativo)</div>
+  <nav class="ttsc-pagination-standard" aria-label="Paginação de matrículas" data-ttsc-pager data-total="52" data-page="3" data-per-page="10" data-noun="matrículas">
+    <span class="info" aria-live="polite"></span>
+    <div class="flex items-center gap-4">
+      <label class="per-page"><span>Por página</span>
+        <select name="per_page" class="ttsc-select ttsc-select-sm"><option>5</option><option selected>10</option><option>25</option><option>50</option></select>
+      </label>
+      <div class="ttsc-pagination" data-ttsc-pager-pages></div>
+    </div>
+  </nav>
+  <div class="ds-row" style="gap:24px">
+    <div class="ds-stack" style="gap:6px">
+      <div class="ds-label">Só páginas — 240 mensalidades, página 12</div>
+      <nav class="ttsc-pagination-standard" style="min-height:auto;border:0;padding:0;background:transparent" aria-label="Paginação de mensalidades" data-ttsc-pager data-total="240" data-page="12" data-per-page="10" data-noun="mensalidades">
+        <span class="info hidden"></span>
+        <div class="ttsc-pagination" data-ttsc-pager-pages></div>
+      </nav>
+    </div>
+    <div class="ds-stack" style="gap:6px">
+      <div class="ds-label">Vazio — filtro sem resultados</div>
+      <nav class="ttsc-pagination-standard" aria-label="Paginação vazia" data-ttsc-pager data-total="0" data-page="1" data-per-page="10" data-noun="alunos">
+        <span class="info" aria-live="polite"></span>
+        <div class="ttsc-pagination" data-ttsc-pager-pages></div>
+      </nav>
+    </div>
+  </div>
+  <div class="ds-note" id="pg-log" aria-live="polite">ttsc.pagination.change → aguardando clique</div>
+</div>
+<script>
+  TTSC.init();
+  function TTSCPager(nav) {
+    var d = nav.dataset, self = this;
+    this.nav = nav; this.pages = nav.querySelector('[data-ttsc-pager-pages]'); this.info = nav.querySelector('.info');
+    this.select = nav.querySelector('select[name="per_page"]');
+    this.o = { total: +d.total || 0, page: +d.page || 1, perPage: +d.perPage || 10, noun: d.noun || 'registros', window: 1 };
+    this.pages.addEventListener('click', function (e) { var b = e.target.closest('button[data-page]'); if (b && !b.disabled) self.go(+b.dataset.page); });
+    if (this.select) this.select.addEventListener('change', function () { self.o.perPage = +self.select.value; self.go(1, true); });
+    this.render();
+  }
+  TTSCPager.prototype.last = function () { return Math.max(1, Math.ceil(this.o.total / this.o.perPage)); };
+  TTSCPager.prototype.windowPages = function () {
+    var page = this.o.page, last = this.last(), w = this.o.window, out = [1], p;
+    if (last <= 7) { out = []; for (p = 1; p <= last; p++) out.push(p); return out; }
+    var from = Math.max(2, page - w), to = Math.min(last - 1, page + w);
+    if (from > 2) out.push('…');
+    for (p = from; p <= to; p++) out.push(p);
+    if (to < last - 1) out.push('…');
+    out.push(last); return out;
+  };
+  TTSCPager.prototype.btn = function (label, page, o) {
+    o = o || {};
+    return '<div class="ttsc-pagination-item"><button type="button" class="ttsc-btn ttsc-btn-icon ttsc-btn-sm' + (o.current ? ' active' : '') + '" data-page="' + page + '"' +
+      (o.current ? ' aria-current="page"' : '') + (o.disabled ? ' disabled' : '') + ' aria-label="' + (o.aria || 'Página ' + page) + '">' + label + '</button></div>';
+  };
+  TTSCPager.prototype.render = function () {
+    var o = this.o, self = this, from = o.total ? (o.page - 1) * o.perPage + 1 : 0, to = Math.min(o.total, o.page * o.perPage);
+    this.info.innerHTML = 'Mostrando <b>' + from + '–' + to + '</b> de <b>' + o.total + '</b> ' + o.noun;
+    var html = this.btn('<i class="fa-light fa-chevron-left"></i>', o.page - 1, { disabled: o.page <= 1 || !o.total, aria: 'Página anterior' });
+    if (o.total) this.windowPages().forEach(function (p) {
+      html += p === '…' ? '<div class="ttsc-pagination-ellipsis flex items-center justify-center" aria-hidden="true">…</div>' : self.btn(p, p, { current: p === o.page });
+    });
+    html += this.btn('<i class="fa-light fa-chevron-right"></i>', o.page + 1, { disabled: o.page >= this.last() || !o.total, aria: 'Próxima página' });
+    this.pages.innerHTML = html;
+  };
+  TTSCPager.prototype.go = function (page, force) {
+    page = Math.min(Math.max(1, page), this.last());
+    if (page === this.o.page && !force) return;
+    this.o.page = page; this.render();
+    this.nav.dispatchEvent(new CustomEvent('ttsc.pagination.change', { bubbles: true, detail: { page: page, perPage: this.o.perPage, offset: (page - 1) * this.o.perPage } }));
+  };
+  document.querySelectorAll('[data-ttsc-pager]').forEach(function (nav) {
+    new TTSCPager(nav);
+    nav.addEventListener('ttsc.pagination.change', function (e) {
+      document.getElementById('pg-log').textContent = 'ttsc.pagination.change → page=' + e.detail.page + ', perPage=' + e.detail.perPage + ' → LIMIT ' + e.detail.perPage + ' OFFSET ' + e.detail.offset;
+    });
+  });
+</script>
+</body>
+</html>

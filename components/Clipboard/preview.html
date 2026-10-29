@@ -1,0 +1,80 @@
+<!-- @dsCard group="Formulários · Plugins" height=271 subtitle="ttscui data-ttsc-clipboard (target, text, copied-class) · clipboard.js 2.0.11 (data-clipboard-target) · feedback copiado/erro" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Clipboard</title>
+<script src="../../vendor/clipboard/clipboard.min.js"></script>
+<style>
+  .cb-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+  .cb-box { border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-sm); background: var(--ttsc-surface); padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+  .cb-code { display: inline-flex; align-items: center; gap: 8px; padding: 6px 6px 6px 10px; border: 1px dashed var(--ttsc-border-strong); border-radius: var(--ttsc-radius-xs);
+    background: var(--ttsc-canvas-2); color: var(--ttsc-text); font-family: var(--font-mono); font-size: 13px; }
+  .cb-line { display: flex; gap: 8px; align-items: center; }
+  .cb-line .ttsc-input { flex: 1; min-width: 0; }
+  .cb-feedback { font-size: 12px; color: var(--ttsc-text-muted); min-height: 16px; }
+  .cb-feedback.is-ok { color: var(--ttsc-accent-text); }
+  .cb-feedback.is-error { color: var(--ttsc-danger-text); }
+  [data-ttsc-clipboard] .cb-done, .js-clip .cb-done { display: none; }
+  .ttsc-clipboard-copied .cb-idle { display: none; }
+  .ttsc-clipboard-copied .cb-done { display: inline; color: var(--ttsc-accent-text); }
+  .ttsc-clipboard-copied { border-color: var(--ttsc-accent-border); }
+  .cb-label { color: var(--ttsc-text-2); font-weight: 500; }
+  .cb-tag { font-size: 11px; color: var(--ttsc-text-muted); }
+</style>
+</head>
+<body>
+<div class="ds-pad cb-cols">
+  <div class="cb-box">
+    <div class="ds-label">ttscui · recomendado</div>
+    <div class="cb-label">Código da matrícula</div>
+    <div class="ds-row">
+      <span class="cb-code" id="enroll-code">MAT-2026-0412
+        <button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon ttsc-btn-sm" aria-label="Copiar código da matrícula"
+                data-ttsc-clipboard="true" data-ttsc-clipboard-text="MAT-2026-0412" data-ttsc-clipboard-copied-class="ttsc-clipboard-copied">
+          <i class="fa-light fa-copy cb-idle"></i><i class="fa-light fa-check cb-done"></i></button></span>
+    </div>
+    <div class="cb-label">Link de convite do responsável</div>
+    <div class="cb-line">
+      <input class="ttsc-input" id="invite-link" readonly value="https://escola.totustuus.app/convite/RSP-8F2K7Q">
+      <button type="button" class="ttsc-btn ttsc-btn-outline" data-ttsc-clipboard="true" data-ttsc-clipboard-target="#invite-link"
+              data-ttsc-clipboard-copied-class="ttsc-clipboard-copied">
+        <span class="cb-idle"><i class="fa-light fa-copy"></i> Copiar</span><span class="cb-done"><i class="fa-light fa-check"></i> Copiado</span></button>
+    </div>
+    <div class="cb-feedback" id="fb-ttsc" role="status" aria-live="polite">Eventos: ttsc.clipboard.success / ttsc.clipboard.error</div>
+  </div>
+  <div class="cb-box">
+    <div class="ds-label">clipboard.js 2.0.11 · alternativa</div>
+    <div class="cb-label">Chave PIX da mensalidade</div>
+    <div class="cb-line">
+      <input class="ttsc-input" id="pix-key" readonly value="00020126580014BR.GOV.BCB.PIX0136a1b2c3d4-mensalidade-out-2026">
+      <button type="button" class="ttsc-btn ttsc-btn-outline js-clip" data-clipboard-target="#pix-key">
+        <span class="cb-idle"><i class="fa-light fa-copy"></i> Copiar</span><span class="cb-done"><i class="fa-light fa-check"></i> Copiado</span></button>
+    </div>
+    <div class="cb-label">Texto fixo</div>
+    <div class="ds-row">
+      <button type="button" class="ttsc-btn ttsc-btn-secondary ttsc-btn-sm js-clip" data-clipboard-text="Turma ENF-1A · Manhã · Sala 204">
+        <span class="cb-idle"><i class="fa-light fa-copy"></i> Copiar dados da turma</span><span class="cb-done"><i class="fa-light fa-check"></i> Copiado</span></button>
+      <span class="cb-tag">data-clipboard-text</span>
+    </div>
+    <div class="cb-feedback" id="fb-cjs" role="status" aria-live="polite">Eventos: success / error (e.clearSelection())</div>
+  </div>
+</div>
+<script>
+  TTSC.init();
+  function flash(btn, cls) { btn.classList.add(cls); setTimeout(function () { btn.classList.remove(cls); }, 1500); }
+  var fbT = document.getElementById('fb-ttsc');
+  document.querySelectorAll('[data-ttsc-clipboard]').forEach(function (btn) {
+    btn.addEventListener('ttsc.clipboard.success', function (e) {
+      fbT.className = 'cb-feedback is-ok'; fbT.textContent = 'Copiado: ' + e.detail.payload.text;
+      setTimeout(function () { btn.classList.remove('ttsc-clipboard-copied'); }, 1500);
+    });
+    btn.addEventListener('ttsc.clipboard.error', function () {
+      fbT.className = 'cb-feedback is-error'; fbT.textContent = 'Não foi possível copiar. Selecione o texto e use Ctrl+C.';
+    });
+  });
+  var fbC = document.getElementById('fb-cjs');
+  var cjs = new ClipboardJS('.js-clip');
+  cjs.on('success', function (e) { e.clearSelection(); flash(e.trigger, 'ttsc-clipboard-copied'); fbC.className = 'cb-feedback is-ok'; fbC.textContent = 'Copiado: ' + e.text.slice(0, 40); });
+  cjs.on('error', function () { fbC.className = 'cb-feedback is-error'; fbC.textContent = 'Use Ctrl+C para copiar.'; });
+</script>
+</body>
+</html>

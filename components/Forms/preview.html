@@ -1,0 +1,106 @@
+<!-- @dsCard group="Formulários" height=600 subtitle="ttsc-form-* · seções, grade 2 colunas, obrigatório, dica, erro aria-invalid (código duplicado), switch, rodapé de ações" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Forms</title>
+<style>
+  .ttsc-form { border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); background: var(--ttsc-surface); padding: 16px; }
+  .ttsc-form-message { color: var(--ttsc-danger-text); }
+  .ttsc-form-description { color: var(--ttsc-text-muted); }
+  .ttsc-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 16px; }
+  .ttsc-form-section { border: 0; margin: 0; padding: 0 0 16px; border-bottom: 1px solid var(--ttsc-border-soft); min-width: 0; }
+  .ttsc-form-section + .ttsc-form-section { padding-top: 14px; }
+  .ttsc-form-section > legend { font-size: 13px; font-weight: 600; color: var(--ttsc-text); padding: 0; margin-bottom: 10px; float: left; width: 100%; }
+  .ttsc-form-section > legend + * { clear: both; }
+  .ttsc-form-required { color: var(--ttsc-danger-text); margin-inline-start: 2px; }
+  .ttsc-form-note { font-size: 12px; color: var(--ttsc-text-muted); margin: 0 0 12px; }
+  .ttsc-input[readonly] { background: var(--ttsc-canvas-2); }
+  .ttsc-form-actions { padding-top: 14px; }
+  .ttsc-form > :where(:not(:last-child)) { margin-block-end: 0; }
+  .ttsc-select { height: 34px; padding: 0 10px; font-size: 13px; border-radius: calc(var(--radius) - 2px); }
+  .ttsc-textarea { padding: 8px 12px; font-size: 13px; border-radius: calc(var(--radius) - 2px); resize: vertical; }
+</style>
+</head>
+<body>
+<div class="ds-pad">
+<form class="ttsc-form" id="course-form" action="#" novalidate>
+  <p class="ttsc-form-note"><span class="ttsc-form-required" aria-hidden="true">*</span> campos obrigatórios</p>
+  <fieldset class="ttsc-form-section">
+    <legend>Identificação</legend>
+    <div class="ttsc-form-grid">
+      <div class="ttsc-form-item">
+        <label class="ttsc-form-label" for="course-code">Código <span class="ttsc-form-required" aria-hidden="true">*</span></label>
+        <input class="ttsc-input" id="course-code" name="code" required maxlength="50" value="ADM-01" aria-invalid="true" aria-describedby="course-code-hint course-code-error">
+        <div class="ttsc-form-description" id="course-code-hint">Único por unidade. Ex.: ADM-02.</div>
+        <div class="ttsc-form-message" id="course-code-error" role="alert">Já existe um curso com este código nesta unidade.</div>
+      </div>
+      <div class="ttsc-form-item">
+        <label class="ttsc-form-label" for="course-name">Nome <span class="ttsc-form-required" aria-hidden="true">*</span></label>
+        <input class="ttsc-input" id="course-name" name="name" required maxlength="255" value="Administração">
+        <div class="ttsc-form-message" role="alert">Informe o nome do curso.</div>
+      </div>
+      <div class="ttsc-form-item col-span-2">
+        <label class="ttsc-form-label" for="course-description">Descrição</label>
+        <textarea class="ttsc-textarea" id="course-description" name="description" rows="2" aria-describedby="course-description-hint">Bacharelado com ênfase em gestão de pequenas e médias empresas.</textarea>
+        <div class="ttsc-form-description" id="course-description-hint">Aparece no portal de inscrições.</div>
+      </div>
+    </div>
+  </fieldset>
+  <fieldset class="ttsc-form-section">
+    <legend>Oferta</legend>
+    <div class="ttsc-form-grid">
+      <div class="ttsc-form-item">
+        <label class="ttsc-form-label" for="course-modality">Modalidade</label>
+        <select class="ttsc-select" id="course-modality" name="modality"><option value="in_person">Presencial</option><option value="online">EAD</option><option value="hybrid">Híbrido</option></select>
+      </div>
+      <div class="ttsc-form-item">
+        <label class="ttsc-form-label" for="course-max">Vagas por turma</label>
+        <input class="ttsc-input" id="course-max" name="max_students" type="number" min="1" max="500" value="50" aria-describedby="course-max-error">
+        <div class="ttsc-form-message" id="course-max-error" role="alert">Entre 1 e 500.</div>
+      </div>
+      <div class="ttsc-form-item">
+        <label class="ttsc-form-label" for="course-unit">Unidade</label>
+        <input class="ttsc-input" id="course-unit" value="Campus Centro — Belo Horizonte" readonly>
+      </div>
+      <div class="ttsc-form-item">
+        <label class="ttsc-form-label" for="course-hours">Carga horária (h)</label>
+        <input class="ttsc-input" id="course-hours" type="number" value="3000" disabled>
+      </div>
+      <div class="ttsc-form-control-inline col-span-2">
+        <input class="ttsc-switch" type="checkbox" id="course-active" name="is_active" value="1" checked>
+        <label class="ttsc-form-label" for="course-active" style="width:auto">Curso ativo para novas matrículas</label>
+      </div>
+    </div>
+  </fieldset>
+  <div class="ttsc-form-actions">
+    <span class="ds-note" id="fm-log" aria-live="polite" style="margin-right:auto">Troque o código para ADM-02 e saia do campo.</span>
+    <button type="button" class="ttsc-btn ttsc-btn-ghost">Cancelar</button>
+    <button type="submit" class="ttsc-btn ttsc-btn-primary"><i class="fa-light fa-floppy-disk"></i> Salvar curso</button>
+  </div>
+</form>
+</div>
+<script>
+  TTSC.init();
+  var form = document.getElementById('course-form'), log = document.getElementById('fm-log');
+  var taken = ['ADM-01', 'PED-02', 'DIR-03'];
+  function setInvalid(f, m) { f.setAttribute('aria-invalid', m ? 'true' : 'false'); var msg = f.closest('.ttsc-form-item') && f.closest('.ttsc-form-item').querySelector('.ttsc-form-message'); if (msg && m) msg.textContent = m; }
+  function messageFor(f) {
+    var v = f.validity; if (v.valueMissing) return 'Campo obrigatório.';
+    if (v.rangeUnderflow || v.rangeOverflow) return 'Entre ' + f.min + ' e ' + f.max + '.';
+    if (v.badInput || v.typeMismatch || v.patternMismatch) return 'Formato inválido.';
+    if (f.name === 'code' && taken.indexOf(f.value.trim().toUpperCase()) > -1) return 'Já existe um curso com este código nesta unidade.';
+    return '';
+  }
+  var fields = form.querySelectorAll('input:not([type=checkbox]):not([readonly]):not(:disabled), select, textarea');
+  fields.forEach(function (f) {
+    f.addEventListener('blur', function () { setInvalid(f, messageFor(f)); });
+    f.addEventListener('input', function () { if (f.getAttribute('aria-invalid') === 'true' && !messageFor(f)) setInvalid(f, ''); });
+  });
+  form.addEventListener('submit', function (e) {
+    e.preventDefault(); var first = null;
+    fields.forEach(function (f) { var m = messageFor(f); setInvalid(f, m); if (m && !first) first = f; });
+    if (first) { first.focus(); log.textContent = 'Envio bloqueado: corrija os campos destacados.'; return; }
+    log.textContent = 'POST /academic/courses → 201 (simulação).';
+  });
+</script>
+</body>
+</html>

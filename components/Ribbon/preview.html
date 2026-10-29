@@ -1,0 +1,60 @@
+<!-- @dsCard group="Base" height=182 subtitle="ttsc-ribbon · etiqueta de canto (tag) e faixa diagonal (corner) · accent, danger, warning, info, mono" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Ribbon</title>
+<style>
+  .ttsc-ribbon-host { position: relative; overflow: hidden; }
+  .ttsc-ribbon { --ttsc-ribbon-bg: var(--ttsc-accent); --ttsc-ribbon-fg: var(--ttsc-accent-on);
+    position: absolute; top: 12px; right: 0; z-index: 1; display: inline-flex; align-items: center; gap: 6px;
+    padding: 3px 10px 3px 12px; font-size: 11px; line-height: 16px; font-weight: 600; letter-spacing: .02em;
+    background: var(--ttsc-ribbon-bg); color: var(--ttsc-ribbon-fg); border-radius: var(--ttsc-radius-xs) 0 0 var(--ttsc-radius-xs); box-shadow: var(--ttsc-shadow-sm); }
+  .ttsc-ribbon-start { right: auto; left: 0; border-radius: 0 var(--ttsc-radius-xs) var(--ttsc-radius-xs) 0; padding: 3px 12px 3px 10px; }
+  .ttsc-ribbon-corner { top: 18px; right: -34px; width: 132px; justify-content: center; padding: 4px 0; border-radius: 0; transform: rotate(45deg); }
+  .ttsc-ribbon-danger  { --ttsc-ribbon-bg: var(--ttsc-danger);  --ttsc-ribbon-fg: #fff; }
+  .ttsc-ribbon-warning { --ttsc-ribbon-bg: var(--ttsc-warning); --ttsc-ribbon-fg: var(--ttsc-accent-on); }
+  .ttsc-ribbon-info    { --ttsc-ribbon-bg: var(--ttsc-info);    --ttsc-ribbon-fg: var(--ttsc-accent-on); }
+  .ttsc-ribbon-mono    { --ttsc-ribbon-bg: var(--ttsc-text);    --ttsc-ribbon-fg: var(--ttsc-surface); }
+  .rb-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .rb-card { border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-control); background: var(--ttsc-surface); padding: 16px; min-height: 150px; display: flex; flex-direction: column; gap: 6px; }
+  .rb-ico { width: 36px; height: 36px; border-radius: var(--ttsc-radius-sm); display: inline-flex; align-items: center; justify-content: center; background: var(--ttsc-canvas-2); color: var(--ttsc-text); font-size: 16px; margin-bottom: 6px; }
+  .rb-t { font-weight: 600; color: var(--ttsc-text); }
+  .rb-m { font-size: 12px; color: var(--ttsc-text-muted); }
+  .rb-v { margin-top: auto; font-size: 12px; color: var(--ttsc-text-2); }
+  .rb-card.is-full { background: var(--ttsc-canvas-2); }
+</style>
+</head>
+<body>
+<div class="ds-pad">
+  <div class="rb-grid">
+    <article class="rb-card ttsc-ribbon-host">
+      <span class="ttsc-ribbon">Novo</span>
+      <span class="rb-ico"><i class="fa-light fa-laptop-code"></i></span>
+      <div class="rb-t">Análise de Sistemas</div>
+      <div class="rb-m">Tecnólogo · Noite · EAD</div>
+      <div class="rb-v">32 de 40 vagas livres</div>
+    </article>
+    <article class="rb-card ttsc-ribbon-host is-full" aria-label="Enfermagem, vagas esgotadas">
+      <span class="ttsc-ribbon ttsc-ribbon-danger"><i class="fa-light fa-ban"></i> Vagas esgotadas</span>
+      <span class="rb-ico"><i class="fa-light fa-user-nurse"></i></span>
+      <div class="rb-t">Enfermagem</div>
+      <div class="rb-m">Técnico · Manhã · Presencial</div>
+      <div class="rb-v">40 de 40 vagas ocupadas</div>
+    </article>
+    <article class="rb-card ttsc-ribbon-host">
+      <span class="ttsc-ribbon ttsc-ribbon-warning">Últimas vagas</span>
+      <span class="rb-ico"><i class="fa-light fa-briefcase"></i></span>
+      <div class="rb-t">Administração</div>
+      <div class="rb-m">Bacharelado · Noite</div>
+      <div class="rb-v">3 de 50 vagas livres</div>
+    </article>
+    <article class="rb-card ttsc-ribbon-host">
+      <span class="ttsc-ribbon ttsc-ribbon-corner ttsc-ribbon-info">Bolsa 50%</span>
+      <span class="rb-ico"><i class="fa-light fa-chalkboard-user"></i></span>
+      <div class="rb-t">Pedagogia</div>
+      <div class="rb-m">Licenciatura · Tarde</div>
+      <div class="rb-v">faixa diagonal (corner)</div>
+    </article>
+  </div>
+</div>
+</body>
+</html>

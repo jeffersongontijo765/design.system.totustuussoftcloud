@@ -1,0 +1,49 @@
+/* ===== Correcoes do runtime ttscui (encontradas na documentacao; cada pagina explica a sua) ===== */
+/* Alert: solidos com contraste >= 4,5:1; light/outline com tokens *-text (runtime: branco sobre verde/amarelo, info violeta) */
+.ttsc-alert-success:not(.ttsc-alert-light):not(.ttsc-alert-outline){background:var(--ttsc-primary-800);color:#fff}
+.ttsc-alert-warning:not(.ttsc-alert-light):not(.ttsc-alert-outline){background:var(--ttsc-warning);color:var(--ttsc-accent-on)}
+.ttsc-alert-info:not(.ttsc-alert-light):not(.ttsc-alert-outline){background:var(--ttsc-info);color:var(--ttsc-accent-on)}
+.ttsc-alert-light.ttsc-alert-success{background:var(--ttsc-accent-soft);border-color:var(--ttsc-accent-border)}
+.ttsc-alert-light.ttsc-alert-info{background:color-mix(in oklab,var(--ttsc-info) 10%,var(--ttsc-surface));border-color:color-mix(in oklab,var(--ttsc-info) 35%,transparent);color:var(--ttsc-text)}
+.ttsc-alert-light.ttsc-alert-primary .ttsc-alert-icon,.ttsc-alert-light.ttsc-alert-success .ttsc-alert-icon{color:var(--ttsc-accent-text)}
+.ttsc-alert-light.ttsc-alert-warning .ttsc-alert-icon{color:var(--ttsc-warning-text)}
+.ttsc-alert-light.ttsc-alert-info .ttsc-alert-icon{color:var(--ttsc-info-text)}
+.ttsc-alert-light.ttsc-alert-destructive .ttsc-alert-icon{color:var(--ttsc-danger-text)}
+.ttsc-alert-outline.ttsc-alert-primary,.ttsc-alert-outline.ttsc-alert-success{color:var(--ttsc-accent-text)}
+.ttsc-alert-outline.ttsc-alert-warning{color:var(--ttsc-warning-text)}
+.ttsc-alert-outline.ttsc-alert-info{color:var(--ttsc-info-text)}
+.ttsc-alert-outline.ttsc-alert-destructive{color:var(--ttsc-danger-text)}
+/* Badge: solidos success/warning/info com texto escuro; light/outline/ghost com tokens *-text */
+.ttsc-badge-success:not(.ttsc-badge-light):not(.ttsc-badge-outline):not(.ttsc-badge-ghost){background:var(--ttsc-success);color:var(--ttsc-accent-on)}
+.ttsc-badge-warning:not(.ttsc-badge-light):not(.ttsc-badge-outline):not(.ttsc-badge-ghost){background:var(--ttsc-warning);color:var(--ttsc-accent-on)}
+.ttsc-badge-info:not(.ttsc-badge-light):not(.ttsc-badge-outline):not(.ttsc-badge-ghost){background:var(--ttsc-info);color:var(--ttsc-accent-on)}
+.ttsc-badge.ttsc-badge-light.ttsc-badge-primary,.ttsc-badge.ttsc-badge-light.ttsc-badge-success{background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text)}
+.ttsc-badge.ttsc-badge-light.ttsc-badge-warning{background:color-mix(in oklab,var(--ttsc-warning) 10%,var(--ttsc-surface));color:var(--ttsc-warning-text)}
+.ttsc-badge.ttsc-badge-light.ttsc-badge-info{background:color-mix(in oklab,var(--ttsc-info) 10%,var(--ttsc-surface));color:var(--ttsc-info-text)}
+.ttsc-badge.ttsc-badge-light.ttsc-badge-destructive{background:color-mix(in oklab,var(--ttsc-danger) 10%,var(--ttsc-surface));color:var(--ttsc-danger-text)}
+.ttsc-badge.ttsc-badge-outline.ttsc-badge-primary,.ttsc-badge.ttsc-badge-outline.ttsc-badge-success,.ttsc-badge.ttsc-badge-ghost.ttsc-badge-primary,.ttsc-badge.ttsc-badge-ghost.ttsc-badge-success{color:var(--ttsc-accent-text)}
+.ttsc-badge.ttsc-badge-outline.ttsc-badge-warning,.ttsc-badge.ttsc-badge-ghost.ttsc-badge-warning{color:var(--ttsc-warning-text)}
+.ttsc-badge.ttsc-badge-outline.ttsc-badge-info,.ttsc-badge.ttsc-badge-ghost.ttsc-badge-info{color:var(--ttsc-info-text)}
+.ttsc-badge.ttsc-badge-outline.ttsc-badge-destructive,.ttsc-badge.ttsc-badge-ghost.ttsc-badge-destructive{color:var(--ttsc-danger-text)}
+/* Radio: grupo sem selecao casa :indeterminate e o runtime pinta de verde */
+.ttsc-radio:indeterminate:not(:checked){background-color:var(--ttsc-surface);border-color:var(--ttsc-border-strong)}
+/* Checkbox: check escuro sobre o verde (#0f0f0f = ttsc-accent-on; data-URI nao le variaveis) */
+.ttsc-checkbox:checked:not(.ttsc-checkbox-mono){background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='none' stroke='%230f0f0f' stroke-linecap='round' stroke-linejoin='round' stroke-width='2.2' d='M5 10.5l3.2 3.2L15 7'/%3E%3C/svg%3E")}
+.ttsc-checkbox:indeterminate:not(.ttsc-checkbox-mono){background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='none' stroke='%230f0f0f' stroke-linecap='round' stroke-width='2.2' d='M6 10h8'/%3E%3C/svg%3E")}
+/* Tabs/scrollspy: texto ativo verde de TEXTO (o runtime usa --primary, 2:1) */
+.ttsc-tabs .ttsc-tab-toggle.active,[data-ttsc-scrollspy-anchor].active{color:var(--ttsc-accent-text)}
+/* Accordion: o runtime usa [data-accordion-item] sem prefixo para trocar o indicador +/- */
+[data-ttsc-accordion-item] .ttsc-accordion-indicator-off{display:none}
+[data-ttsc-accordion-item].active>[data-ttsc-accordion-toggle] .ttsc-accordion-indicator-on{display:none}
+[data-ttsc-accordion-item].active>[data-ttsc-accordion-toggle] .ttsc-accordion-indicator-off{display:inline-block}
+/* Rating: o JS escreve utilitarios Tailwind ausentes do runtime */
+[data-ttsc-rating] .ttsc-rating{flex-direction:row-reverse;justify-content:flex-end}
+[data-ttsc-rating] .text-yellow-400{color:var(--ttsc-warning)}
+[data-ttsc-rating] [class*="text-muted-foreground"]{color:var(--ttsc-border-prominent)}
+/* Progress: cores de estado com tokens (info era violeta) */
+.ttsc-progress-success .ttsc-progress-indicator{background-color:var(--ttsc-success)}
+.ttsc-progress-warning .ttsc-progress-indicator{background-color:var(--ttsc-warning)}
+.ttsc-progress-info .ttsc-progress-indicator{background-color:var(--ttsc-info)}
+/* Toast/ToggleGroup */
+.ttsc-toast-container{z-index:var(--ttsc-z-toast)}
+.ttsc-toggle-group .ttsc-btn:has(input:focus-visible){outline:2px solid var(--ttsc-accent);outline-offset:-2px;z-index:1}

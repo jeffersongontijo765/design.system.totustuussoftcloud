@@ -1,0 +1,63 @@
+<!-- @dsCard group="Componentes" height=420 subtitle="ProductTour · product tour com estados, ações e acessibilidade (padrões de referência adaptados) " -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>ProductTour</title>
+<style>
+  html,body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font-family:Inter,system-ui,sans-serif;font-size:13px;-webkit-font-smoothing:antialiased}
+  .demo{padding:16px;display:grid;gap:14px;max-width:1100px}
+  .card{background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-surface);padding:16px}
+  .card-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+  .card-t{margin:0;font-size:14px;font-weight:600;color:var(--ttsc-text)}
+  .card-s{margin:2px 0 0;font-size:11px;color:var(--ttsc-text-muted)}
+  .pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:var(--ttsc-radius-pill);border:1px solid var(--ttsc-border);color:var(--ttsc-text-2);white-space:nowrap;background:var(--ttsc-surface)}
+  .pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+  .pill-ok{color:var(--ttsc-success);border-color:color-mix(in srgb,var(--ttsc-success) 40%,transparent)}
+  .pill-warn{color:var(--ttsc-warning-text);border-color:color-mix(in srgb,var(--ttsc-warning) 45%,transparent)}
+  .pill-bad{color:var(--ttsc-danger-text);border-color:color-mix(in srgb,var(--ttsc-danger) 40%,transparent)}
+  .pill-info{color:var(--ttsc-info-text);border-color:color-mix(in srgb,var(--ttsc-info) 40%,transparent)}
+  .av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text);flex-shrink:0}
+  .ib{width:30px;height:30px;border-radius:8px;border:1px solid var(--ttsc-border);background:var(--ttsc-surface);display:grid;place-items:center;color:var(--ttsc-text-2);cursor:pointer}
+  .ib:hover{background:var(--ttsc-canvas-2)}
+  .ib-ok:hover{color:var(--ttsc-success)} .ib-no:hover{color:var(--ttsc-danger-text)}
+  .muted{color:var(--ttsc-text-muted)} .tnum{font-variant-numeric:tabular-nums}
+  :focus-visible{outline:2px solid var(--ttsc-accent);outline-offset:2px}
+
+  .tour-stage{position:relative;min-height:230px;border-radius:var(--ttsc-radius-surface);border:1px dashed var(--ttsc-border-strong);background:var(--ttsc-canvas-2);display:grid;place-items:center;padding:20px}
+  .tour-target{position:absolute;left:18%;top:20%;width:44%;height:34%;border-radius:var(--ttsc-radius-control);box-shadow:0 0 0 3px var(--ttsc-accent),0 0 0 9999px color-mix(in srgb,var(--ttsc-canvas) 55%,transparent);background:var(--ttsc-surface)}
+  .tour-target span{position:absolute;inset:10px;border-radius:6px;background:repeating-linear-gradient(90deg,var(--ttsc-surface-2) 0 10px,transparent 10px 16px)}
+  .tour{position:relative;width:min(340px,80%);margin-left:52%;margin-top:-6px;display:grid;gap:10px;padding:16px;border-radius:var(--ttsc-radius-surface);border:1px solid var(--ttsc-border);background:var(--ttsc-surface);box-shadow:var(--ttsc-shadow-popover)}
+  .tour-step{font-size:11px;font-weight:600;color:var(--ttsc-accent-text)}
+  .tour h3{margin:0;font-size:14px;color:var(--ttsc-text)}
+  .tour p{margin:0;font-size:12px;color:var(--ttsc-text-2);line-height:1.5}
+  .tour-dots{display:flex;gap:6px}
+  .tour-dots i{width:6px;height:6px;border-radius:50%;background:var(--ttsc-border-strong)}
+  .tour-dots i.on{background:var(--ttsc-accent);width:16px;border-radius:4px}
+  .tour-acts{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .tour-btn{font:inherit;font-size:12px;font-weight:600;padding:7px 12px;border-radius:var(--ttsc-radius-control);border:1px solid var(--ttsc-border);background:var(--ttsc-surface);color:var(--ttsc-text);cursor:pointer}
+  .tour-btn.primary{background:var(--ttsc-accent);color:var(--ttsc-accent-on);border-color:var(--ttsc-accent)}
+  .tour-skip{font:inherit;font-size:12px;background:none;border:0;color:var(--ttsc-text-muted);cursor:pointer;padding:0}
+</style>
+</head>
+<body>
+<main class="demo">
+
+  <section class="card" aria-labelledby="tr-t">
+    <div class="card-h"><div><h2 id="tr-t" class="card-t">Tour da secretaria</h2><p class="card-s">Passo a passo sobre a tela, para quem está começando</p></div></div>
+    <div class="tour-stage" aria-hidden="true">
+      <div class="tour-target"><span></span></div>
+    </div>
+    <div class="tour" role="dialog" aria-modal="false" aria-labelledby="tr-h" aria-describedby="tr-p" style="margin-top:-150px">
+      <span class="tour-step">Passo 2 de 4</span>
+      <h3 id="tr-h">Filtre a fila por unidade</h3>
+      <p id="tr-p">Use o seletor de unidade para ver só os atendimentos da sua escola. A lista atualiza sem recarregar a página.</p>
+      <div class="tour-dots" aria-hidden="true"><i></i><i class="on"></i><i></i><i></i></div>
+      <div class="tour-acts">
+        <button class="tour-skip" type="button">Pular tour</button>
+        <div style="display:flex;gap:6px"><button class="tour-btn" type="button">Voltar</button><button class="tour-btn primary" type="button">Próximo</button></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+</body>
+</html>

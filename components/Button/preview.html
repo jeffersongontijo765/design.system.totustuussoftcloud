@@ -1,0 +1,39 @@
+<!-- @dsCard group="Componentes" height=260 subtitle="ttsc-btn · primary, secondary, outline, ghost, destructive, mono, tamanhos, ícone, carregando" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Button</title></head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="ds-label">Variantes</div>
+  <div class="ds-row">
+    <button class="ttsc-btn ttsc-btn-primary"><i class="fa-light fa-plus"></i> Nova matrícula</button>
+    <button class="ttsc-btn ttsc-btn-secondary">Secundário</button>
+    <button class="ttsc-btn ttsc-btn-outline"><i class="fa-light fa-arrow-down-to-line"></i> Exportar</button>
+    <button class="ttsc-btn ttsc-btn-ghost">Cancelar</button>
+    <button class="ttsc-btn ttsc-btn-destructive"><i class="fa-light fa-trash"></i> Excluir</button>
+    <button class="ttsc-btn ttsc-btn-mono">Mono</button>
+  </div>
+  <div class="ds-label">Tamanhos e ícone</div>
+  <div class="ds-row">
+    <button class="ttsc-btn ttsc-btn-primary ttsc-btn-sm">Pequeno</button>
+    <button class="ttsc-btn ttsc-btn-primary">Padrão</button>
+    <button class="ttsc-btn ttsc-btn-primary ttsc-btn-lg">Grande</button>
+    <button class="ttsc-btn ttsc-btn-outline ttsc-btn-icon" aria-label="Filtrar"><i class="fa-light fa-filter"></i></button>
+    <button class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon" aria-label="Mais ações"><i class="fa-light fa-ellipsis-vertical"></i></button>
+  </div>
+  <div class="ds-label">Estados</div>
+  <div class="ds-row">
+    <button class="ttsc-btn ttsc-btn-primary" disabled>Desabilitado</button>
+    <button class="ttsc-btn ttsc-btn-primary" id="btn-save" data-loading-text="Salvando…"><i class="fa-light fa-floppy-disk"></i> <span>Salvar</span></button>
+  </div>
+</div>
+<script>
+  TTSC.init();
+  document.getElementById('btn-save').addEventListener('click', function () {
+    var b = this, label = b.querySelector('span'), old = label.textContent;
+    b.disabled = true; b.setAttribute('aria-busy', 'true'); label.textContent = b.dataset.loadingText;
+    setTimeout(function () { b.disabled = false; b.removeAttribute('aria-busy'); label.textContent = old; }, 1200);
+  });
+</script>
+</body>
+</html>

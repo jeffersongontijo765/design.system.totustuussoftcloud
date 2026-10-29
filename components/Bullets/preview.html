@@ -1,0 +1,86 @@
+<!-- @dsCard group="Base" height=312 subtitle="ttsc-bullet · ponto, linha, barra vertical · cores de status · tamanhos" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Bullets</title>
+<style>
+  .ttsc-bullet { display: inline-block; flex-shrink: 0; width: 6px; height: 6px; border-radius: var(--ttsc-radius-pill); background: var(--ttsc-meta); }
+  .ttsc-bullet-sm { width: 4px; height: 4px; }
+  .ttsc-bullet-lg { width: 8px; height: 8px; }
+  .ttsc-bullet-line { width: 12px; height: 2px; }
+  .ttsc-bullet-vertical { width: 4px; height: auto; min-height: 28px; align-self: stretch; }
+  .ttsc-bullet-ring { background: transparent; box-shadow: inset 0 0 0 1.5px var(--ttsc-bullet-color, var(--ttsc-meta)); }
+  .ttsc-bullet-accent  { background: var(--ttsc-accent);  --ttsc-bullet-color: var(--ttsc-accent); }
+  .ttsc-bullet-success { background: var(--ttsc-success); --ttsc-bullet-color: var(--ttsc-success); }
+  .ttsc-bullet-warning { background: var(--ttsc-warning); --ttsc-bullet-color: var(--ttsc-warning); }
+  .ttsc-bullet-danger  { background: var(--ttsc-danger);  --ttsc-bullet-color: var(--ttsc-danger); }
+  .ttsc-bullet-info    { background: var(--ttsc-info);    --ttsc-bullet-color: var(--ttsc-info); }
+  .ttsc-bullet-ring.ttsc-bullet-accent, .ttsc-bullet-ring.ttsc-bullet-success, .ttsc-bullet-ring.ttsc-bullet-warning,
+  .ttsc-bullet-ring.ttsc-bullet-danger, .ttsc-bullet-ring.ttsc-bullet-info { background: transparent; }
+  .ttsc-bullet-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  .ttsc-bullet-list > li { display: flex; align-items: center; gap: 10px; color: var(--ttsc-text-2); }
+  .ttsc-bullet-list.is-timeline > li { align-items: stretch; gap: 12px; }
+  .bl-cols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .bl-box { border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-sm); background: var(--ttsc-surface); padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .bl-title { font-weight: 600; color: var(--ttsc-text); }
+  .bl-meta { font-size: 12px; color: var(--ttsc-text-muted); }
+  .bl-name { color: var(--ttsc-text); font-weight: 500; }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="bl-cols">
+    <div class="bl-box">
+      <div class="ds-label">Ponto · lista</div>
+      <div class="bl-title">Documentos para matrícula</div>
+      <ul class="ttsc-bullet-list">
+        <li><span class="ttsc-bullet" aria-hidden="true"></span>RG e CPF do aluno</li>
+        <li><span class="ttsc-bullet" aria-hidden="true"></span>Histórico escolar</li>
+        <li><span class="ttsc-bullet" aria-hidden="true"></span>Comprovante de residência</li>
+        <li><span class="ttsc-bullet" aria-hidden="true"></span>Foto 3x4</li>
+      </ul>
+    </div>
+    <div class="bl-box">
+      <div class="ds-label">Ponto · status</div>
+      <div class="bl-title">Situação das matrículas</div>
+      <ul class="ttsc-bullet-list">
+        <li><span class="ttsc-bullet ttsc-bullet-lg ttsc-bullet-success" aria-hidden="true"></span>Ativa <span class="bl-meta">· 412</span></li>
+        <li><span class="ttsc-bullet ttsc-bullet-lg ttsc-bullet-warning" aria-hidden="true"></span>Pendente <span class="bl-meta">· 37</span></li>
+        <li><span class="ttsc-bullet ttsc-bullet-lg ttsc-bullet-info" aria-hidden="true"></span>Trancada <span class="bl-meta">· 15</span></li>
+        <li><span class="ttsc-bullet ttsc-bullet-lg ttsc-bullet-danger" aria-hidden="true"></span>Cancelada <span class="bl-meta">· 9</span></li>
+        <li><span class="ttsc-bullet ttsc-bullet-lg ttsc-bullet-ring" aria-hidden="true"></span>Rascunho <span class="bl-meta">· 3</span></li>
+      </ul>
+    </div>
+    <div class="bl-box">
+      <div class="ds-label">Linha · submenu</div>
+      <div class="bl-title">Secretaria</div>
+      <ul class="ttsc-bullet-list">
+        <li><span class="ttsc-bullet ttsc-bullet-line ttsc-bullet-accent" aria-hidden="true"></span><span class="bl-name">Matrículas</span></li>
+        <li><span class="ttsc-bullet ttsc-bullet-line" aria-hidden="true"></span>Rematrícula</li>
+        <li><span class="ttsc-bullet ttsc-bullet-line" aria-hidden="true"></span>Transferências</li>
+        <li><span class="ttsc-bullet ttsc-bullet-line" aria-hidden="true"></span>Declarações</li>
+      </ul>
+    </div>
+    <div class="bl-box">
+      <div class="ds-label">Barra vertical · agenda</div>
+      <div class="bl-title">Hoje, 21/10</div>
+      <ul class="ttsc-bullet-list is-timeline">
+        <li><span class="ttsc-bullet ttsc-bullet-vertical ttsc-bullet-accent" aria-hidden="true"></span>
+          <div><div class="bl-name">Aula inaugural — Enfermagem</div><div class="bl-meta">08:00–09:40 · Auditório</div></div></li>
+        <li><span class="ttsc-bullet ttsc-bullet-vertical ttsc-bullet-warning" aria-hidden="true"></span>
+          <div><div class="bl-name">Prova de recuperação</div><div class="bl-meta">10:00–12:00 · Sala 204</div></div></li>
+        <li><span class="ttsc-bullet ttsc-bullet-vertical ttsc-bullet-info" aria-hidden="true"></span>
+          <div><div class="bl-name">Conselho de classe 3A</div><div class="bl-meta">14:00–15:30 · Sala dos professores</div></div></li>
+      </ul>
+    </div>
+  </div>
+  <div class="ds-row">
+    <span class="ds-label">Tamanhos</span>
+    <span class="ttsc-bullet ttsc-bullet-sm ttsc-bullet-accent"></span>
+    <span class="ttsc-bullet ttsc-bullet-accent"></span>
+    <span class="ttsc-bullet ttsc-bullet-lg ttsc-bullet-accent"></span>
+    <span class="ttsc-bullet ttsc-bullet-line ttsc-bullet-accent"></span>
+    <span class="ds-note">sm 4px · padrão 6px · lg 8px · linha 12×2px · vertical 4px × altura do item</span>
+  </div>
+</div>
+</body>
+</html>

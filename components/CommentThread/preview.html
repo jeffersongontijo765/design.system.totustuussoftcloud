@@ -1,0 +1,76 @@
+<!-- @dsCard group="Componentes" height=420 subtitle="CommentThread · comment thread com estados, ações e acessibilidade (padrões de referência adaptados) " -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>CommentThread</title>
+<style>
+  html,body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font-family:Inter,system-ui,sans-serif;font-size:13px;-webkit-font-smoothing:antialiased}
+  .demo{padding:16px;display:grid;gap:14px;max-width:1100px}
+  .card{background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-surface);padding:16px}
+  .card-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+  .card-t{margin:0;font-size:14px;font-weight:600;color:var(--ttsc-text)}
+  .card-s{margin:2px 0 0;font-size:11px;color:var(--ttsc-text-muted)}
+  .pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:var(--ttsc-radius-pill);border:1px solid var(--ttsc-border);color:var(--ttsc-text-2);white-space:nowrap;background:var(--ttsc-surface)}
+  .pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+  .pill-ok{color:var(--ttsc-success);border-color:color-mix(in srgb,var(--ttsc-success) 40%,transparent)}
+  .pill-warn{color:var(--ttsc-warning-text);border-color:color-mix(in srgb,var(--ttsc-warning) 45%,transparent)}
+  .pill-bad{color:var(--ttsc-danger-text);border-color:color-mix(in srgb,var(--ttsc-danger) 40%,transparent)}
+  .pill-info{color:var(--ttsc-info-text);border-color:color-mix(in srgb,var(--ttsc-info) 40%,transparent)}
+  .av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text);flex-shrink:0}
+  .ib{width:30px;height:30px;border-radius:8px;border:1px solid var(--ttsc-border);background:var(--ttsc-surface);display:grid;place-items:center;color:var(--ttsc-text-2);cursor:pointer}
+  .ib:hover{background:var(--ttsc-canvas-2)}
+  .ib-ok:hover{color:var(--ttsc-success)} .ib-no:hover{color:var(--ttsc-danger-text)}
+  .muted{color:var(--ttsc-text-muted)} .tnum{font-variant-numeric:tabular-nums}
+  :focus-visible{outline:2px solid var(--ttsc-accent);outline-offset:2px}
+
+  .ct{display:grid;gap:12px}
+  .ct-item{display:grid;grid-template-columns:32px minmax(0,1fr);gap:10px}
+  .ct-body{display:grid;gap:4px;padding:10px 12px;border-radius:var(--ttsc-radius-control);background:var(--ttsc-canvas-2);border:1px solid var(--ttsc-border-soft)}
+  .ct-item.internal .ct-body{background:color-mix(in srgb,var(--ttsc-warning) 10%,var(--ttsc-surface));border-color:color-mix(in srgb,var(--ttsc-warning) 35%,transparent)}
+  .ct-head{display:flex;gap:8px;align-items:center;font-size:12px;flex-wrap:wrap}
+  .ct-name{font-weight:600;color:var(--ttsc-text)}
+  .ct-time{color:var(--ttsc-text-muted)}
+  .ct-text{margin:0;font-size:13px;line-height:1.5;color:var(--ttsc-text-2)}
+  .ct-acts{display:flex;gap:10px;font-size:11px}
+  .ct-acts button{font:inherit;background:none;border:0;color:var(--ttsc-text-muted);cursor:pointer;padding:0}
+  .ct-acts button:hover{color:var(--ttsc-text)}
+  .ct-reply{margin-left:42px}
+  .ct-form{display:grid;gap:8px}
+  .ct-form textarea{font:inherit;font-size:13px;padding:10px;border-radius:var(--ttsc-radius-control);border:1px solid var(--ttsc-border);background:var(--ttsc-surface);color:var(--ttsc-text);min-height:64px;resize:vertical}
+</style>
+</head>
+<body>
+<main class="demo">
+
+  <section class="card" aria-labelledby="ct-t">
+    <div class="card-h"><div><h2 id="ct-t" class="card-t">Ocorrência 0412 · Comentários</h2><p class="card-s">Mensagens para a família e notas internas da equipe</p></div></div>
+    <div class="ct">
+      <article class="ct-item">
+        <span class="av" aria-hidden="true">MO</span>
+        <div class="ct-body">
+          <div class="ct-head"><span class="ct-name">Marina Oliveira</span><span class="pill pill-info">Família</span><span class="ct-time"><time datetime="2026-11-19T09:14">19/11 · 09:14</time></span></div>
+          <p class="ct-text">Gostaria de saber se a falta de terça foi registrada como justificada.</p>
+          <div class="ct-acts"><button type="button">Responder</button></div>
+        </div>
+      </article>
+      <article class="ct-item ct-reply">
+        <span class="av" aria-hidden="true">JS</span>
+        <div class="ct-body">
+          <div class="ct-head"><span class="ct-name">Joana Silva</span><span class="pill pill-ok">Secretaria</span><span class="ct-time"><time datetime="2026-11-19T10:02">19/11 · 10:02</time></span></div>
+          <p class="ct-text">Registrada como justificada, com o atestado anexado. Qualquer dúvida, é só responder aqui.</p>
+          <div class="ct-acts"><button type="button">Responder</button></div>
+        </div>
+      </article>
+      <article class="ct-item internal">
+        <span class="av" aria-hidden="true">RL</span>
+        <div class="ct-body">
+          <div class="ct-head"><span class="ct-name">Rui Lima</span><span class="pill pill-warn">Nota interna</span><span class="ct-time"><time datetime="2026-11-19T11:30">19/11 · 11:30</time></span></div>
+          <p class="ct-text">Confirmar com a coordenação se o atestado cobre a prova de sexta. Não compartilhar com a família.</p>
+          <div class="ct-acts"><button type="button">Responder</button></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+</main>
+</body>
+</html>

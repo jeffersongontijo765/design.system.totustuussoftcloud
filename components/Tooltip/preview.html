@@ -1,0 +1,51 @@
+<!-- @dsCard group="Componentes" height=160 subtitle="data-ttsc-tooltip · hover, click, focus, placement top/right/bottom, ttsc-tooltip-light, permanente aberto" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Tooltip</title>
+<style>
+  .ttsc-tooltip { max-width: 240px; font-size: 12px; line-height: 16px; }
+  .pv-cols { display: grid; grid-template-columns: 1fr 1fr; gap: var(--ttsc-space-6); align-items: start; }
+  .pv-kpi { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--ttsc-text); padding: var(--ttsc-space-2) var(--ttsc-space-3); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-control); background: var(--ttsc-surface); }
+  .pv-kpi i { color: var(--ttsc-text-muted); }
+  .pv-stage { padding-top: 56px; }
+</style>
+</head>
+<body>
+<div class="ds-pad pv-cols">
+  <div class="ds-stack">
+    <div class="ds-label">Gatilhos e posições</div>
+    <div class="ds-row">
+      <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-icon" aria-label="Exportar" aria-describedby="tt-export"
+              data-ttsc-tooltip="#tt-export" data-ttsc-tooltip-placement="top"><i class="fa-light fa-arrow-down-to-line"></i></button>
+      <div id="tt-export" class="ttsc-tooltip" role="tooltip">Exportar lista (CSV/Excel)</div>
+
+      <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-icon" aria-label="Filtrar" aria-describedby="tt-filter"
+              data-ttsc-tooltip="#tt-filter" data-ttsc-tooltip-placement="bottom" data-ttsc-tooltip-trigger="focus"><i class="fa-light fa-filter"></i></button>
+      <div id="tt-filter" class="ttsc-tooltip" role="tooltip">Filtrar (foco pelo teclado)</div>
+
+      <button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-sm" aria-describedby="tt-click"
+              data-ttsc-tooltip="#tt-click" data-ttsc-tooltip-placement="right" data-ttsc-tooltip-trigger="click">
+        <i class="fa-light fa-circle-question"></i> Clique
+      </button>
+      <div id="tt-click" class="ttsc-tooltip ttsc-tooltip-light" role="tooltip">Fecha ao clicar fora</div>
+    </div>
+    <div class="ds-note">Passe o mouse, use Tab ou clique.</div>
+  </div>
+  <div class="ds-stack">
+    <div class="ds-label">Aberto (permanente)</div>
+    <div class="pv-stage">
+      <span class="pv-kpi" id="kpi-freq" tabindex="0" aria-describedby="tt-freq"
+            data-ttsc-tooltip="#tt-freq" data-ttsc-tooltip-placement="top-start"
+            data-ttsc-tooltip-trigger="click" data-ttsc-tooltip-permanent="true">
+        Frequência média 91% <i class="fa-light fa-circle-info"></i>
+      </span>
+      <div id="tt-freq" class="ttsc-tooltip" role="tooltip">Presenças + faltas justificadas ÷ aulas lançadas. Mínimo legal: 75%.</div>
+    </div>
+  </div>
+</div>
+<script>
+  TTSC.init();
+  TTSC.Tooltip.getInstance(document.getElementById('kpi-freq')).show();
+</script>
+</body>
+</html>

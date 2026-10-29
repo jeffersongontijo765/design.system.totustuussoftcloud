@@ -1,0 +1,2047 @@
+<!doctype html>
+<html lang="pt-BR" dir="ltr" class="h-full bg-slate-50" data-ttsc-theme="true">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Starter Kit — App Shell</title>
+<script>
+/* Starter Kit: segue o tema do preview (frame pai) e grava as chaves reais de tema de cada layout:
+   app/web/erros = html.dark + data-theme + localStorage 'ttsc-theme'; auth = 'od-theme'; portal de suporte = 'portal_theme'. */
+(function () {
+  function apply() {
+    var p = null; try { p = parent.document.documentElement.getAttribute('data-theme'); } catch (e) {}
+    var t = p === 'dark' ? 'dark' : 'light', h = document.documentElement;
+    h.setAttribute('data-theme', t); h.classList.toggle('dark', t === 'dark'); h.classList.toggle('light', t !== 'dark');
+    try { ['ttsc-theme', 'od-theme', 'theme', 'portal_theme'].forEach(function (k) { localStorage.setItem(k, t); }); } catch (e) {}
+  }
+  apply();
+  try { if (parent !== window) new MutationObserver(apply).observe(parent.document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class'] }); } catch (e) {}
+})();
+</script>
+<script>try{localStorage.setItem('ttsc:sub-sidebar:collapsed','0')}catch(e){}</script>
+<!-- CSS/JS do app em uma peca so: assets/css (ordem de $coreStyleAssets em main.php) + assets/js/ttsc.*.js -->
+<link rel="stylesheet" href="../bundle.css"><script src="../bundle.js"></script>
+<meta name="ds-theme-sync" content="off">
+<style>
+/* Starter Kit — slot de conteudo (so tokens). Some na pagina real: ali entra $this->section('content'). */
+.kit-slot { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; min-height: 340px;
+  border: 2px dashed color-mix(in srgb, var(--muted-foreground, #64748b) 55%, transparent); border-radius: var(--ttsc-radius-surface, 16px);
+  background: var(--ttsc-surface, var(--surface, #fff)); color: var(--ttsc-text-muted, #64748b); text-align: center; padding: 24px; }
+.kit-slot i { font-size: 28px; color: var(--ttsc-accent-text, #047857); }
+.kit-slot strong { color: var(--ttsc-text, #0f172a); font-size: 14px; }
+.kit-slot code { font-size: 12px; color: var(--ttsc-text-2, #475569); background: var(--ttsc-canvas-2, #f1f5f9); padding: 2px 8px; border-radius: 6px; }
+</style>
+</head>
+<body class="sb-app h-full bg-slate-50 text-slate-800 font-sans antialiased overflow-hidden flex flex-col">
+    <!-- Theme boot (prevents FOUC) -->
+    
+
+    <!-- Canonical Backdrop Overlay (Model Parity: docs/model/TotusTuus SoftCloud — Commercial.html line 6101) -->
+    <div id="backdrop-overlay" class="fixed inset-0 bg-slate-900/40 backdrop-blur-[2px] z-40 transition-opacity hidden" onclick="window.closeAllDrawers ? window.closeAllDrawers() : closeAllDrawers()"></div>
+
+    <!-- Navigation drawer backdrop (< 1100px): shown by assets/js/ttsc.shell.js while
+         the rail or the sub-sidebar is open as an off-canvas drawer; a click closes it.
+         Styles: #navigation-backdrop in ttsc.design-system.css. -->
+    <div id="navigation-backdrop" aria-hidden="true" hidden></div>
+
+    
+    <!-- GLOBAL HEADER (direct child of body — matches model) -->
+    <!-- ════════════════ GLOBAL TOPBAR (Commercial Benchmark Standard) ════════════════ -->
+<!-- Header styles loaded globally via /assets/css/ttsc.header.css (main.php Layer 3) -->
+<header class="h-14 bg-white border-b border-slate-200 px-4 flex items-center justify-between shrink-0 select-none relative z-50" data-od-id="topnav">
+
+  <!-- ── LEFT: brand + context breadcrumb dropdowns ── -->
+  <div class="hdr-left flex items-center space-x-2 sm:space-x-3 text-sm min-w-0">
+
+    <div id="crumb-home" class="hidden"></div>
+
+    <!-- Navigation drawer toggles: rendered for every page, shown only below
+         1100px (ttsc.shell-layout.css) where the rail and the sub-sidebar become
+         off-canvas drawers. Wired by assets/js/ttsc.shell.js, which keeps
+         aria-expanded in sync and hides #btn-sub-sidebar when the page has no
+         sub-sidebar. -->
+    <div class="hdr-nav-toggles flex items-center gap-1 shrink-0">
+      <button type="button" id="btn-mobile" class="hdr-nav-toggle w-8 h-8 items-center justify-center rounded-xl text-slate-500 hover:text-emerald-600 hover:bg-slate-100 transition cursor-pointer" aria-controls="primary-rail-wrapper" aria-expanded="false" aria-label="Abrir menu principal" title="Menu principal">
+        <i class="fa-light fa-bars text-sm" aria-hidden="true"></i>
+      </button>
+      <button type="button" id="btn-sub-sidebar" class="hdr-nav-toggle w-8 h-8 items-center justify-center rounded-xl text-slate-500 hover:text-emerald-600 hover:bg-slate-100 transition cursor-pointer" aria-controls="sub-sidebar" aria-expanded="false" aria-label="Abrir menu da seção" title="Menu da seção (Ctrl+B)">
+        <i class="fa-light fa-sidebar text-sm" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <!-- Brand Logo -->
+    <a href="#/" class="hdr-brand flex items-center mr-1 shrink-0 hover:opacity-90 transition group focus:outline-none" title="TotusTuus SoftCloud">
+      <img src="assets/media/app/favicon.svg" class="w-7 h-7 object-contain transition-transform group-hover:scale-105" alt="TotusTuus SoftCloud">
+    </a>
+
+    <!-- Entity (Tenant) Dropdown -->
+    <div class="hdr-entity relative z-50 min-w-0">
+      <button type="button" id="btn-org-dropdown" onclick="toggleDropdown('dropdown-org')" class="flex items-center space-x-2 px-2.5 py-1.5 rounded-xl border border-slate-200/90 hover:border-slate-300 bg-white hover:bg-slate-50/80 transition shadow-2xs focus:outline-none cursor-pointer group" aria-haspopup="true" aria-expanded="false" title="Trocar Entidade">
+        <div class="w-6 h-6 rounded-lg bg-emerald-500 flex items-center justify-center text-white shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
+          <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>
+          </svg>
+        </div>
+        <span class="entity-name-label font-bold text-slate-900 tracking-tight text-xs sm:text-sm truncate max-w-[180px] sm:max-w-[220px]">TotusTuus SoftCloud</span>
+        <span class="hdr-entity-plan text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded border border-emerald-300 text-emerald-600 bg-white">PRO</span>
+        <i class="fa-light fa-chevron-down text-[10px] text-slate-400"></i>
+      </button>
+      <div id="dropdown-org" class="absolute top-full left-0 mt-2 w-80 sm:w-88 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200/90 dark:border-slate-800 z-50 p-3 space-y-2.5 hidden">
+        <div class="relative">
+          <i class="fa-light fa-magnifying-glass absolute left-3 top-2.5 text-xs text-slate-400 pointer-events-none"></i>
+          <input type="text" id="entity-search" placeholder="Pesquisar entidades ou escolas..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" class="w-full pl-8 pr-3 py-2 text-xs bg-slate-50/80 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-1.5 focus:ring-emerald-500 text-slate-700 dark:text-slate-200 placeholder:text-slate-400 transition">
+        </div>
+
+        <div class="flex items-center justify-between px-1 pt-0.5">
+          <span class="text-[10px] uppercase font-bold tracking-wider text-slate-400 dark:text-slate-500">ENTIDADES / REDES ESCOLARES</span>
+          <span class="text-[10px] uppercase font-bold tracking-wider text-emerald-600 dark:text-emerald-400 font-semibold">0 ATIVAS</span>
+        </div>
+
+        <div class="space-y-1.5 max-h-[300px] overflow-y-auto pr-0.5 custom-scrollbar" id="entity-list-container">
+          
+          <div id="entity-search-empty" class="hidden py-6 text-center text-slate-400 text-xs">
+            <i class="fa-light fa-buildings text-xl mb-1.5 block opacity-40"></i>
+            <span>Nenhuma entidade encontrada</span>
+          </div>
+        </div>
+
+        <div class="border-t border-slate-100 dark:border-slate-800 pt-2">
+          <a href="#/companies" class="w-full flex items-center justify-center space-x-1.5 py-2 px-3 text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 hover:bg-emerald-50/80 dark:hover:bg-emerald-950/30 rounded-xl transition cursor-pointer">
+            <i class="fa-light fa-plus text-xs font-bold"></i>
+            <span>Cadastrar Nova Entidade</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <span class="hdr-secondary text-slate-300 font-light" aria-hidden="true">/</span>
+
+    <!-- Unit / Branch Dropdown -->
+    <div class="hdr-unit relative z-50 min-w-0" id="crumb-unit">
+      <button type="button" id="btn-unit-dropdown" onclick="toggleDropdown('dropdown-unit')" class="flex items-center space-x-1.5 px-2.5 py-1.5 rounded-xl border border-slate-200/90 hover:border-slate-300 bg-white hover:bg-slate-50/80 transition shadow-2xs text-slate-700 focus:outline-none cursor-pointer group" title="Trocar Unidade">
+        <i class="fa-light fa-building text-xs text-emerald-600 shrink-0 group-hover:scale-105 transition-transform"></i>
+        <span class="unit-name-label text-xs font-semibold text-slate-800 truncate max-w-[170px] sm:max-w-[210px]">Sede Matriz - TotusTuus SoftCloud</span>
+        <i class="fa-light fa-chevron-down text-[10px] text-slate-400 ml-0.5"></i>
+      </button>
+
+      <div id="dropdown-unit" class="absolute top-full left-0 mt-2 w-80 sm:w-88 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-200/90 dark:border-slate-800 z-50 p-3 space-y-2.5 hidden">
+        <div class="flex items-center justify-between px-1 pb-2 border-b border-slate-100 dark:border-slate-800">
+          <span class="text-[10px] uppercase font-bold tracking-wider text-slate-400 dark:text-slate-500">
+            CAMPI DE: <strong class="text-slate-800 dark:text-slate-200 font-extrabold uppercase">TotusTuus SoftCloud</strong>
+          </span>
+          <span class="text-[10px] uppercase font-bold tracking-wider text-emerald-600 dark:text-emerald-400 font-semibold">
+            0 CAMPI          </span>
+        </div>
+
+        <!-- Search Input -->
+        <div class="relative">
+          <i class="fa-light fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+          <input type="text"
+                 id="unit-search"
+                 placeholder="Buscar campus / unidade..."
+                 autocomplete="off"
+                 class="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/80 rounded-xl focus:outline-none focus:ring-1 focus:ring-emerald-500 text-slate-700 dark:text-slate-200 placeholder-slate-400">
+        </div>
+
+        <div class="space-y-1.5 max-h-[300px] overflow-y-auto pr-0.5 custom-scrollbar" id="unit-list-container">
+          
+          <div id="unit-search-empty" class="hidden py-6 text-center text-slate-400 text-xs">
+            <i class="fa-light fa-building text-xl mb-1.5 block opacity-40"></i>
+            <span>Nenhum campus ou unidade encontrada</span>
+          </div>
+        </div>
+
+        <div class="border-t border-slate-100 dark:border-slate-800 pt-2">
+          <a href="#/units" class="w-full flex items-center justify-center space-x-1.5 py-2 px-3 text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 hover:bg-emerald-50/80 dark:hover:bg-emerald-950/30 rounded-xl transition cursor-pointer">
+            <i class="fa-light fa-plus text-xs font-bold"></i>
+            <span>Adicionar Campus nesta Entidade</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <span class="hdr-secondary text-slate-300 font-light" aria-hidden="true">/</span>
+
+    <!-- Academic Period Crumb (Opens Period Drawer) -->
+    <div class="hdr-secondary relative z-50 inline-block">
+      <button id="btn-period-dropdown" type="button" data-drawer-trigger="drawer-period" onclick="openDrawer('drawer-period')" class="flex items-center space-x-1.5 px-2 py-1 rounded-lg hover:bg-slate-100 transition text-slate-700 focus:outline-none group cursor-pointer" title="Período Acadêmico / Ano Letivo">
+        <i class="fa-light fa-calendar-days text-xs text-emerald-600 group-hover:scale-105 transition-transform"></i>
+        <span id="header-period-name" class="text-xs font-semibold text-slate-800">Ano Letivo 2026</span>
+        <span id="header-period-pill" class="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200">2026</span>
+        <i class="fa-light fa-chevron-down text-[10px] text-slate-400 ml-0.5"></i>
+      </button>
+    </div>
+
+    <!-- Portal selector moved to sidebar as requested -->
+  </div>
+
+  <!-- ── RIGHT: quick actions, telemetry, account ── -->
+  <div class="hdr-right flex items-center space-x-1 sm:space-x-2 shrink-0">
+
+    <!-- Period (mobile) -->
+    <!-- Period (mobile) -->
+    <button type="button" id="btn-header-period-mobile" data-drawer-trigger="drawer-period" onclick="openDrawer('drawer-period')" class="sm:hidden p-2 text-slate-500 hover:text-emerald-600 hover:bg-slate-100 rounded-xl transition relative cursor-pointer" title="Período Acadêmico / Ano Letivo">
+      <i class="fa-light fa-calendar-days text-sm"></i>
+    </button>
+
+    <!-- Corporate Calendar -->
+    <button type="button" id="btn-header-calendar" data-drawer-trigger="drawer-calendar" onclick="openDrawer('drawer-calendar')" class="hdr-secondary p-2 text-slate-500 hover:text-emerald-600 hover:bg-slate-100 rounded-xl transition relative cursor-pointer" title="Calendário Corporativo e Agenda">
+      <i class="fa-light fa-calendar text-sm"></i>
+      <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-white"></span>
+    </button>
+
+    <!-- Global Search (Ctrl+K) -->
+    <button type="button" id="btn-search" data-drawer-trigger="drawer-search" onclick="openDrawer('drawer-search')" class="p-2 text-slate-500 hover:text-emerald-600 hover:bg-slate-100 rounded-xl transition cursor-pointer" title="Buscar (Ctrl+K)">
+      <i class="fa-light fa-magnifying-glass text-sm"></i>
+    </button>
+
+    <!-- Privacy / LGPD Compliance -->
+    <button type="button" id="btn-header-lgpd" data-drawer-trigger="drawer-lgpd" onclick="openDrawer('drawer-lgpd')" class="hdr-secondary p-2 text-emerald-600 hover:bg-emerald-50 rounded-xl transition relative cursor-pointer" title="Privacidade, Segurança e Conformidade">
+      <i class="fa-light fa-shield-halved text-sm"></i>
+      <span class="absolute bottom-1 right-1 w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+    </button>
+
+    <!-- Notifications -->
+    <button type="button" id="btn-header-notifications" data-drawer-trigger="drawer-notifications" onclick="openDrawer('drawer-notifications')" class="p-2 text-slate-500 hover:text-emerald-600 hover:bg-slate-100 rounded-xl transition relative cursor-pointer" title="Notificações e Alertas">
+      <i class="fa-light fa-bell text-sm"></i>
+      <span id="header-notif-badge" class="absolute top-1 right-1 w-2 h-2 rounded-full bg-rose-500 ring-2 ring-white" aria-hidden="true"></span>
+    </button>
+
+    <!-- Help & Support -->
+    <button type="button" id="btn-header-help" data-drawer-trigger="drawer-help" onclick="openDrawer('drawer-help')" class="hdr-secondary p-2 text-slate-500 hover:text-emerald-600 hover:bg-slate-100 rounded-xl transition relative cursor-pointer" title="Ajuda e Suporte (FAQ)">
+      <i class="fa-light fa-circle-question text-sm"></i>
+    </button>
+
+    <!-- LATENCY PILL & POPOVER (Adaptive Theme: Supabase Jet Black in Dark Mode, Crisp Clean Slate in Light Mode) -->
+    <div class="hdr-secondary relative group inline-block" id="header-latency-wrapper">
+      <button type="button" id="btn-header-latency" onclick="toggleHeaderLatencyPopover(event)" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white hover:bg-slate-50 dark:bg-[#171717] dark:hover:bg-[#222222] border border-slate-200/90 dark:border-[#2a2a2a] hover:border-emerald-500/50 dark:hover:border-[#3ECF8E]/50 text-slate-700 dark:text-slate-200 shadow-2xs text-xs font-semibold select-none transition cursor-pointer" aria-label="Desempenho do Sistema e Latência de Rede">
+        <svg class="w-3.5 h-3.5 text-emerald-600 dark:text-[#3ECF8E]" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+        <span class="relative flex h-2 w-2 shrink-0">
+          <span id="header-latency-pulse" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 dark:bg-[#3ECF8E] opacity-75"></span>
+          <span id="header-latency-dot" class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500 dark:bg-[#3ECF8E] shadow-[0_0_8px_rgba(16,185,129,0.5)] dark:shadow-[0_0_8px_#3ECF8E]"></span>
+        </span>
+        <span id="header-latency-val" class="font-mono font-bold text-[11px] tracking-tight text-emerald-600 dark:text-[#3ECF8E]">--ms</span>
+      </button>
+
+      <!-- Card Popover with Up Arrow Pointer ▲ aligned right under button -->
+      <div id="header-latency-popover" class="absolute top-full right-0 mt-2 z-50 hidden group-hover:block hover:block transition-all duration-150 w-72 max-w-[calc(100vw-24px)]">
+        <div class="relative bg-white dark:bg-[#171717] text-slate-800 dark:text-slate-200 rounded-2xl shadow-2xl p-3.5 border border-slate-200/90 dark:border-[#2a2a2a] text-xs backdrop-blur-md">
+          <div class="latency-arrow absolute -top-1.5 right-6 w-0 h-0 border-x-4 border-x-transparent border-b-[6px] border-b-white dark:border-b-[#171717]"></div>
+
+          <!-- Popover Header -->
+          <div class="flex items-center justify-between pb-2.5 mb-2.5 border-b border-slate-100 dark:border-[#262626]">
+            <div class="flex items-center gap-2">
+              <span class="flex items-center justify-center w-5 h-5 rounded-md bg-emerald-50 dark:bg-[#3ECF8E]/10 border border-emerald-200 dark:border-[#3ECF8E]/20 text-emerald-600 dark:text-[#3ECF8E]">
+                <svg class="w-3 h-3 text-emerald-600 dark:text-[#3ECF8E]" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+              </span>
+              <span class="font-semibold text-slate-900 dark:text-white text-xs" data-i18n="header_system_health">Saúde do Sistema</span>
+              <span class="text-[10px] font-mono text-slate-600 dark:text-neutral-400 bg-slate-100 dark:bg-neutral-800/80 px-1.5 py-0.5 rounded border border-slate-200 dark:border-neutral-700/60">LOCAL</span>
+            </div>
+            <span id="header-realtime-badge" class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-50 dark:bg-[#3ECF8E]/10 text-emerald-600 dark:text-[#3ECF8E] border border-emerald-200 dark:border-[#3ECF8E]/25">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-[#3ECF8E] animate-pulse"></span>
+              AO VIVO
+            </span>
+          </div>
+
+          <!-- Real System Metrics -->
+          <div class="space-y-2 text-xs">
+            <div class="flex items-center justify-between py-0.5">
+              <span class="text-slate-500 dark:text-neutral-400 font-medium flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5 text-slate-400 dark:text-neutral-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                <span data-i18n="header_latency_label">Latência atual:</span>
+              </span>
+              <span id="header-latency-quality" class="font-mono text-emerald-600 dark:text-[#3ECF8E] font-bold text-[11px] tracking-tight">--ms</span>
+            </div>
+            <div class="flex items-center justify-between py-0.5">
+              <span class="text-slate-500 dark:text-neutral-400 font-medium flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5 text-slate-400 dark:text-neutral-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="9" y="2" width="6" height="6" rx="1"/><rect x="1" y="16" width="6" height="6" rx="1"/><rect x="17" y="16" width="6" height="6" rx="1"/><path d="M4 16v-4h16v4"/><line x1="12" y1="8" x2="12" y2="12"/></svg>
+                <span data-i18n="header_api_status_label">Status da API:</span>
+              </span>
+              <span id="header-api-status-val" class="inline-flex items-center gap-1.5 font-semibold text-xs text-emerald-600 dark:text-emerald-400"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-[#3ECF8E]"></span><span>Conectado</span></span>
+            </div>
+            <div class="flex items-center justify-between py-0.5">
+              <span class="text-slate-500 dark:text-neutral-400 font-medium flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5 text-slate-400 dark:text-neutral-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                <span data-i18n="header_db_status_label">Banco de Dados (MySQL):</span>
+              </span>
+              <span id="header-db-status-val" class="inline-flex items-center gap-1.5 font-semibold text-xs text-emerald-600 dark:text-[#3ECF8E]">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-[#3ECF8E]"></span>
+                <span id="header-db-text">Conectado</span>
+                <span id="header-db-latency" class="font-mono text-[10px] text-slate-400 dark:text-neutral-400">(4.84ms)</span>
+              </span>
+            </div>
+            <div class="flex items-center justify-between py-0.5">
+              <span class="text-slate-500 dark:text-neutral-400 font-medium flex items-center gap-1.5">
+                <svg class="w-3.5 h-3.5 text-slate-400 dark:text-neutral-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                <span data-i18n="header_socket_status_label">Status do Socket:</span>
+              </span>
+              <span id="header-socket-status-val" class="inline-flex items-center gap-1.5 font-semibold text-xs text-emerald-600 dark:text-emerald-400">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-[#3ECF8E]"></span>
+                <span data-i18n="header_socket_status_value">Conectado</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Footer: Timestamp & Refresh -->
+          <div class="mt-2.5 pt-2 border-t border-slate-100 dark:border-[#262626] flex items-center justify-between text-[10px] text-slate-500 dark:text-neutral-400">
+            <span id="header-latency-last-check">Verificando...</span>
+            <button type="button" onclick="window.measureRealProjectLatency(true)" class="text-slate-500 dark:text-neutral-400 hover:text-emerald-600 dark:hover:text-[#3ECF8E] transition flex items-center gap-1 cursor-pointer">
+              <svg id="header-latency-refresh-icon" class="w-2.5 h-2.5 text-slate-400 dark:text-neutral-400" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/><path d="M2.5 22v-6h6"/></svg>
+              <span>Atualizar</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Profile Button -->
+    <button type="button" data-drawer-trigger="drawer-profile" onclick="openDrawer('drawer-profile')" class="ml-1 flex items-center space-x-2 p-1 pr-2 rounded-xl hover:bg-slate-100 transition group focus:outline-none cursor-pointer" id="btn-user-menu" title="Configurações de Perfil e Conta">
+      <div class="relative">
+                  <div class="w-8 h-8 rounded-full bg-emerald-600 group-hover:bg-emerald-700 text-white font-bold flex items-center justify-center text-xs shadow-sm transition active:scale-95">A</div>
+                <span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white"></span>
+      </div>
+    </button>
+  </div>
+</header>
+
+<script>
+// ════════════ Header Core Functions (Canonical Commercial Benchmark) ════════════
+(function () {
+  'use strict';
+
+  function baseUrl() {
+    var b = '#';
+    if (!b.startsWith('http://') && !b.startsWith('https://')) {
+      b = window.location.origin + (b ? '/' + b.replace(/^\/+/, '') : '');
+    }
+    return b;
+  }
+
+  var metaToken = document.querySelector('meta[name="csrf-token"]');
+  var csrfToken = metaToken ? metaToken.getAttribute('content') : '';
+
+  // 1. Dropdown Toggle
+  window.toggleDropdown = function(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var willOpen = el.classList.contains('hidden');
+    // Close other header dropdowns
+    ['dropdown-org', 'dropdown-unit', 'dropdown-portal', 'dropdown-export'].forEach(function(dId) {
+      if (dId !== id) {
+        var other = document.getElementById(dId);
+        if (other) other.classList.add('hidden');
+      }
+    });
+    el.classList.toggle('hidden', !willOpen);
+  };
+
+  // 2. Select Entity (Tenant)
+  window.selectEntity = function(btn, entityName, entityId) {
+    var triggerBtn = document.getElementById('btn-org-dropdown');
+    if (triggerBtn) {
+      var span = triggerBtn.querySelector('.entity-name-label') || triggerBtn.querySelector('span.font-semibold') || triggerBtn.querySelector('span.font-bold') || triggerBtn.querySelector('span');
+      if (span) span.textContent = entityName;
+    }
+    var container = document.getElementById('dropdown-org');
+    if (container) {
+      container.querySelectorAll('.dropdown-org-item').forEach(function(el) {
+        el.className = 'dropdown-org-item w-full flex items-center justify-between p-2.5 text-xs transition text-left cursor-pointer group border border-transparent hover:bg-slate-50 dark:hover:bg-slate-800/60 rounded-xl';
+        var icon = el.querySelector('.entity-icon');
+        if (icon) {
+          icon.className = 'entity-icon fa-light fa-layer-group text-base shrink-0 text-slate-400 group-hover:text-slate-600';
+        }
+        var check = el.querySelector('.entity-check');
+        if (check) check.classList.add('hidden');
+      });
+      if (btn) {
+        btn.className = 'dropdown-org-item w-full flex items-center justify-between p-2.5 text-xs transition text-left cursor-pointer group border border-emerald-400 bg-white dark:bg-slate-800 rounded-2xl shadow-2xs';
+        var icon = btn.querySelector('.entity-icon');
+        if (icon) {
+          icon.className = 'entity-icon fa-light fa-layer-group text-base shrink-0 text-emerald-600';
+        }
+        var check = btn.querySelector('.entity-check');
+        if (check) check.classList.remove('hidden');
+      }
+      container.classList.add('hidden');
+    }
+
+    if (entityId) {
+      fetch(baseUrl() + '/tenant/switch/' + encodeURIComponent(entityId), {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-CSRF-TOKEN': csrfToken
+        }
+      }).then(function(res) {
+        return res.json().catch(function() { return {}; });
+      }).then(function(data) {
+        if (data && data.redirect) {
+          window.location.href = data.redirect;
+        } else {
+          window.location.reload();
+        }
+      }).catch(function() { window.location.reload(); });
+    }
+  };
+
+  // 3. Select Unit
+  window.selectUnit = function(btn, unitName, unitUuid) {
+    var triggerSpan = document.querySelector('#btn-unit-dropdown .unit-name-label') || document.querySelector('#btn-unit-dropdown span');
+    if (triggerSpan) triggerSpan.textContent = unitName;
+    var container = document.getElementById('dropdown-unit');
+    if (container) {
+      container.querySelectorAll('.dropdown-unit-item').forEach(function(el) {
+        el.className = 'dropdown-unit-item w-full flex items-center justify-between p-2.5 text-xs transition text-left cursor-pointer group border border-transparent hover:bg-slate-50 dark:hover:bg-slate-800/60 rounded-xl';
+        var icon = el.querySelector('.unit-icon');
+        if (icon) {
+          icon.className = 'unit-icon fa-light fa-building text-base shrink-0 text-slate-400 group-hover:text-slate-600';
+        }
+        var check = el.querySelector('.unit-check');
+        if (check) check.classList.add('hidden');
+      });
+      if (btn) {
+        btn.className = 'dropdown-unit-item w-full flex items-center justify-between p-2.5 text-xs transition text-left cursor-pointer group border border-emerald-400/80 bg-slate-50/50 dark:bg-slate-800/80 rounded-2xl shadow-2xs';
+        var icon = btn.querySelector('.unit-icon');
+        if (icon) {
+          icon.className = 'unit-icon fa-light fa-building text-base shrink-0 text-emerald-600';
+        }
+        var check = btn.querySelector('.unit-check');
+        if (check) check.classList.remove('hidden');
+      }
+      container.classList.add('hidden');
+    }
+
+    if (unitUuid) {
+      fetch(baseUrl() + '/unit/switch', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-CSRF-TOKEN': csrfToken
+        },
+        body: JSON.stringify({ unit_uuid: unitUuid })
+      }).then(function(res) {
+        return res.json().catch(function() { return {}; });
+      }).then(function(data) {
+        if (data && data.redirect) {
+          window.location.href = data.redirect;
+        } else {
+          window.location.reload();
+        }
+      }).catch(function() { window.location.reload(); });
+    }
+  };
+
+  // 4. Select Portal
+  window.selectPortal = function(btn, portalName, iconClass) {
+    var triggerBtn = document.getElementById('btn-portal-dropdown');
+    if (triggerBtn) {
+      var span = triggerBtn.querySelector('span');
+      if (span) span.textContent = portalName;
+      var triggerIcon = triggerBtn.querySelector('i:first-child');
+      if (triggerIcon && iconClass) {
+        triggerIcon.className = iconClass + ' text-xs text-emerald-600';
+      }
+    }
+    var container = document.getElementById('dropdown-portal');
+    if (container) {
+      container.querySelectorAll('.dropdown-portal-item').forEach(function(el) {
+        el.className = 'dropdown-portal-item w-full flex items-center justify-between px-2.5 py-1.5 rounded-xl text-slate-600 hover:bg-slate-50 transition text-left border border-transparent cursor-pointer';
+        var icon = el.querySelector('.flex > i') || el.querySelector('i:first-child');
+        if (icon) {
+          icon.classList.remove('text-emerald-600');
+          icon.classList.add('text-slate-400');
+        }
+        var check = el.querySelector('.fa-check');
+        if (check) check.remove();
+      });
+      if (btn) {
+        btn.className = 'dropdown-portal-item w-full flex items-center justify-between px-2.5 py-1.5 rounded-xl bg-emerald-50 text-emerald-700 font-semibold border border-emerald-200 text-left transition cursor-pointer';
+        var icon = btn.querySelector('.flex > i') || btn.querySelector('i:first-child');
+        if (icon) {
+          icon.classList.remove('text-slate-400');
+          icon.classList.add('text-emerald-600');
+        }
+        if (!btn.querySelector('.fa-check')) {
+          var check = document.createElement('i');
+          check.className = 'fa-light fa-check text-emerald-600 text-xs shrink-0';
+          btn.appendChild(check);
+        }
+      }
+      container.classList.add('hidden');
+    }
+  };
+
+  // 5. Latency Popover Toggle
+  window.toggleHeaderLatencyPopover = function(e) {
+    if (e) {
+      if (typeof e.stopPropagation === 'function') e.stopPropagation();
+      if (typeof e.preventDefault === 'function') e.preventDefault();
+    }
+    var pop = document.getElementById('header-latency-popover');
+    if (pop) {
+      pop.classList.toggle('!block');
+    }
+  };
+
+  // 7. Search Input Filters inside dropdowns
+  function setupSearchFilter(inputId, containerSelector, itemSelector) {
+    var input = document.getElementById(inputId);
+    if (!input) return;
+    input.addEventListener('input', function(e) {
+      var term = (e.target.value || '').toLowerCase().trim();
+      var items = document.querySelectorAll(containerSelector + ' ' + itemSelector);
+      var visibleCount = 0;
+      items.forEach(function(item) {
+        var text = (item.textContent || '').toLowerCase();
+        var match = (!term || text.indexOf(term) > -1);
+        item.style.display = match ? '' : 'none';
+        if (match) visibleCount++;
+      });
+      var emptyEl = document.getElementById(inputId + '-empty');
+      if (emptyEl) {
+        emptyEl.classList.toggle('hidden', visibleCount > 0);
+      }
+    });
+  }
+  setupSearchFilter('entity-search', '#dropdown-org', '.dropdown-org-item');
+  setupSearchFilter('unit-search', '#dropdown-unit', '.dropdown-unit-item');
+
+  // 8. Outside Click Listener
+  document.addEventListener('click', function(e) {
+    if (!(e.target instanceof Element)) return;
+
+    // Latency popover click outside
+    var latWrap = document.getElementById('header-latency-wrapper');
+    if (latWrap && !latWrap.contains(e.target)) {
+      var pop = document.getElementById('header-latency-popover');
+      if (pop) pop.classList.remove('!block');
+    }
+
+    // Dropdowns click outside
+    var dropdownConfigs = [
+      { btn: 'btn-org-dropdown', menu: 'dropdown-org' },
+      { btn: 'btn-unit-dropdown', menu: 'dropdown-unit' },
+      { btn: 'btn-export-dropdown', menu: 'dropdown-export' }
+    ];
+    dropdownConfigs.forEach(function(d) {
+      var b = document.getElementById(d.btn);
+      var m = document.getElementById(d.menu);
+      if (m && !m.classList.contains('hidden')) {
+        if ((!b || !b.contains(e.target)) && !m.contains(e.target)) {
+          m.classList.add('hidden');
+        }
+      }
+    });
+  });
+
+  // Mobile navigation is owned by assets/js/ttsc.shell.js.  Keeping one
+  // handler avoids the former double-toggle that immediately reopened panels.
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      ['dropdown-org', 'dropdown-unit', 'dropdown-export'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+      });
+      var pop = document.getElementById('header-latency-popover');
+      if (pop) pop.classList.remove('!block');
+      if (typeof window.closeAllDrawers === 'function') window.closeAllDrawers(true);
+    }
+  });
+
+})();
+
+// ════════════ Real Project Latency & Health Measurement (Supabase Style) ════════════
+window.measureRealProjectLatency = function(manual) {
+  var t0 = performance.now();
+  var valEl = document.getElementById('header-latency-val');
+  var qualEl = document.getElementById('header-latency-quality');
+  var apiStatusEl = document.getElementById('header-api-status-val');
+  var dbTextEl = document.getElementById('header-db-text');
+  var dbLatEl = document.getElementById('header-db-latency');
+  var lastCheckEl = document.getElementById('header-latency-last-check');
+  var dotEl = document.getElementById('header-latency-dot');
+  var pulseEl = document.getElementById('header-latency-pulse');
+  var refreshIcon = document.getElementById('header-latency-refresh-icon');
+
+  if (manual && refreshIcon) {
+    refreshIcon.classList.add('animate-spin');
+  }
+
+  var cleanup = function() {
+    if (refreshIcon) refreshIcon.classList.remove('animate-spin');
+  };
+
+  // Robust endpoint resolution: if raw URL is absolute but running locally on HTTP,
+  // synchronize protocol and host to avoid self-signed SSL/mixed content blocks.
+  var healthEndpoint;
+  try {
+    var rawUrl = '#/api/v1/health';
+    var parsed = new URL(rawUrl, window.location.href);
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      parsed.protocol = window.location.protocol;
+      parsed.host = window.location.host;
+    }
+    healthEndpoint = parsed.href;
+  } catch (e) {
+    var appBase = document.querySelector('base');
+    var baseHref = appBase && appBase.href ? appBase.href : window.location.origin + '/';
+    if (baseHref.charAt(baseHref.length - 1) !== '/') baseHref += '/';
+    healthEndpoint = baseHref + 'api/v1/health';
+  }
+
+  var isDarkTheme = function() {
+    return document.documentElement.classList.contains('dark') || document.documentElement.getAttribute('data-theme') === 'dark';
+  };
+
+  var reportOffline = function() {
+    cleanup();
+    var elapsed = Math.round(performance.now() - t0);
+    var isDark = isDarkTheme();
+    var warnColor = isDark ? '#fbbf24' : '#d97706';
+    if (valEl) {
+      valEl.textContent = elapsed + 'ms';
+      valEl.style.color = warnColor;
+    }
+    if (qualEl) {
+      qualEl.textContent = elapsed + 'ms (Degradado)';
+      qualEl.style.color = warnColor;
+    }
+    if (dotEl) dotEl.style.backgroundColor = warnColor;
+    if (pulseEl) pulseEl.style.backgroundColor = warnColor;
+    if (lastCheckEl) lastCheckEl.textContent = 'Status: Verificação offline';
+  };
+
+  var checkHealth = function() {
+    var targetUrl = healthEndpoint + (healthEndpoint.indexOf('?') === -1 ? '?' : '&') + '_t=' + Date.now();
+    var fetchController = typeof AbortController !== 'undefined' ? new AbortController() : null;
+    var timeoutId = fetchController ? setTimeout(function() { fetchController.abort(); }, 4000) : null;
+
+    fetch(targetUrl, {
+      method: 'GET',
+      headers: { 'Accept': 'application/json' },
+      cache: 'no-store',
+      signal: fetchController ? fetchController.signal : undefined
+    })
+    .then(function(res) {
+      if (timeoutId) clearTimeout(timeoutId);
+      var rtt = Math.round(performance.now() - t0);
+      if (!res.ok && res.status !== 302 && res.status !== 304) throw new Error('HTTP ' + res.status);
+      var contentType = res.headers.get('content-type') || '';
+      if (contentType.indexOf('application/json') > -1) {
+        return res.json().then(function(data) { return { rtt: rtt, data: data }; });
+      }
+      return { rtt: rtt, data: null };
+    })
+    .then(function(res) {
+      cleanup();
+      var rtt = res.rtt;
+      var data = res.data;
+      var isDark = isDarkTheme();
+
+      // Color coding (adapts to active theme)
+      var qualText = 'Ótimo';
+      var color = isDark ? '#3ECF8E' : '#059669';
+      if (rtt < 150) {
+        qualText = 'Ótimo';
+        color = isDark ? '#3ECF8E' : '#059669';
+      } else if (rtt < 400) {
+        qualText = 'Bom';
+        color = isDark ? '#34d399' : '#10b981';
+      } else if (rtt < 1000) {
+        qualText = 'Razoável';
+        color = isDark ? '#fbbf24' : '#d97706';
+      } else {
+        qualText = 'Degradado';
+        color = isDark ? '#f87171' : '#dc2626';
+      }
+
+      if (valEl) {
+        valEl.textContent = rtt + 'ms';
+        valEl.style.color = color;
+      }
+      if (qualEl) {
+        qualEl.textContent = rtt + 'ms (' + qualText + ')';
+        qualEl.style.color = color;
+      }
+      if (dotEl) dotEl.style.backgroundColor = color;
+      if (pulseEl) pulseEl.style.backgroundColor = color;
+
+      if (apiStatusEl) {
+        apiStatusEl.className = 'inline-flex items-center gap-1.5 font-semibold text-xs text-emerald-600 dark:text-emerald-400';
+        apiStatusEl.innerHTML = '<span class="w-1.5 h-1.5 rounded-full ' + (isDark ? 'bg-[#3ECF8E]' : 'bg-emerald-500') + '"></span><span>Conectado</span>';
+      }
+
+      if (data && data.services) {
+        var isDbOk = data.services.database === 'Connected' || data.services.database === 'OK';
+        if (dbTextEl) dbTextEl.textContent = isDbOk ? 'Conectado' : 'Desconectado';
+        if (dbLatEl) {
+          if (data.services.database_latency_ms !== undefined && data.services.database_latency_ms !== null) {
+            dbLatEl.textContent = '(' + data.services.database_latency_ms + 'ms)';
+          }
+        }
+      }
+
+      if (lastCheckEl) {
+        var now = new Date();
+        var timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        lastCheckEl.textContent = 'Verificado: ' + timeStr;
+      }
+    })
+    .catch(function(err) {
+      if (timeoutId) clearTimeout(timeoutId);
+      reportOffline();
+    });
+  };
+
+  checkHealth();
+};
+
+
+</script>
+
+    <!-- MAIN APP BODY: rail + sub-sidebar + content column -->
+    <div class="flex-1 min-h-0 flex overflow-hidden relative">
+
+        <!-- PRIMARY ICON RAIL (60px) -->
+        <div id="primary-rail-wrapper" class="relative shrink-0 select-none">
+  <aside id="primary-rail" class="absolute inset-y-0 left-0 flex flex-col justify-between items-center py-2.5" data-od-id="rail" aria-label="Portal da Instituição">
+
+    <!-- Non-draggable close control (accessibility / test compatibility).
+         window.closeAllSidebars is defined by assets/js/ttsc.shell.js. -->
+    <button type="button" class="sb-close-btn rail-close-btn hidden" aria-label="Fechar Menu" onclick="if (window.closeAllSidebars) window.closeAllSidebars()"></button>
+
+    <!-- Portal Selector in Sidebar (Rail) - Pinned at top
+         Chrome via .rail-portal-btn / .rail-portal-badge (ttsc.design-system.css) -->
+    <div class="relative w-full flex flex-col items-center pb-2 border-b border-slate-100 px-1.5 shrink-0" id="rail-portal-wrapper">
+      <button type="button"
+              id="btn-sidebar-portal"
+              onclick="toggleSidebarPortalDropdown(event)"
+              class="rail-item rail-portal-btn relative flex items-center justify-center h-10 rounded-xl px-0 select-none"
+              title="SaaS Acadêmico (Tenant)"
+              aria-haspopup="true"
+              aria-expanded="false">
+        <!-- 40x40 Icon Tile (Always visible, left-aligned on expand) -->
+        <div class="w-10 h-10 flex items-center justify-center shrink-0">
+          <i class="fa-light fa-landmark text-base"></i>
+        </div>
+
+        <!-- Expanded Portal Label & Chevron (shown when rail expands) -->
+        <div class="rail-label flex items-center justify-between flex-1 min-w-0 pr-2 overflow-hidden">
+          <div class="flex items-center gap-1.5 min-w-0 truncate">
+            <span class="truncate text-xs font-semibold text-emerald-900">SaaS Acadêmico</span>
+            <span class="rail-portal-badge shrink-0">TENANT</span>
+          </div>
+          <i id="sidebar-portal-chevron-expanded" class="fa-light fa-chevron-down text-xs text-slate-400 shrink-0 transition-transform duration-200"></i>
+        </div>
+        <span class="rail-tooltip">SaaS Acadêmico (Tenant)</span>
+      </button>
+
+      <!-- Floating Portal Popover Dropdown (Anchored to rail, opens to the right) -->
+      <div id="sidebar-portal-dropdown"
+           class="absolute left-[calc(100%+8px)] top-0 w-72 bg-white rounded-2xl shadow-2xl border border-slate-200/90 z-50 p-2.5 space-y-1 hidden select-none text-xs before:content-[''] before:absolute before:-left-3 before:top-0 before:bottom-0 before:w-3">
+        <!-- Popover Header -->
+        <div class="px-2 py-1.5 flex items-center justify-between border-b border-slate-100 mb-1">
+          <span class="text-[10px] font-semibold tracking-wider text-slate-400 uppercase">Portais disponíveis</span>
+          <span class="text-[10px] font-semibold tracking-wider text-emerald-600 uppercase">6 ativos</span>
+        </div>
+
+        <!-- Portals List -->
+        <div class="space-y-1">
+                                  <form method="post" action="#/portal/switch" class="contents">
+              <input type="hidden" name="csrf_token" value="c0a8cede7600988b51c05fb2a1b40f5bbb98ce5b48cb9826b4918d7f7b588842">              <input type="hidden" name="portal" value="developer">
+              <button type="submit"
+               onclick="closeSidebarPortalDropdown()"
+               class="flex w-full items-center justify-between px-2.5 py-2 rounded-xl transition text-left cursor-pointer text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <div class="w-7 h-7 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0 text-xs">
+                  <i class="fa-light fa-code"></i>
+                </div>
+                <div class="min-w-0">
+                  <div class="truncate text-xs text-slate-700 font-medium">
+                    Portal do Desenvolvedor                  </div>
+                  <div class="text-[10px] text-slate-400">
+                    Master                  </div>
+                </div>
+              </div>
+              <span class="rail-portal-badge shrink-0 bg-slate-100 text-slate-500 ml-2">
+                MASTER              </span>
+              </button>
+            </form>
+                                  <form method="post" action="#/portal/switch" class="contents">
+              <input type="hidden" name="csrf_token" value="c0a8cede7600988b51c05fb2a1b40f5bbb98ce5b48cb9826b4918d7f7b588842">              <input type="hidden" name="portal" value="admin">
+              <button type="submit"
+               onclick="closeSidebarPortalDropdown()"
+               class="flex w-full items-center justify-between px-2.5 py-2 rounded-xl transition text-left cursor-pointer bg-emerald-50 text-emerald-800 font-semibold border border-emerald-200 shadow-2xs">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <div class="w-7 h-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center shrink-0 text-xs">
+                  <i class="fa-light fa-landmark"></i>
+                </div>
+                <div class="min-w-0">
+                  <div class="truncate text-xs text-emerald-800 font-semibold">
+                    SaaS Acadêmico                  </div>
+                  <div class="text-[10px] text-slate-400">
+                    Tenant                  </div>
+                </div>
+              </div>
+              <span class="rail-portal-badge shrink-0  ml-2">
+                TENANT              </span>
+              </button>
+            </form>
+                                  <form method="post" action="#/portal/switch" class="contents">
+              <input type="hidden" name="csrf_token" value="c0a8cede7600988b51c05fb2a1b40f5bbb98ce5b48cb9826b4918d7f7b588842">              <input type="hidden" name="portal" value="teacher">
+              <button type="submit"
+               onclick="closeSidebarPortalDropdown()"
+               class="flex w-full items-center justify-between px-2.5 py-2 rounded-xl transition text-left cursor-pointer text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <div class="w-7 h-7 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0 text-xs">
+                  <i class="fa-light fa-laptop"></i>
+                </div>
+                <div class="min-w-0">
+                  <div class="truncate text-xs text-slate-700 font-medium">
+                    Portal do Professor                  </div>
+                  <div class="text-[10px] text-slate-400">
+                    Tenant                  </div>
+                </div>
+              </div>
+              <span class="rail-portal-badge shrink-0 bg-slate-100 text-slate-500 ml-2">
+                TENANT              </span>
+              </button>
+            </form>
+                                  <form method="post" action="#/portal/switch" class="contents">
+              <input type="hidden" name="csrf_token" value="c0a8cede7600988b51c05fb2a1b40f5bbb98ce5b48cb9826b4918d7f7b588842">              <input type="hidden" name="portal" value="student">
+              <button type="submit"
+               onclick="closeSidebarPortalDropdown()"
+               class="flex w-full items-center justify-between px-2.5 py-2 rounded-xl transition text-left cursor-pointer text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <div class="w-7 h-7 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0 text-xs">
+                  <i class="fa-light fa-graduation-cap"></i>
+                </div>
+                <div class="min-w-0">
+                  <div class="truncate text-xs text-slate-700 font-medium">
+                    Portal do Aluno                  </div>
+                  <div class="text-[10px] text-slate-400">
+                    Tenant                  </div>
+                </div>
+              </div>
+              <span class="rail-portal-badge shrink-0 bg-slate-100 text-slate-500 ml-2">
+                TENANT              </span>
+              </button>
+            </form>
+                                  <form method="post" action="#/portal/switch" class="contents">
+              <input type="hidden" name="csrf_token" value="c0a8cede7600988b51c05fb2a1b40f5bbb98ce5b48cb9826b4918d7f7b588842">              <input type="hidden" name="portal" value="guardian">
+              <button type="submit"
+               onclick="closeSidebarPortalDropdown()"
+               class="flex w-full items-center justify-between px-2.5 py-2 rounded-xl transition text-left cursor-pointer text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <div class="w-7 h-7 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0 text-xs">
+                  <i class="fa-light fa-users"></i>
+                </div>
+                <div class="min-w-0">
+                  <div class="truncate text-xs text-slate-700 font-medium">
+                    Portal dos Responsáveis                  </div>
+                  <div class="text-[10px] text-slate-400">
+                    Tenant                  </div>
+                </div>
+              </div>
+              <span class="rail-portal-badge shrink-0 bg-slate-100 text-slate-500 ml-2">
+                TENANT              </span>
+              </button>
+            </form>
+                                  <form method="post" action="#/portal/switch" class="contents">
+              <input type="hidden" name="csrf_token" value="c0a8cede7600988b51c05fb2a1b40f5bbb98ce5b48cb9826b4918d7f7b588842">              <input type="hidden" name="portal" value="third-party">
+              <button type="submit"
+               onclick="closeSidebarPortalDropdown()"
+               class="flex w-full items-center justify-between px-2.5 py-2 rounded-xl transition text-left cursor-pointer text-slate-600 hover:bg-slate-50 hover:text-slate-900 border border-transparent">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <div class="w-7 h-7 rounded-lg bg-slate-100 text-slate-500 flex items-center justify-center shrink-0 text-xs">
+                  <i class="fa-light fa-handshake"></i>
+                </div>
+                <div class="min-w-0">
+                  <div class="truncate text-xs text-slate-700 font-medium">
+                    Portal de Fornecedores e Parceiros                  </div>
+                  <div class="text-[10px] text-slate-400">
+                    Tenant                  </div>
+                </div>
+              </div>
+              <span class="rail-portal-badge shrink-0 bg-slate-100 text-slate-500 ml-2">
+                TENANT              </span>
+              </button>
+            </form>
+                  </div>
+      </div>
+    </div>
+
+    <!-- Top Navigation Modules (Scrollable if necessary) -->
+    <div class="w-full flex-1 flex flex-col items-center gap-2 px-1.5 pt-2 overflow-y-auto" style="scrollbar-width: none;">
+
+                              <div class="portal-group-items">
+                                    <a href="#/client/dashboard"
+             draggable="true"
+             data-rail-slug="dashboard"
+             aria-current="false"
+             class="rail-item relative flex items-center justify-center h-10 rounded-xl transition duration-150 text-slate-400"
+             title="Painel"
+             aria-label="Painel">
+            <div class="w-10 h-10 flex items-center justify-center shrink-0">
+              <i class="fa-light fa-house text-base transition-transform duration-150"></i>
+            </div>
+            <span class="rail-label text-xs font-semibold whitespace-nowrap text-slate-700">Painel</span>
+            <span class="rail-tooltip">Painel</span>
+          </a>
+                  </div>
+                                      <details class="portal-rail-group" data-portal-group="admin-academic_lifecycle" open data-active-group="true">
+          <summary title="Ciclo Acadêmico" aria-label="Ciclo Acadêmico">
+            <i class="fa-light fa-graduation-cap portal-group-icon" aria-hidden="true"></i>
+            <span class="portal-group-label">Ciclo Acadêmico</span>
+            <i class="fa-light fa-chevron-down portal-group-chevron" aria-hidden="true"></i>
+          </summary>
+          <div class="portal-group-items">
+                                    <a href="#/academic"
+             draggable="true"
+             data-rail-slug="academic"
+             aria-current="false"
+             class="rail-item relative flex items-center justify-center h-10 rounded-xl transition duration-150 text-slate-400"
+             title="Administração Acadêmica"
+             aria-label="Administração Acadêmica">
+            <div class="w-10 h-10 flex items-center justify-center shrink-0">
+              <i class="fa-light fa-graduation-cap text-base transition-transform duration-150"></i>
+            </div>
+            <span class="rail-label text-xs font-semibold whitespace-nowrap text-slate-700">Administração Acadêmica</span>
+            <span class="rail-tooltip">Administração Acadêmica</span>
+          </a>
+                            <a href="#/academic/secretariat"
+             draggable="true"
+             data-rail-slug="academic_secretariat"
+             aria-current="page"
+             class="rail-item relative flex items-center justify-center h-10 rounded-xl transition duration-150 bg-emerald-50 text-emerald-600 border border-emerald-300 font-semibold shadow-xs is-active"
+             title="Secretaria"
+             aria-label="Secretaria">
+            <div class="w-10 h-10 flex items-center justify-center shrink-0">
+              <i class="fa-light fa-id-card text-base transition-transform duration-150"></i>
+            </div>
+            <span class="rail-label text-xs font-semibold whitespace-nowrap text-emerald-700">Secretaria</span>
+            <span class="rail-tooltip">Secretaria</span>
+          </a>
+                            <a href="#/academic/grading"
+             draggable="true"
+             data-rail-slug="academic_pedagogical"
+             aria-current="false"
+             class="rail-item relative flex items-center justify-center h-10 rounded-xl transition duration-150 text-slate-400"
+             title="Gestão Pedagógica"
+             aria-label="Gestão Pedagógica">
+            <div class="w-10 h-10 flex items-center justify-center shrink-0">
+              <i class="fa-light fa-book-open text-base transition-transform duration-150"></i>
+            </div>
+            <span class="rail-label text-xs font-semibold whitespace-nowrap text-slate-700">Gestão Pedagógica</span>
+            <span class="rail-tooltip">Gestão Pedagógica</span>
+          </a>
+                            <a href="#/exams"
+             draggable="true"
+             data-rail-slug="exams"
+             aria-current="false"
+             class="rail-item relative flex items-center justify-center h-10 rounded-xl transition duration-150 text-slate-400"
+             title="Simulados PRO"
+             aria-label="Simulados PRO">
+            <div class="w-10 h-10 flex items-center justify-center shrink-0">
+              <i class="fa-light fa-file-pen text-base transition-transform duration-150"></i>
+            </div>
+            <span class="rail-label text-xs font-semibold whitespace-nowrap text-slate-700">Simulados PRO</span>
+            <span class="rail-tooltip">Simulados PRO</span>
+          </a>
+                            <a href="#/academic/reports"
+             draggable="true"
+             data-rail-slug="academic_reports"
+             aria-current="false"
+             class="rail-item relative flex items-center justify-center h-10 rounded-xl transition duration-150 text-slate-400"
+             title="Relatórios"
+             aria-label="Relatórios">
+            <div class="w-10 h-10 flex items-center justify-center shrink-0">
+              <i class="fa-light fa-chart-pie text-base transition-transform duration-150"></i>
+            </div>
+            <span class="rail-label text-xs font-semibold whitespace-nowrap text-slate-700">Relatórios</span>
+            <span class="rail-tooltip">Relatórios</span>
+          </a>
+                  </div>
+        </details>                              <details class="portal-rail-group" data-portal-group="admin-learning_student_services">
+          <summary title="Aprendizado e Serviços ao Aluno" aria-label="Aprendizado e Serviços ao Aluno">
+            <i class="fa-light fa-file-lines portal-group-icon" aria-hidden="true"></i>
+            <span class="portal-group-label">Aprendizado e Serviços ao Aluno</span>
+            <i class="fa-light fa-chevron-down portal-group-chevron" aria-hidden="true"></i>
+          </summary>
+          <div class="portal-group-items">
+                                    <a href="#/content/documents"
+             draggable="true"
+             data-rail-slug="academic_documents"
+             aria-current="false"
+             class="rail-item relative flex items-center justify-center h-10 rounded-xl transition duration-150 text-slate-400"
+             title="Gestão de Documentos"
+             aria-label="Gestão de Documentos">
+            <div class="w-10 h-10 flex items-center justify-center shrink-0">
+              <i class="fa-light fa-file-lines text-base transition-transform duration-150"></i>
+            </div>
+            <span class="rail-label text-xs font-semibold whitespace-nowrap text-slate-700">Gestão de Documentos</span>
+            <span class="rail-tooltip">Gestão de Documentos</span>
+          </a>
+                            <a href="#/library"
+             draggable="true"
+             data-rail-slug="library"
+             aria-current="false"
+             class="rail-item relative flex items-center justify-center h-10 rounded-xl transition duration-150 text-slate-400"
+             title="Biblioteca"
+             aria-label="Biblioteca">
+            <div class="w-10 h-10 flex items-center justify-center shrink-0">
+              <i class="fa-light fa-book-bookmark text-base transition-transform duration-150"></i>
+            </div>
+            <span class="rail-label text-xs font-semibold whitespace-nowrap text-slate-700">Biblioteca</span>
+            <span class="rail-tooltip">Biblioteca</span>
+          </a>
+                            <a href="#/academic/events"
+             draggable="true"
+             data-rail-slug="academic_events"
+             aria-current="false"
+             class="rail-item relative flex items-center justify-center h-10 rounded-xl transition duration-150 text-slate-400"
+             title="Gestão de Eventos"
+             aria-label="Gestão de Eventos">
+            <div class="w-10 h-10 flex items-center justify-center shrink-0">
+              <i class="fa-light fa-calendar-days text-base transition-transform duration-150"></i>
+            </div>
+            <span class="rail-label text-xs font-semibold whitespace-nowrap text-slate-700">Gestão de Eventos</span>
+            <span class="rail-tooltip">Gestão de Eventos</span>
+          </a>
+                            <a href="#/academic/spaces"
+             draggable="true"
+             data-rail-slug="academic_spaces"
+             aria-current="false"
+             class="rail-item relative flex items-center justify-center h-10 rounded-xl transition duration-150 text-slate-400"
+             title="Agendamento de Espaços PRO"
+             aria-label="Agendamento de Espaços PRO">
+            <div class="w-10 h-10 flex items-center justify-center shrink-0">
+              <i class="fa-light fa-door-open text-base transition-transform duration-150"></i>
+            </div>
+            <span class="rail-label text-xs font-semibold whitespace-nowrap text-slate-700">Agendamento de Espaços PRO</span>
+            <span class="rail-tooltip">Agendamento de Espaços PRO</span>
+          </a>
+                            <a href="#/preceptorship"
+             draggable="true"
+             data-rail-slug="preceptorship"
+             aria-current="false"
+             class="rail-item relative flex items-center justify-center h-10 rounded-xl transition duration-150 text-slate-400"
+             title="Gestão de Preceptoria PRO"
+             aria-label="Gestão de Preceptoria PRO">
+            <div class="w-10 h-10 flex items-center justify-center shrink-0">
+              <i class="fa-light fa-stethoscope text-base transition-transform duration-150"></i>
+            </div>
+            <span class="rail-label text-xs font-semibold whitespace-nowrap text-slate-700">Gestão de Preceptoria PRO</span>
+            <span class="rail-tooltip">Gestão de Preceptoria PRO</span>
+          </a>
+                            <a href="#/academic/pastoral"
+             draggable="true"
+             data-rail-slug="academic_pastoral"
+             aria-current="false"
+             class="rail-item relative flex items-center justify-center h-10 rounded-xl transition duration-150 text-slate-400"
+             title="Gestão Pastoral PRO"
+             aria-label="Gestão Pastoral PRO">
+            <div class="w-10 h-10 flex items-center justify-center shrink-0">
+              <i class="fa-light fa-hands-praying text-base transition-transform duration-150"></i>
+            </div>
+            <span class="rail-label text-xs font-semibold whitespace-nowrap text-slate-700">Gestão Pastoral PRO</span>
+            <span class="rail-tooltip">Gestão Pastoral PRO</span>
+          </a>
+                  </div>
+        </details>                              <details class="portal-rail-group" data-portal-group="admin-institution_management">
+          <summary title="Gestão da Instituição" aria-label="Gestão da Instituição">
+            <i class="fa-light fa-handshake portal-group-icon" aria-hidden="true"></i>
+            <span class="portal-group-label">Gestão da Instituição</span>
+            <i class="fa-light fa-chevron-down portal-group-chevron" aria-hidden="true"></i>
+          </summary>
+          <div class="portal-group-items">
+                                    <a href="#/commercial"
+             draggable="true"
+             data-rail-slug="commercial"
+             aria-current="false"
+             class="rail-item relative flex items-center justify-center h-10 rounded-xl transition duration-150 text-slate-400"
+             title="Gestão Comercial"
+             aria-label="Gestão Comercial">
+            <div class="w-10 h-10 flex items-center justify-center shrink-0">
+              <i class="fa-light fa-handshake text-base transition-transform duration-150"></i>
+            </div>
+            <span class="rail-label text-xs font-semibold whitespace-nowrap text-slate-700">Gestão Comercial</span>
+            <span class="rail-tooltip">Gestão Comercial</span>
+          </a>
+                            <a href="#/financial"
+             draggable="true"
+             data-rail-slug="financial"
+             aria-current="false"
+             class="rail-item relative flex items-center justify-center h-10 rounded-xl transition duration-150 text-slate-400"
+             title="Gestão Financeira"
+             aria-label="Gestão Financeira">
+            <div class="w-10 h-10 flex items-center justify-center shrink-0">
+              <i class="fa-light fa-dollar-sign text-base transition-transform duration-150"></i>
+            </div>
+            <span class="rail-label text-xs font-semibold whitespace-nowrap text-slate-700">Gestão Financeira</span>
+            <span class="rail-tooltip">Gestão Financeira</span>
+          </a>
+                            <a href="#/accounting"
+             draggable="true"
+             data-rail-slug="accounting"
+             aria-current="false"
+             class="rail-item relative flex items-center justify-center h-10 rounded-xl transition duration-150 text-slate-400"
+             title="Gestão Contábil"
+             aria-label="Gestão Contábil">
+            <div class="w-10 h-10 flex items-center justify-center shrink-0">
+              <i class="fa-light fa-calculator text-base transition-transform duration-150"></i>
+            </div>
+            <span class="rail-label text-xs font-semibold whitespace-nowrap text-slate-700">Gestão Contábil</span>
+            <span class="rail-tooltip">Gestão Contábil</span>
+          </a>
+                            <a href="#/people/hr"
+             draggable="true"
+             data-rail-slug="hr"
+             aria-current="false"
+             class="rail-item relative flex items-center justify-center h-10 rounded-xl transition duration-150 text-slate-400"
+             title="Recursos Humanos"
+             aria-label="Recursos Humanos">
+            <div class="w-10 h-10 flex items-center justify-center shrink-0">
+              <i class="fa-light fa-user-tie text-base transition-transform duration-150"></i>
+            </div>
+            <span class="rail-label text-xs font-semibold whitespace-nowrap text-slate-700">Recursos Humanos</span>
+            <span class="rail-tooltip">Recursos Humanos</span>
+          </a>
+                            <a href="#/people/dp"
+             draggable="true"
+             data-rail-slug="dp"
+             aria-current="false"
+             class="rail-item relative flex items-center justify-center h-10 rounded-xl transition duration-150 text-slate-400"
+             title="Departamento de Pessoal"
+             aria-label="Departamento de Pessoal">
+            <div class="w-10 h-10 flex items-center justify-center shrink-0">
+              <i class="fa-light fa-id-card-clip text-base transition-transform duration-150"></i>
+            </div>
+            <span class="rail-label text-xs font-semibold whitespace-nowrap text-slate-700">Departamento de Pessoal</span>
+            <span class="rail-tooltip">Departamento de Pessoal</span>
+          </a>
+                            <a href="#/people/smt"
+             draggable="true"
+             data-rail-slug="smt"
+             aria-current="false"
+             class="rail-item relative flex items-center justify-center h-10 rounded-xl transition duration-150 text-slate-400"
+             title="Saúde Ocupacional"
+             aria-label="Saúde Ocupacional">
+            <div class="w-10 h-10 flex items-center justify-center shrink-0">
+              <i class="fa-light fa-heart-pulse text-base transition-transform duration-150"></i>
+            </div>
+            <span class="rail-label text-xs font-semibold whitespace-nowrap text-slate-700">Saúde Ocupacional</span>
+            <span class="rail-tooltip">Saúde Ocupacional</span>
+          </a>
+                            <a href="#/projects"
+             draggable="true"
+             data-rail-slug="projects"
+             aria-current="false"
+             class="rail-item relative flex items-center justify-center h-10 rounded-xl transition duration-150 text-slate-400"
+             title="Gestão de Projetos PRO"
+             aria-label="Gestão de Projetos PRO">
+            <div class="w-10 h-10 flex items-center justify-center shrink-0">
+              <i class="fa-light fa-diagram-project text-base transition-transform duration-150"></i>
+            </div>
+            <span class="rail-label text-xs font-semibold whitespace-nowrap text-slate-700">Gestão de Projetos PRO</span>
+            <span class="rail-tooltip">Gestão de Projetos PRO</span>
+          </a>
+                  </div>
+        </details>                              <details class="portal-rail-group" data-portal-group="admin-campus_operations">
+          <summary title="Operações do Campus" aria-label="Operações do Campus">
+            <i class="fa-light fa-boxes-stacked portal-group-icon" aria-hidden="true"></i>
+            <span class="portal-group-label">Operações do Campus</span>
+            <i class="fa-light fa-chevron-down portal-group-chevron" aria-hidden="true"></i>
+          </summary>
+          <div class="portal-group-items">
+                                    <a href="#/supplies"
+             draggable="true"
+             data-rail-slug="supplies"
+             aria-current="false"
+             class="rail-item relative flex items-center justify-center h-10 rounded-xl transition duration-150 text-slate-400"
+             title="Gestão de Suprimentos"
+             aria-label="Gestão de Suprimentos">
+            <div class="w-10 h-10 flex items-center justify-center shrink-0">
+              <i class="fa-light fa-boxes-stacked text-base transition-transform duration-150"></i>
+            </div>
+            <span class="rail-label text-xs font-semibold whitespace-nowrap text-slate-700">Gestão de Suprimentos</span>
+            <span class="rail-tooltip">Gestão de Suprimentos</span>
+          </a>
+                            <a href="#/wms"
+             draggable="true"
+             data-rail-slug="storage"
+             aria-current="false"
+             class="rail-item relative flex items-center justify-center h-10 rounded-xl transition duration-150 text-slate-400"
+             title="Gestão de Armazém"
+             aria-label="Gestão de Armazém">
+            <div class="w-10 h-10 flex items-center justify-center shrink-0">
+              <i class="fa-light fa-warehouse text-base transition-transform duration-150"></i>
+            </div>
+            <span class="rail-label text-xs font-semibold whitespace-nowrap text-slate-700">Gestão de Armazém</span>
+            <span class="rail-tooltip">Gestão de Armazém</span>
+          </a>
+                            <a href="#/assets"
+             draggable="true"
+             data-rail-slug="assets"
+             aria-current="false"
+             class="rail-item relative flex items-center justify-center h-10 rounded-xl transition duration-150 text-slate-400"
+             title="Gestão de Patrimônio"
+             aria-label="Gestão de Patrimônio">
+            <div class="w-10 h-10 flex items-center justify-center shrink-0">
+              <i class="fa-light fa-building-shield text-base transition-transform duration-150"></i>
+            </div>
+            <span class="rail-label text-xs font-semibold whitespace-nowrap text-slate-700">Gestão de Patrimônio</span>
+            <span class="rail-tooltip">Gestão de Patrimônio</span>
+          </a>
+                            <a href="#/fleet"
+             draggable="true"
+             data-rail-slug="fleet"
+             aria-current="false"
+             class="rail-item relative flex items-center justify-center h-10 rounded-xl transition duration-150 text-slate-400"
+             title="Frota e Transporte Escolar"
+             aria-label="Frota e Transporte Escolar">
+            <div class="w-10 h-10 flex items-center justify-center shrink-0">
+              <i class="fa-light fa-truck text-base transition-transform duration-150"></i>
+            </div>
+            <span class="rail-label text-xs font-semibold whitespace-nowrap text-slate-700">Frota e Transporte Escolar</span>
+            <span class="rail-tooltip">Frota e Transporte Escolar</span>
+          </a>
+                            <a href="#/concierge"
+             draggable="true"
+             data-rail-slug="concierge"
+             aria-current="false"
+             class="rail-item relative flex items-center justify-center h-10 rounded-xl transition duration-150 text-slate-400"
+             title="Portaria e Controle de Acesso"
+             aria-label="Portaria e Controle de Acesso">
+            <div class="w-10 h-10 flex items-center justify-center shrink-0">
+              <i class="fa-light fa-door-open text-base transition-transform duration-150"></i>
+            </div>
+            <span class="rail-label text-xs font-semibold whitespace-nowrap text-slate-700">Portaria e Controle de Acesso</span>
+            <span class="rail-tooltip">Portaria e Controle de Acesso</span>
+          </a>
+                  </div>
+        </details>                              <details class="portal-rail-group" data-portal-group="admin-governance_technology">
+          <summary title="Governança e Tecnologia" aria-label="Governança e Tecnologia">
+            <i class="fa-light fa-building-columns portal-group-icon" aria-hidden="true"></i>
+            <span class="portal-group-label">Governança e Tecnologia</span>
+            <i class="fa-light fa-chevron-down portal-group-chevron" aria-hidden="true"></i>
+          </summary>
+          <div class="portal-group-items">
+                                    <a href="#/institution"
+             draggable="true"
+             data-rail-slug="institution"
+             aria-current="false"
+             class="rail-item relative flex items-center justify-center h-10 rounded-xl transition duration-150 text-slate-400"
+             title="Configurações da Instituição"
+             aria-label="Configurações da Instituição">
+            <div class="w-10 h-10 flex items-center justify-center shrink-0">
+              <i class="fa-light fa-building-columns text-base transition-transform duration-150"></i>
+            </div>
+            <span class="rail-label text-xs font-semibold whitespace-nowrap text-slate-700">Configurações da Instituição</span>
+            <span class="rail-tooltip">Configurações da Instituição</span>
+          </a>
+                            <a href="#/identity"
+             draggable="true"
+             data-rail-slug="access"
+             aria-current="false"
+             class="rail-item relative flex items-center justify-center h-10 rounded-xl transition duration-150 text-slate-400"
+             title="Gestão de Acesso"
+             aria-label="Gestão de Acesso">
+            <div class="w-10 h-10 flex items-center justify-center shrink-0">
+              <i class="fa-light fa-shield-halved text-base transition-transform duration-150"></i>
+            </div>
+            <span class="rail-label text-xs font-semibold whitespace-nowrap text-slate-700">Gestão de Acesso</span>
+            <span class="rail-tooltip">Gestão de Acesso</span>
+          </a>
+                            <a href="#/compliance"
+             draggable="true"
+             data-rail-slug="compliance"
+             aria-current="false"
+             class="rail-item relative flex items-center justify-center h-10 rounded-xl transition duration-150 text-slate-400"
+             title="Gestão de Privacidade"
+             aria-label="Gestão de Privacidade">
+            <div class="w-10 h-10 flex items-center justify-center shrink-0">
+              <i class="fa-light fa-user-shield text-base transition-transform duration-150"></i>
+            </div>
+            <span class="rail-label text-xs font-semibold whitespace-nowrap text-slate-700">Gestão de Privacidade</span>
+            <span class="rail-tooltip">Gestão de Privacidade</span>
+          </a>
+                            <a href="#/itsm"
+             draggable="true"
+             data-rail-slug="itsm"
+             aria-current="false"
+             class="rail-item relative flex items-center justify-center h-10 rounded-xl transition duration-150 text-slate-400"
+             title="TI Profissional"
+             aria-label="TI Profissional">
+            <div class="w-10 h-10 flex items-center justify-center shrink-0">
+              <i class="fa-light fa-headset text-base transition-transform duration-150"></i>
+            </div>
+            <span class="rail-label text-xs font-semibold whitespace-nowrap text-slate-700">TI Profissional</span>
+            <span class="rail-tooltip">TI Profissional</span>
+          </a>
+                            <a href="#/support"
+             draggable="true"
+             data-rail-slug="support"
+             aria-current="false"
+             class="rail-item relative flex items-center justify-center h-10 rounded-xl transition duration-150 text-slate-400"
+             title="Atendimentos"
+             aria-label="Atendimentos">
+            <div class="w-10 h-10 flex items-center justify-center shrink-0">
+              <i class="fa-light fa-life-ring text-base transition-transform duration-150"></i>
+            </div>
+            <span class="rail-label text-xs font-semibold whitespace-nowrap text-slate-700">Atendimentos</span>
+            <span class="rail-tooltip">Atendimentos</span>
+          </a>
+                            <a href="#/integrations"
+             draggable="true"
+             data-rail-slug="integrations"
+             aria-current="false"
+             class="rail-item relative flex items-center justify-center h-10 rounded-xl transition duration-150 text-slate-400"
+             title="Gestão de Integrações"
+             aria-label="Gestão de Integrações">
+            <div class="w-10 h-10 flex items-center justify-center shrink-0">
+              <i class="fa-light fa-plug text-base transition-transform duration-150"></i>
+            </div>
+            <span class="rail-label text-xs font-semibold whitespace-nowrap text-slate-700">Gestão de Integrações</span>
+            <span class="rail-tooltip">Gestão de Integrações</span>
+          </a>
+                            <a href="#/settings"
+             draggable="true"
+             data-rail-slug="settings"
+             aria-current="false"
+             class="rail-item relative flex items-center justify-center h-10 rounded-xl transition duration-150 text-slate-400"
+             title="Configurações do Sistema"
+             aria-label="Configurações do Sistema">
+            <div class="w-10 h-10 flex items-center justify-center shrink-0">
+              <i class="fa-light fa-gear text-base transition-transform duration-150"></i>
+            </div>
+            <span class="rail-label text-xs font-semibold whitespace-nowrap text-slate-700">Configurações do Sistema</span>
+            <span class="rail-tooltip">Configurações do Sistema</span>
+          </a>
+                  </div>
+        </details>          </div>
+
+    <!-- Bottom Controls (canonical model parity: lines 6475-6502)
+         Hover state owned by #primary-rail .rail-item rules (ttsc.design-system.css) -->
+    <div class="w-full flex flex-col items-center gap-1.5 pt-2 border-t border-slate-100 px-1.5 shrink-0">
+      <button type="button" data-toggle-drawer="drawer-help" onclick="openDrawer('drawer-help')" class="rail-item relative flex items-center justify-center h-10 rounded-xl text-slate-400 transition duration-150 cursor-pointer" title="Ajuda e Suporte">
+        <div class="w-10 h-10 flex items-center justify-center shrink-0">
+          <i class="fa-light fa-circle-question text-base transition-transform duration-150"></i>
+        </div>
+        <span class="rail-label text-xs font-semibold text-slate-700 whitespace-nowrap">Ajuda e Suporte</span>
+        <span class="rail-tooltip">Ajuda e Suporte</span>
+      </button>
+
+      <button type="button" data-toggle-drawer="drawer-profile" onclick="openDrawer('drawer-profile')" class="rail-item relative flex items-center justify-center h-10 rounded-xl text-slate-400 transition duration-150 cursor-pointer" title="Configurações">
+        <div class="w-10 h-10 flex items-center justify-center shrink-0">
+          <i class="fa-light fa-gear text-base transition-transform duration-200"></i>
+        </div>
+        <span class="rail-label text-xs font-semibold text-slate-700 whitespace-nowrap">Configurações</span>
+        <span class="rail-tooltip">Configurações</span>
+      </button>
+    </div>
+  </aside>
+</div>
+
+<script>
+let portalDropdownCloseTimer = null;
+
+function cancelPortalDropdownClose() {
+  if (portalDropdownCloseTimer) {
+    clearTimeout(portalDropdownCloseTimer);
+    portalDropdownCloseTimer = null;
+  }
+}
+
+function schedulePortalDropdownClose(delay) {
+  cancelPortalDropdownClose();
+  portalDropdownCloseTimer = setTimeout(function() {
+    closeSidebarPortalDropdown();
+  }, typeof delay === 'number' ? delay : 120);
+}
+
+function toggleSidebarPortalDropdown(e) {
+  if (e) {
+    if (typeof e.stopPropagation === 'function') e.stopPropagation();
+    if (typeof e.preventDefault === 'function') e.preventDefault();
+  }
+  cancelPortalDropdownClose();
+  const dd = document.getElementById('sidebar-portal-dropdown');
+  const chev = document.getElementById('sidebar-portal-chevron');
+  const chevExp = document.getElementById('sidebar-portal-chevron-expanded');
+  const btn = document.getElementById('btn-sidebar-portal');
+  const rail = document.getElementById('primary-rail');
+  if (!dd) return;
+  const isHidden = dd.classList.contains('hidden');
+  if (isHidden) {
+    dd.classList.remove('hidden');
+    if (rail) rail.classList.add('portal-dropdown-open');
+    if (chev) chev.classList.add('rotate-180');
+    if (chevExp) chevExp.classList.add('rotate-180');
+    if (btn) btn.setAttribute('aria-expanded', 'true');
+  } else {
+    dd.classList.add('hidden');
+    if (rail) rail.classList.remove('portal-dropdown-open');
+    if (chev) chev.classList.remove('rotate-180');
+    if (chevExp) chevExp.classList.remove('rotate-180');
+    if (btn) btn.setAttribute('aria-expanded', 'false');
+  }
+}
+window.toggleSidebarPortalDropdown = toggleSidebarPortalDropdown;
+
+function closeSidebarPortalDropdown() {
+  cancelPortalDropdownClose();
+  const dd = document.getElementById('sidebar-portal-dropdown');
+  const chev = document.getElementById('sidebar-portal-chevron');
+  const chevExp = document.getElementById('sidebar-portal-chevron-expanded');
+  const btn = document.getElementById('btn-sidebar-portal');
+  const rail = document.getElementById('primary-rail');
+  if (dd && !dd.classList.contains('hidden')) {
+    dd.classList.add('hidden');
+    if (rail) rail.classList.remove('portal-dropdown-open');
+    if (chev) chev.classList.remove('rotate-180');
+    if (chevExp) chevExp.classList.remove('rotate-180');
+    if (btn) btn.setAttribute('aria-expanded', 'false');
+  }
+}
+window.closeSidebarPortalDropdown = closeSidebarPortalDropdown;
+
+// Setup hover auto-hide behavior
+(function() {
+  function initPortalHoverEvents() {
+    const dd = document.getElementById('sidebar-portal-dropdown');
+    const btn = document.getElementById('btn-sidebar-portal');
+    const wrapper = document.getElementById('rail-portal-wrapper');
+
+    if (!dd) return;
+
+    // When mouse enters dropdown, cancel any scheduled close
+    dd.addEventListener('mouseenter', function() {
+      cancelPortalDropdownClose();
+    });
+
+    // When mouse leaves dropdown, auto-hide
+    dd.addEventListener('mouseleave', function(e) {
+      if (btn && (btn === e.relatedTarget || btn.contains(e.relatedTarget))) {
+        return;
+      }
+      schedulePortalDropdownClose(120);
+    });
+
+    if (btn) {
+      btn.addEventListener('mouseenter', function() {
+        const isVisible = dd && !dd.classList.contains('hidden');
+        if (isVisible) {
+          cancelPortalDropdownClose();
+        }
+      });
+
+      btn.addEventListener('mouseleave', function(e) {
+        const isVisible = dd && !dd.classList.contains('hidden');
+        if (isVisible) {
+          // If mouse is moving towards the dropdown (or bridge)
+          if (dd && (dd === e.relatedTarget || dd.contains(e.relatedTarget))) {
+            cancelPortalDropdownClose();
+            return;
+          }
+          schedulePortalDropdownClose(220);
+        }
+      });
+    }
+
+    if (wrapper) {
+      wrapper.addEventListener('mouseleave', function(e) {
+        const isVisible = dd && !dd.classList.contains('hidden');
+        if (isVisible) {
+          if (dd && (dd === e.relatedTarget || dd.contains(e.relatedTarget))) {
+            return;
+          }
+          schedulePortalDropdownClose(120);
+        }
+      });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPortalHoverEvents);
+  } else {
+    initPortalHoverEvents();
+  }
+})();
+
+document.addEventListener('click', function(e) {
+  const dd = document.getElementById('sidebar-portal-dropdown');
+  const btn = document.getElementById('btn-sidebar-portal');
+  if (dd && !dd.classList.contains('hidden')) {
+    if ((!btn || !btn.contains(e.target)) && !dd.contains(e.target)) {
+      closeSidebarPortalDropdown();
+    }
+  }
+});
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeSidebarPortalDropdown();
+  }
+});
+</script>
+
+        <!-- SUB-SIDEBAR (width: --ttsc-sub-sidebar-w, ttsc.design-system.css) -->
+                    <!-- Legacy mobile hook retained for the shared sidebar controller. -->
+<div class="sb-backdrop" data-sb-sidebar="academic-secretariat-sidebar" aria-hidden="true" hidden></div>
+<aside id="sub-sidebar" class="flex flex-col shrink-0 relative select-none" data-od-id="sidebar" data-sidebar-id="academic-secretariat-sidebar" aria-label="Secretaria">
+  <!-- Sub-Sidebar Header (Title, Icon, Badge & Collapse Button)
+       Panel chrome (width/border/background) is owned by #sub-sidebar in
+       ttsc.design-system.css; region chrome by .sb-head/.sb-tile (same file). -->
+  <div class="sb-head p-3 flex items-center justify-between shrink-0">
+    <div class="flex items-center gap-2.5 min-w-0">
+      <div class="sb-tile w-8 h-8 rounded-xl flex items-center justify-center shrink-0">
+        <i class="fa-light fa-id-card text-sm"></i>
+      </div>
+      <div class="min-w-0">
+        <div class="sb-title text-xs truncate">
+          Secretaria        </div>
+        <div class="sb-sub flex items-center gap-1.5 text-[11px]">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block shrink-0"></span>
+          <span class="truncate">Módulo Ativo</span>
+        </div>
+      </div>
+    </div>
+    <div class="flex items-center gap-1 shrink-0">
+      <span class="sb-badge">ACA</span>
+      <button type="button"
+              data-sidebar-collapse="1"
+              id="subsidebar-collapse-btn"
+              class="sb-collapse w-7 h-7 flex items-center justify-center rounded-lg transition cursor-pointer"
+              title="Recolher Barra Lateral"
+              aria-label="Recolher Barra Lateral">
+        <i class="fa-light fa-chevrons-left text-xs"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Quick Sub-sidebar Search Filter (model parity: line 6528) -->
+  <div class="sb-search-filter p-3 shrink-0">
+    <div class="relative flex items-center">
+      <i class="fa-light fa-magnifying-glass sb-search-icon text-xs" aria-hidden="true"></i>
+      <input type="search" id="subsidebar-filter" data-sb-search="true" data-sidebar-filter="sub-sidebar" placeholder="Buscar páginas..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" role="searchbox" data-lpignore="true" data-1p-ignore="true" data-form-type="other" aria-keyshortcuts="/" class="sb-search-input" />
+      <!-- "/" focuses this filter (assets/js/ttsc.sidebar.js); Ctrl+K stays the
+           app-wide global search shortcut (assets/js/ttsc.drawer.js). -->
+      <span class="sb-kbd" aria-hidden="true">/</span>
+    </div>
+  </div>
+
+  <!-- Navigation Accordions (Scrollable Area) -->
+  <div class="flex-1 overflow-y-auto px-2.5 py-3 space-y-2 text-xs" style="scrollbar-width: thin;">
+            <div class="subnav-group">
+                <a class="subnav-link" href="#/academic/secretariat/protocols">
+                    <i class="fa-light fa-headset text-xs w-4"></i>
+                    <span class="truncate">Protocolos de Atendimento</span>
+                </a>
+            </div>
+                <div class="subnav-group">
+      <button type="button" data-accordion-toggle="acc-1" data-accordion-chevron="chev-1" aria-expanded="true" aria-controls="acc-1" class="sb-section-btn w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-[11px] uppercase">
+        <!-- The label wrapper MUST be min-w-0 + flex-1: as a flex item its
+             automatic minimum size is min-content, so the nowrap label could
+             never ellipsize and the longest one pushed the badge + chevron past
+             the row's right edge (chevron on the panel border, 1px of horizontal
+             overflow -> scrollbar). flex-1 makes it absorb all slack so the
+             badge/chevron group stays pinned flush to the row end. -->
+        <span class="flex items-center gap-2 min-w-0 flex-1">
+          <i class="fa-light fa-id-card text-xs shrink-0"></i>
+          <span class="truncate">Admissões e Matrículas</span>
+        </span>
+        <!-- shrink-0: the indicator cluster never compresses, so every row's
+             chevron lands on the same x (button right padding = 10px). -->
+        <div class="flex items-center gap-1.5 shrink-0">
+          <span class="sb-count-pill">9</span>
+          <i id="chev-1" class="chev-icon fa-light fa-chevron-down text-[10px] shrink-0 rotate-180"></i>
+        </div>
+      </button>
+      <div id="acc-1" class="subnav-accordion-content is-open mt-1">
+        <div class="subnav-tree space-y-0.5">
+          <a class="subnav-link" href="#/academic/enrollment">
+            <i class="fa-light fa-user-plus text-xs w-4 text-slate-400"></i>
+            <span class="truncate">Matrícula</span>
+          </a>
+          <a class="subnav-link is-active" href="#/academic/enrollment/re-enrollment" aria-current="page">
+            <i class="fa-light fa-rotate-right text-xs w-4"></i>
+            <span class="truncate">Rematrícula</span>
+          </a>
+          <a class="subnav-link" href="#/academic/enrollment/transfers">
+            <i class="fa-light fa-arrow-right-arrow-left text-xs w-4 text-slate-400"></i>
+            <span class="truncate">Transferências</span>
+          </a>
+          <a class="subnav-link" href="#/academic/enrollment/records">
+            <i class="fa-light fa-address-card text-xs w-4 text-slate-400"></i>
+            <span class="truncate">Registros Acadêmicos</span>
+          </a>
+          <a class="subnav-link" href="#/academic/enrollment/transfer-credits">
+            <i class="fa-light fa-certificate text-xs w-4 text-slate-400"></i>
+            <span class="truncate">Transferência de Créditos</span>
+          </a>
+          <a class="subnav-link" href="#/academic/enrollment/recognition">
+            <i class="fa-light fa-brain text-xs w-4 text-slate-400"></i>
+            <span class="truncate">Aproveitamento de Estudos</span>
+          </a>
+          <a class="subnav-link" href="#/academic/enrollment/accreditation">
+            <i class="fa-light fa-stamp text-xs w-4 text-slate-400"></i>
+            <span class="truncate">Credenciamento</span>
+          </a>
+          <a class="subnav-link" href="#/academic/enrollment/agreements">
+            <i class="fa-light fa-handshake text-xs w-4 text-slate-400"></i>
+            <span class="truncate">Acordos e Parcerias</span>
+          </a>
+          <a class="subnav-link" href="#/academic/enrollment/scholarships">
+            <i class="fa-light fa-hand-holding-dollar text-xs w-4 text-slate-400"></i>
+            <span class="truncate">Bolsas de Estudo</span>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="subnav-group">
+      <button type="button" data-accordion-toggle="acc-2" data-accordion-chevron="chev-2" aria-expanded="false" aria-controls="acc-2" class="sb-section-btn w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-[11px] uppercase">
+        <!-- The label wrapper MUST be min-w-0 + flex-1: as a flex item its
+             automatic minimum size is min-content, so the nowrap label could
+             never ellipsize and the longest one pushed the badge + chevron past
+             the row's right edge (chevron on the panel border, 1px of horizontal
+             overflow -> scrollbar). flex-1 makes it absorb all slack so the
+             badge/chevron group stays pinned flush to the row end. -->
+        <span class="flex items-center gap-2 min-w-0 flex-1">
+          <i class="fa-light fa-users text-xs shrink-0"></i>
+          <span class="truncate">Alunos e Gestão de Turmas</span>
+        </span>
+        <!-- shrink-0: the indicator cluster never compresses, so every row's
+             chevron lands on the same x (button right padding = 10px). -->
+        <div class="flex items-center gap-1.5 shrink-0">
+          <span class="sb-count-pill">8</span>
+          <i id="chev-2" class="chev-icon fa-light fa-chevron-down text-[10px] shrink-0 "></i>
+        </div>
+      </button>
+      <div id="acc-2" class="subnav-accordion-content is-closed mt-1">
+        <div class="subnav-tree space-y-0.5">
+          <a class="subnav-link" href="#/academic/students">
+            <i class="fa-light fa-user-graduate text-xs w-4 text-slate-400"></i>
+            <span class="truncate">Registered Students</span>
+          </a>
+          <a class="subnav-link" href="#/academic/students/groups">
+            <i class="fa-light fa-users-line text-xs w-4 text-slate-400"></i>
+            <span class="truncate">Class Enturmation</span>
+          </a>
+          <a class="subnav-link" href="#/academic/students/attendance">
+            <i class="fa-light fa-clipboard-user text-xs w-4 text-slate-400"></i>
+            <span class="truncate">Registros de Frequência</span>
+          </a>
+          <a class="subnav-link" href="#/academic/secretariat/status">
+            <i class="fa-light fa-hourglass-half text-xs w-4 text-slate-400"></i>
+            <span class="truncate">Situação Acadêmica e Pendências</span>
+          </a>
+          <a class="subnav-link" href="#/academic/secretariat/documents">
+            <i class="fa-light fa-folder-open text-xs w-4 text-slate-400"></i>
+            <span class="truncate">Documentos do Aluno</span>
+          </a>
+          <a class="subnav-link" href="#/academic/secretariat/diplomas">
+            <i class="fa-light fa-award text-xs w-4 text-slate-400"></i>
+            <span class="truncate">Diplomas e Certificados</span>
+          </a>
+          <a class="subnav-link" href="#/academic/secretariat/communication">
+            <i class="fa-light fa-comments text-xs w-4 text-slate-400"></i>
+            <span class="truncate">Comunicação com Responsáveis</span>
+          </a>
+          <a class="subnav-link" href="#/academic/students/occurrences">
+            <i class="fa-light fa-triangle-exclamation text-xs w-4 text-slate-400"></i>
+            <span class="truncate">Ocorrências</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sub-Sidebar Pinned Operational Footer (model parity) — .sb-foot chrome via ttsc.design-system.css -->
+  <div class="sb-foot p-3 shrink-0">
+          </div>
+</aside>
+
+<script>
+/* NOTE: window.toggleSubSidebar is owned by assets/js/ttsc.shell.js (viewport-aware:
+   mobile drawer < 1100px with backdrop, desktop collapse + localStorage persistence).
+   A local desktop-only copy used to be defined here too; it was always overwritten by
+   shell.js and, if it ever survived, broke the mobile drawer -> single owner only. */
+
+function toggleAccordion(accId, chevId, e) {
+  if (e) {
+    if (typeof e.preventDefault === 'function') e.preventDefault();
+    if (typeof e.stopPropagation === 'function') e.stopPropagation();
+  }
+  const acc = document.getElementById(accId);
+  const chev = document.getElementById(chevId);
+  if (!acc) return;
+  const isClosed = acc.classList.contains('is-closed') || acc.classList.contains('hidden');
+  if (isClosed) {
+    acc.classList.remove('hidden', 'is-closed');
+    acc.classList.add('is-open');
+    if (chev) chev.classList.add('rotate-180');
+  } else {
+    acc.classList.remove('is-open');
+    acc.classList.add('is-closed');
+    if (chev) chev.classList.remove('rotate-180');
+  }
+}
+window.toggleAccordion = toggleAccordion;
+
+function filterSubSidebar(query) {
+  query = (query || '').toLowerCase().trim();
+  const groups = document.querySelectorAll('.subnav-group');
+  groups.forEach(g => {
+    let hasMatch = false;
+    const links = g.querySelectorAll('a');
+    links.forEach(a => {
+      const text = a.textContent.toLowerCase();
+      if (!query || text.includes(query)) {
+        a.style.display = '';
+        hasMatch = true;
+      } else {
+        a.style.display = 'none';
+      }
+    });
+    const contentDiv = g.querySelector('div[id^="acc-"]');
+    const chev = g.querySelector('.chev-icon');
+    if (!query) {
+      g.style.display = '';
+    } else if (hasMatch) {
+      g.style.display = '';
+      if (contentDiv) {
+        contentDiv.classList.remove('hidden', 'is-closed');
+        contentDiv.classList.add('is-open');
+        if (chev) chev.classList.add('rotate-180');
+      }
+    } else {
+      g.style.display = 'none';
+    }
+  });
+}
+window.filterSubSidebar = filterSubSidebar;
+
+document.getElementById('subsidebar-filter')?.addEventListener('input', function() {
+  filterSubSidebar(this.value);
+});
+
+/* Keyboard: "/" focuses #subsidebar-filter (handler in assets/js/ttsc.sidebar.js).
+   Ctrl+K is NOT handled here — it opens the global search (assets/js/ttsc.drawer.js);
+   handling it in both places focused the filter and opened the search at once. */
+</script>
+
+        
+        <!-- SUB-SIDEBAR EXPAND BUTTON (model parity) -->
+        <button id="sub-sidebar-expand-btn" type="button" onclick="toggleSubSidebar()" class="sub-sidebar-expand-btn h-9 px-3 bg-white dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700/80 rounded-xl shadow-2xs text-slate-700 dark:text-slate-200 transition cursor-pointer flex items-center space-x-1.5 shrink-0 self-start mt-1 hidden" title="Expandir Barra Lateral">
+            <svg class="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="18" height="18" x="3" y="3" rx="3"/>
+                <path d="M9 3v18"/>
+            </svg>
+            <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 leading-none">Menu</span>
+        </button>
+
+        <!-- MAIN VIEWPORT CONTAINER (model parity: docs/model/TotusTuus SoftCloud — Commercial.html line 6905) -->
+        <main id="main-viewport" class="flex-1 overflow-y-auto bg-slate-50 flex flex-col px-4 py-3.5 sm:px-6 sm:py-4 lg:px-8 space-y-4 pb-16 min-w-0 w-full" data-od-id="content" role="main">
+                        <script>
+window.switchDomainTab = function (tabName) {
+  var tabs = ["kpi","table","cards","kanban","analytics"];
+  tabs.forEach(function (t) {
+    var v = document.getElementById('view-' + t);
+    if (v) v.style.display = (t === tabName ? 'block' : 'none');
+    var b = document.getElementById('tab-btn-' + t);
+    if (b) {
+      if (t === tabName) {
+        b.className = 'tab-btn px-3.5 py-1.5 rounded-xl transition flex items-center space-x-1.5 bg-white text-slate-900 shadow-sm font-semibold is-active cursor-pointer';
+      } else {
+        b.className = 'tab-btn px-3.5 py-1.5 rounded-xl transition flex items-center space-x-1.5 text-slate-600 hover:text-slate-900 bg-transparent font-normal cursor-pointer';
+      }
+    }
+  });
+  var vp = document.getElementById('main-viewport');
+  if (vp) vp.scrollTo({ top: 0, behavior: 'smooth' });
+  var group = document.getElementById('chassis-segmented-tabs');
+  if (group && typeof group.recalculateTabs === 'function') { group.recalculateTabs(); }
+  document.dispatchEvent(new CustomEvent('ttsc:domain-tab', { detail: { tab: tabName } }));
+};
+</script>
+
+<!-- Header (title + breadcrumb + refresh) -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+  <div class="flex items-start space-x-3.5">
+    <div class="w-11 h-11 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center shrink-0">
+      <i class="fa-light fa-light fa-user-plus text-emerald-600 text-lg"></i>
+    </div>
+    <div>
+      <h1 class="text-xl font-semibold text-slate-900 tracking-tight">Espaço de Trabalho — Rematrícula</h1>
+      <div class="flex items-center space-x-2 text-xs text-slate-400 mt-0.5">
+        <i class="fa-light fa-house text-[10px]"></i>
+                                                          <a href="#/dashboard" class="hover:text-slate-600 transition">Portal da Instituição</a>
+                                                <span>/</span>                    <span class="text-slate-600 font-medium">Rematrícula</span>
+                                </div>
+    </div>
+  </div>
+  <button type="button" onclick="location.reload()" class="ttsc-btn ttsc-btn-primary ttsc-btn-sm">
+    <i class="fa-light fa-arrows-rotate text-xs"></i>
+    <span>Atualizar</span>
+  </button>
+</div>
+
+<!-- Status banner (model: "Commercial pipeline" / "Microservice Registry") -->
+<div class="bg-emerald-50/70 border border-emerald-200/80 rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-3">
+  <div class="flex items-center space-x-3.5 min-w-0">
+    <div class="w-10 h-10 rounded-xl bg-white border border-emerald-200 flex items-center justify-center text-emerald-600 shrink-0">
+      <i class="fa-light fa-light fa-user-plus text-base"></i>
+    </div>
+    <div class="min-w-0">
+      <h2 class="text-base font-semibold text-slate-800 flex flex-wrap items-center gap-x-2 gap-y-1">
+        <span>Espaço de Trabalho — Rematrícula</span>
+        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-white text-slate-500 border border-slate-200"><i class="fa-light fa-lock text-[9px]"></i>Consulta — gravado pelo fluxo do sistema</span>
+      </h2>
+      <p class="text-xs text-slate-500 mt-0.5">Registros, indicadores e ciclo de vida desta página na instituição selecionada.</p>
+    </div>
+  </div>
+  <div class="inline-flex items-center space-x-2 px-3 py-1 bg-white border border-emerald-300 rounded-full text-xs font-semibold text-emerald-700 self-start md:self-auto shadow-sm shrink-0">
+    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+    <span>Banco ativo (0 registros)</span>
+  </div>
+</div>
+
+<!-- Segmented tabs + actions -->
+<div id="domain-tab-toolbar" class="commercial-tabs-layout flex flex-col lg:flex-row lg:items-center justify-between gap-3 select-none">
+  <div id="chassis-segmented-tabs"
+       class="ttsc-segmented-tabs inline-flex p-1 bg-slate-200/75 rounded-2xl border border-slate-200 text-xs font-medium text-slate-600 gap-1 overflow-x-visible relative">
+        <button id="tab-btn-kpi" type="button" onclick="switchDomainTab('kpi')"
+      class="tab-btn is-active px-3.5 py-1.5 rounded-xl transition flex items-center space-x-1.5 bg-white text-slate-900 shadow-sm font-semibold cursor-pointer">
+      <i class="fa-light fa-chart-simple  text-xs"></i>
+      <span>KPI</span>
+            <span class="tab-badge px-1.5 py-0.5 bg-slate-300 text-slate-700 rounded-full text-[10px]">4</span>
+          </button>
+        <button id="tab-btn-table" type="button" onclick="switchDomainTab('table')"
+      class="tab-btn  px-3.5 py-1.5 rounded-xl transition flex items-center space-x-1.5 text-slate-600 hover:text-slate-900 bg-transparent font-normal cursor-pointer">
+      <i class="fa-light fa-table-list text-emerald-600 text-xs"></i>
+      <span>Tabela de Dados</span>
+            <span class="tab-badge px-1.5 py-0.5 bg-emerald-100 text-emerald-800 font-semibold rounded-full text-[10px]">0</span>
+          </button>
+        <button id="tab-btn-cards" type="button" onclick="switchDomainTab('cards')"
+      class="tab-btn  px-3.5 py-1.5 rounded-xl transition flex items-center space-x-1.5 text-slate-600 hover:text-slate-900 bg-transparent font-normal cursor-pointer">
+      <i class="fa-light fa-border-all  text-xs"></i>
+      <span>Cartões / Grade</span>
+            <span class="tab-badge px-1.5 py-0.5 bg-slate-300 text-slate-700 rounded-full text-[10px]">0</span>
+          </button>
+        <button id="tab-btn-kanban" type="button" onclick="switchDomainTab('kanban')"
+      class="tab-btn  px-3.5 py-1.5 rounded-xl transition flex items-center space-x-1.5 text-slate-600 hover:text-slate-900 bg-transparent font-normal cursor-pointer">
+      <i class="fa-light fa-bars-progress  text-xs"></i>
+      <span>Quadro Kanban</span>
+          </button>
+        <button id="tab-btn-analytics" type="button" onclick="switchDomainTab('analytics')"
+      class="tab-btn  px-3.5 py-1.5 rounded-xl transition flex items-center space-x-1.5 text-slate-600 hover:text-slate-900 bg-transparent font-normal cursor-pointer">
+      <i class="fa-light fa-chart-line  text-xs"></i>
+      <span>Analytics</span>
+            <span class="tab-badge px-1.5 py-0.5 bg-slate-300 text-slate-700 rounded-full text-[10px]">2026</span>
+          </button>
+      </div>
+  <div class="commercial-tab-actions flex flex-wrap items-center gap-2.5">
+        <button type="button" data-action="domain-open-filter" class="ttsc-btn ttsc-btn-outline ttsc-btn-sm">
+      <i class="fa-light fa-filter text-emerald-600 text-xs"></i>
+      <span>Filtrar</span>
+    </button>
+            <div class="relative">
+      <button type="button" data-action="domain-toggle-export" class="ttsc-btn ttsc-btn-outline-success ttsc-btn-sm">
+        <i class="fa-light fa-arrow-up-from-bracket text-emerald-600 text-xs"></i>
+        <span>Exportar</span>
+        <i class="fa-light fa-chevron-down text-[10px] text-emerald-600"></i>
+      </button>
+      <div id="domain-export-menu" class="absolute right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-slate-200 py-2 z-50 text-xs w-72 hidden">
+        <div class="px-3.5 py-1.5 border-b border-slate-100 text-[10px] uppercase font-semibold tracking-wider text-slate-400 flex items-center justify-between">
+          <span>Exportar dados</span>
+          <i class="fa-light fa-arrow-up-from-bracket text-emerald-600 text-[11px]"></i>
+        </div>
+        <div class="max-h-80 overflow-y-auto space-y-0.5 py-1">
+                    <button type="button" data-action="domain-export" data-format="csv" class="w-full text-left px-3.5 py-2 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 flex items-center justify-between transition cursor-pointer">
+            <span class="flex items-center space-x-2.5"><i class="fa-light fa-file-csv text-emerald-600 text-sm"></i><span class="font-medium">Exportar como CSV</span></span>
+            <span class="text-[10px] text-slate-400 font-mono bg-slate-100 px-1.5 py-0.5 rounded">.csv</span>
+          </button>
+                    <button type="button" data-action="domain-export" data-format="xlsx" class="w-full text-left px-3.5 py-2 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 flex items-center justify-between transition cursor-pointer">
+            <span class="flex items-center space-x-2.5"><i class="fa-light fa-file-excel text-emerald-600 text-sm"></i><span class="font-medium">Planilha Excel</span></span>
+            <span class="text-[10px] text-slate-400 font-mono bg-slate-100 px-1.5 py-0.5 rounded">.xlsx</span>
+          </button>
+                    <button type="button" data-action="domain-export" data-format="xls" class="w-full text-left px-3.5 py-2 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 flex items-center justify-between transition cursor-pointer">
+            <span class="flex items-center space-x-2.5"><i class="fa-light fa-file-excel text-emerald-600 text-sm"></i><span class="font-medium">Excel 97-2004</span></span>
+            <span class="text-[10px] text-slate-400 font-mono bg-slate-100 px-1.5 py-0.5 rounded">.xls</span>
+          </button>
+                    <button type="button" data-action="domain-export" data-format="pdf" class="w-full text-left px-3.5 py-2 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 flex items-center justify-between transition cursor-pointer">
+            <span class="flex items-center space-x-2.5"><i class="fa-light fa-file-pdf text-emerald-600 text-sm"></i><span class="font-medium">Documento PDF</span></span>
+            <span class="text-[10px] text-slate-400 font-mono bg-slate-100 px-1.5 py-0.5 rounded">.pdf</span>
+          </button>
+                    <button type="button" data-action="domain-export" data-format="docx" class="w-full text-left px-3.5 py-2 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 flex items-center justify-between transition cursor-pointer">
+            <span class="flex items-center space-x-2.5"><i class="fa-light fa-file-word text-emerald-600 text-sm"></i><span class="font-medium">Documento Word</span></span>
+            <span class="text-[10px] text-slate-400 font-mono bg-slate-100 px-1.5 py-0.5 rounded">.docx</span>
+          </button>
+                    <button type="button" data-action="domain-export" data-format="html" class="w-full text-left px-3.5 py-2 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 flex items-center justify-between transition cursor-pointer">
+            <span class="flex items-center space-x-2.5"><i class="fa-light fa-browser text-emerald-600 text-sm"></i><span class="font-medium">Página HTML</span></span>
+            <span class="text-[10px] text-slate-400 font-mono bg-slate-100 px-1.5 py-0.5 rounded">.html</span>
+          </button>
+                    <button type="button" data-action="domain-export" data-format="md" class="w-full text-left px-3.5 py-2 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 flex items-center justify-between transition cursor-pointer">
+            <span class="flex items-center space-x-2.5"><i class="fa-light fa-file-lines text-emerald-600 text-sm"></i><span class="font-medium">Documento Markdown</span></span>
+            <span class="text-[10px] text-slate-400 font-mono bg-slate-100 px-1.5 py-0.5 rounded">.md</span>
+          </button>
+                    <button type="button" data-action="domain-export" data-format="tsv" class="w-full text-left px-3.5 py-2 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 flex items-center justify-between transition cursor-pointer">
+            <span class="flex items-center space-x-2.5"><i class="fa-light fa-table text-emerald-600 text-sm"></i><span class="font-medium">TSV (separado por tabulação)</span></span>
+            <span class="text-[10px] text-slate-400 font-mono bg-slate-100 px-1.5 py-0.5 rounded">.tsv</span>
+          </button>
+                    <button type="button" data-action="domain-export" data-format="json" class="w-full text-left px-3.5 py-2 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 flex items-center justify-between transition cursor-pointer">
+            <span class="flex items-center space-x-2.5"><i class="fa-light fa-file-code text-emerald-600 text-sm"></i><span class="font-medium">Conjunto de dados JSON</span></span>
+            <span class="text-[10px] text-slate-400 font-mono bg-slate-100 px-1.5 py-0.5 rounded">.json</span>
+          </button>
+                    <button type="button" data-action="domain-export" data-format="xml" class="w-full text-left px-3.5 py-2 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 flex items-center justify-between transition cursor-pointer">
+            <span class="flex items-center space-x-2.5"><i class="fa-light fa-code text-emerald-600 text-sm"></i><span class="font-medium">Documento XML</span></span>
+            <span class="text-[10px] text-slate-400 font-mono bg-slate-100 px-1.5 py-0.5 rounded">.xml</span>
+          </button>
+                    <button type="button" data-action="domain-export" data-format="yaml" class="w-full text-left px-3.5 py-2 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 flex items-center justify-between transition cursor-pointer">
+            <span class="flex items-center space-x-2.5"><i class="fa-light fa-file-code text-emerald-600 text-sm"></i><span class="font-medium">Conjunto de dados YAML</span></span>
+            <span class="text-[10px] text-slate-400 font-mono bg-slate-100 px-1.5 py-0.5 rounded">.yaml</span>
+          </button>
+                    <button type="button" data-action="domain-export" data-format="sql" class="w-full text-left px-3.5 py-2 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 flex items-center justify-between transition cursor-pointer">
+            <span class="flex items-center space-x-2.5"><i class="fa-light fa-database text-emerald-600 text-sm"></i><span class="font-medium">Exportação SQL</span></span>
+            <span class="text-[10px] text-slate-400 font-mono bg-slate-100 px-1.5 py-0.5 rounded">.sql</span>
+          </button>
+                    <button type="button" data-action="domain-export" data-format="txt" class="w-full text-left px-3.5 py-2 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 flex items-center justify-between transition cursor-pointer">
+            <span class="flex items-center space-x-2.5"><i class="fa-light fa-file-lines text-emerald-600 text-sm"></i><span class="font-medium">Texto simples</span></span>
+            <span class="text-[10px] text-slate-400 font-mono bg-slate-100 px-1.5 py-0.5 rounded">.txt</span>
+          </button>
+                    <button type="button" data-action="domain-export" data-format="ods" class="w-full text-left px-3.5 py-2 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 flex items-center justify-between transition cursor-pointer">
+            <span class="flex items-center space-x-2.5"><i class="fa-light fa-table-cells text-emerald-600 text-sm"></i><span class="font-medium">OpenDocument (ODS)</span></span>
+            <span class="text-[10px] text-slate-400 font-mono bg-slate-100 px-1.5 py-0.5 rounded">.ods</span>
+          </button>
+                    <button type="button" data-action="domain-export" data-format="rtf" class="w-full text-left px-3.5 py-2 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 flex items-center justify-between transition cursor-pointer">
+            <span class="flex items-center space-x-2.5"><i class="fa-light fa-file-lines text-emerald-600 text-sm"></i><span class="font-medium">Rich Text (RTF)</span></span>
+            <span class="text-[10px] text-slate-400 font-mono bg-slate-100 px-1.5 py-0.5 rounded">.rtf</span>
+          </button>
+                    <button type="button" data-action="domain-export" data-format="zip" class="w-full text-left px-3.5 py-2 hover:bg-emerald-50 text-slate-700 hover:text-emerald-800 flex items-center justify-between transition cursor-pointer">
+            <span class="flex items-center space-x-2.5"><i class="fa-light fa-file-zipper text-emerald-600 text-sm"></i><span class="font-medium">Pacote ZIP</span></span>
+            <span class="text-[10px] text-slate-400 font-mono bg-slate-100 px-1.5 py-0.5 rounded">.zip</span>
+          </button>
+                  </div>
+      </div>
+    </div>
+          </div>
+</div>
+
+<!-- VIEW 1: KPI (model: /developer/dashboard + /developer/commercial) -->
+
+<!-- ===== SLOT DE CONTEUDO (Starter Kit) — na view real: <?php $this->start('content') ?> ... <?php $this->stop() ?> ===== -->
+<section class="kit-slot" aria-label="Slot de conteúdo da página" data-kit-slot="content">
+  <i class="fa-light fa-square-dashed" aria-hidden="true"></i>
+  <strong>Slot de conteúdo</strong>
+  <span>Visões KPI, Tabela, Cartões, Kanban ou Analytics entram aqui.</span>
+  <code>&lt;?= $pageContent ?&gt; &middot; app/layouts/main.php</code>
+</section>
+
+        </main>
+    </div>
+
+    <!-- GLOBAL PAGE FOOTER (direct child of body — matches model exactly) -->
+    <footer class="h-10 bg-white border-t border-slate-200 px-6 flex items-center justify-between text-xs text-slate-500 shrink-0 select-none z-30 relative" id="appMainFooter">
+    <div class="flex items-center space-x-4 min-w-0">
+        <span class="truncate">&copy; 2026 Totus Tuus SoftCloud &bull; Todos os direitos reservados.</span>
+        <span class="inline-flex items-center text-emerald-600 font-semibold space-x-1.5 shrink-0">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 whitespace-nowrap shrink-0"></span>
+            <span>Todos os Sistemas Operacionais</span>
+        </span>
+    </div>
+    <div class="flex items-center space-x-4 shrink-0">
+        <a href="#/legal/terms" class="hover:text-slate-900 transition">Termos</a>
+        <a href="#/legal/privacy" class="hover:text-slate-900 transition">Privacidade</a>
+        <a href="#/dpo/contact" class="hover:text-slate-900 transition">DPO</a>
+        <a href="#/support/knowledge" class="hover:text-slate-900 transition">Documentação</a>
+        <span class="font-mono text-slate-400 whitespace-nowrap shrink-0" title="Versão da Plataforma">v1.0.0</span>
+    </div>
+</footer>
+
+    <!-- FLOATING ACTIONS: SCROLL TOP & CHAT BOT (model lines 8018–8038) -->
+    <div id="floating-actions-container" class="fixed bottom-12 right-6 z-40 flex flex-col items-end space-y-3 pointer-events-none">
+        <!-- Chat Popover -->
+        <div id="support-chat-popover" class="mb-2 w-80 bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden text-xs pointer-events-auto transition-all duration-200 transform origin-bottom-right hidden">
+            <div class="p-3.5 bg-emerald-600 text-white flex items-center justify-between">
+                <div class="flex items-center space-x-2.5">
+                    <div class="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center text-white shadow-xs">
+                        <i class="fa-light fa-cloud-bolt text-sm"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center space-x-1.5">
+                            <span class="font-bold text-xs tracking-tight text-white leading-none">TotusCopilot AI</span>
+                            <span class="text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.2 rounded bg-emerald-900/60 text-emerald-200 border border-emerald-400/80 whitespace-nowrap shrink-0">SISTEMA GLOBAL</span>
+                        </div>
+                        <div class="text-[10px] text-emerald-100 mt-0.5 flex items-center space-x-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-300 animate-pulse whitespace-nowrap shrink-0"></span>
+                            <span class="font-medium">Online • IA 24/7 Ativa</span>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" onclick="toggleChatBot()" class="text-emerald-100 hover:text-white p-1 rounded-lg hover:bg-emerald-700/60 transition cursor-pointer" title="Fechar Assistente">
+                    <i class="fa-light fa-xmark text-sm"></i>
+                </button>
+            </div>
+            <div class="p-3.5 space-y-3 bg-slate-50 h-60 overflow-y-auto">
+                <div class="bg-white border border-slate-200 rounded-xl p-3 text-slate-700 shadow-xs space-y-1.5">
+                    <div class="flex items-center space-x-1.5 text-emerald-700 font-semibold text-[11px]">
+                        <i class="fa-light fa-cloud-bolt text-[10px]"></i>
+                        <span>Assistente Integrado TotusTuus</span>
+                    </div>
+                    <p class="text-[11px] text-slate-600 leading-relaxed">Olá! Eu sou o TotusCopilot, seu assistente de IA universal no TotusTuus SoftCloud. Posso ajudar com navegação nos portais, consultas ao banco de dados, APIs, auditoria de conformidade, pipelines comerciais e fluxos fiscais.</p>
+                </div>
+                <div class="space-y-1.5">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block px-0.5 whitespace-nowrap shrink-0">Atalhos Universais</span>
+                    <div class="grid grid-cols-2 gap-1.5">
+                        <button type="button" data-drawer-trigger="drawer-search" onclick="openDrawer('drawer-search')" class="p-2 bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 rounded-xl text-left text-[11px] font-semibold text-slate-700 hover:text-emerald-800 transition shadow-xs flex items-center space-x-1.5 cursor-pointer">
+                            <i class="fa-light fa-magnifying-glass text-emerald-600 text-[10px]"></i>
+                            <span class="truncate">Buscar Negócios</span>
+                        </button>
+                        <button type="button" data-drawer-trigger="drawer-notifications" onclick="openDrawer('drawer-notifications')" class="p-2 bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 rounded-xl text-left text-[11px] font-semibold text-slate-700 hover:text-emerald-800 transition shadow-xs flex items-center space-x-1.5 cursor-pointer">
+                            <i class="fa-light fa-bell text-emerald-600 text-[10px]"></i>
+                            <span class="truncate">Alertas & Status</span>
+                        </button>
+                        <button type="button" data-drawer-trigger="drawer-lgpd" onclick="openDrawer('drawer-lgpd')" class="p-2 bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 rounded-xl text-left text-[11px] font-semibold text-slate-700 hover:text-emerald-800 transition shadow-xs flex items-center space-x-1.5 cursor-pointer">
+                            <i class="fa-light fa-shield-halved text-emerald-600 text-[10px]"></i>
+                            <span class="truncate">Conformidade & Privacidade</span>
+                        </button>
+                        <button type="button" data-drawer-trigger="drawer-calendar" onclick="openDrawer('drawer-calendar')" class="p-2 bg-white hover:bg-emerald-50 border border-slate-200 hover:border-emerald-300 rounded-xl text-left text-[11px] font-semibold text-slate-700 hover:text-emerald-800 transition shadow-xs flex items-center space-x-1.5 cursor-pointer">
+                            <i class="fa-light fa-calculator text-emerald-600 text-[10px]"></i>
+                            <span class="truncate">Relatórios Fiscais</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="p-2.5 border-t border-slate-100 bg-white flex items-center space-x-2">
+                <input type="text" placeholder="Pergunte qualquer coisa sobre qualquer módulo do sistema..." class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-700 focus:outline-none focus:ring-1 focus:ring-emerald-500 shadow-xs">
+                <button type="button" onclick="if(window.showToast) window.showToast('TotusCopilot AI: Processando requisição multi-sistema...', 'info', 'TotusCopilot AI');" class="w-9 h-9 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white flex items-center justify-center cursor-pointer transition shadow-xs shrink-0" title="Enviar Mensagem">
+                    <i class="fa-light fa-arrow-up-from-bracket rotate-90 text-xs"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Actions Row: Scroll To Top (with Circular Progress) & Chat Button -->
+        <div class="flex items-center space-x-2.5 pointer-events-auto">
+            <!-- Scroll to Top with SVG Circular Progress Ring -->
+            <button id="btn-scroll-top" type="button" onclick="scrollToTop()" class="relative w-11 h-11 rounded-full bg-white border border-slate-200 text-slate-700 hover:text-emerald-600 shadow-md hover:shadow-lg flex items-center justify-center transition active:scale-95 group cursor-pointer" style="border-radius: 9999px !important; width: 44px !important; height: 44px !important;" title="Voltar ao topo">
+                <svg class="absolute inset-0 w-full h-full -rotate-90 pointer-events-none" viewBox="0 0 44 44" style="border-radius: 9999px !important;">
+                    <circle cx="22" cy="22" r="18" stroke="#e2e8f0" stroke-width="3" fill="none"></circle>
+                    <circle id="scroll-progress-ring" cx="22" cy="22" r="18" stroke="#10b981" stroke-width="3" stroke-dasharray="113.1" stroke-dashoffset="113.1" stroke-linecap="round" fill="none" class="transition-all duration-150" style="stroke-dashoffset: 113.1;"></circle>
+                </svg>
+                <i class="fa-light fa-chevron-up text-xs group-hover:-translate-y-0.5 transition-transform duration-150 relative z-10"></i>
+            </button>
+
+            <!-- Chat AI Bot Button -->
+            <button id="btn-chat-bot" type="button" onclick="toggleChatBot()" class="w-12 h-12 rounded-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white shadow-lg hover:shadow-xl flex items-center justify-center transition active:scale-95 relative cursor-pointer group" style="border-radius: 9999px !important; width: 48px !important; height: 48px !important;" title="Chat & Suporte">
+                <i class="fa-light fa-comment-dots text-lg group-hover:scale-110 transition-transform duration-150"></i>
+                <span class="absolute top-0 right-0 w-3 h-3 rounded-full bg-rose-500 ring-2 ring-white whitespace-nowrap shrink-0" style="border-radius: 9999px !important;"></span>
+            </button>
+        </div>
+    </div>
+
+    <div id="totus-toast-container" class="fixed top-5 right-5 z-[99999] flex flex-col gap-2.5 max-w-sm w-full pointer-events-none" aria-live="polite"></div>
+</body>
+</html>

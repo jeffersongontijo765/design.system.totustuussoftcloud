@@ -1,0 +1,64 @@
+<!-- @dsCard group="Componentes" height=328 subtitle="Lista de risco com motivo, medidor por faixa e ação de abrir a ficha" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>RiskList</title>
+<style>
+  html,body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font-family:Inter,system-ui,sans-serif;font-size:13px;-webkit-font-smoothing:antialiased}
+  .demo{padding:16px;display:grid;gap:14px;max-width:1100px}
+  .card{background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-surface);padding:16px}
+  .card-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+  .card-t{margin:0;font-size:14px;font-weight:600;color:var(--ttsc-text)}
+  .card-s{margin:2px 0 0;font-size:11px;color:var(--ttsc-text-muted)}
+  .pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:var(--ttsc-radius-pill);border:1px solid var(--ttsc-border);color:var(--ttsc-text-2);white-space:nowrap;background:var(--ttsc-surface)}
+  .pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+  .pill-ok{color:var(--ttsc-success);border-color:color-mix(in srgb,var(--ttsc-success) 40%,transparent)}
+  .pill-warn{color:var(--ttsc-warning-text);border-color:color-mix(in srgb,var(--ttsc-warning) 45%,transparent)}
+  .pill-bad{color:var(--ttsc-danger-text);border-color:color-mix(in srgb,var(--ttsc-danger) 40%,transparent)}
+  .pill-info{color:var(--ttsc-info-text);border-color:color-mix(in srgb,var(--ttsc-info) 40%,transparent)}
+  .av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text);flex-shrink:0}
+  .ib{width:30px;height:30px;border-radius:8px;border:1px solid var(--ttsc-border);background:var(--ttsc-surface);display:grid;place-items:center;color:var(--ttsc-text-2);cursor:pointer}
+  .ib:hover{background:var(--ttsc-canvas-2)}
+  .ib-ok:hover{color:var(--ttsc-success)} .ib-no:hover{color:var(--ttsc-danger-text)}
+  .muted{color:var(--ttsc-text-muted)} .tnum{font-variant-numeric:tabular-nums}
+  :focus-visible{outline:2px solid var(--ttsc-accent);outline-offset:2px}
+
+  .risk{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+  .risk li{display:grid;grid-template-columns:30px minmax(0,1fr) 140px auto;gap:12px;align-items:center;padding:10px 12px;border:1px solid var(--ttsc-border-soft);border-radius:var(--ttsc-radius-control)}
+  .risk-name{font-weight:600;color:var(--ttsc-text);font-size:13px}
+  .risk-why{font-size:11px;color:var(--ttsc-text-muted)}
+  .risk-meter{display:grid;gap:4px}
+  .risk-meter-top{display:flex;justify-content:space-between;font-size:11px;font-variant-numeric:tabular-nums;color:var(--ttsc-text-2)}
+  .risk-track{height:6px;border-radius:var(--ttsc-radius-pill);background:var(--ttsc-surface-2);overflow:hidden}
+  .risk-track i{display:block;height:100%;width:calc(var(--p) * 1%);border-radius:inherit;background:var(--ttsc-success)}
+  .risk li.is-mid .risk-track i{background:var(--ttsc-warning)}
+  .risk li.is-high .risk-track i{background:var(--ttsc-danger)}
+  @media (max-width:640px){.risk li{grid-template-columns:30px minmax(0,1fr)}.risk-meter,.risk li>.ib{grid-column:2}}
+</style>
+</head>
+<body>
+<main class="demo">
+
+  <section class="card" aria-labelledby="rl-t">
+    <div class="card-h">
+      <div><h2 id="rl-t" class="card-t">Alunos em risco de evasão</h2><p class="card-s">Faltas acima de 25% no período ou duas reprovações seguidas</p></div>
+      <span class="pill pill-bad">3 com risco alto</span>
+    </div>
+    <ul class="risk">
+      <li class="is-high"><span class="av" aria-hidden="true">KF</span>
+        <div><div class="risk-name">Kenji Fujita · 2º A</div><div class="risk-why">Faltas em 38% das aulas; 3 semanas sem entrega</div></div>
+        <div class="risk-meter"><div class="risk-meter-top"><span>Risco</span><b>82%</b></div><div class="risk-track" role="img" aria-label="Risco 82%"><i style="--p:82"></i></div></div>
+        <button class="ib" type="button" aria-label="Abrir ficha de Kenji Fujita"><i class="fa-light fa-arrow-right" aria-hidden="true"></i></button></li>
+      <li class="is-mid"><span class="av" aria-hidden="true">SB</span>
+        <div><div class="risk-name">Sara Bianchi · 1º B</div><div class="risk-why">Média 4,8 em matemática; reprovação anterior</div></div>
+        <div class="risk-meter"><div class="risk-meter-top"><span>Risco</span><b>54%</b></div><div class="risk-track" role="img" aria-label="Risco 54%"><i style="--p:54"></i></div></div>
+        <button class="ib" type="button" aria-label="Abrir ficha de Sara Bianchi"><i class="fa-light fa-arrow-right" aria-hidden="true"></i></button></li>
+      <li><span class="av" aria-hidden="true">DP</span>
+        <div><div class="risk-name">Diego Paredes · 3º A</div><div class="risk-why">Inadimplência de 2 parcelas</div></div>
+        <div class="risk-meter"><div class="risk-meter-top"><span>Risco</span><b>22%</b></div><div class="risk-track" role="img" aria-label="Risco 22%"><i style="--p:22"></i></div></div>
+        <button class="ib" type="button" aria-label="Abrir ficha de Diego Paredes"><i class="fa-light fa-arrow-right" aria-hidden="true"></i></button></li>
+    </ul>
+  </section>
+
+</main>
+</body>
+</html>

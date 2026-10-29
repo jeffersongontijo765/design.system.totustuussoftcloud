@@ -1,0 +1,77 @@
+<!-- @dsCard group="Geral" height=315 subtitle="Cropper.js 1.6.2 · foto de perfil 1:1, viewMode 1, prévia redonda, girar/zoom, exportar canvas 256×256" -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><title>Cropper</title>
+<link rel="stylesheet" href="../../vendor/cropper/cropper.min.css">
+<style>
+  .cr-grid { display: grid; grid-template-columns: minmax(0, 1fr) 200px; gap: 16px; align-items: start; }
+  .cr-stage { height: 280px; background: var(--ttsc-canvas-2); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); overflow: hidden; }
+  .cr-stage img { display: block; max-width: 100%; }
+  /* Tema do Cropper com tokens */
+  .cr-stage .cropper-view-box { outline: 2px solid var(--ttsc-accent); outline-color: var(--ttsc-accent); border-radius: 50%; }
+  .cr-stage .cropper-face { background-color: transparent; border-radius: 50%; }
+  .cr-stage .cropper-line { background-color: var(--ttsc-accent); }
+  .cr-stage .cropper-point { background-color: var(--ttsc-accent); width: 8px; height: 8px; opacity: 1; }
+  .cr-stage .cropper-modal { background-color: var(--ttsc-scrim); opacity: 1; }
+  .cr-stage .cropper-dashed { border-color: color-mix(in srgb, var(--ttsc-surface) 70%, transparent); }
+  .cr-side { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
+  .cr-preview { width: 96px; height: 96px; border-radius: 50%; overflow: hidden; border: 2px solid var(--ttsc-border); background: var(--ttsc-surface-2); }
+  .cr-result { width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--ttsc-border); background: var(--ttsc-surface-2); object-fit: cover; }
+  .cr-meta { font-size: 12px; color: var(--ttsc-text-2); }
+</style>
+</head>
+<body>
+<div class="ds-pad">
+  <div class="cr-grid">
+    <div class="cr-stage"><img id="cr-img" alt="Foto enviada por Mariana Lopes"></div>
+    <div class="cr-side">
+      <div class="ds-label">Prévia</div>
+      <div class="cr-preview" id="cr-preview"></div>
+      <div class="ds-row">
+        <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-icon ttsc-btn-sm" aria-label="Aproximar" data-cr="zoom-in"><i class="fa-light fa-magnifying-glass-plus"></i></button>
+        <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-icon ttsc-btn-sm" aria-label="Afastar" data-cr="zoom-out"><i class="fa-light fa-magnifying-glass-minus"></i></button>
+        <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-icon ttsc-btn-sm" aria-label="Girar 90 graus" data-cr="rotate"><i class="fa-light fa-rotate-right"></i></button>
+        <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-icon ttsc-btn-sm" aria-label="Restaurar" data-cr="reset"><i class="fa-light fa-arrow-rotate-left"></i></button>
+      </div>
+      <button type="button" class="ttsc-btn ttsc-btn-primary ttsc-btn-sm" id="cr-save"><i class="fa-light fa-crop-simple"></i> Recortar e salvar</button>
+      <div class="ds-row"><img class="cr-result" id="cr-result" alt="Avatar recortado"><span class="cr-meta" id="cr-meta">Canvas exportado aparece aqui</span></div>
+    </div>
+  </div>
+</div>
+<script src="../../vendor/cropper/cropper.min.js"></script>
+<script>
+  // "Foto" gerada inline (SVG data: URI) — nenhuma imagem externa
+  var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="640" height="420" viewBox="0 0 640 420">' +
+    '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9fd8c0"/><stop offset="1" stop-color="#4f7cac"/></linearGradient></defs>' +
+    '<rect width="640" height="420" fill="url(#g)"/><rect x="0" y="300" width="640" height="120" fill="#2f4b6e" opacity=".35"/>' +
+    '<circle cx="330" cy="165" r="70" fill="#f1c9a5"/><path d="M262 150c0-52 32-82 70-82s72 28 70 84c-14-30-40-44-70-44s-56 14-70 42z" fill="#3b2a20"/>' +
+    '<path d="M210 420c0-80 54-138 120-138s120 58 120 138z" fill="#1f6f5c"/><circle cx="305" cy="170" r="6" fill="#3b2a20"/><circle cx="355" cy="170" r="6" fill="#3b2a20"/>' +
+    '<path d="M308 200q22 16 44 0" stroke="#9a5a44" stroke-width="5" fill="none" stroke-linecap="round"/></svg>';
+  var img = document.getElementById('cr-img');
+  img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+
+  var cropper = new Cropper(img, {
+    aspectRatio: 1, viewMode: 1, dragMode: 'move', autoCropArea: 0.6,
+    background: false, guides: false, center: false, toggleDragModeOnDblclick: false,
+    preview: '#cr-preview',
+    ready: function () { exportAvatar(); }
+  });
+  document.querySelectorAll('[data-cr]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var a = b.dataset.cr;
+      if (a === 'zoom-in') cropper.zoom(0.1); if (a === 'zoom-out') cropper.zoom(-0.1);
+      if (a === 'rotate') cropper.rotate(90); if (a === 'reset') cropper.reset();
+    });
+  });
+  function exportAvatar() {
+    var canvas = cropper.getCroppedCanvas({ width: 256, height: 256, fillColor: '#ffffff', imageSmoothingQuality: 'high' });
+    var url = canvas.toDataURL('image/jpeg', 0.9);
+    document.getElementById('cr-result').src = url;
+    document.getElementById('cr-meta').textContent = '256×256 JPEG · ' + Math.round(url.length * 0.75 / 1024) + ' KB';
+  }
+  document.getElementById('cr-save').addEventListener('click', exportAvatar);
+  TTSC.init();
+</script>
+</body>
+</html>

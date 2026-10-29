@@ -1,0 +1,556 @@
+/* Fontes Inter / Source Code Pro carregadas via <link> no layout
+   (web/layouts/main.php) — removido o @import de CSS que serializava
+   o carregamento da folha de estilos. */
+
+:root {
+  /* Light Mode (design system lock: hex + OKLCH fallback) */
+  --color-bg-base: #f8f9fa;
+  --color-bg-surface: #ffffff;
+  --color-text-primary: #1c1c1c;
+  --color-text-secondary: #4b5563;
+  /* WCAG AA: #9ca3af reprova (2.54:1) — #6b7280 = 4.8:1 */
+  --color-text-muted: #6b7280;
+  
+  --color-border-subtle: #e5e7eb;
+  --color-border-base: #d1d5db;
+  --color-border-strong: #9ca3af;
+
+  --color-supa-green: #3ecf8e;
+  /* WCAG AA: #00c573 como texto/link reprova (2.27:1) — #047857 = 5.5:1 */
+  --color-supa-green-link: #047857;
+  --color-supa-green-border: rgba(62, 207, 142, 0.3);
+  --color-supa-green-soft: rgba(62, 207, 142, 0.1);
+
+  --accent: oklch(0.78 0.16 162);
+  --accent-soft: oklch(0.78 0.16 162 / 0.1);
+  --accent-border: oklch(0.78 0.16 162 / 0.3);
+  --border-strong: #9ca3af;
+  --border-prominent: #6b7280;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: 'Source Code Pro', monospace;
+}
+
+html.dark {
+  /* Dark Mode (design system lock) */
+  --color-bg-base: #0f0f0f;
+  --color-bg-surface: #171717;
+  --color-text-primary: #fafafa;
+  --color-text-secondary: #b4b4b4;
+  --color-text-muted: #898989;
+  
+  --color-border-subtle: #242424;
+  --color-border-base: #2e2e2e;
+  --color-border-strong: #363636;
+
+  --color-supa-green: #3ecf8e;
+  --color-supa-green-link: #00c573;
+  --color-supa-green-border: rgba(62, 207, 142, 0.3);
+  --color-supa-green-soft: rgba(62, 207, 142, 0.12);
+
+  --accent: oklch(0.78 0.16 162);
+  --accent-soft: oklch(0.78 0.16 162 / 0.12);
+  --accent-border: oklch(0.78 0.16 162 / 0.35);
+  --border-strong: #363636;
+  --border-prominent: #4b4b4b;
+}
+
+@theme {
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  
+  --color-bg-base: var(--color-bg-base);
+  --color-bg-surface: var(--color-bg-surface);
+  --color-text-primary: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-muted: var(--color-text-muted);
+  --color-border-subtle: var(--color-border-subtle);
+  --color-border-base: var(--color-border-base);
+  --color-border-strong: var(--color-border-strong);
+  --color-supa-green: var(--color-supa-green);
+  --color-supa-green-link: var(--color-supa-green-link);
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-bg-base);
+  color: var(--color-text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--color-supa-green, #3ecf8e);
+  outline-offset: 2px;
+  border-radius: var(--radius-md, 8px);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   GLOBAL SUPABASE DARK INPUT & FORM CONTROL STANDARD (#242832)
+   ═══════════════════════════════════════════════════════════ */
+html.dark input[type="text"],
+html.dark input[type="password"],
+html.dark input[type="email"],
+html.dark input[type="search"],
+html.dark input[type="number"],
+html.dark input[type="tel"],
+html.dark input[type="url"],
+html.dark input[type="date"],
+html.dark input[type="datetime-local"],
+html.dark select,
+html.dark textarea,
+html.dark .form-control,
+html.dark .form-select,
+html.dark .sb-input,
+html.dark .sb-select-trigger,
+html.dark .select2-container--bootstrap-5 .select2-selection,
+html.dark .select2-container--default .select2-selection--single,
+html.dark .select2-container--default .select2-selection--multiple,
+.dark input[type="text"],
+.dark input[type="password"],
+.dark input[type="email"],
+.dark input[type="search"],
+.dark input[type="number"],
+.dark input[type="tel"],
+.dark input[type="url"],
+.dark input[type="date"],
+.dark input[type="datetime-local"],
+.dark select,
+.dark textarea,
+.dark .form-control,
+.dark .form-select,
+.dark .sb-input,
+.dark .sb-select-trigger,
+.dark .select2-container--bootstrap-5 .select2-selection,
+.dark .select2-container--default .select2-selection--single,
+.dark .select2-container--default .select2-selection--multiple,
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea,
+[data-theme="dark"] .form-control,
+[data-theme="dark"] .form-select,
+[data-theme="dark"] .sb-input,
+[data-theme="dark"] .sb-select-trigger {
+  background: #242832 !important;
+  background-color: #242832 !important;
+  border: 1px solid #323745 !important;
+  border-radius: 8px !important;
+  color: #f3f4f6 !important;
+}
+
+html.dark input:hover,
+html.dark select:hover,
+html.dark textarea:hover,
+html.dark .form-control:hover,
+html.dark .form-select:hover,
+html.dark .sb-input:hover,
+html.dark .sb-select-trigger:hover,
+.dark input:hover,
+.dark select:hover,
+.dark textarea:hover,
+.dark .form-control:hover,
+.dark .form-select:hover,
+.dark .sb-input:hover,
+.dark .sb-select-trigger:hover,
+[data-theme="dark"] input:hover,
+[data-theme="dark"] select:hover,
+[data-theme="dark"] textarea:hover,
+[data-theme="dark"] .form-control:hover,
+[data-theme="dark"] .form-select:hover,
+[data-theme="dark"] .sb-input:hover,
+[data-theme="dark"] .sb-select-trigger:hover {
+  border-color: #10b981 !important;
+}
+
+html.dark input:focus,
+html.dark select:focus,
+html.dark textarea:focus,
+html.dark .form-control:focus,
+html.dark .form-select:focus,
+html.dark .sb-input:focus,
+html.dark .sb-select-trigger.is-open,
+.dark input:focus,
+.dark select:focus,
+.dark textarea:focus,
+.dark .form-control:focus,
+.dark .form-select:focus,
+.dark .sb-input:focus,
+.dark .sb-select-trigger.is-open,
+[data-theme="dark"] input:focus,
+[data-theme="dark"] select:focus,
+[data-theme="dark"] textarea:focus,
+[data-theme="dark"] .form-control:focus,
+[data-theme="dark"] .form-select:focus,
+[data-theme="dark"] .sb-input:focus,
+[data-theme="dark"] .sb-select-trigger.is-open {
+  border-color: #10b981 !important;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25) !important;
+  outline: none !important;
+}
+
+/* Chrome / Safari / Edge Autofill Fix in Dark Mode */
+html.dark input:-webkit-autofill,
+html.dark input:-webkit-autofill:hover,
+html.dark input:-webkit-autofill:focus,
+html.dark input:-webkit-autofill:active,
+.dark input:-webkit-autofill,
+.dark input:-webkit-autofill:hover,
+.dark input:-webkit-autofill:focus,
+.dark input:-webkit-autofill:active,
+[data-theme="dark"] input:-webkit-autofill,
+[data-theme="dark"] input:-webkit-autofill:hover,
+[data-theme="dark"] input:-webkit-autofill:focus,
+[data-theme="dark"] input:-webkit-autofill:active {
+  -webkit-text-fill-color: #f3f4f6 !important;
+  -webkit-box-shadow: 0 0 0px 1000px #242832 inset !important;
+  box-shadow: 0 0 0px 1000px #242832 inset !important;
+  transition: background-color 5000s ease-in-out 0s;
+  caret-color: #f3f4f6 !important;
+}
+
+.technical-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem; /* 12px */
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+
+/* Animations */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes fade-in-up {
+  0% { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+.delay-400 { animation-delay: 400ms; }
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-100%); }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 25s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* ── Marketing motion (per design.md marketing allowance) ── */
+
+/* Scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Aurora background blobs (ambient, slow) */
+@keyframes aurora-drift {
+  0% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+  50% { transform: translate(40px, -30px) scale(1.15); opacity: 0.8; }
+  100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+}
+.aurora {
+  animation: aurora-drift 9s ease-in-out infinite;
+}
+.aurora-2 {
+  animation: aurora-drift 12s ease-in-out infinite reverse;
+}
+
+/* Subtle grid backdrop */
+.grid-bg {
+  background-image:
+    linear-gradient(var(--color-border-subtle, #e5e7eb) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-border-subtle, #e5e7eb) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
+}
+html.dark .grid-bg {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+}
+
+/* Gradient accent text (static, subtle) */
+.text-gradient {
+  background: linear-gradient(120deg, var(--color-supa-green, #3ecf8e), var(--color-supa-green-link, #00c573));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Text wordmark (trust strip) */
+.wm {
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+/* Animated counter value */
+.counter-value {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Status dot pulse for hero badge */
+@keyframes dot-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 var(--color-supa-green-border, rgba(62, 207, 142, 0.3)); }
+  50% { box-shadow: 0 0 0 5px transparent; }
+}
+.dot-pulse {
+  animation: dot-pulse 2.4s ease-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   BENTO UI & INTERACTIVE SALES SHOWCASE UTILITIES (PREMIUM)
+   ═══════════════════════════════════════════════════════════ */
+.bento-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .bento-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .bento-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+.bento-card {
+  background-color: var(--color-bg-surface);
+  border: 1px solid var(--color-border-base);
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.bento-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-supa-green), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.bento-card:hover {
+  border-color: var(--color-supa-green);
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.08);
+}
+
+.bento-card:hover::before {
+  opacity: 1;
+}
+
+html.dark .bento-card:hover {
+  box-shadow: 0 16px 36px -10px rgba(62, 207, 142, 0.12);
+}
+
+.bento-icon-box {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 10px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-supa-green-soft);
+  color: var(--color-supa-green);
+  border: 1px solid var(--color-supa-green-border);
+  font-size: 1.15rem;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.bento-card:hover .bento-icon-box {
+  transform: scale(1.05);
+}
+
+/* Category Filter Pills (Squircle 8px) */
+.web-tab-pill {
+  padding: 0.5rem 1.25rem;
+  border-radius: 9999px !important;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border: 1px solid var(--color-border-base);
+  background: var(--color-bg-surface);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.web-tab-pill:hover,
+.web-tab-pill.active {
+  background: var(--color-supa-green-soft);
+  border-color: var(--color-supa-green);
+  color: var(--color-supa-green-link);
+}
+
+/* Interactive Calculator Range Input */
+input[type="range"].web-range {
+  accent-color: var(--color-supa-green);
+}
+
+/* Mobile navigation panel (site público) */
+.mobile-nav-link {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 0.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.mobile-nav-link:hover,
+.mobile-nav-link:focus-visible {
+  background: var(--color-supa-green-soft);
+  color: var(--color-supa-green-link);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LAYOUT STABILITY & ANTI-BREAKAGE SYSTEM (MULTILINGUAL)
+   ═══════════════════════════════════════════════════════════ */
+
+.bento-card {
+  width: 100%;
+}
+
+.bento-card h3 {
+  line-height: 1.35;
+}
+
+/* RTL Arrow Flipping for Arabic */
+html[dir="rtl"] .fa-arrow-right {
+  transform: rotate(180deg);
+}
+
+html[dir="rtl"] .fa-arrow-left {
+  transform: rotate(180deg);
+}
+
+/* RTL icon spacing adjustments */
+html[dir="rtl"] .mr-1,
+html[dir="rtl"] .mr-1\.5,
+html[dir="rtl"] .mr-2 {
+  margin-right: 0 !important;
+  margin-left: 0.375rem !important;
+}
+
+html[dir="rtl"] .ml-1,
+html[dir="rtl"] .ml-1\.5,
+html[dir="rtl"] .ml-2 {
+  margin-left: 0 !important;
+  margin-right: 0.375rem !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   WCAG AA — CORREÇÃO DE CONTRASTE (só tema claro)
+   Branco sobre #3ecf8e = 2.00:1 · verde #00c573 em branco = 2.27:1
+   Regras abaixo preservam o verde decorative e escurecem apenas
+   texto/elementos interativos (>= 4.5:1).
+   ═══════════════════════════════════════════════════════════ */
+
+/* 1. Fundo esmeralda com texto branco (CTAs, badges, botões) */
+[class~="bg-[var(--color-supa-green)]"][class~="text-white"] {
+  background-color: #047857; /* 5.48:1 com branco */
+}
+[class~="bg-[var(--color-supa-green)]"][class~="text-white"]:hover {
+  background-color: #065f46;
+}
+[class~="bg-emerald-500"][class~="text-white"] { background-color: #047857; }
+[class~="bg-emerald-500"][class~="text-white"]:hover { background-color: #065f46; }
+[class~="bg-emerald-600"][class~="text-white"] { background-color: #065f46; }
+
+/* 2. Texto verde sobre superfícies claras */
+html:not(.dark) [class~="text-[var(--color-supa-green)]"],
+html:not(.dark) .text-emerald-400,
+html:not(.dark) .text-emerald-500,
+html:not(.dark) .text-emerald-600 {
+  color: #047857;
+}
+
+/* 3. Gradiente do hero: paradas legíveis em superfície clara */
+html:not(.dark) .text-gradient {
+  background: linear-gradient(120deg, #059669, #047857);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PREFER-REDUCED-MOTION — animações e transições discretas
+   ═══════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .aurora, .aurora-2 { animation: none !important; }
+  /* O JS de reveal é pulado com reduced-motion: garante conteúdo visível */
+  .reveal { opacity: 1 !important; transform: none !important; }
+}

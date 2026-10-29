@@ -1,0 +1,53 @@
+<!-- @dsCard group="Componentes" height=245 subtitle="ttsc-link · padrão (ttsc-accent-text), underline, underlined, dashed, mono, inverse, sm/lg, externo, desabilitado" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Link</title>
+<style>
+  .ttsc-link:hover { color: color-mix(in oklab, var(--ttsc-accent-text) 80%, var(--ttsc-text)); }
+  .ttsc-link-mono { color: var(--ttsc-text); }
+  .ttsc-link-mono:hover { color: var(--ttsc-accent-text); }
+  .ttsc-link-underlined { text-decoration-color: color-mix(in oklab, currentColor 50%, transparent); }
+  .ttsc-link-underlined:hover { text-decoration-color: currentColor; }
+  .ttsc-link-inverse, .ttsc-link-inverse:hover { color: var(--ttsc-accent-on); }
+  .ttsc-link i { font-size: 12px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .lk-grid { display: grid; grid-template-columns: 150px 1fr; gap: 14px 12px; align-items: center; }
+  .lk-p { margin: 0; color: var(--ttsc-text-2); line-height: 1.7; }
+  .lk-banner { display: flex; align-items: center; gap: 12px; background: var(--ttsc-accent); color: var(--ttsc-accent-on); border-radius: var(--ttsc-radius-sm); padding: 8px 14px; }
+</style>
+</head>
+<body>
+<div class="ds-pad lk-grid">
+  <div class="ds-label">Padrão e sublinhado</div>
+  <div class="ds-row" style="gap:20px">
+    <a class="ttsc-link" href="#">Ver matrícula MAT-2026-0381</a>
+    <a class="ttsc-link ttsc-link-underline" href="#">Ver todas as matrículas <i class="fa-light fa-arrow-right"></i></a>
+    <a class="ttsc-link ttsc-link-underlined" href="#">Sublinhado fixo</a>
+    <a class="ttsc-link ttsc-link-underlined ttsc-link-dashed" href="#">frequência mínima</a>
+  </div>
+
+  <div class="ds-label">Em texto corrido</div>
+  <p class="lk-p">Consulte o <a class="ttsc-link ttsc-link-underlined" href="#">regimento escolar (PDF, 1,2 MB)</a> ou fale com a secretaria em <a class="ttsc-link ttsc-link-underlined" href="#">secretaria@colegio.edu.br</a>. A <a class="ttsc-link ttsc-link-underlined ttsc-link-dashed" href="#">frequência mínima</a> é de 75%.</p>
+
+  <div class="ds-label">Mono · tabela</div>
+  <div class="ds-row" style="gap:20px">
+    <a class="ttsc-link ttsc-link-mono" href="#" aria-label="Abrir ficha de Ana Beatriz Souza">Ana Beatriz Souza</a>
+    <a class="ttsc-link ttsc-link-mono" href="#" aria-label="Abrir ficha de Carlos Henrique Lima">Carlos Henrique Lima</a>
+    <span class="ds-note">hover fica verde</span>
+  </div>
+
+  <div class="ds-label">Tamanhos · externo · desabilitado</div>
+  <div class="ds-row" style="gap:20px">
+    <a class="ttsc-link ttsc-link-sm" href="#">Pequeno</a>
+    <a class="ttsc-link" href="#">Padrão</a>
+    <a class="ttsc-link ttsc-link-lg" href="#">Grande</a>
+    <a class="ttsc-link" href="#" target="_blank" rel="noopener">Portal do INEP <i class="fa-light fa-arrow-up-right-from-square"></i><span class="sr-only">(abre em nova aba)</span></a>
+    <a class="ttsc-link ttsc-link-disabled" aria-disabled="true" tabindex="-1">Histórico financeiro</a>
+  </div>
+
+  <div class="ds-label">Inversa (sobre accent)</div>
+  <div class="lk-banner"><i class="fa-light fa-bullhorn"></i> Rematrícula 2027.1 aberta até 20/12. <a class="ttsc-link ttsc-link-inverse ttsc-link-underlined" href="#">Fazer rematrícula</a></div>
+</div>
+<script>TTSC.init();</script>
+</body>
+</html>

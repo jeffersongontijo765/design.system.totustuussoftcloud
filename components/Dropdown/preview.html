@@ -1,0 +1,85 @@
+<!-- @dsCard group="Componentes" height=380 subtitle="ttscDropdown · ttsc-dropdown-menu, link, selected, toggle de submenu, separator, header, destrutivo" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Dropdown</title>
+<style>
+  .ttsc-dropdown-menu { box-shadow: var(--ttsc-shadow-popover); border-radius: var(--ttsc-radius-sm); }
+  .ttsc-dropdown-menu-sub { list-style: none; margin: 0; padding: 0; }
+  .ttsc-dropdown-menu-link, .ttsc-dropdown-menu-toggle { font-size: 13px; color: var(--ttsc-text); background: none; border: 0; }
+  .ttsc-dropdown-menu-link.selected { background: var(--ttsc-accent-soft); color: var(--ttsc-accent-text); }
+  .ttsc-dropdown-menu-link.selected i { color: var(--ttsc-accent-text); }
+  .ttsc-dropdown-menu-link.dd-danger, .ttsc-dropdown-menu-link.dd-danger i { color: var(--ttsc-danger-text); }
+  .ttsc-dropdown-menu-link.dd-danger:hover { background: color-mix(in oklab, var(--ttsc-danger) 10%, transparent); }
+  .dd-header { padding: 6px 10px 8px; font-size: 11px; font-weight: 500; letter-spacing: .02em; color: var(--ttsc-text-muted); }
+  .dd-kbd { margin-inline-start: auto; }
+  .dd-w { width: 240px; }
+  .dd-w-sm { width: 220px; }
+  .dd-static { position: static; display: block; }
+  .dd-grid { display: grid; grid-template-columns: 280px 1fr; gap: 24px; align-items: start; }
+  .dd-sub-static { display: flex; align-items: flex-start; gap: 4px; }
+</style>
+</head>
+<body>
+<div class="ds-pad dd-grid">
+  <div class="ds-stack">
+    <div class="ds-label">Menu aberto (estático)</div>
+    <div class="dd-sub-static">
+      <div class="ttsc-dropdown-menu dd-w open dd-static"  role="menu" aria-label="Ações da matrícula">
+      <ul class="ttsc-dropdown-menu-sub" role="none">
+        <li class="dd-header" role="none">MAT-2026-0381 · Ana Beatriz Souza</li>
+        <li role="none"><a class="ttsc-dropdown-menu-link" href="#" role="menuitem"><i class="fa-light fa-eye"></i> Ver ficha</a></li>
+        <li role="none"><a class="ttsc-dropdown-menu-link" href="#" role="menuitem"><i class="fa-light fa-pen"></i> Editar <kbd class="ttsc-kbd ttsc-kbd-xs dd-kbd">E</kbd></a></li>
+        <li role="none"><a class="ttsc-dropdown-menu-link selected" href="#" role="menuitemradio" aria-checked="true"><i class="fa-light fa-check"></i> Turma 3º A</a></li>
+        <li class="ttsc-menu-item"  role="none">
+          <button type="button" class="ttsc-dropdown-menu-toggle"  role="menuitem" aria-haspopup="menu"><i class="fa-light fa-file-export"></i> Emitir documento <span class="ttsc-dropdown-menu-indicator"><i class="fa-light fa-chevron-right"></i></span></button>
+          
+        </li>
+        <li class="ttsc-dropdown-menu-separator" role="separator"></li>
+        <li role="none"><a class="ttsc-dropdown-menu-link dd-danger" href="#" role="menuitem" data-ttsc-dropdown-dismiss="true"><i class="fa-light fa-trash"></i> Excluir matrícula</a></li>
+      </ul>
+    </div>
+    </div>
+  </div>
+  <div class="ds-stack">
+    <div class="ds-label">Interativo — clique (submenu em “Emitir documento”)</div>
+    <div class="ds-row">
+      <div data-ttsc-dropdown="true" data-ttsc-dropdown-placement="bottom-start" data-ttsc-dropdown-offset="0, 6px" id="dd-acoes">
+        <button type="button" class="ttsc-btn ttsc-btn-outline" data-ttsc-dropdown-toggle="true" aria-haspopup="menu" aria-expanded="false">Ações <i class="fa-light fa-chevron-down"></i></button>
+        <div class="ttsc-dropdown-menu dd-w" data-ttsc-dropdown-menu="true" role="menu" aria-label="Ações da matrícula">
+      <ul class="ttsc-dropdown-menu-sub" role="none">
+        <li class="dd-header" role="none">MAT-2026-0381 · Ana Beatriz Souza</li>
+        <li role="none"><a class="ttsc-dropdown-menu-link" href="#" role="menuitem"><i class="fa-light fa-eye"></i> Ver ficha</a></li>
+        <li role="none"><a class="ttsc-dropdown-menu-link" href="#" role="menuitem"><i class="fa-light fa-pen"></i> Editar <kbd class="ttsc-kbd ttsc-kbd-xs dd-kbd">E</kbd></a></li>
+        <li role="none"><a class="ttsc-dropdown-menu-link selected" href="#" role="menuitemradio" aria-checked="true"><i class="fa-light fa-check"></i> Turma 3º A</a></li>
+        <li class="ttsc-menu-item" data-ttsc-dropdown-item="true" data-ttsc-dropdown-placement="right-start" data-ttsc-dropdown-trigger="click" data-ttsc-dropdown-offset="-4px, 4px" role="none">
+          <button type="button" class="ttsc-dropdown-menu-toggle" data-ttsc-dropdown-toggle="true" role="menuitem" aria-haspopup="menu"><i class="fa-light fa-file-export"></i> Emitir documento <span class="ttsc-dropdown-menu-indicator"><i class="fa-light fa-chevron-right"></i></span></button>
+          <div class="ttsc-dropdown-menu dd-w-sm" data-ttsc-dropdown-menu="true" role="menu" aria-label="Emitir documento"><ul class="ttsc-dropdown-menu-sub" role="none"><li role="none"><a class="ttsc-dropdown-menu-link" href="#" role="menuitem"><i class="fa-light fa-file-certificate"></i> Declaração de matrícula</a></li><li role="none"><a class="ttsc-dropdown-menu-link" href="#" role="menuitem"><i class="fa-light fa-file-contract"></i> Contrato</a></li><li role="none"><a class="ttsc-dropdown-menu-link" href="#" role="menuitem"><i class="fa-light fa-file-invoice-dollar"></i> Boleto em aberto</a></li></ul></div>
+        </li>
+        <li class="ttsc-dropdown-menu-separator" role="separator"></li>
+        <li role="none"><a class="ttsc-dropdown-menu-link dd-danger" href="#" role="menuitem" data-ttsc-dropdown-dismiss="true"><i class="fa-light fa-trash"></i> Excluir matrícula</a></li>
+      </ul>
+    </div>
+      </div>
+      <div data-ttsc-dropdown="true" data-ttsc-dropdown-placement="bottom-end">
+        <button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon" data-ttsc-dropdown-toggle="true" aria-haspopup="menu" aria-label="Mais ações"><i class="fa-light fa-ellipsis-vertical"></i></button>
+        <div class="ttsc-dropdown-menu dd-w-sm" data-ttsc-dropdown-menu="true" role="menu">
+          <ul class="ttsc-dropdown-menu-sub" role="none">
+            <li role="none"><a class="ttsc-dropdown-menu-link" href="#" role="menuitem"><i class="fa-light fa-arrow-down-to-line"></i> Exportar CSV</a></li>
+            <li role="none"><a class="ttsc-dropdown-menu-link" href="#" role="menuitem"><i class="fa-light fa-print"></i> Imprimir lista</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="ds-note" id="dd-log">evento: —</div>
+  </div>
+</div>
+<script>
+  TTSC.init();
+  document.querySelectorAll('[data-ttsc-dropdown]').forEach(function (dd) {
+    var t = dd.querySelector('[data-ttsc-dropdown-toggle]');
+    dd.addEventListener('shown', function () { t.setAttribute('aria-expanded', 'true'); document.getElementById('dd-log').textContent = 'evento: shown'; });
+    dd.addEventListener('hidden', function () { t.setAttribute('aria-expanded', 'false'); document.getElementById('dd-log').textContent = 'evento: hidden'; });
+  });
+</script>
+</body>
+</html>

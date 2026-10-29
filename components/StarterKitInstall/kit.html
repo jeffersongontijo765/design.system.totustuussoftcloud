@@ -1,0 +1,1493 @@
+<!DOCTYPE html>
+<html lang="pt-br" dir="ltr">
+<head>
+<meta charset="utf-8"><script>/* Starter Kit: layout sem tema escuro -> grava 'light' nas chaves reais (o localStorage e compartilhado entre kits) */(function(){var h=document.documentElement;h.setAttribute('data-theme','light');h.classList.remove('dark');h.classList.add('light');try{['ttsc-theme','od-theme','theme','portal_theme'].forEach(function(k){localStorage.setItem(k,'light')})}catch(e){}})();</script><script>try{localStorage.setItem('ttsc_cookie_consent','accepted_all')}catch(e){}</script>
+    <script>
+(function() {
+    'use strict';
+
+    // Tenant date display mask (PHP date() syntax). The database always stores
+    // ISO dates; this only affects client-side date rendering (ttscD helpers).
+    // Default 'Y-m-d' (English/ISO standard) when no tenant preference is set.
+    window.ttscFmtDate = "Y-m-d";
+
+    // Tenant timezone (default America/Sao_Paulo) and the server timezone used
+    // to interpret naive stored datetimes. Display-only — storage stays ISO.
+    window.ttscFmtTz = "America/Sao_Paulo";
+    window.ttscFmtServerTz = "UTC";
+
+    // Locale -> [Intl locale, currency code, symbol]
+    var lm = {
+        'en':    ['en-US', 'USD', '$'],
+        'pt-br': ['pt-BR', 'BRL', 'R$'],
+        'es':    ['es-ES', 'EUR', '€'],
+        'fr':    ['fr-FR', 'EUR', '€'],
+        'de':    ['de-DE', 'EUR', '€'],
+        'it':    ['it-IT', 'EUR', '€'],
+        'zh':    ['zh-CN', 'CNY', '¥'],
+        'ja':    ['ja-JP', 'JPY', '¥'],
+        'ru':    ['ru-RU', 'RUB', '₽'],
+        'ar':    ['ar-SA', 'SAR', 'ر.س.']
+    };
+
+    // Explicit currency override -> [Intl locale, currency code, symbol]
+    var cm = {
+        'BRL': ['pt-BR', 'BRL', 'R$'],
+        'USD': ['en-US', 'USD', '$'],
+        'EUR': ['de-DE', 'EUR', '€'],
+        'GBP': ['en-GB', 'GBP', '£'],
+        'ARS': ['es-AR', 'ARS', '$'],
+        'MXN': ['es-MX', 'MXN', '$'],
+        'CNY': ['zh-CN', 'CNY', '¥'],
+        'JPY': ['ja-JP', 'JPY', '¥'],
+        'RUB': ['ru-RU', 'RUB', '₽'],
+        'SAR': ['ar-SA', 'SAR', 'ر.س.']
+    };
+
+    function normLocale() {
+        var l = (document.documentElement.lang || 'en').toLowerCase().replace(/_/g, '-');
+        if (l.indexOf('pt') === 0) l = 'pt-br';
+        else if (l.indexOf('es-') === 0) l = 'es';
+        else if (l.indexOf('en-') === 0) l = 'en';
+        else if (l.indexOf('fr-') === 0) l = 'fr';
+        else if (l.indexOf('de-') === 0) l = 'de';
+        else if (l.indexOf('it-') === 0) l = 'it';
+        else if (l.indexOf('zh-') === 0) l = 'zh';
+        else if (l.indexOf('ja-') === 0) l = 'ja';
+        else if (l.indexOf('ru-') === 0) l = 'ru';
+        else if (l.indexOf('ar-') === 0) l = 'ar';
+        return l;
+    }
+
+    function resolve() {
+        var ov = (window.ttscFmtCurrency || '').toString().toUpperCase();
+        if (cm[ov]) return cm[ov];
+        return lm[normLocale()] || ['en-US', 'USD', '$'];
+    }
+
+    function fmt(v, o) {
+        v = parseFloat(v) || 0;
+        o = o || { minimumFractionDigits: 2, maximumFractionDigits: 2 };
+        return v.toLocaleString(resolve()[0], o);
+    }
+
+    window.ttscM = {
+        get loc() { return resolve()[0]; },
+        get cur() { return resolve()[1]; },
+        get sym() { return resolve()[2]; },
+        fmt: fmt,
+        money: function(v, o) {
+            return resolve()[2] + ' ' + fmt(v, o);
+        },
+        currency: function(c) { window.ttscFmtCurrency = c || ''; }
+    };
+})();
+
+// ── Date formatting (window.ttscD) ────────────────────────────
+// Single source of truth for client-side date/datetime rendering.
+// Honors the tenant display mask (window.ttscFmtDate) and timezone
+// (window.ttscFmtTz). Stored datetimes are interpreted in the server
+// timezone (window.ttscFmtServerTz); date-only values never shift.
+(function() {
+    'use strict';
+
+    var l = (document.documentElement.lang || 'en').toLowerCase().replace(/_/g, '-');
+    if (l.indexOf('pt') === 0) l = 'pt-br';
+    var m = {
+        'en': 'en-US', 'pt-br': 'pt-BR', 'es': 'es-ES', 'fr': 'fr-FR', 'de': 'de-DE',
+        'it': 'it-IT', 'zh': 'zh-CN', 'ja': 'ja-JP', 'ru': 'ru-RU', 'ar': 'ar-SA'
+    }[l] || 'en-US';
+
+    function pad(n) { return (n < 10 ? '0' : '') + n; }
+
+    // Offset (ms) of the instant `d` in IANA timezone `tz` (0 when invalid).
+    function tzOff(d, tz) {
+        try {
+            var parts = new Intl.DateTimeFormat('en-US', {
+                timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit',
+                hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+            }).formatToParts(d);
+            var get = function(t) {
+                for (var i = 0; i < parts.length; i++) { if (parts[i].type === t) return parseInt(parts[i].value, 10); }
+                return 0;
+            };
+            var h = get('hour');
+            if (h === 24) h = 0; // hour12:false midnight quirk
+            return Date.UTC(get('year'), get('month') - 1, get('day'), h, get('minute'), get('second')) - d.getTime();
+        } catch (e) { return 0; }
+    }
+
+    // Wall-clock components of `d` in `tz` (local when tz empty).
+    function comps(d, tz) {
+        if (!tz) {
+            return { Y: d.getFullYear(), m: pad(d.getMonth() + 1), d: pad(d.getDate()), H: pad(d.getHours()), i: pad(d.getMinutes()), s: pad(d.getSeconds()) };
+        }
+        var parts = new Intl.DateTimeFormat('en-US', {
+            timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit',
+            hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+        }).formatToParts(d);
+        var get = function(t) {
+            for (var i = 0; i < parts.length; i++) { if (parts[i].type === t) return parseInt(parts[i].value, 10); }
+            return 0;
+        };
+        var h = get('hour');
+        if (h === 24) h = 0;
+        return { Y: get('year'), m: pad(get('month')), d: pad(get('day')), H: pad(h), i: pad(get('minute')), s: pad(get('second')) };
+    }
+
+    // Parse a stored value into an instant (Date):
+    //  - explicit offset / Z → native parse
+    //  - date-only → UTC midnight (tz-agnostic)
+    //  - naive datetime + server tz known → interpret wall time in server tz
+    //  - otherwise → native (browser-local) parse, legacy behavior
+    function parse(v) {
+        if (v instanceof Date) return v;
+        var s = String(v);
+        var mo = /^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2})(?::(\d{2}))?)?(\.\d+)?(Z|[+-]\d{2}:?\d{2})?$/.exec(s);
+        if (mo) {
+            if (mo[8]) return new Date(s);
+            var hasTime = mo[4] !== undefined;
+            var utc = Date.UTC(+mo[1], +mo[2] - 1, +mo[3], +(mo[4] || 0), +(mo[5] || 0), +(mo[6] || 0));
+            if (!hasTime) return new Date(utc);
+            var stz = window.ttscFmtServerTz || '';
+            if (stz) {
+                var inst = utc - tzOff(new Date(utc), stz);
+                return new Date(utc - tzOff(new Date(inst), stz));
+            }
+            return new Date(s);
+        }
+        return new Date(s);
+    }
+
+    function monthName(x, tz, full) {
+        return x.toLocaleString(m, { month: full ? 'long' : 'short', timeZone: tz || undefined });
+    }
+    function dayName(x, tz) {
+        return x.toLocaleString(m, { weekday: 'short', timeZone: tz || undefined });
+    }
+
+    function fmtMask(d, f, tz) {
+        var c = comps(d, tz), out = '', i, ch;
+        for (i = 0; i < f.length; i++) {
+            ch = f.charAt(i);
+            if (ch === 'Y') out += c.Y;
+            else if (ch === 'y') out += pad(c.Y % 100);
+            else if (ch === 'm') out += c.m;
+            else if (ch === 'n') out += parseInt(c.m, 10);
+            else if (ch === 'd') out += c.d;
+            else if (ch === 'j') out += parseInt(c.d, 10);
+            else if (ch === 'H') out += c.H;
+            else if (ch === 'G') out += parseInt(c.H, 10);
+            else if (ch === 'h') out += pad(parseInt(c.H, 10) % 12 || 12);
+            else if (ch === 'g') out += (parseInt(c.H, 10) % 12 || 12);
+            else if (ch === 'i') out += c.i;
+            else if (ch === 's') out += c.s;
+            else if (ch === 'M') out += monthName(d, tz, false);
+            else if (ch === 'F') out += monthName(d, tz, true);
+            else if (ch === 'D') out += dayName(d, tz);
+            else if (ch === 'A') out += (parseInt(c.H, 10) < 12 ? 'AM' : 'PM');
+            else if (ch === 'a') out += (parseInt(c.H, 10) < 12 ? 'am' : 'pm');
+            else out += ch;
+        }
+        return out;
+    }
+
+    function render(v, o, withTime) {
+        var d = parse(v);
+        if (isNaN(d.getTime())) return String(v);
+        var mask = window.ttscFmtDate || '';
+        // Date-only values are day-granularity: render their stored components
+        // as-is (UTC) — never shifted by timezone or the browser's local time.
+        var dateOnly = typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v);
+        var tz = dateOnly ? 'UTC' : (window.ttscFmtTz || '');
+        if (mask) return fmtMask(d, mask, tz);
+        var opts = Object.assign({}, o, tz ? { timeZone: tz } : {});
+        return withTime ? d.toLocaleString(m, opts) : d.toLocaleDateString(m, opts);
+    }
+
+    window.ttscD = {
+        d: function(v, o) { return render(v, o, false); },
+        dt: function(v, o) { return render(v, o, true); }
+    };
+})();
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TotusTuus SoftCloud</title>
+    <meta name="description" content="Sistema completo de gestão empresarial e escolar 100% na nuvem. Acadêmico, Financeiro, CRM, RH, Faturamento, LGPD e Inteligência Artificial.">
+    <!-- SEO OpenGraph / Twitter Cards -->
+    <meta property="og:title" content="TotusTuus SoftCloud — Sistema de Gestão">
+    <meta property="og:description" content="Plataforma Integrada de Gestão para Instituições de Ensino.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="#/install">
+    <meta name="twitter:card" content="summary_large_image">
+    <script>
+        // Tema unificado com o app (chave ttsc-theme) + legado 'theme'
+        try {
+            var t = localStorage.getItem('ttsc-theme') || localStorage.getItem('theme');
+            if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        } catch (e) {}
+    </script>
+    <style>
+        html:not(.dark) [data-theme-icon="sun"] { display: none !important; }
+        html.dark [data-theme-icon="moon"] { display: none !important; }
+    </style>
+    <link rel="stylesheet" href="assets/fa.css">
+    <!-- Tailwind build estático do site (substitui o CDN @tailwindcss/browser) -->
+    <link rel="stylesheet" href="assets/css/tailwind.web.css">
+    <link rel="stylesheet" href="assets/css/web-layout.css">
+    <link href="assets/css/ttsc.rtl.css" rel="stylesheet">
+    
+    </head>
+<body class="min-h-screen flex flex-col transition-colors duration-300">
+
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <!-- TOPBAR — Micro Bar for Support & Quick Portals                   -->
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <div class="fixed top-0 left-0 right-0 z-[60] bg-[var(--color-bg-base)] border-b border-[var(--color-border-subtle)] text-[var(--color-text-muted)] text-[11px] font-medium transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-7">
+            <div class="flex items-center gap-4 min-w-0">
+                <a href="#/support/portal/new" class="hover:text-[var(--color-supa-green-link)] transition flex items-center gap-1.5 whitespace-nowrap shrink-0">
+                    <i class="fas fa-headset text-[10px]"></i> <span>Portal de Suporte</span>
+                </a>
+                <span class="hidden sm:inline text-[var(--color-border-base)]">|</span>
+                <span class="hidden md:inline whitespace-nowrap text-[var(--color-text-muted)]">Portais Rápidos:</span>
+                <!-- Quick portals: hidden below sm (the mobile menu's Portal Login opens every portal) -->
+                <div class="hidden sm:flex items-center gap-3 whitespace-nowrap">
+                    <a href="#/login-student" class="hover:text-[var(--color-supa-green-link)] transition flex items-center gap-1"><i class="fas fa-graduation-cap text-[10px]"></i> Aluno</a>
+                    <a href="#/login-teacher" class="hover:text-[var(--color-supa-green-link)] transition flex items-center gap-1"><i class="fas fa-book-open text-[10px]"></i> Professor</a>
+                    <a href="#/login-parents" class="hover:text-[var(--color-supa-green-link)] transition flex items-center gap-1"><i class="fas fa-users text-[10px]"></i> Pais e Responsáveis</a>
+                    <a href="#/login-developer" class="hover:text-[var(--color-supa-green-link)] transition flex items-center gap-1"><i class="fas fa-code text-[10px]"></i> Desenvolvedores</a>
+                </div>
+            </div>
+            <div class="hidden lg:flex items-center gap-2 font-mono text-[10px] text-emerald-500">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 dot-pulse"></span> SLA 99,9% Online            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════════ -->
+    <!-- MAIN HEADER NAVIGATION                                           -->
+    <!-- ════════════════════════════════════════════════════════════════ -->
+            <header class="fixed top-7 left-0 right-0 z-50 bg-[var(--color-bg-surface)]/90 backdrop-blur-md border-b border-[var(--color-border-base)] transition-colors duration-300">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    
+                    <!-- Brand Logo -->
+                    <a href="#/" class="flex items-center gap-2.5 min-w-0 text-decoration-none group">
+                        <img src="assets/media/app/favicon.svg" class="w-8 h-8 object-contain transition-transform group-hover:scale-105" alt="TotusTuus SoftCloud">
+                        <div class="flex items-baseline">
+                            <span class="font-bold text-lg text-[var(--color-text-primary)] tracking-tight">TotusTuus</span>
+                            <span class="hidden sm:inline ml-1.5 px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider text-[var(--color-supa-green)] bg-[var(--color-supa-green-soft)] border border-[var(--color-supa-green-border)]">SoftCloud</span>
+                        </div>
+                    </a>
+
+                    <!-- Centered Nav Links -->
+                    <nav class="hidden md:flex items-center gap-7">
+                        <a href="#/#modulos" class="text-xs font-semibold text-[var(--color-text-secondary)] hover:text-[var(--color-supa-green-link)] transition-colors py-1">Soluções</a>
+                        <a href="#/plans" class="text-xs font-semibold text-[var(--color-text-secondary)] hover:text-[var(--color-supa-green-link)] transition-colors py-1">Planos</a>
+                        <a href="#/about" class="text-xs font-semibold text-[var(--color-text-secondary)] hover:text-[var(--color-supa-green-link)] transition-colors py-1">Sobre</a>
+                        <a href="#/contact" class="text-xs font-semibold text-[var(--color-text-secondary)] hover:text-[var(--color-supa-green-link)] transition-colors py-1">Contato</a>
+                    </nav>
+
+                    <!-- Right Action Cluster -->
+                    <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+                        <!-- Mobile nav trigger -->
+                        <button type="button" id="webNavToggle" class="md:hidden w-9 h-9 rounded-lg text-[var(--color-text-secondary)] hover:text-[var(--color-supa-green-link)] hover:bg-[var(--color-bg-base)] transition flex items-center justify-center border border-[var(--color-border-subtle)] cursor-pointer" aria-label="Abrir menu" aria-expanded="false" aria-controls="webMobileNav">
+                            <i class="fas fa-bars text-sm"></i>
+                        </button>
+
+                        
+<style>
+/* ── Language Selector ── */
+.lang-select {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.lang-select-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--sb-text, #0f172a);
+  background: transparent;
+  border: 1px solid var(--sb-border, #e2e8f0);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+  line-height: 1;
+  white-space: nowrap;
+}
+.lang-select-trigger:hover {
+  background: rgba(0, 0, 0, 0.03);
+  border-color: var(--accent, #10b981);
+}
+.lang-select-trigger:active {
+  transform: scale(0.97);
+}
+.lang-select-trigger img,
+.lang-flag-img {
+  width: 18px !important;
+  height: 13px !important;
+  border-radius: 2px !important;
+  object-fit: cover !important;
+  flex-shrink: 0 !important;
+  display: inline-block !important;
+  vertical-align: middle !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+.lang-option .lang-flag-img {
+  width: 20px !important;
+  height: 14px !important;
+  margin-right: 8px !important;
+}
+.lang-select-trigger .lang-label {
+  font-size: 12px;
+  color: var(--sb-text, #0f172a);
+}
+.lang-select-trigger .lang-chevron {
+  font-size: 8px;
+  color: var(--sb-text-muted, #94a3b8);
+  transition: transform 0.2s ease;
+}
+.lang-select-trigger.is-open .lang-chevron {
+  transform: rotate(180deg);
+}
+
+/* Dropdown panel */
+.lang-select-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  min-width: 200px;
+  background: var(--surface, #fff);
+  border: 1px solid var(--sb-border, #e2e8f0);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 4px;
+  z-index: 9999;
+  display: none;
+  animation: langFadeIn 0.12s ease;
+}
+.lang-select-dropdown.is-open {
+  display: block;
+}
+@keyframes langFadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.lang-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--sb-text, #0f172a);
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  font-family: inherit;
+  text-align: left;
+  line-height: 1;
+}
+.lang-option:hover {
+  background: rgba(16, 185, 129, 0.06);
+}
+.lang-option.is-active {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+}
+.lang-option .lang-name {
+  flex: 1;
+}
+.lang-option .lang-check {
+  font-size: 10px;
+  color: #10b981;
+  opacity: 0;
+  transition: opacity 0.12s;
+}
+.lang-option.is-active .lang-check {
+  opacity: 1;
+}
+
+/* Dark mode */
+.dark .lang-select-trigger {
+  color: #f1f5f9;
+  border-color: #334155;
+}
+.dark .lang-select-trigger:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+.dark .lang-select-dropdown {
+  background: #1a1d24 !important;
+  border-color: #282c37 !important;
+}
+.dark .lang-option {
+  color: #f1f5f9;
+}
+.dark .lang-option:hover {
+  background: rgba(16, 185, 129, 0.1) !important;
+}
+.dark .lang-option.is-active {
+  background: rgba(16, 185, 129, 0.15) !important;
+  color: #10b981 !important;
+}
+
+/* Login page variant — Full Supabase Select Dropdown */
+.lang-select--login .lang-select-trigger {
+  padding: 8px 14px;
+  min-height: 38px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 8px;
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--border, #d1d5db);
+  color: var(--fg, #0f172a);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+.lang-select--login .lang-select-trigger:hover {
+  border-color: #10b981;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.15);
+}
+
+.dark .lang-select--login .lang-select-trigger,
+html.dark .lang-select--login .lang-select-trigger {
+  background: #242832 !important;
+  border-color: #323745 !important;
+  color: #f3f4f6 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dark .lang-select--login .lang-select-trigger:hover,
+html.dark .lang-select--login .lang-select-trigger:hover {
+  border-color: #10b981 !important;
+}
+
+.dark .lang-select--login .lang-select-dropdown,
+html.dark .lang-select--login .lang-select-dropdown {
+  background: #1a1d24 !important;
+  border-color: #282c37 !important;
+  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5) !important;
+}
+
+/* Landing page variant */
+.lang-select--landing .lang-select-trigger {
+  padding: 6px 14px;
+  font-size: 13px;
+  border-radius: 8px;
+}
+</style>
+
+<div class="lang-select lang-select--landing">
+  <button type="button" class="lang-select-trigger" id="langSelectTrigger-landing" aria-haspopup="listbox" aria-expanded="false">
+    <img src="assets/media/flags/brazil.svg" alt="" loading="lazy" class="lang-flag-img">
+        <i class="fa-light fa-chevron-down lang-chevron"></i>
+  </button>
+  <div class="lang-select-dropdown" id="langSelectDropdown-landing" role="listbox" aria-label="Selecionar idioma">
+          <button type="button"
+              class="lang-option "
+              data-locale="en"
+              data-switch-lang
+              role="option"
+              aria-selected="false">
+        <img src="assets/media/flags/united-states.svg" alt="" loading="lazy" class="lang-flag-img">
+        <span class="lang-name">English</span>
+        <i class="fa-light fa-check lang-check"></i>
+      </button>
+          <button type="button"
+              class="lang-option is-active"
+              data-locale="pt-br"
+              data-switch-lang
+              role="option"
+              aria-selected="true">
+        <img src="assets/media/flags/brazil.svg" alt="" loading="lazy" class="lang-flag-img">
+        <span class="lang-name">Português</span>
+        <i class="fa-light fa-check lang-check"></i>
+      </button>
+          <button type="button"
+              class="lang-option "
+              data-locale="es"
+              data-switch-lang
+              role="option"
+              aria-selected="false">
+        <img src="assets/media/flags/spain.svg" alt="" loading="lazy" class="lang-flag-img">
+        <span class="lang-name">Español</span>
+        <i class="fa-light fa-check lang-check"></i>
+      </button>
+          <button type="button"
+              class="lang-option "
+              data-locale="fr"
+              data-switch-lang
+              role="option"
+              aria-selected="false">
+        <img src="assets/media/flags/france.svg" alt="" loading="lazy" class="lang-flag-img">
+        <span class="lang-name">Français</span>
+        <i class="fa-light fa-check lang-check"></i>
+      </button>
+          <button type="button"
+              class="lang-option "
+              data-locale="de"
+              data-switch-lang
+              role="option"
+              aria-selected="false">
+        <img src="assets/media/flags/germany.svg" alt="" loading="lazy" class="lang-flag-img">
+        <span class="lang-name">Deutsch</span>
+        <i class="fa-light fa-check lang-check"></i>
+      </button>
+          <button type="button"
+              class="lang-option "
+              data-locale="it"
+              data-switch-lang
+              role="option"
+              aria-selected="false">
+        <img src="assets/media/flags/italy.svg" alt="" loading="lazy" class="lang-flag-img">
+        <span class="lang-name">Italiano</span>
+        <i class="fa-light fa-check lang-check"></i>
+      </button>
+          <button type="button"
+              class="lang-option "
+              data-locale="zh"
+              data-switch-lang
+              role="option"
+              aria-selected="false">
+        <img src="assets/media/flags/china.svg" alt="" loading="lazy" class="lang-flag-img">
+        <span class="lang-name">中文</span>
+        <i class="fa-light fa-check lang-check"></i>
+      </button>
+          <button type="button"
+              class="lang-option "
+              data-locale="ja"
+              data-switch-lang
+              role="option"
+              aria-selected="false">
+        <img src="assets/media/flags/japan.svg" alt="" loading="lazy" class="lang-flag-img">
+        <span class="lang-name">日本語</span>
+        <i class="fa-light fa-check lang-check"></i>
+      </button>
+          <button type="button"
+              class="lang-option "
+              data-locale="ru"
+              data-switch-lang
+              role="option"
+              aria-selected="false">
+        <img src="assets/media/flags/russia.svg" alt="" loading="lazy" class="lang-flag-img">
+        <span class="lang-name">Русский</span>
+        <i class="fa-light fa-check lang-check"></i>
+      </button>
+          <button type="button"
+              class="lang-option "
+              data-locale="ar"
+              data-switch-lang
+              role="option"
+              aria-selected="false">
+        <img src="assets/media/flags/saudi-arabia.svg" alt="" loading="lazy" class="lang-flag-img">
+        <span class="lang-name">العربية</span>
+        <i class="fa-light fa-check lang-check"></i>
+      </button>
+      </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // Switch language: save preference and reload
+  function switchLanguage(locale) {
+    try { localStorage.setItem('ttsc-locale', locale); } catch(e) {}
+    document.cookie = 'ttsc-locale=' + locale + ';path=/;max-age=31536000';
+    window.location.reload();
+  }
+
+  // Hide broken flag images
+  document.querySelectorAll('.lang-flag-img').forEach(function(img) {
+    img.addEventListener('error', function() { this.style.display = 'none'; });
+  });
+
+  // Event delegation: toggle dropdown + switch language
+  document.addEventListener('click', function(e) {
+      if (!(e.target instanceof Element)) return;
+    // Check for language switch click (CSP-safe, no onclick)
+    var langOption = e.target.closest('[data-switch-lang]');
+    if (langOption) {
+      var locale = langOption.getAttribute('data-locale');
+      if (locale) switchLanguage(locale);
+      return;
+    }
+
+    // Check for trigger toggle
+    var trigger = e.target.closest('.lang-select-trigger');
+    if (trigger) {
+      var parent = trigger.closest('.lang-select');
+      if (!parent) return;
+      var dropdown = parent.querySelector('.lang-select-dropdown');
+      var isOpen = dropdown.classList.contains('is-open');
+
+      // Close all other dropdowns
+      document.querySelectorAll('.lang-select-dropdown.is-open').forEach(function(d) {
+        d.classList.remove('is-open');
+      });
+      document.querySelectorAll('.lang-select-trigger.is-open').forEach(function(t) {
+        t.classList.remove('is-open');
+        t.setAttribute('aria-expanded', 'false');
+      });
+
+      if (!isOpen) {
+        dropdown.classList.add('is-open');
+        trigger.classList.add('is-open');
+        trigger.setAttribute('aria-expanded', 'true');
+      }
+      return;
+    }
+
+    // Click outside → close all dropdowns
+    document.querySelectorAll('.lang-select-dropdown.is-open').forEach(function(d) {
+      d.classList.remove('is-open');
+    });
+    document.querySelectorAll('.lang-select-trigger.is-open').forEach(function(t) {
+      t.classList.remove('is-open');
+      t.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.lang-select-dropdown.is-open').forEach(function(d) {
+        d.classList.remove('is-open');
+      });
+      document.querySelectorAll('.lang-select-trigger.is-open').forEach(function(t) {
+        t.classList.remove('is-open');
+        t.setAttribute('aria-expanded', 'false');
+      });
+    }
+  });
+})();
+</script>
+                        
+                        <button id="themeToggle" class="w-8 h-8 rounded-lg text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-base)] transition flex items-center justify-center border border-[var(--color-border-subtle)]" aria-label="Alternar tema">
+                            <i class="fas fa-moon text-xs" data-theme-icon="moon"></i>
+                            <i class="fas fa-sun text-xs" data-theme-icon="sun"></i>
+                        </button>
+
+                        <button type="button" data-action="open-portal-drawer" class="hidden sm:flex px-3.5 py-2 text-xs font-semibold text-[var(--color-text-primary)] bg-[var(--color-bg-base)] border border-[var(--color-border-base)] rounded-lg hover:border-[var(--color-supa-green)] hover:text-[var(--color-supa-green-link)] transition items-center gap-1.5 cursor-pointer shadow-xs">
+                            <i class="fas fa-user-lock text-[10px] text-[var(--color-supa-green-link)]"></i>
+                            <span>Login do Portal</span>
+                        </button>
+
+                        <a href="#/contact" class="hidden sm:flex px-4 py-2 bg-[var(--color-supa-green)] text-white text-xs font-bold rounded-lg hover:bg-[var(--color-supa-green-link)] transition items-center gap-1.5 shadow-sm">
+                            <i class="fas fa-calendar-check text-[10px]"></i>
+                            <span>Agendar Demonstração</span>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </header>
+
+        <!-- Mobile Navigation Panel (menu abaixo do header fixo: 28px topbar + 64px nav) -->
+        <div id="webMobileNav" class="hidden md:hidden fixed top-[92px] left-0 right-0 z-40 bg-[var(--color-bg-surface)] border-b border-[var(--color-border-base)] shadow-lg">
+            <nav class="max-w-7xl mx-auto px-4 py-3 flex flex-col" aria-label="Abrir menu">
+                <a href="#/#modulos" class="mobile-nav-link">Soluções</a>
+                <a href="#/plans" class="mobile-nav-link">Planos</a>
+                <a href="#/about" class="mobile-nav-link">Sobre</a>
+                <a href="#/contact" class="mobile-nav-link">Contato</a>
+                <div class="flex gap-2 pt-3 mt-1 border-t border-[var(--color-border-subtle)]">
+                    <button type="button" data-action="open-portal-drawer" class="flex-1 px-3 py-2.5 text-xs font-semibold text-[var(--color-text-primary)] bg-[var(--color-bg-base)] border border-[var(--color-border-base)] rounded-lg transition flex items-center justify-center gap-1.5 cursor-pointer">
+                        <i class="fas fa-user-lock text-[10px] text-[var(--color-supa-green-link)]"></i>
+                        <span>Login do Portal</span>
+                    </button>
+                    <a href="#/contact" class="flex-1 px-3 py-2.5 bg-[var(--color-supa-green)] text-white text-xs font-bold rounded-lg hover:bg-[var(--color-supa-green-link)] transition flex items-center justify-center gap-1.5">
+                        <i class="fas fa-calendar-check text-[10px]"></i>
+                        <span>Agendar Demonstração</span>
+                    </a>
+                </div>
+            </nav>
+        </div>
+        <script>
+        (function() {
+            var btn = document.getElementById('webNavToggle');
+            var panel = document.getElementById('webMobileNav');
+            if (!btn || !panel) return;
+            function setOpen(open) {
+                panel.classList.toggle('hidden', !open);
+                btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+                btn.querySelector('i').classList.toggle('fa-xmark', open);
+                btn.querySelector('i').classList.toggle('fa-bars', !open);
+            }
+            btn.addEventListener('click', function() { setOpen(panel.classList.contains('hidden')); });
+            panel.addEventListener('click', function(e) { if (e.target.closest('a')) setOpen(false); });
+            document.addEventListener('keydown', function(e) { if (e.key === 'Escape') setOpen(false); });
+        })();
+        </script>
+    
+    <main class="grow">
+        
+<div class="min-h-screen flex items-start justify-center bg-gray-100 pt-40 pb-12 px-4">
+    <div class="max-w-2xl w-full bg-white rounded-xl shadow-lg p-8">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">
+                <i class="fas fa-rocket text-blue-600 mr-2"></i>Instalação do Sistema            </h1>
+            <p class="text-gray-600">Configure sua empresa em poucos passos</p>
+        </div>
+
+        
+        
+        <form method="POST" action="/install" class="space-y-6">
+            <input type="hidden" name="csrf_token" value="3b7ea0897ee301d964fcd649b21267b353c423b5b3a95dbbd7620b90909eb6ff">            <div class="border-b pb-6 mb-6">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">
+                    <i class="fas fa-database mr-2"></i>Configurações do Banco de Dados                </h2>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Host do Banco de Dados</label>
+                        <input type="text" name="db_host" value="127.0.0.1" required
+                            class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Porta</label>
+                        <input type="number" name="db_port" value="3306" required
+                            class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nome do Banco de Dados</label>
+                        <input type="text" name="db_name" value="totustuus" required
+                            class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Usuário</label>
+                        <input type="text" name="db_user" value="root" required
+                            class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Senha do Banco de Dados</label>
+                        <input type="password" name="db_pass" placeholder="Deixe vazio se não houver senha"
+                            class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-b pb-6 mb-6">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">
+                    <i class="fas fa-building mr-2"></i>Dados da Empresa                </h2>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nome Fantasia</label>
+                        <input type="text" name="empresa_nome" required placeholder="Nome exibido no sistema"
+                            class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Razão Social</label>
+                        <input type="text" name="empresa_razao" required
+                            class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">CNPJ</label>
+                        <input type="text" name="empresa_cnpj" required placeholder="00.000.000/0001-00"
+                            class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Telefone</label>
+                        <input type="text" name="empresa_telefone" required placeholder="(00) 00000-0000"
+                            class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">E-mail</label>
+                        <input type="email" name="empresa_email" required placeholder="contato@empresa.com.br"
+                            class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">
+                    <i class="fas fa-user-shield mr-2"></i>Administrador Principal                </h2>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nome Completo</label>
+                        <input type="text" name="admin_nome" required placeholder="Nome do administrador"
+                            class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">E-mail</label>
+                        <input type="email" name="admin_email" required placeholder="admin@empresa.com"
+                            class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Senha</label>
+                        <input type="password" name="admin_senha" required minlength="6" placeholder="Mínimo de 6 caracteres"
+                            class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Confirmar Senha</label>
+                        <input type="password" name="admin_senha_confirm" required minlength="6" placeholder="Confirmar senha"
+                            class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <i class="fas fa-exclamation-triangle text-yellow-400"></i>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-yellow-700">
+                            Após a instalação, o arquivo de configuração será criado automaticamente. Mantenha suas credenciais em segurança.                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+                <i class="fas fa-check mr-2"></i>Instalar Sistema            </button>
+        </form>
+    </div>
+</div>
+
+    </main>
+
+    <style>
+#portalDrawer { display: none; position: fixed; inset: 0; z-index: 9999; align-items: center; justify-content: center; }
+#portalDrawer.is-open { display: flex; }
+#portalDrawerBackdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(4px); }
+#portalDrawerCard {
+    position: relative; margin: 16px; width: min(500px, 95vw);
+    background: var(--color-bg-surface, #fff); border: 1px solid var(--color-border-base, #e2e8f0);
+    border-radius: 20px; padding: 28px; box-shadow: 0 25px 60px rgba(0,0,0,0.25);
+    animation: drawerIn 200ms ease-out;
+}
+@keyframes drawerIn { from { opacity: 0; transform: scale(0.96) translateY(-8px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+.portal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 16px; }
+.portal-card {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    padding: 18px 12px; border: 2px solid var(--color-border-base, #e2e8f0);
+    border-radius: 14px; cursor: pointer; transition: background-color 150ms, border-color 150ms, box-shadow 150ms;
+    background: var(--color-bg-base, #f8fafc); text-decoration: none;
+}
+.portal-card:hover { border-color: var(--color-supa-green, #3ecf8e); background: var(--color-supa-green-soft, rgba(62,207,142,0.05)); box-shadow: 0 2px 10px var(--color-supa-green-border, rgba(62,207,142,0.15)); }
+.portal-card i { font-size: 22px; color: var(--color-supa-green, #3ecf8e); }
+.portal-card span { font-weight: 600; font-size: 13px; color: var(--color-text-primary, #1e293b); text-align: center; }
+.portal-card small { font-size: 11px; color: var(--color-text-muted, #64748b); text-align: center; line-height: 1.3; }
+.drawer-close {
+    position: absolute; top: 12px; right: 12px; width: 30px; height: 30px;
+    border-radius: 8px; border: none; background: var(--color-bg-base, #f1f5f9);
+    color: var(--color-text-muted, #64748b); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 13px;
+}
+.drawer-close:hover { background: var(--color-border-base, #e2e8f0); color: var(--color-text-primary, #1e293b); }
+</style>
+
+<div id="portalDrawer">
+    <div id="portalDrawerBackdrop" data-action="close-portal-drawer"></div>
+    <div id="portalDrawerCard">
+        <button class="drawer-close" data-action="close-portal-drawer" type="button" aria-label="Fechar"><i class="fas fa-times"></i></button>
+        <div style="text-align:center;padding-top:4px">
+            <h2 style="font-size:20px;font-weight:600;color:var(--color-text-primary,#1e293b);margin-bottom:2px">Acesse Seu Portal</h2>
+            <p style="font-size:13px;color:var(--color-text-muted,#64748b)">Selecione como deseja entrar</p>
+        </div>
+        <div class="portal-grid">
+            <a href="#/login" class="portal-card">
+                <i class="fas fa-gear"></i>
+                <span>Administração</span>
+                <small>Gestão institucional completa</small>
+            </a>
+            <a href="#/login-teacher" class="portal-card">
+                <i class="fas fa-book-open"></i>
+                <span>Professor</span>
+                <small>Diário de classe, notas e frequência</small>
+            </a>
+            <a href="#/login-student" class="portal-card">
+                <i class="fas fa-graduation-cap"></i>
+                <span>Aluno</span>
+                <small>Notas, horários e materiais de aula</small>
+            </a>
+            <a href="#/login-parents" class="portal-card">
+                <i class="fas fa-users"></i>
+                <span>Pais e Responsáveis</span>
+                <small>Acompanhamento acadêmico e pagamento de mensalidades</small>
+            </a>
+            <a href="#/login-thirdparty" class="portal-card">
+                <i class="fas fa-handshake"></i>
+                <span>Parceiros e Fornecedores</span>
+                <small>Portal de compras e contratos de parceria</small>
+            </a>
+            <a href="#/login-developer" class="portal-card">
+                <i class="fas fa-code"></i>
+                <span>Desenvolvedores</span>
+                <small>APIs, Webhooks e documentação</small>
+            </a>
+        </div>
+        <div style="text-align:center;margin-top:14px">
+            <button type="button" data-action="close-portal-drawer" style="background:none;border:none;color:var(--color-text-muted,#64748b);cursor:pointer;font-size:13px">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+    <footer class="bg-[var(--color-bg-surface)] text-[var(--color-text-primary)] py-12 mt-auto border-t border-[var(--color-border-base)] transition-colors duration-300">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8 mb-8">
+                <div class="col-span-2">
+                    <div class="flex items-center gap-3 mb-4">
+                        <img src="assets/media/app/favicon.svg" class="w-8 h-8 object-contain" alt="TotusTuus SoftCloud">
+                        <span class="font-bold text-lg text-[var(--color-text-primary)]">TotusTuus SoftCloud</span>
+                    </div>
+                    <p class="text-[var(--color-text-muted)] max-w-md">
+                        Soluções inteligentes de gestão de negócios. Simplificando processos e impulsionando o crescimento de PMEs em todo o Brasil.                    </p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 text-[var(--color-text-primary)]">Links</h4>
+                    <ul class="space-y-2 text-[var(--color-text-secondary)]">
+                        <li><a href="#/about" class="hover:text-[var(--color-supa-green-link)] transition">Sobre Nós</a></li>
+                        <li><a href="#/contact" class="hover:text-[var(--color-supa-green-link)] transition">Contato</a></li>
+                        <li><a href="#/legal/privacy" class="hover:text-[var(--color-supa-green-link)] transition">Privacidade</a></li>
+                        <li><a href="#/legal/terms" class="hover:text-[var(--color-supa-green-link)] transition">Termos de Uso</a></li>
+                        <li><a href="#/dpo/contact" class="hover:text-[var(--color-supa-green-link)] transition">Encarregado (DPO)</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4 text-[var(--color-text-primary)]">Portais</h4>
+                    <ul class="space-y-2 text-[var(--color-text-secondary)]">
+                        <li><a href="#/login" class="hover:text-[var(--color-supa-green-link)] transition">Administração</a></li>
+                        <li><a href="#/login-teacher" class="hover:text-[var(--color-supa-green-link)] transition">Professor</a></li>
+                        <li><a href="#/login-student" class="hover:text-[var(--color-supa-green-link)] transition">Aluno</a></li>
+                        <li><a href="#/login-parents" class="hover:text-[var(--color-supa-green-link)] transition">Pais e Responsáveis</a></li>
+                        <li><a href="#/login-developer" class="hover:text-[var(--color-supa-green-link)] transition">Desenvolvedores</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="pt-8 border-t border-[var(--color-border-subtle)] text-center text-[var(--color-text-muted)] text-sm">
+                <p>&copy; 2026 TotusTuus SoftCloud. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+(function() {
+    var toggle = document.getElementById('themeToggle');
+    if (!toggle) return;
+
+    var moon = toggle.querySelector('[data-theme-icon="moon"]');
+    var sun = toggle.querySelector('[data-theme-icon="sun"]');
+
+    function syncIcons() {
+        var isDark = document.documentElement.classList.contains('dark');
+        if (moon) moon.classList.toggle('hidden', isDark);
+        if (sun) sun.classList.toggle('hidden', !isDark);
+    }
+
+    // Sync icons on page load
+    syncIcons();
+
+    toggle.addEventListener('click', function() {
+        document.documentElement.classList.toggle('dark');
+        var mode = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+        try {
+            localStorage.setItem('theme', mode);
+            localStorage.setItem('ttsc-theme', mode); // unificado com o app
+        } catch (e) {}
+        syncIcons();
+    });
+})();
+    </script>
+    <script>
+(function() {
+    'use strict';
+    var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Scroll reveals
+    var revealEls = document.querySelectorAll('.reveal');
+    if (prefersReduced) {
+        // Movimento reduzido: conteúdo aparece imediatamente (sem animação)
+        revealEls.forEach(function(el) { el.classList.add('is-visible'); });
+        document.querySelectorAll('[data-count]').forEach(function(el) {
+            el.textContent = el.getAttribute('data-count') + (el.getAttribute('data-suffix') || '');
+        });
+        return;
+    }
+    if ('IntersectionObserver' in window && revealEls.length) {
+        var io = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    io.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+        revealEls.forEach(function(el) { io.observe(el); });
+    } else {
+        revealEls.forEach(function(el) { el.classList.add('is-visible'); });
+    }
+
+    // Animated counters
+    var counters = document.querySelectorAll('[data-count]');
+    if ('IntersectionObserver' in window && counters.length) {
+        var cio = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (!entry.isIntersecting) return;
+                var el = entry.target;
+                cio.unobserve(el);
+                var target = parseFloat(el.getAttribute('data-count'));
+                var suffix = el.getAttribute('data-suffix') || '';
+                var duration = 1400;
+                var start = null;
+                function step(ts) {
+                    if (!start) start = ts;
+                    var p = Math.min((ts - start) / duration, 1);
+                    var eased = 1 - Math.pow(1 - p, 3);
+                    el.textContent = Math.round(target * eased) + suffix;
+                    if (p < 1) requestAnimationFrame(step);
+                }
+                requestAnimationFrame(step);
+            });
+        }, { threshold: 0.4 });
+        counters.forEach(function(el) { cio.observe(el); });
+    }
+})();
+    </script>
+    <script>
+(function() {
+    'use strict';
+    function openPortalDrawer() {
+        var d = document.getElementById('portalDrawer');
+        if (d) { d.classList.add('is-open'); document.body.style.overflow = 'hidden'; }
+    }
+    function closePortalDrawer() {
+        var d = document.getElementById('portalDrawer');
+        if (d) { d.classList.remove('is-open'); document.body.style.overflow = ''; }
+    }
+    window.openPortalDrawer = openPortalDrawer;
+    window.closePortalDrawer = closePortalDrawer;
+
+    document.addEventListener('click', function(e) {
+        if (!(e.target instanceof Element)) return;
+        if (e.target.closest('[data-action="open-portal-drawer"]')) {
+            e.preventDefault();
+            openPortalDrawer();
+        }
+        if (e.target.closest('[data-action="close-portal-drawer"]')) {
+            e.preventDefault();
+            closePortalDrawer();
+        }
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closePortalDrawer();
+    });
+})();
+</script>
+    <button id="leadChatToggle" type="button" class="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 bg-[var(--color-supa-green)] text-white rounded-lg shadow-lg hover:bg-[var(--color-supa-green-link)] transition-all duration-200 hover:shadow-xl" aria-label="Falar com vendas" aria-expanded="false">
+        <i class="fas fa-comment-dots text-lg"></i>
+        <span class="text-sm font-medium hidden sm:inline">Falar com vendas</span>
+    </button>
+    <div id="leadChatPanel" class="fixed bottom-24 right-6 z-50 w-[min(360px,calc(100vw-3rem))] hidden rounded-lg border border-[var(--color-border-base)] bg-[var(--color-bg-surface)] shadow-2xl overflow-hidden" role="dialog" aria-label="Falar com vendas">
+        <div class="flex items-center justify-between px-5 py-4 border-b border-[var(--color-border-subtle)] bg-[var(--color-bg-base)]">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-full bg-[var(--color-supa-green-soft)] text-[var(--color-supa-green)] flex items-center justify-center"><i class="fas fa-headset"></i></div>
+                <div>
+                    <p class="text-sm font-semibold text-[var(--color-text-primary)]">Falar com vendas</p>
+                    <p class="text-xs text-[var(--color-text-muted)]"><span class="w-1.5 h-1.5 rounded-full bg-[var(--color-supa-green)] dot-pulse inline-block mr-1"></span>Respondemos em até um dia útil</p>
+                </div>
+            </div>
+            <button id="leadChatClose" type="button" class="w-8 h-8 rounded-md text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-base)] transition flex items-center justify-center" aria-label="Fechar"><i class="fas fa-times text-sm"></i></button>
+        </div>
+        <form data-lead-form novalidate class="p-5 space-y-3">
+            <div>
+                <label for="chatLeadName" class="block text-xs font-medium text-[var(--color-text-secondary)] mb-1">Nome completo *</label>
+                <input type="text" id="chatLeadName" name="name" required class="w-full rounded-md border border-[var(--color-border-base)] bg-[var(--color-bg-base)] px-3 py-2 text-sm text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:border-[var(--color-supa-green)] focus:outline-none" placeholder="Maria Souza" />
+            </div>
+            <div>
+                <label for="chatLeadEmail" class="block text-xs font-medium text-[var(--color-text-secondary)] mb-1">E-mail *</label>
+                <input type="email" id="chatLeadEmail" name="email" required class="w-full rounded-md border border-[var(--color-border-base)] bg-[var(--color-bg-base)] px-3 py-2 text-sm text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:border-[var(--color-supa-green)] focus:outline-none" placeholder="maria@escola.com.br" />
+            </div>
+            <div>
+                <label for="chatLeadPhone" class="block text-xs font-medium text-[var(--color-text-secondary)] mb-1">Telefone / WhatsApp</label>
+                <input type="tel" id="chatLeadPhone" name="phone" class="w-full rounded-md border border-[var(--color-border-base)] bg-[var(--color-bg-base)] px-3 py-2 text-sm text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:border-[var(--color-supa-green)] focus:outline-none" placeholder="(11) 99999-9999" />
+            </div>
+            <div>
+                <label for="chatLeadCompany" class="block text-xs font-medium text-[var(--color-text-secondary)] mb-1">Escola / Empresa</label>
+                <input type="text" id="chatLeadCompany" name="company" class="w-full rounded-md border border-[var(--color-border-base)] bg-[var(--color-bg-base)] px-3 py-2 text-sm text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:border-[var(--color-supa-green)] focus:outline-none" placeholder="Academia Aurora" />
+            </div>
+            <div>
+                <label for="chatLeadMessage" class="block text-xs font-medium text-[var(--color-text-secondary)] mb-1">Como podemos ajudar?</label>
+                <textarea id="chatLeadMessage" name="message" rows="3" class="w-full rounded-md border border-[var(--color-border-base)] bg-[var(--color-bg-base)] px-3 py-2 text-sm text-[var(--color-text-primary)] placeholder-[var(--color-text-muted)] focus:border-[var(--color-supa-green)] focus:outline-none resize-none" placeholder="Gostaria de saber mais sobre os módulos acadêmico e financeiro..."></textarea>
+            </div>
+            <div class="lead-status hidden rounded-md border px-3 py-2.5 text-xs"></div>
+            <button type="submit" class="w-full px-4 py-2.5 bg-[var(--color-supa-green)] text-white rounded-md font-medium text-sm hover:bg-[var(--color-supa-green-link)] transition flex items-center justify-center gap-2 shadow-sm">
+                <i class="fas fa-paper-plane text-xs"></i> Enviar mensagem            </button>
+            <a href="#/support/portal/new" target="_blank" rel="noopener" class="block text-center text-xs text-[var(--color-supa-green-link)] hover:underline">Ainda tem dúvidas? Abra um ticket com nossa equipe</a>
+        </form>
+    </div>
+    <script>
+(function() {
+    var toggle = document.getElementById('leadChatToggle');
+    var panel = document.getElementById('leadChatPanel');
+    var closeBtn = document.getElementById('leadChatClose');
+    var form = document.querySelector('[data-lead-form]');
+    var statusEl = form ? form.querySelector('.lead-status') : null;
+
+    if (!toggle || !panel || !closeBtn) return;
+    function open() { panel.classList.remove('hidden'); toggle.setAttribute('aria-expanded', 'true'); toggle.classList.add('hidden'); }
+    function close() { panel.classList.add('hidden'); toggle.setAttribute('aria-expanded', 'false'); toggle.classList.remove('hidden'); }
+    toggle.addEventListener('click', open);
+    closeBtn.addEventListener('click', close);
+    document.addEventListener('keydown', function(e) { if (e.key === 'Escape') close(); });
+
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var submitBtn = form.querySelector('button[type="submit"]');
+            var origBtnHtml = submitBtn ? submitBtn.innerHTML : '';
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin text-xs"></i> <span>Enviando...</span>';
+            }
+            if (statusEl) {
+                statusEl.className = 'lead-status hidden';
+                statusEl.textContent = '';
+            }
+
+            var payload = {
+                name: (document.getElementById('chatLeadName') || {}).value || '',
+                email: (document.getElementById('chatLeadEmail') || {}).value || '',
+                phone: (document.getElementById('chatLeadPhone') || {}).value || '',
+                company: (document.getElementById('chatLeadCompany') || {}).value || '',
+                message: (document.getElementById('chatLeadMessage') || {}).value || '',
+                source: 'web_main'
+            };
+
+            fetch('#/api/leads/capture', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': '3b7ea0897ee301d964fcd649b21267b353c423b5b3a95dbbd7620b90909eb6ff'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = origBtnHtml;
+                }
+                if (statusEl) {
+                    statusEl.classList.remove('hidden');
+                    if (data.success) {
+                        statusEl.className = 'lead-status p-3 rounded-md border text-xs bg-emerald-500/10 border-emerald-500/30 text-emerald-400 font-medium';
+                        statusEl.textContent = data.message || 'Mensagem enviada com sucesso!';
+                        form.reset();
+                        setTimeout(function() { close(); }, 3500);
+                    } else {
+                        statusEl.className = 'lead-status p-3 rounded-md border text-xs bg-rose-500/10 border-rose-500/30 text-rose-400 font-medium';
+                        statusEl.textContent = data.message || 'Ocorreu um erro ao enviar. Tente novamente.';
+                    }
+                }
+            })
+            .catch(function() {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = origBtnHtml;
+                }
+                if (statusEl) {
+                    statusEl.classList.remove('hidden');
+                    statusEl.className = 'lead-status p-3 rounded-md border text-xs bg-rose-500/10 border-rose-500/30 text-rose-400 font-medium';
+                    statusEl.textContent = 'Falha de conexão. Por favor verifique sua rede.';
+                }
+            });
+        });
+    }
+})();
+    </script>
+    <style>
+/* Supabase cookie consent — works in both light and dark modes */
+#cookieConsentBanner .cookie-banner-inner {
+  background: var(--bg, #fcfcfc);
+  border-top: 1px solid var(--border, #e5e5e5);
+  box-shadow: 0 -4px 24px rgba(0,0,0,0.06);
+}
+.dark #cookieConsentBanner .cookie-banner-inner {
+  background: var(--sb-surface, #1c1c1c);
+  border-top-color: var(--sb-border, #2e2e2e);
+  box-shadow: 0 -4px 24px rgba(0,0,0,0.4);
+}
+
+#cookieConsentBanner .cookie-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  background: rgba(62,207,142,0.12);
+  color: #3ecf8e;
+}
+
+#cookiePreferencesModal .cookie-pref-card {
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--border, #e5e5e5);
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15);
+}
+.dark #cookiePreferencesModal .cookie-pref-card {
+  background: var(--sb-surface, #1c1c1c);
+  border-color: var(--sb-border, #2e2e2e);
+}
+
+#cookiePreferencesModal .cookie-pref-header {
+  border-bottom: 1px solid var(--border-soft, #ebebeb);
+}
+.dark #cookiePreferencesModal .cookie-pref-header {
+  border-bottom-color: var(--sb-border-subtle, #242424);
+}
+
+#cookiePreferencesModal .cookie-pref-footer {
+  border-top: 1px solid var(--border-soft, #ebebeb);
+}
+.dark #cookiePreferencesModal .cookie-pref-footer {
+  border-top-color: var(--sb-border-subtle, #242424);
+}
+
+/* Supabase button — green accent in both modes */
+.cookie-ttsc-btn-primary {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 0.375rem; height: 36px; padding: 0 20px;
+  font-size: 0.8125rem; font-weight: 600; line-height: 1;
+  font-family: "Inter", system-ui, sans-serif;
+  border-radius: 8px; border: 1px solid transparent;
+  cursor: pointer; white-space: nowrap;
+  transition: all 0.15s ease;
+  background: #3ecf8e; color: #0f0f0f;
+}
+.cookie-ttsc-btn-primary:hover { opacity: 0.85; }
+
+.cookie-ttsc-btn-outline {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 0.375rem; height: 36px; padding: 0 16px;
+  font-size: 0.8125rem; font-weight: 500; line-height: 1;
+  font-family: "Inter", system-ui, sans-serif;
+  border-radius: 8px; border: 1px solid var(--border, #e2e8f0);
+  cursor: pointer; white-space: nowrap;
+  transition: all 0.15s ease;
+  background: transparent; color: var(--fg-2, #4d4d4d);
+}
+.cookie-ttsc-btn-outline:hover {
+  border-color: var(--border-strong, #cbd5e1);
+  background: var(--surface-2, #f8fafc);
+  color: var(--fg, #1c1c1c);
+}
+.dark .cookie-ttsc-btn-outline {
+  border-color: var(--sb-border, #2e2e2e);
+  color: var(--sb-text-secondary, #b4b4b4);
+  background: transparent;
+}
+.dark .cookie-ttsc-btn-outline:hover {
+  border-color: var(--sb-border-prominent, #363636);
+  background: rgba(255,255,255,0.04);
+  color: var(--sb-text, #fafafa);
+}
+
+.cookie-btn-soft {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 0.375rem; height: 36px; padding: 0 16px;
+  font-size: 0.8125rem; font-weight: 500; line-height: 1;
+  font-family: "Inter", system-ui, sans-serif;
+  border-radius: 8px; border: 1px solid transparent;
+  cursor: pointer; white-space: nowrap;
+  transition: all 0.15s ease;
+  background: rgba(0,0,0,0.04); color: #64748b;
+}
+.cookie-btn-soft:hover {
+  background: rgba(0,0,0,0.08);
+  color: #1e293b;
+}
+.dark .cookie-btn-soft {
+  background: rgba(255,255,255,0.04);
+  color: var(--sb-text-secondary, #b4b4b4);
+}
+.dark .cookie-btn-soft:hover {
+  background: rgba(255,255,255,0.08);
+  color: var(--sb-text, #fafafa);
+}
+
+/* Category row */
+.cookie-cat-row {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 14px; border-radius: 12px;
+  border: 1px solid var(--border-soft, #ebebeb);
+  transition: background 0.15s ease;
+}
+.cookie-cat-row:hover {
+  background: rgba(0,0,0,0.02);
+}
+.dark .cookie-cat-row {
+  border-color: var(--sb-border-subtle, #242424);
+}
+.dark .cookie-cat-row:hover {
+  background: rgba(255,255,255,0.02);
+}
+
+/* Checkbox — always uses accent green */
+.cookie-cat-row input[type="checkbox"] {
+  accent-color: #3ecf8e;
+  width: 16px; height: 16px; border-radius: 4px;
+  cursor: pointer; margin-top: 2px;
+}
+.cookie-cat-row input[type="checkbox"]:disabled {
+  cursor: not-allowed; opacity: 0.7;
+}
+
+/* Badge "Sempre ativo" */
+.cookie-badge-essential {
+  display: inline-flex; align-items: center;
+  padding: 2px 8px; border-radius: 9999px;
+  font-size: 0.625rem; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.3px; line-height: 1; white-space: nowrap;
+  background: rgba(62,207,142,0.12);
+  color: #059669;
+  flex-shrink: 0; margin-top: 1px;
+}
+.dark .cookie-badge-essential {
+  background: rgba(62,207,142,0.15);
+  color: #3ecf8e;
+}
+
+/* Scrollbar for preferences list */
+.cookie-scroll::-webkit-scrollbar { width: 4px; }
+.cookie-scroll::-webkit-scrollbar-track { background: transparent; }
+.cookie-scroll::-webkit-scrollbar-thumb { background: var(--meta, #b4b4b4); border-radius: 10px; }
+.dark .cookie-scroll::-webkit-scrollbar-thumb { background: var(--sb-border, #2e2e2e); }
+
+/* Close button */
+.cookie-close-ttsc-btn {
+  width: 32px; height: 32px; border-radius: 8px;
+  border: none; background: transparent;
+  color: var(--muted, #6b6b6b);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s ease;
+}
+.cookie-close-ttsc-btn:hover {
+  background: rgba(0,0,0,0.04); color: var(--fg, #1c1c1c);
+}
+.dark .cookie-close-ttsc-btn { color: var(--sb-text-muted, #898989); }
+.dark .cookie-close-ttsc-btn:hover {
+  background: rgba(255,255,255,0.06);
+  color: var(--sb-text, #fafafa);
+}
+
+/* Layout utilities used by this partial, scoped to its two roots. The partial is
+   included by layouts without Tailwind (web/layouts/portal.php, auth/layouts/main.php):
+   without these rules .hidden did not hide and .fixed did not position, so the banner
+   and the preferences modal rendered open at the end of every page. Values mirror Tailwind. */
+#cookieConsentBanner.hidden, #cookiePreferencesModal.hidden { display: none !important; }
+:is(#cookieConsentBanner,#cookiePreferencesModal).fixed, :is(#cookieConsentBanner,#cookiePreferencesModal) .fixed { position: fixed; }
+:is(#cookieConsentBanner,#cookiePreferencesModal).inset-0, :is(#cookieConsentBanner,#cookiePreferencesModal) .inset-0 { inset: 0; }
+:is(#cookieConsentBanner,#cookiePreferencesModal).bottom-0 { bottom: 0; }
+:is(#cookieConsentBanner,#cookiePreferencesModal).left-0 { left: 0; }
+:is(#cookieConsentBanner,#cookiePreferencesModal).right-0 { right: 0; }
+#cookieConsentBanner.z-\[9999\] { z-index: 9999; }
+#cookiePreferencesModal.z-\[9998\] { z-index: 9998; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .flex { display: flex; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .flex-1 { flex: 1 1 0%; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .flex-col { flex-direction: column; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .items-center { align-items: center; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .items-start { align-items: flex-start; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .justify-between { justify-content: space-between; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .justify-center { justify-content: center; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .shrink-0 { flex-shrink: 0; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .min-w-0 { min-width: 0; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .w-full { width: 100%; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .gap-2 { gap: .5rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .gap-3 { gap: .75rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .space-y-2 > :not(:last-child) { margin-bottom: .5rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .max-w-5xl { max-width: 64rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .max-w-xl { max-width: 36rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .max-h-\[85vh\] { max-height: 85vh; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .mx-auto { margin-left: auto; margin-right: auto; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .ml-3 { margin-left: .75rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .mt-1 { margin-top: .25rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .p-4 { padding: 1rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .px-5 { padding-left: 1.25rem; padding-right: 1.25rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .py-3 { padding-top: .75rem; padding-bottom: .75rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .overflow-hidden { overflow: hidden; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .overflow-y-auto { overflow-y: auto; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .border-b { border-bottom-width: 1px; border-bottom-style: solid; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .text-xs { font-size: .75rem; line-height: 1rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .text-sm { font-size: .875rem; line-height: 1.25rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .text-base { font-size: 1rem; line-height: 1.5rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .font-semibold { font-weight: 600; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) p, :is(#cookieConsentBanner,#cookiePreferencesModal) h3 { margin: 0; }
+@media (max-width: 640px) {
+  #cookieConsentBanner .flex.items-start { flex-wrap: wrap; }
+  #cookieConsentBanner .ml-3 { margin-left: 0; width: 100%; justify-content: flex-end; }
+}
+</style>
+
+<div id="cookieConsentBanner"
+     class="fixed bottom-0 left-0 right-0 z-[9999] hidden"
+     role="alert"
+     aria-live="polite"
+     data-config-url="#/privacy/consent-config"
+     data-decisions-url="#/privacy/consent-decisions">
+    <div class="cookie-banner-inner">
+        <div class="max-w-5xl mx-auto px-5 py-4">
+            <div class="flex items-start gap-3">
+                <div class="cookie-icon">
+                    <i class="fa-light fa-shield-halved text-sm"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h3 class="text-sm font-semibold" style="color:var(--fg,#1c1c1c);margin:0" id="consentBannerTitle">Privacidade em Primeiro Lugar</h3>
+                    <p class="text-xs mt-1" style="color:var(--muted,#6b6b6b);line-height:1.5;margin:0" id="consentBannerText">
+                        Utilizamos cookies e tecnologias semelhantes para melhorar sua experiência, personalizar conteúdo e analisar nosso tráfego.                    </p>
+                </div>
+                <div class="flex items-center gap-2 shrink-0 ml-3">
+                    <button type="button" data-consent-action="reject" class="cookie-ttsc-btn-outline" id="consentRejectAll">Rejeitar</button>
+                    <button type="button" data-consent-action="customize" class="cookie-btn-soft" id="consentCustomize">Personalizar</button>
+                    <button type="button" data-consent-action="accept-all" class="cookie-ttsc-btn-primary" id="consentAcceptAll">Aceitar Todos</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="cookiePreferencesModal" class="fixed inset-0 z-[9998] hidden" role="dialog" aria-modal="true" aria-labelledby="cookiePrefTitle">
+    <div class="fixed inset-0" style="background:rgba(0,0,0,0.5);backdrop-filter:blur(4px)" data-consent-action="close-preferences"></div>
+    <div class="fixed inset-0 flex items-center justify-center p-4">
+        <div class="cookie-pref-card w-full max-w-xl max-h-[85vh] flex flex-col overflow-hidden">
+            <div class="cookie-pref-header flex items-center justify-between px-5 py-4 shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="cookie-icon" style="width:32px;height:32px;border-radius:8px">
+                        <i class="fa-light fa-sliders text-xs"></i>
+                    </div>
+                    <h3 id="cookiePrefTitle" class="text-base font-semibold" style="color:var(--fg,#1c1c1c);margin:0">Preferências de Cookies</h3>
+                </div>
+                <button type="button" data-consent-action="close-preferences" class="cookie-close-ttsc-btn" aria-label="Fechar">
+                    <i class="fa-light fa-xmark"></i>
+                </button>
+            </div>
+            <div class="px-5 py-3 border-b shrink-0" style="border-color:var(--border-soft,#ebebeb)">
+                <p class="text-xs" style="color:var(--muted,#6b6b6b);line-height:1.5;margin:0">
+                    Personalize suas preferências de cookies. Categorias <strong style="color:var(--fg,#1c1c1c);font-weight:500">essenciais</strong> estão sempre ativos para o funcionamento do sistema.                </p>
+            </div>
+            <div class="flex-1 overflow-y-auto cookie-scroll px-5 py-4 space-y-2" id="cookiePreferencesList">
+            </div>
+            <div class="cookie-pref-footer flex items-center justify-between gap-3 px-5 py-4 shrink-0">
+                <button type="button" data-consent-action="reject" class="cookie-ttsc-btn-outline">Rejeitar não essenciais</button>
+                <div class="flex items-center gap-2">
+                    <button type="button" data-consent-action="save-preferences" class="cookie-btn-soft">Salvar preferências</button>
+                    <button type="button" data-consent-action="accept-all" class="cookie-ttsc-btn-primary">Aceitar todos</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <script src="assets/js/consent-cookie.js"></script>
+    </body>
+</html>

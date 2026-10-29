@@ -1,0 +1,49 @@
+<!-- @dsCard group="Base" height=265 subtitle="ttsc-underline (título) · accent, info, warning, mono · espessura · ttsc-underline-link animado" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Underline</title>
+<style>
+  .ttsc-underline { --ttsc-underline-color: var(--ttsc-accent); --ttsc-underline-size: 3px; --ttsc-underline-width: 100%;
+    position: relative; display: inline-block; padding-bottom: calc(var(--ttsc-underline-size) + 4px); }
+  .ttsc-underline::after { content: ""; position: absolute; left: 0; bottom: 0; width: var(--ttsc-underline-width); height: var(--ttsc-underline-size);
+    border-radius: var(--ttsc-radius-pill); background: var(--ttsc-underline-color); }
+  .ttsc-underline-short { --ttsc-underline-width: 32px; }
+  .ttsc-underline-thin  { --ttsc-underline-size: 2px; }
+  .ttsc-underline-thick { --ttsc-underline-size: 6px; }
+  .ttsc-underline-soft::after { opacity: .35; bottom: 4px; height: calc(var(--ttsc-underline-size) * 2.5); z-index: -1; }
+  .ttsc-underline-soft { isolation: isolate; padding-bottom: 2px; }
+  .ttsc-underline-info    { --ttsc-underline-color: var(--ttsc-info); }
+  .ttsc-underline-warning { --ttsc-underline-color: var(--ttsc-warning); }
+  .ttsc-underline-danger  { --ttsc-underline-color: var(--ttsc-danger); }
+  .ttsc-underline-mono    { --ttsc-underline-color: var(--ttsc-text); }
+  .ttsc-underline-link { color: var(--ttsc-text); text-decoration: none; background: linear-gradient(var(--ttsc-accent), var(--ttsc-accent)) left bottom / 0 2px no-repeat;
+    transition: background-size .25s ease; padding-bottom: 2px; }
+  .ttsc-underline-link:hover, .ttsc-underline-link:focus-visible, .ttsc-underline-link.is-hover { background-size: 100% 2px; }
+  .ttsc-underline-link.is-dotted { text-decoration: underline dotted var(--ttsc-text-muted); text-underline-offset: 3px; background: none; }
+  @media (prefers-reduced-motion: reduce) { .ttsc-underline-link { transition: none; } }
+  .ul-cols { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; }
+  .ul-box { border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-sm); background: var(--ttsc-surface); padding: 16px; display: flex; flex-direction: column; gap: 14px; align-items: flex-start; }
+  .ul-h1 { margin: 0; font-size: 22px; font-weight: 600; color: var(--ttsc-text); letter-spacing: -.01em; }
+  .ul-h2 { margin: 0; font-size: 16px; font-weight: 600; color: var(--ttsc-text); }
+  .ul-p { margin: 0; color: var(--ttsc-text-2); }
+</style>
+</head>
+<body>
+<div class="ds-pad ul-cols">
+  <div class="ul-box">
+    <div class="ds-label">Títulos</div>
+    <h1 class="ul-h1 ttsc-underline ttsc-underline-short">Processo seletivo 2027</h1>
+    <h2 class="ul-h2 ttsc-underline ttsc-underline-thin ttsc-underline-info">Cursos com inscrições abertas</h2>
+    <h2 class="ul-h2"><span class="ttsc-underline ttsc-underline-soft ttsc-underline-thick ttsc-underline-warning">Prazo final: 30/11</span> para envio de documentos</h2>
+    <h2 class="ul-h2 ttsc-underline ttsc-underline-short ttsc-underline-mono">Calendário acadêmico</h2>
+  </div>
+  <div class="ul-box">
+    <div class="ds-label">Links</div>
+    <p class="ul-p">Consulte o <a href="#" class="ttsc-underline-link">regulamento de matrícula</a> antes de enviar.</p>
+    <p class="ul-p">Hover forçado: <a href="#" class="ttsc-underline-link is-hover">ver edital completo</a></p>
+    <p class="ul-p">Termo com definição: <a href="#" class="ttsc-underline-link is-dotted">carga horária</a></p>
+    <div class="ds-note">Linha decorativa usa a cor (accent é permitido como fundo/barra); o texto continua em ttsc-text.</div>
+  </div>
+</div>
+</body>
+</html>

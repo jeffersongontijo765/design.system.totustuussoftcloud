@@ -1,0 +1,93 @@
+<!-- @dsCard group="Componentes" height=575 subtitle="ttsc-drawer · end, --ttsc-drawer-md, header/content/footer, backdrop estático, formulário do CRUD (aberto)" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Drawer</title>
+<style>
+  .ttsc-drawer-backdrop { background-color: var(--ttsc-scrim); }
+  .ttsc-drawer-sm { width: var(--ttsc-drawer-sm); }
+  .ttsc-drawer-md { width: var(--ttsc-drawer-md); }
+  .ttsc-drawer-lg { width: var(--ttsc-drawer-lg); }
+  .ttsc-drawer { box-shadow: var(--ttsc-shadow-xl); }
+  .ttsc-drawer-header { padding: var(--ttsc-space-4) var(--ttsc-space-5); align-items: flex-start; }
+  .ttsc-drawer-title { font-size: 15px; color: var(--ttsc-text); margin: 0; }
+  .ttsc-drawer-subtitle { margin: 2px 0 0; font-size: 12px; color: var(--ttsc-text-muted); }
+  .ttsc-drawer-content { display: flex; flex-direction: column; gap: var(--ttsc-space-4); }
+  .ttsc-drawer-footer { padding: var(--ttsc-space-3) var(--ttsc-space-5); background: var(--ttsc-canvas); }
+  .ttsc-drawer-close { color: var(--ttsc-text-muted); background: none; border: 0; }
+  .ttsc-form-item { display: flex; flex-direction: column; gap: 6px; }
+  .ttsc-form-label { font-size: 12px; font-weight: 500; color: var(--ttsc-text-2); }
+  .dr-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .dr-help { font-size: 12px; color: var(--ttsc-text-muted); }
+  .dr-stage { position: relative; height: 500px; overflow: hidden; border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); background: var(--ttsc-canvas); }
+  .dr-page { padding: 16px 20px; display: flex; flex-direction: column; gap: 10px; }
+  .dr-row { height: 36px; border-radius: var(--ttsc-radius-xs); background: var(--ttsc-surface); border: 1px solid var(--ttsc-border-soft); }
+  .dr-scrim { position: absolute; inset: 0; background: var(--ttsc-scrim); }
+  .dr-stage .ttsc-drawer { position: absolute; display: flex; translate: 0 0; max-width: 70%; }
+  .dr-head { display: flex; align-items: center; justify-content: space-between; }
+  .dr-head strong { color: var(--ttsc-text); font-size: 15px; }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="ds-row" style="justify-content:space-between">
+    <div class="ds-label">Formulário do CRUD — estado aberto (estático)</div>
+    <button type="button" class="ttsc-btn ttsc-btn-primary ttsc-btn-sm" data-ttsc-drawer-toggle="#drawer-matricula"><i class="fa-light fa-plus"></i> Nova matrícula (abre o drawer real)</button>
+  </div>
+  <div class="dr-stage" aria-hidden="false">
+    <div class="dr-page">
+      <div class="dr-head"><strong>Matrículas</strong><span class="ds-note">412 registros</span></div>
+      <div class="dr-row"></div><div class="dr-row"></div><div class="dr-row"></div><div class="dr-row"></div><div class="dr-row"></div><div class="dr-row"></div>
+    </div>
+    <div class="dr-scrim"></div>
+    <div class="ttsc-drawer ttsc-drawer-end ttsc-drawer-md open" role="dialog" aria-labelledby="st-title">
+    <div class="ttsc-drawer-header">
+      <div><h3 class="ttsc-drawer-title" id="st-title">Nova matrícula</h3><p class="ttsc-drawer-subtitle">Unidade Centro · período 2026.2</p></div>
+      <button type="button" class="ttsc-drawer-close" data-ttsc-drawer-dismiss="true" aria-label="Fechar"><i class="fa-light fa-xmark"></i></button>
+    </div>
+    <form class="ttsc-drawer-content" onsubmit="return false">
+      <div class="ttsc-form-item"><label class="ttsc-form-label" for="st-aluno">Aluno</label><input class="ttsc-input" id="st-aluno" value="Ana Beatriz Souza" ></div>
+      <div class="dr-2">
+        <div class="ttsc-form-item"><label class="ttsc-form-label" for="st-curso">Curso</label><select class="ttsc-select" id="st-curso"><option>Pedagogia</option><option>Administração</option></select></div>
+        <div class="ttsc-form-item"><label class="ttsc-form-label" for="st-turma">Turma</label><select class="ttsc-select" id="st-turma"><option>3º A — 32/35 vagas</option><option disabled>3º B — 35/35 vagas</option></select></div>
+      </div>
+      <div class="dr-2">
+        <div class="ttsc-form-item"><label class="ttsc-form-label" for="st-turno">Turno</label><select class="ttsc-select" id="st-turno"><option>Manhã</option><option>Noite</option></select></div>
+        <div class="ttsc-form-item"><label class="ttsc-form-label" for="st-data">Data da matrícula</label><input class="ttsc-input" id="st-data" value="21/10/2026"></div>
+      </div>
+      <div class="ttsc-form-item"><label class="ttsc-form-label" for="st-obs">Observações</label><textarea class="ttsc-textarea" id="st-obs" rows="2">Transferida da rede municipal.</textarea><span class="dr-help">Visível apenas para a secretaria.</span></div>
+    </form>
+    <div class="ttsc-drawer-footer">
+      <button type="button" class="ttsc-btn ttsc-btn-ghost" data-ttsc-drawer-dismiss="true">Cancelar</button>
+      <button type="button" class="ttsc-btn ttsc-btn-primary"><i class="fa-light fa-floppy-disk"></i> Salvar</button>
+    </div>
+  </div>
+  </div>
+</div>
+
+<div class="ttsc-drawer ttsc-drawer-end ttsc-drawer-md hidden" id="drawer-matricula" data-ttsc-drawer="true" data-ttsc-drawer-container="body" data-ttsc-drawer-zindex="1050" data-ttsc-drawer-backdrop-static="true" aria-labelledby="dr-title">
+    <div class="ttsc-drawer-header">
+      <div><h3 class="ttsc-drawer-title" id="dr-title">Nova matrícula</h3><p class="ttsc-drawer-subtitle">Unidade Centro · período 2026.2</p></div>
+      <button type="button" class="ttsc-drawer-close" data-ttsc-drawer-dismiss="true" aria-label="Fechar"><i class="fa-light fa-xmark"></i></button>
+    </div>
+    <form class="ttsc-drawer-content" onsubmit="return false">
+      <div class="ttsc-form-item"><label class="ttsc-form-label" for="dr-aluno">Aluno</label><input class="ttsc-input" id="dr-aluno" value="Ana Beatriz Souza" data-ttsc-drawer-focus></div>
+      <div class="dr-2">
+        <div class="ttsc-form-item"><label class="ttsc-form-label" for="dr-curso">Curso</label><select class="ttsc-select" id="dr-curso"><option>Pedagogia</option><option>Administração</option></select></div>
+        <div class="ttsc-form-item"><label class="ttsc-form-label" for="dr-turma">Turma</label><select class="ttsc-select" id="dr-turma"><option>3º A — 32/35 vagas</option><option disabled>3º B — 35/35 vagas</option></select></div>
+      </div>
+      <div class="dr-2">
+        <div class="ttsc-form-item"><label class="ttsc-form-label" for="dr-turno">Turno</label><select class="ttsc-select" id="dr-turno"><option>Manhã</option><option>Noite</option></select></div>
+        <div class="ttsc-form-item"><label class="ttsc-form-label" for="dr-data">Data da matrícula</label><input class="ttsc-input" id="dr-data" value="21/10/2026"></div>
+      </div>
+      <div class="ttsc-form-item"><label class="ttsc-form-label" for="dr-obs">Observações</label><textarea class="ttsc-textarea" id="dr-obs" rows="2">Transferida da rede municipal.</textarea><span class="dr-help">Visível apenas para a secretaria.</span></div>
+    </form>
+    <div class="ttsc-drawer-footer">
+      <button type="button" class="ttsc-btn ttsc-btn-ghost" data-ttsc-drawer-dismiss="true">Cancelar</button>
+      <button type="button" class="ttsc-btn ttsc-btn-primary"><i class="fa-light fa-floppy-disk"></i> Salvar</button>
+    </div>
+  </div>
+<script>
+  TTSC.init();
+</script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!-- @dsCard group="Base" height=199 subtitle="data-indicator on/off · ttsc-indicator-label/progress · spinner FA e CSS · barra de página" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Indicator</title>
+<style>
+  [data-indicator] .ttsc-indicator-progress { display: none; }
+  [data-indicator="on"] .ttsc-indicator-label { display: none; }
+  [data-indicator="on"] .ttsc-indicator-progress { display: inline-flex; align-items: center; gap: 8px; }
+  [data-indicator="on"] { pointer-events: none; }
+  .ttsc-btn[data-indicator="on"]:disabled { opacity: 1; }
+  .ttsc-spinner { display: inline-block; width: 16px; height: 16px; border-radius: var(--ttsc-radius-pill);
+    border: 2px solid var(--ttsc-border-strong); border-top-color: var(--ttsc-accent); animation: ttsc-spin .7s linear infinite; flex-shrink: 0; }
+  .ttsc-spinner-sm { width: 12px; height: 12px; border-width: 1.5px; }
+  .ttsc-spinner-lg { width: 28px; height: 28px; border-width: 3px; }
+  .ttsc-btn-primary .ttsc-spinner { border-color: color-mix(in oklab, var(--ttsc-accent-on) 25%, transparent); border-top-color: var(--ttsc-accent-on); }
+  @keyframes ttsc-spin { to { transform: rotate(360deg); } }
+  .ttsc-page-indicator { position: relative; height: 3px; overflow: hidden; background: var(--ttsc-accent-soft); border-radius: var(--ttsc-radius-pill); }
+  .ttsc-page-indicator::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 35%; background: var(--ttsc-accent); border-radius: inherit; animation: ttsc-indeterminate 1.2s ease-in-out infinite; }
+  .ttsc-page-indicator[data-indicator="off"] { visibility: hidden; }
+  @keyframes ttsc-indeterminate { from { transform: translateX(-100%); } to { transform: translateX(300%); } }
+  @media (prefers-reduced-motion: reduce) { .ttsc-spinner, .fa-spin, .ttsc-page-indicator::before { animation-duration: 2.4s; } }
+  .ind-box { border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-sm); background: var(--ttsc-surface); padding: 14px; }
+  .ind-loading { display: flex; align-items: center; gap: 10px; color: var(--ttsc-text-muted); }
+  .ind-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="ds-label">Botão · clique para alternar (2 s)</div>
+  <div class="ds-row">
+    <button type="button" class="ttsc-btn ttsc-btn-primary js-indicator" data-indicator="off">
+      <span class="ttsc-indicator-label"><i class="fa-light fa-floppy-disk"></i> Salvar matrícula</span>
+      <span class="ttsc-indicator-progress" role="status">Salvando… <i class="fa-light fa-spinner-third fa-spin"></i></span>
+    </button>
+    <button type="button" class="ttsc-btn ttsc-btn-outline js-indicator" data-indicator="off">
+      <span class="ttsc-indicator-label"><i class="fa-light fa-file-pdf"></i> Gerar boletim</span>
+      <span class="ttsc-indicator-progress" role="status"><span class="ttsc-spinner ttsc-spinner-sm"></span> Gerando…</span>
+    </button>
+    <span class="ds-note">estado fixo "on":</span>
+    <button type="button" class="ttsc-btn ttsc-btn-primary" data-indicator="on" disabled aria-busy="true">
+      <span class="ttsc-indicator-label">Enviar</span>
+      <span class="ttsc-indicator-progress" role="status">Enviando… <i class="fa-light fa-spinner-third fa-spin"></i></span>
+    </button>
+    <button type="button" class="ttsc-btn ttsc-btn-outline" data-indicator="on" disabled aria-busy="true">
+      <span class="ttsc-indicator-label">Exportar</span>
+      <span class="ttsc-indicator-progress" role="status"><span class="ttsc-spinner ttsc-spinner-sm"></span> Exportando…</span>
+    </button>
+  </div>
+
+  <div class="ds-label">Página e bloco</div>
+  <div class="ind-cols">
+    <div class="ind-box ds-stack">
+      <div class="ttsc-page-indicator" data-indicator="on" role="progressbar" aria-label="Carregando página"></div>
+      <div class="ind-loading" role="status"><span class="ttsc-spinner"></span> Carregando turmas da unidade Centro…</div>
+    </div>
+    <div class="ind-box">
+      <div class="ds-row">
+        <span class="ttsc-spinner ttsc-spinner-sm" aria-hidden="true"></span>
+        <span class="ttsc-spinner" aria-hidden="true"></span>
+        <span class="ttsc-spinner ttsc-spinner-lg" aria-hidden="true"></span>
+        <i class="fa-light fa-spinner-third fa-spin" style="font-size:20px;color:var(--ttsc-accent-text)" aria-hidden="true"></i>
+        <span class="ds-note">CSS sm/padrão/lg · FA spinner-third</span>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  document.querySelectorAll('.js-indicator').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      btn.setAttribute('data-indicator', 'on'); btn.disabled = true; btn.setAttribute('aria-busy', 'true');
+      setTimeout(function () { btn.setAttribute('data-indicator', 'off'); btn.disabled = false; btn.removeAttribute('aria-busy'); }, 2000);
+    });
+  });
+</script>
+</body>
+</html>

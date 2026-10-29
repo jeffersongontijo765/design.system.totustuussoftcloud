@@ -1,0 +1,97 @@
+<!-- @dsCard group="Componentes" height=330 subtitle="ttsc-accordion · outline (um aberto por vez), padrão com expandAll, indicadores +/–" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Accordion</title>
+<style>
+  [data-ttsc-accordion-item] .ttsc-accordion-indicator-off { display: none; }
+  [data-ttsc-accordion-item].active > [data-ttsc-accordion-toggle] .ttsc-accordion-indicator-on { display: none; }
+  [data-ttsc-accordion-item].active > [data-ttsc-accordion-toggle] .ttsc-accordion-indicator-off { display: inline-block; }
+  .ttsc-accordion-title { font-size: 14px; color: var(--ttsc-text); }
+  .ttsc-accordion-wrapper { font-size: 13px; line-height: 1.6; color: var(--ttsc-text-2); }
+  .ttsc-accordion-outline .ttsc-accordion-item { background: var(--ttsc-surface); border-radius: var(--ttsc-radius-sm); }
+  .ttsc-accordion-outline .ttsc-accordion-item.active { border-color: var(--ttsc-accent-border); }
+  .ttsc-accordion-outline .ttsc-accordion-item.active .ttsc-accordion-indicator { color: var(--ttsc-accent-text); }
+  .ttsc-accordion-outline { gap: 8px; }
+  .ttsc-accordion-outline .ttsc-accordion-toggle, .ttsc-accordion-outline .ttsc-accordion-wrapper { padding: 12px 16px; }
+  .acc-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; align-items: start; }
+  .acc-plain { background: var(--ttsc-surface); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-sm); padding: 0 16px; }
+  .acc-plain .ttsc-accordion-toggle { padding-block: 12px; }
+  .acc-plain .ttsc-accordion-wrapper { padding-bottom: 12px; }
+</style>
+</head>
+<body>
+<div class="ds-pad acc-grid">
+  <div class="ds-stack">
+    <div class="ds-label">Outline · FAQ do curso (um aberto por vez)</div>
+    <div class="ttsc-accordion ttsc-accordion-outline" data-ttsc-accordion="true" id="faq">
+      <div class="ttsc-accordion-item active" data-ttsc-accordion-item="true">
+        <button type="button" class="ttsc-accordion-toggle" data-ttsc-accordion-toggle="true" id="faq-1-t" aria-controls="faq-1" aria-expanded="true">
+          <span class="ttsc-accordion-title">Como faço a rematrícula para 2027.1?</span>
+          <span class="ttsc-accordion-indicator" aria-hidden="true"><i class="fa-light fa-plus ttsc-accordion-indicator-on"></i><i class="fa-light fa-minus ttsc-accordion-indicator-off"></i></span>
+        </button>
+        <div class="ttsc-accordion-content" id="faq-1" role="region" aria-labelledby="faq-1-t">
+          <div class="ttsc-accordion-wrapper">Acesse Portal do Aluno › Matrículas › Rematrícula entre 02/12 e 20/12. É preciso estar sem mensalidades em aberto e com o contrato de 2026 assinado.</div>
+        </div>
+      </div>
+      <div class="ttsc-accordion-item" data-ttsc-accordion-item="true">
+        <button type="button" class="ttsc-accordion-toggle" data-ttsc-accordion-toggle="true" id="faq-2-t" aria-controls="faq-2" aria-expanded="false">
+          <span class="ttsc-accordion-title">Qual a frequência mínima para aprovação?</span>
+          <span class="ttsc-accordion-indicator" aria-hidden="true"><i class="fa-light fa-plus ttsc-accordion-indicator-on"></i><i class="fa-light fa-minus ttsc-accordion-indicator-off"></i></span>
+        </button>
+        <div class="ttsc-accordion-content hidden" id="faq-2" role="region" aria-labelledby="faq-2-t">
+          <div class="ttsc-accordion-wrapper">75% de presença em cada disciplina. Atestados entregues na secretaria em até 5 dias úteis abonam as faltas.</div>
+        </div>
+      </div>
+      <div class="ttsc-accordion-item" data-ttsc-accordion-item="true">
+        <button type="button" class="ttsc-accordion-toggle" data-ttsc-accordion-toggle="true" id="faq-3-t" aria-controls="faq-3" aria-expanded="false">
+          <span class="ttsc-accordion-title">Posso trancar o curso no meio do semestre?</span>
+          <span class="ttsc-accordion-indicator" aria-hidden="true"><i class="fa-light fa-plus ttsc-accordion-indicator-on"></i><i class="fa-light fa-minus ttsc-accordion-indicator-off"></i></span>
+        </button>
+        <div class="ttsc-accordion-content hidden" id="faq-3" role="region" aria-labelledby="faq-3-t">
+          <div class="ttsc-accordion-wrapper">Sim, por requerimento até a 8ª semana letiva. As mensalidades vencidas até a data do pedido continuam devidas.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="ds-stack">
+    <div class="ds-label">Padrão · configurações da turma (expandAll)</div>
+    <div class="ttsc-accordion acc-plain" data-ttsc-accordion="true" data-ttsc-accordion-expand-all="true" id="cfg">
+      <div class="ttsc-accordion-item active" data-ttsc-accordion-item="true">
+        <button type="button" class="ttsc-accordion-toggle" data-ttsc-accordion-toggle="true" aria-controls="cfg-1" aria-expanded="true">
+          <span class="ttsc-accordion-title">Regras de frequência</span>
+          <span class="ttsc-accordion-indicator" aria-hidden="true"><i class="fa-light fa-chevron-down ttsc-accordion-indicator-on"></i><i class="fa-light fa-chevron-up ttsc-accordion-indicator-off"></i></span>
+        </button>
+        <div class="ttsc-accordion-content" id="cfg-1" role="region"><div class="ttsc-accordion-wrapper">Mínimo de 75% por disciplina; chamada fechada 48h após a aula.</div></div>
+      </div>
+      <div class="ttsc-accordion-item active" data-ttsc-accordion-item="true">
+        <button type="button" class="ttsc-accordion-toggle" data-ttsc-accordion-toggle="true" aria-controls="cfg-2" aria-expanded="true">
+          <span class="ttsc-accordion-title">Regras de nota</span>
+          <span class="ttsc-accordion-indicator" aria-hidden="true"><i class="fa-light fa-chevron-down ttsc-accordion-indicator-on"></i><i class="fa-light fa-chevron-up ttsc-accordion-indicator-off"></i></span>
+        </button>
+        <div class="ttsc-accordion-content" id="cfg-2" role="region"><div class="ttsc-accordion-wrapper">Média 7,0; recuperação para médias entre 4,0 e 6,9.</div></div>
+      </div>
+      <div class="ttsc-accordion-item" data-ttsc-accordion-item="true">
+        <button type="button" class="ttsc-accordion-toggle" data-ttsc-accordion-toggle="true" aria-controls="cfg-3" aria-expanded="false">
+          <span class="ttsc-accordion-title">Mensalidades</span>
+          <span class="ttsc-accordion-indicator" aria-hidden="true"><i class="fa-light fa-chevron-down ttsc-accordion-indicator-on"></i><i class="fa-light fa-chevron-up ttsc-accordion-indicator-off"></i></span>
+        </button>
+        <div class="ttsc-accordion-content hidden" id="cfg-3" role="region"><div class="ttsc-accordion-wrapper">Vencimento dia 10; desconto de 5% até o dia 5.</div></div>
+      </div>
+    </div>
+    <div class="ds-note">Clique nos títulos: à esquerda abrir um fecha os outros; à direita vários ficam abertos.</div>
+  </div>
+</div>
+<script>
+  TTSC.init();
+  document.querySelectorAll('[data-ttsc-accordion]').forEach(function (root) {
+    function sync() {
+      root.querySelectorAll('[data-ttsc-accordion-item]').forEach(function (item) {
+        var t = item.querySelector('[data-ttsc-accordion-toggle]');
+        if (t) t.setAttribute('aria-expanded', item.classList.contains('active') ? 'true' : 'false');
+      });
+    }
+    root.addEventListener('shown', sync); root.addEventListener('hidden', sync);
+  });
+</script>
+</body>
+</html>

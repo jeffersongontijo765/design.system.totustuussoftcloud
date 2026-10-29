@@ -1,0 +1,68 @@
+<!-- @dsCard group="Base" height=217 subtitle="ttsc-pulse · ponto ao vivo (live-indicator-dot) · cores · tamanhos · anel em ícone/símbolo" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Pulse</title>
+<style>
+  .ttsc-pulse { --ttsc-pulse-color: var(--ttsc-accent); --ttsc-pulse-size: 8px; position: relative; display: inline-block; flex-shrink: 0;
+    width: var(--ttsc-pulse-size); height: var(--ttsc-pulse-size); border-radius: var(--ttsc-radius-pill); background: var(--ttsc-pulse-color); }
+  .ttsc-pulse::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: var(--ttsc-pulse-color); animation: ttsc-pulse-ring 2s cubic-bezier(.2,.6,.4,1) infinite; }
+  .ttsc-pulse-sm { --ttsc-pulse-size: 6px; }
+  .ttsc-pulse-lg { --ttsc-pulse-size: 12px; }
+  .ttsc-pulse-success { --ttsc-pulse-color: var(--ttsc-success); }
+  .ttsc-pulse-warning { --ttsc-pulse-color: var(--ttsc-warning); }
+  .ttsc-pulse-danger  { --ttsc-pulse-color: var(--ttsc-danger); }
+  .ttsc-pulse-info    { --ttsc-pulse-color: var(--ttsc-info); }
+  .ttsc-pulse-paused::after, .ttsc-pulse[data-live="off"]::after { animation: none; opacity: 0; }
+  .ttsc-pulse[data-live="off"] { --ttsc-pulse-color: var(--ttsc-meta); }
+  .ttsc-pulse-ring { position: relative; display: inline-flex; border-radius: var(--ttsc-radius-pill); }
+  .ttsc-pulse-ring::before { content: ""; position: absolute; inset: -4px; border-radius: inherit; border: 2px solid var(--ttsc-pulse-color, var(--ttsc-accent)); animation: ttsc-pulse-halo 2s ease-out infinite; pointer-events: none; }
+  @keyframes ttsc-pulse-ring { 0% { transform: scale(1); opacity: .6; } 70%, 100% { transform: scale(2.6); opacity: 0; } }
+  @keyframes ttsc-pulse-halo { 0% { transform: scale(.9); opacity: .9; } 80%, 100% { transform: scale(1.35); opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .ttsc-pulse::after, .ttsc-pulse-ring::before { animation: none; opacity: 0; } }
+  /* Legado do app (assets/css/ttsc.css) */
+  .live-indicator-dot { width: 8px; height: 8px; background-color: var(--ttsc-accent); border-radius: 50%; display: inline-block; animation: pulse-live 2s infinite; }
+  @keyframes pulse-live { 0% { transform: scale(.95); box-shadow: 0 0 0 0 color-mix(in oklab, var(--ttsc-accent) 70%, transparent); }
+    70% { transform: scale(1); box-shadow: 0 0 0 6px color-mix(in oklab, var(--ttsc-accent) 0%, transparent); }
+    100% { transform: scale(.95); box-shadow: 0 0 0 0 color-mix(in oklab, var(--ttsc-accent) 0%, transparent); } }
+  .pu-cols { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  .pu-box { border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-sm); background: var(--ttsc-surface); padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+  .pu-item { display: flex; align-items: center; gap: 10px; color: var(--ttsc-text); }
+  .pu-meta { font-size: 12px; color: var(--ttsc-text-muted); }
+  .pu-chip { display: inline-flex; align-items: center; gap: 8px; padding: 4px 10px; border-radius: var(--ttsc-radius-pill); border: 1px solid var(--ttsc-accent-border); background: var(--ttsc-accent-soft); color: var(--ttsc-accent-text); font-weight: 500; font-size: 12px; }
+  .pu-sym { width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--ttsc-radius-pill); background: var(--ttsc-canvas-2); color: var(--ttsc-text); font-size: 16px; }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="pu-cols">
+    <div class="pu-box">
+      <div class="ds-label">Ao vivo</div>
+      <span class="pu-chip"><span class="ttsc-pulse ttsc-pulse-sm" aria-hidden="true"></span> Ao vivo · 2 aulas agora</span>
+      <div class="pu-item"><span class="ttsc-pulse" aria-hidden="true"></span><div>Aula inaugural — Enfermagem<div class="pu-meta">08:00–09:40 · Auditório</div></div></div>
+      <div class="pu-item"><span class="live-indicator-dot" aria-hidden="true"></span><div>.live-indicator-dot (legado)<div class="pu-meta">mesma aparência, migrar p/ ttsc-pulse</div></div></div>
+    </div>
+    <div class="pu-box">
+      <div class="ds-label">Status de serviço</div>
+      <div class="pu-item"><span class="ttsc-pulse ttsc-pulse-success" aria-hidden="true"></span>Portal do aluno <span class="pu-meta">operacional</span></div>
+      <div class="pu-item"><span class="ttsc-pulse ttsc-pulse-warning" aria-hidden="true"></span>Integração bancária <span class="pu-meta">lenta</span></div>
+      <div class="pu-item"><span class="ttsc-pulse ttsc-pulse-danger" aria-hidden="true"></span>Envio de SMS <span class="pu-meta">fora do ar</span></div>
+      <div class="pu-item"><span class="ttsc-pulse" data-live="off" aria-hidden="true"></span>Catraca bloco B <span class="pu-meta">sem sinal (off)</span></div>
+    </div>
+    <div class="pu-box">
+      <div class="ds-label">Tamanhos e anel</div>
+      <div class="ds-row" style="gap:16px">
+        <span class="ttsc-pulse ttsc-pulse-sm ttsc-pulse-info"></span>
+        <span class="ttsc-pulse ttsc-pulse-info"></span>
+        <span class="ttsc-pulse ttsc-pulse-lg ttsc-pulse-info"></span>
+        <span class="pu-meta">sm 6 · 8 · lg 12px</span>
+      </div>
+      <div class="ds-row" style="gap:16px">
+        <span class="ttsc-pulse-ring" style="--ttsc-pulse-color:var(--ttsc-accent)"><span class="pu-sym"><i class="fa-light fa-video"></i></span></span>
+        <span class="ttsc-pulse-ring" style="--ttsc-pulse-color:var(--ttsc-danger)"><span class="pu-sym"><i class="fa-light fa-bell"></i></span></span>
+        <span class="pu-meta">anel em ícone: chamada ativa, alerta novo</span>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

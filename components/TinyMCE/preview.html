@@ -1,0 +1,87 @@
+<!-- @dsCard group="Editores" height=455 subtitle="TinyMCE 8.3.2 (GPL) · skin oxide/oxide-dark por data-theme, content_css default/dark, plugins lists link table autolink code, tokens no conteúdo" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>TinyMCE</title>
+<style>
+  .ttsc-tiny .tox.tox-tinymce { border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-control); box-shadow: var(--ttsc-shadow-xs); }
+  .ttsc-tiny .tox.tox-tinymce.tox-edit-focus, .ttsc-tiny .tox.tox-tinymce:focus-within { border-color: var(--ttsc-accent); box-shadow: 0 0 0 3px var(--ttsc-accent-soft); }
+  .ttsc-tiny .tox .tox-editor-header { border-bottom: 1px solid var(--ttsc-border); box-shadow: none; padding: 0; }
+  .ttsc-tiny .tox .tox-toolbar__primary, .ttsc-tiny .tox .tox-toolbar-overlord, .ttsc-tiny .tox .tox-editor-header { background: var(--ttsc-canvas-2); }
+  .ttsc-tiny .tox .tox-tbtn { color: var(--ttsc-text-2); background: transparent; border-radius: 6px; }
+  .ttsc-tiny .tox .tox-tbtn--select { border: 1px solid var(--ttsc-border); background: var(--ttsc-surface); }
+  .ttsc-tiny .tox .tox-tbtn__select-label { color: var(--ttsc-text); }
+  .ttsc-tiny .tox .tox-tbtn svg { fill: var(--ttsc-text-2); }
+  .ttsc-tiny .tox .tox-tbtn:hover { background: var(--ttsc-surface-2); color: var(--ttsc-text); }
+  .ttsc-tiny .tox .tox-tbtn--enabled, .ttsc-tiny .tox .tox-tbtn--enabled:hover { background: var(--ttsc-accent-soft); }
+  .ttsc-tiny .tox .tox-tbtn--enabled svg { fill: var(--ttsc-accent-text); }
+  .ttsc-tiny .tox .tox-statusbar { background: var(--ttsc-canvas-2); border-top: 1px solid var(--ttsc-border); color: var(--ttsc-text-muted); }
+  .ttsc-tiny .tox .tox-statusbar a, .ttsc-tiny .tox .tox-statusbar__path-item, .ttsc-tiny .tox .tox-statusbar__wordcount { color: var(--ttsc-text-muted); }
+  .t-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+  .t-head label { font-size: 13px; font-weight: 500; color: var(--ttsc-text); }
+  .t-note { display: flex; gap: 8px; align-items: flex-start; font-size: 12px; color: var(--ttsc-text-2); background: var(--ttsc-canvas-2); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-sm); padding: 8px 10px; }
+  .t-note i { color: var(--ttsc-info-text); margin-top: 2px; }
+  .t-note code { font-size: 11px; color: var(--ttsc-text); }
+  .ttsc-tiny textarea { width: 100%; min-height: 240px; }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="t-head"><label for="ppc-content">Projeto Pedagógico do Curso · Administração (course_ppcs.content)</label><span class="ttsc-badge ttsc-badge-sm ttsc-badge-outline">en · pt_BR não incluído</span></div>
+  <div class="ttsc-tiny">
+    <textarea id="ppc-content" name="content">
+      <h2>3. Organização curricular</h2>
+      <p>A matriz está organizada em <strong>8 semestres</strong>, com 3.000 horas e estágio supervisionado a partir do 5º período. Detalhes em <a href="https://colegiototus.edu.br/ppc">colegiototus.edu.br/ppc</a>.</p>
+      <table style="width:100%;border-collapse:collapse">
+        <thead><tr><th>Semestre</th><th>Disciplinas</th><th>Carga horária</th></tr></thead>
+        <tbody><tr><td>1º</td><td>Teoria Geral da Administração, Contabilidade</td><td>360 h</td></tr><tr><td>2º</td><td>Matemática Financeira, Marketing</td><td>360 h</td></tr></tbody>
+      </table>
+      <ol><li>Atividades complementares: 200 h</li><li>Trabalho de conclusão: 80 h</li></ol>
+    </textarea>
+  </div>
+  <div class="t-note"><i class="fa-light fa-circle-info"></i><span>O pacote do repo não traz idiomas. Para pt-BR, copie <code>langs/pt_BR.js</code> (pacote de idiomas oficial da versão 8) para <code>vendor/tinymce/langs/</code> e use <code>language: 'pt_BR'</code>.</span></div>
+</div>
+<script>
+TTSC.init();
+// tinymce.min.js e themes/silver/theme.min.js: pacote original tinymce@8.3.2 (npm). A cópia em assets/vendors/tinymce
+// do repo foi corrompida pela troca global "kt"→"ttsc" (isDesktop → isDesttscop) e não carrega — ver README.
+function loadScript(src) {
+  return new Promise(function (resolve, reject) {
+    var s = document.createElement('script'); s.src = src; s.onload = resolve; s.onerror = reject; document.head.appendChild(s);
+  });
+}
+loadScript('../../vendor/tinymce/tinymce.min.js').then(function () {
+  var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  var css = getComputedStyle(document.documentElement);
+  function t(name) { return css.getPropertyValue(name).trim(); }
+  // O conteúdo roda num iframe: os tokens são resolvidos aqui e injetados como valores
+  var contentStyle =
+    'body{font-family:Inter,system-ui,sans-serif;font-size:13px;line-height:1.6;margin:12px 14px;' +
+    'background:' + t('--ttsc-surface') + ';color:' + t('--ttsc-text') + '}' +
+    'a{color:' + t('--ttsc-accent-text') + '}h2{font-size:16px;font-weight:600;margin:0 0 6px}' +
+    'table{border-color:' + t('--ttsc-border-strong') + '}th,td{border:1px solid ' + t('--ttsc-border-strong') + ';padding:6px 8px;text-align:left}' +
+    'th{background:' + t('--ttsc-canvas-2') + ';font-weight:600}';
+  tinymce.init({
+    selector: '#ppc-content',
+    base_url: '../../vendor/tinymce',
+    suffix: '.min',
+    license_key: 'gpl',
+    skin: dark ? 'oxide-dark' : 'oxide',
+    content_css: dark ? 'dark' : 'default',
+    content_style: contentStyle,
+    plugins: 'lists link table autolink code',
+    toolbar: 'undo redo | blocks | bold italic | link | bullist numlist outdent indent | table | code',
+    block_formats: 'Paragraph=p; Heading 2=h2; Heading 3=h3',
+    menubar: false,
+    branding: false,
+    promotion: false,
+    height: 320,
+    resize: false,
+    link_default_target: '_blank',
+    link_assume_external_targets: 'https',
+    table_default_styles: { width: '100%', 'border-collapse': 'collapse' },
+    invalid_elements: 'script,style,iframe,object,embed'
+  });
+});
+</script>
+</body>
+</html>

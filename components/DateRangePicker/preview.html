@@ -1,0 +1,91 @@
+<!-- @dsCard group="Formulários · Plugins" height=380 subtitle="daterangepicker 3.1.0 + jQuery 3.7.1 + moment 2.30.1 · presets pt-BR · aberto em container local · tema com tokens" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>DateRangePicker</title>
+<link rel="stylesheet" href="../../vendor/daterangepicker/daterangepicker.css">
+<script src="../../vendor/jquery/jquery.min.js"></script>
+<script src="../../vendor/moment/moment.min.js"></script>
+<script src="../../vendor/daterangepicker/daterangepicker.js"></script>
+<style>
+  /* Tema TTSC para daterangepicker (tokens; funciona em light e dark) */
+  .daterangepicker { background: var(--ttsc-surface); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-control);
+    box-shadow: var(--ttsc-shadow-popover); color: var(--ttsc-text); font-family: inherit; font-size: 13px; z-index: var(--ttsc-z-popover); }
+  .daterangepicker::before, .daterangepicker::after { display: none; }
+  .daterangepicker .calendar-table { background: var(--ttsc-surface); border-color: var(--ttsc-surface); }
+  .daterangepicker .calendar-table th, .daterangepicker .calendar-table td { min-width: 30px; width: 30px; height: 28px; line-height: 26px; font-size: 12px; border-radius: var(--ttsc-radius-xs); }
+  .daterangepicker .calendar-table th.month { color: var(--ttsc-text); font-weight: 600; font-size: 13px; text-transform: capitalize; }
+  .daterangepicker .calendar-table thead tr:nth-child(2) th { color: var(--ttsc-text-muted); font-weight: 500; font-size: 11px; }
+  .daterangepicker .calendar-table .next span, .daterangepicker .calendar-table .prev span { border-color: var(--ttsc-text-2); }
+  .daterangepicker td.available:hover, .daterangepicker th.available:hover { background: var(--ttsc-canvas-2); color: var(--ttsc-text); }
+  .daterangepicker td.off, .daterangepicker td.off.in-range, .daterangepicker td.off.start-date, .daterangepicker td.off.end-date { background: transparent; color: var(--ttsc-text-muted); opacity: .55; }
+  .daterangepicker td.in-range { background: var(--ttsc-accent-soft); color: var(--ttsc-text); border-radius: 0; }
+  .daterangepicker td.start-date { border-radius: var(--ttsc-radius-xs) 0 0 var(--ttsc-radius-xs); }
+  .daterangepicker td.end-date { border-radius: 0 var(--ttsc-radius-xs) var(--ttsc-radius-xs) 0; }
+  .daterangepicker td.start-date.end-date { border-radius: var(--ttsc-radius-xs); }
+  .daterangepicker td.active, .daterangepicker td.active:hover { background: var(--ttsc-accent); color: var(--ttsc-accent-on); font-weight: 600; }
+  .daterangepicker .ranges li { color: var(--ttsc-text-2); border-radius: var(--ttsc-radius-xs); margin: 2px 6px; padding: 7px 10px; }
+  .daterangepicker .ranges li:hover { background: var(--ttsc-canvas-2); color: var(--ttsc-text); }
+  .daterangepicker .ranges li.active { background: var(--ttsc-accent-soft); color: var(--ttsc-accent-text); font-weight: 600; }
+  .daterangepicker.show-ranges.ltr .drp-calendar.left { border-left-color: var(--ttsc-border); }
+  .daterangepicker .drp-buttons { border-top-color: var(--ttsc-border); }
+  .daterangepicker .drp-selected { color: var(--ttsc-text-2); font-size: 12px; }
+  .daterangepicker .drp-buttons .btn { font: inherit; font-weight: 500; font-size: 12px; padding: 5px 12px; border-radius: var(--ttsc-radius-sm); cursor: pointer; }
+  .daterangepicker .drp-buttons .cancelBtn { background: transparent; border: 1px solid var(--ttsc-border); color: var(--ttsc-text); }
+  .daterangepicker .drp-buttons .applyBtn { background: var(--ttsc-accent); border: 1px solid var(--ttsc-accent); color: var(--ttsc-accent-on); }
+  .drp-host { position: relative; min-height: 380px; }
+  .drp-field { display: flex; flex-direction: column; gap: 6px; max-width: 320px; }
+  .drp-trigger { position: relative; }
+  .drp-trigger > i { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--ttsc-text-muted); pointer-events: none; z-index: 1; }
+  .drp-trigger > .ttsc-input { padding-left: 32px; width: 100%; cursor: pointer; }
+  .drp-out { font-size: 12px; color: var(--ttsc-text-muted); }
+  .drp-out code { color: var(--ttsc-text); }
+</style>
+</head>
+<body>
+<div class="ds-pad drp-host" id="drp-host">
+  <div class="ds-row" style="align-items:flex-end;gap:16px">
+    <div class="drp-field">
+      <label class="ttsc-form-label" for="drp-enroll">Data da matrícula</label>
+      <div class="drp-trigger"><i class="fa-light fa-calendar-range"></i><input class="ttsc-input" id="drp-enroll" readonly></div>
+    </div>
+    <div class="drp-out" id="drp-out" role="status" aria-live="polite"></div>
+  </div>
+</div>
+<script>
+  moment.updateLocale('pt-br', {
+    months: 'janeiro_fevereiro_março_abril_maio_junho_julho_agosto_setembro_outubro_novembro_dezembro'.split('_'),
+    monthsShort: 'jan_fev_mar_abr_mai_jun_jul_ago_set_out_nov_dez'.split('_'),
+    weekdaysMin: 'Do_Se_Te_Qu_Qu_Se_Sá'.split('_'),
+    week: { dow: 0, doy: 6 }
+  });
+  var $in = $('#drp-enroll');
+  $in.daterangepicker({
+    parentEl: '#drp-host', opens: 'right', alwaysShowCalendars: true, autoApply: false,
+    startDate: moment().subtract(6, 'days'), endDate: moment(), maxDate: moment().endOf('year'),
+    ranges: {
+      'Hoje': [moment(), moment()],
+      'Ontem': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+      'Últimos 7 dias': [moment().subtract(6, 'days'), moment()],
+      'Últimos 30 dias': [moment().subtract(29, 'days'), moment()],
+      'Este mês': [moment().startOf('month'), moment().endOf('month')],
+      'Mês passado': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')],
+      'Este ano letivo': [moment().startOf('year'), moment().endOf('year')]
+    },
+    locale: {
+      format: 'DD/MM/YYYY', separator: ' a ', applyLabel: 'Aplicar', cancelLabel: 'Cancelar', fromLabel: 'De', toLabel: 'Até',
+      customRangeLabel: 'Personalizado', weekLabel: 'S', firstDay: 0,
+      daysOfWeek: ['Do', 'Se', 'Te', 'Qu', 'Qu', 'Se', 'Sá'],
+      monthNames: ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro']
+    }
+  }, function (start, end, label) { show(start, end, label); });
+  function show(start, end, label) {
+    document.getElementById('drp-out').innerHTML = (label ? label + ' · ' : '') + 'SQL: <code>BETWEEN \'' + start.format('YYYY-MM-DD') + '\' AND \'' + end.format('YYYY-MM-DD') + '\'</code>';
+  }
+  var drp = $in.data('daterangepicker');
+  show(drp.startDate, drp.endDate, 'Últimos 7 dias');
+  drp.show();
+  /* mantém aberto no preview (o plugin fecha ao clicar fora) */
+  $(document).off('mousedown.daterangepicker touchend.daterangepicker focusin.daterangepicker');
+</script>
+</body>
+</html>

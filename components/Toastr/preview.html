@@ -1,0 +1,70 @@
+<!-- @dsCard group="Geral" height=365 subtitle="toastr 2.1.4 (+ jQuery) · success/info/warning/error, tema com tokens, ícones FA, progressBar, target local — prefira TTSC.Toast" -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><title>Toastr</title>
+<link rel="stylesheet" href="../../vendor/toastr/toastr.min.css">
+<style>
+  /* Tema toastr -> tokens (remove PNGs e cores fixas do toastr.css) */
+  #toast-container { z-index: var(--ttsc-z-toast); }
+  #toast-container > .toast { background-image: none !important; background-color: var(--ttsc-surface); color: var(--ttsc-text-2);
+    border: 1px solid var(--ttsc-border); border-left: 3px solid var(--tc, var(--ttsc-info)); border-radius: var(--ttsc-radius-surface);
+    box-shadow: var(--ttsc-shadow-xl); opacity: 1; padding: 12px 14px; width: 340px; font-size: 12px; }
+  #toast-container > .toast:hover { box-shadow: var(--ttsc-shadow-xl); }
+  #toast-container .toast-title { color: var(--ttsc-text); font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; margin-bottom: 2px; }
+  #toast-container .toast-title i { color: var(--tc-text, var(--ttsc-info-text)); font-size: 15px; }
+  #toast-container .toast-message { color: var(--ttsc-text-2); line-height: 1.5; padding-left: 23px; }
+  #toast-container .toast-close-button { color: var(--ttsc-text-muted); text-shadow: none; opacity: 1; font-weight: 400; font-size: 14px; top: 0; right: 0; }
+  #toast-container .toast-close-button:hover, #toast-container .toast-close-button:focus { color: var(--ttsc-text); opacity: 1; }
+  #toast-container .toast-progress { background: var(--tc, var(--ttsc-info)); opacity: .6; height: 3px; }
+  .ttsc-toastr-success { --tc: var(--ttsc-success); --tc-text: var(--ttsc-accent-text); }
+  .ttsc-toastr-info { --tc: var(--ttsc-info); --tc-text: var(--ttsc-info-text); }
+  .ttsc-toastr-warning { --tc: var(--ttsc-warning); --tc-text: var(--ttsc-warning-text); }
+  .ttsc-toastr-error { --tc: var(--ttsc-danger); --tc-text: var(--ttsc-danger-text); }
+  /* Demo: container dentro do card */
+  .tr-host { position: relative; height: 290px; border: 1px dashed var(--ttsc-border); border-radius: var(--ttsc-radius-surface); background: var(--ttsc-canvas); overflow: hidden; }
+  .tr-host #toast-container { position: absolute; top: 10px; right: 10px; }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="ds-row">
+    <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-sm" data-tr="success">Sucesso</button>
+    <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-sm" data-tr="info">Informação</button>
+    <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-sm" data-tr="warning">Alerta</button>
+    <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-sm" data-tr="error">Erro</button>
+    <button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-sm" id="tr-clear">Limpar</button>
+    <span class="ds-note">Novo código: use o Toast nativo (TTSC.Toast).</span>
+  </div>
+  <div class="tr-host" id="tr-host"></div>
+</div>
+<script src="../../vendor/jquery/jquery.min.js"></script>
+<script src="../../vendor/toastr/toastr.min.js"></script>
+<script>
+  toastr.options = {
+    target: '#tr-host', positionClass: 'toast-top-right', newestOnTop: true, closeButton: true, progressBar: true,
+    timeOut: 5000, extendedTimeOut: 2000, preventDuplicates: true, escapeHtml: false,
+    closeHtml: '<button type="button" aria-label="Fechar notificação"><i class="fa-light fa-xmark"></i></button>',
+    iconClasses: { success: 'ttsc-toastr-success', info: 'ttsc-toastr-info', warning: 'ttsc-toastr-warning', error: 'ttsc-toastr-error' },
+    showDuration: 200, hideDuration: 300
+  };
+  var ICON = { success: 'fa-circle-check', info: 'fa-circle-info', warning: 'fa-triangle-exclamation', error: 'fa-circle-xmark' };
+  var esc = function (s) { return $('<div>').text(s).html(); };
+  // Wrapper TTSC: escapa os textos e injeta o ícone FA no título
+  function notify(type, message, title, opts) {
+    return toastr[type](esc(message), '<i class="fa-light ' + ICON[type] + '" aria-hidden="true"></i><span>' + esc(title) + '</span>', opts);
+  }
+  var SAMPLES = {
+    success: ['Matrícula MAT-2026-0142 confirmada.', 'Matrícula salva'],
+    info: ['A rematrícula 2027 abre em 01/11.', 'Aviso'],
+    warning: ['3 alunos do 9º B estão abaixo de 75% de frequência.', 'Frequência'],
+    error: ['Não foi possível gerar os boletos. Tente novamente.', 'Falha na geração']
+  };
+  $('[data-tr]').on('click', function () { var t = this.dataset.tr; notify(t, SAMPLES[t][0], SAMPLES[t][1]); });
+  $('#tr-clear').on('click', function () { toastr.clear(); });
+  TTSC.init();
+  // Abertos no load (sem expirar) para o card ficar legível
+  ['error', 'warning', 'success'].forEach(function (t) { notify(t, SAMPLES[t][0], SAMPLES[t][1], { timeOut: 0, extendedTimeOut: 0, progressBar: false }); });
+</script>
+</body>
+</html>

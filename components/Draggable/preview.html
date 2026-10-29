@@ -1,0 +1,78 @@
+<!-- @dsCard group="Geral" height=200 subtitle="@shopify/draggable 1.0.0-beta.12 · Draggable.Sortable, alça, mirror, teclado (Alt+↑↓), ordem salva" -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><title>Draggable</title>
+<style>
+  .dg-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+  .dg-card { background: var(--ttsc-surface); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); padding: 12px; display: flex; flex-direction: column; gap: 6px; outline: none; }
+  .dg-card:focus-visible { outline: 2px solid var(--ttsc-accent); outline-offset: 2px; }
+  .dg-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; font-size: 12px; color: var(--ttsc-text-muted); }
+  .dg-handle { cursor: grab; color: var(--ttsc-text-muted); padding: 2px 4px; border-radius: var(--ttsc-radius-xs); }
+  .dg-handle:hover { background: var(--ttsc-canvas-2); color: var(--ttsc-text); }
+  .dg-value { font-size: 20px; font-weight: 600; color: var(--ttsc-text); }
+  .dg-sub { font-size: 11px; color: var(--ttsc-text-muted); }
+  /* Estados aplicados pelo Draggable */
+  .dg-card.draggable-source--is-dragging { background: var(--ttsc-accent-soft); border: 1px dashed var(--ttsc-accent-border); }
+  .dg-card.draggable-source--is-dragging > * { visibility: hidden; }
+  .dg-card.draggable-mirror { box-shadow: var(--ttsc-shadow-lg); border-color: var(--ttsc-accent-border); z-index: var(--ttsc-z-popover); cursor: grabbing; }
+  .dg-card.draggable-source--placed { animation: dg-placed .4s ease; }
+  @keyframes dg-placed { from { background: var(--ttsc-accent-soft); } to { background: var(--ttsc-surface); } }
+  .dg-order { font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--ttsc-text-2); }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="ds-row" style="justify-content:space-between">
+    <span class="ds-label">Painel acadêmico · arraste pela alça</span>
+    <span class="ds-note">Teclado: foco no card + Alt+↑/↓</span>
+  </div>
+  <div class="dg-grid" id="dg-board" aria-label="Cards do painel, reordenáveis">
+    <article class="dg-card" tabindex="0" data-card-id="kpi-enrollments" aria-roledescription="card reordenável">
+      <div class="dg-head">Matrículas ativas <span class="dg-handle" aria-hidden="true"><i class="fa-light fa-grip-dots-vertical"></i></span></div>
+      <div class="dg-value">1.248</div><div class="dg-sub">+4,2% vs. 2025</div>
+    </article>
+    <article class="dg-card" tabindex="0" data-card-id="kpi-attendance" aria-roledescription="card reordenável">
+      <div class="dg-head">Frequência média <span class="dg-handle" aria-hidden="true"><i class="fa-light fa-grip-dots-vertical"></i></span></div>
+      <div class="dg-value">92,4%</div><div class="dg-sub">últimos 30 dias</div>
+    </article>
+    <article class="dg-card" tabindex="0" data-card-id="kpi-revenue" aria-roledescription="card reordenável">
+      <div class="dg-head">Receita do mês <span class="dg-handle" aria-hidden="true"><i class="fa-light fa-grip-dots-vertical"></i></span></div>
+      <div class="dg-value">R$ 386,4 mil</div><div class="dg-sub">93,7% adimplência</div>
+    </article>
+    <article class="dg-card" tabindex="0" data-card-id="kpi-requests" aria-roledescription="card reordenável">
+      <div class="dg-head">Solicitações abertas <span class="dg-handle" aria-hidden="true"><i class="fa-light fa-grip-dots-vertical"></i></span></div>
+      <div class="dg-value">17</div><div class="dg-sub">5 com prazo hoje</div>
+    </article>
+  </div>
+  <div class="dg-order" id="dg-order" aria-live="polite"></div>
+</div>
+<script src="../../vendor/draggable/draggable.bundle.js"></script>
+<script>
+  var board = document.getElementById('dg-board');
+  function currentOrder() { return [].map.call(board.querySelectorAll('.dg-card:not(.draggable-mirror):not(.draggable--original)'), function (c) { return c.dataset.cardId; }); }
+  function saveOrder(msg) {
+    var order = currentOrder();
+    // produção: fetch('/admin/dashboard/card-order', { method: 'PATCH', body: JSON.stringify({ card_order: order }) })
+    document.getElementById('dg-order').textContent = (msg ? msg + ' · ' : '') + 'card_order = ' + JSON.stringify(order);
+  }
+  var sortable = new Draggable.Sortable(board, {
+    draggable: '.dg-card', handle: '.dg-handle',
+    mirror: { constrainDimensions: true }, delay: { mouse: 0, drag: 0, touch: 150 }
+  });
+  sortable.on('sortable:stop', function (e) {
+    setTimeout(function () { saveOrder('Movido da posição ' + (e.oldIndex + 1) + ' para ' + (e.newIndex + 1)); }, 0);
+  });
+  // Alternativa de teclado (Draggable não move por teclado)
+  board.addEventListener('keydown', function (e) {
+    var card = e.target.closest('.dg-card'); if (!card || !e.altKey) return;
+    if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { if (card.previousElementSibling) { board.insertBefore(card, card.previousElementSibling); } }
+    else if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { if (card.nextElementSibling) { board.insertBefore(card.nextElementSibling, card); } }
+    else return;
+    e.preventDefault(); card.focus(); saveOrder(card.querySelector('.dg-head').textContent.trim() + ' movido');
+  });
+  saveOrder();
+  TTSC.init();
+</script>
+</body>
+</html>

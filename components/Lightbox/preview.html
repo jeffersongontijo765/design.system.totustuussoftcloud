@@ -1,0 +1,68 @@
+<!-- @dsCard group="Geral" height=460 subtitle="fslightbox 3.4.1 · data-fslightbox (galeria), data-type=image, refreshFsLightbox(), abrir por índice" -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><title>Fullscreen Lightbox</title>
+<style>
+  .lb-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+  .lb-thumb { display: block; position: relative; border-radius: var(--ttsc-radius-control); overflow: hidden; border: 1px solid var(--ttsc-border); background: var(--ttsc-surface-2); aspect-ratio: 4 / 3; }
+  .lb-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .2s ease; }
+  .lb-thumb:hover img { transform: scale(1.03); }
+  .lb-thumb:focus-visible { outline: 2px solid var(--ttsc-accent); outline-offset: 2px; }
+  .lb-thumb .lb-zoom { position: absolute; right: 6px; bottom: 6px; width: 26px; height: 26px; border-radius: var(--ttsc-radius-sm); display: flex; align-items: center; justify-content: center; background: var(--ttsc-surface); color: var(--ttsc-text); border: 1px solid var(--ttsc-border); font-size: 12px; }
+  .lb-caption { font-size: 12px; color: var(--ttsc-text-2); margin-top: 4px; }
+  /* Versão estática do lightbox aberto (só para leitura do card) */
+  .lb-static { position: relative; height: 170px; border-radius: var(--ttsc-radius-surface); overflow: hidden; background: #0f0f0f; display: flex; align-items: center; justify-content: center; }
+  .lb-static img { height: 130px; border-radius: var(--ttsc-radius-xs); }
+  .lb-static .bar { position: absolute; top: 0; left: 0; right: 0; display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; color: #fafafa; font-size: 12px; background: linear-gradient(rgba(0,0,0,.55), transparent); }
+  .lb-static .nav { position: absolute; top: 50%; transform: translateY(-50%); color: #fafafa; font-size: 18px; }
+  /* Ajuste do fslightbox real ao chassi */
+  .fslightbox-container { font-family: inherit; z-index: var(--ttsc-z-modal) !important; }
+  .fslightbox-slide-number-container { font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="ds-label">Galeria · Feira de Ciências 2026 (clique para abrir em tela cheia)</div>
+  <div class="lb-grid" id="lb-grid"></div>
+  <div class="ds-label">Aberto (representação estática)</div>
+  <div class="lb-static" aria-hidden="true">
+    <div class="bar"><span>2 / 4</span><span><i class="fa-light fa-expand"></i>&nbsp;&nbsp;<i class="fa-light fa-xmark"></i></span></div>
+    <span class="nav" style="left:12px"><i class="fa-light fa-chevron-left"></i></span>
+    <img id="lb-static-img" alt="">
+    <span class="nav" style="right:12px"><i class="fa-light fa-chevron-right"></i></span>
+  </div>
+</div>
+<script src="../../vendor/fslightbox/fslightbox.js"></script>
+<script>
+  function photo(title, c1, c2, shape) {
+    var s = '<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">' +
+      '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="' + c1 + '"/><stop offset="1" stop-color="' + c2 + '"/></linearGradient></defs>' +
+      '<rect width="800" height="600" fill="url(#g)"/>' + shape +
+      '<rect x="0" y="500" width="800" height="100" fill="#000" opacity=".35"/>' +
+      '<text x="40" y="562" font-family="Inter, Arial, sans-serif" font-size="40" font-weight="600" fill="#fff">' + title + '</text></svg>';
+    return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(s);
+  }
+  var fotos = [
+    { t: 'Abertura no ginásio', u: photo('Abertura no ginásio', '#4f7cac', '#1f3b57', '<rect x="120" y="220" width="560" height="200" rx="12" fill="#fff" opacity=".18"/><circle cx="400" cy="170" r="70" fill="#f6d365" opacity=".9"/>') },
+    { t: 'Projeto de robótica — 9º ano B', u: photo('Robótica — 9º ano B', '#3ecf8e', '#16624a', '<rect x="300" y="160" width="200" height="180" rx="20" fill="#e8f5ee"/><circle cx="360" cy="230" r="18" fill="#16624a"/><circle cx="440" cy="230" r="18" fill="#16624a"/><rect x="250" y="340" width="300" height="40" rx="10" fill="#e8f5ee"/>') },
+    { t: 'Horta escolar', u: photo('Horta escolar', '#a3c76d', '#4e6b2a', '<path d="M0 420 Q200 340 400 420 T800 420 V500 H0z" fill="#3b2a20" opacity=".6"/><circle cx="220" cy="330" r="40" fill="#2f7d32"/><circle cx="420" cy="320" r="48" fill="#2f7d32"/><circle cx="610" cy="335" r="36" fill="#2f7d32"/>') },
+    { t: 'Premiação dos finalistas', u: photo('Premiação', '#e2a03f', '#8a4b12', '<rect x="250" y="300" width="100" height="120" fill="#fff" opacity=".7"/><rect x="350" y="250" width="100" height="170" fill="#fff" opacity=".85"/><rect x="450" y="330" width="100" height="90" fill="#fff" opacity=".6"/><circle cx="400" cy="190" r="40" fill="#f6d365"/>') }
+  ];
+  var grid = document.getElementById('lb-grid');
+  grid.innerHTML = fotos.map(function (f, i) {
+    return '<figure style="margin:0"><a class="lb-thumb" href="' + f.u + '" data-fslightbox="feira-ciencias" data-type="image" aria-label="Ampliar foto ' + (i + 1) + ' de ' + fotos.length + ': ' + f.t + '">' +
+      '<img src="' + f.u + '" alt="' + f.t + '" loading="lazy"><span class="lb-zoom" aria-hidden="true"><i class="fa-light fa-magnifying-glass-plus"></i></span></a>' +
+      '<figcaption class="lb-caption">' + f.t + '</figcaption></figure>';
+  }).join('');
+  document.getElementById('lb-static-img').src = fotos[1].u;
+  // Itens inseridos depois do load: re-varrer os [data-fslightbox]
+  refreshFsLightbox();
+  var lb = fsLightboxInstances['feira-ciencias'];
+  lb.props.exitFullscreenOnClose = true;
+  lb.props.onOpen = function () { document.documentElement.setAttribute('data-lightbox-open', ''); };
+  lb.props.onClose = function () { document.documentElement.removeAttribute('data-lightbox-open'); };
+  TTSC.init();
+</script>
+</body>
+</html>

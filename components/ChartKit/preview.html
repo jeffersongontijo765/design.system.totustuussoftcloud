@@ -1,0 +1,2072 @@
+<!-- @dsCard group="Gráficos" height=8330 width=1280 subtitle="Galeria completa de gráficos de gestão — 41 modelos em 8 seções, com índice e mapa de decisão: com e sem grade, metas e limites, tooltip personalizado, estatística, hierarquia em SVG puro e heatmap anual, tudo em tokens" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>ChartKit</title>
+<style>
+  html,body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font-family:Inter,system-ui,sans-serif;font-size:13px;-webkit-font-smoothing:antialiased}
+  *,*::before,*::after{box-sizing:border-box}
+  .ck{max-width:1280px;margin:0 auto;padding:16px;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:14px;align-items:stretch}
+  .ck-sec{grid-column:span 12;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:2px 2px 8px;border-bottom:1px solid var(--ttsc-border)}
+  .ck-sec h2{margin:0;font-size:15px;line-height:22px;font-weight:700;color:var(--ttsc-text)}
+  .ck-sec p{margin:0;font-size:12px;line-height:18px;color:var(--ttsc-text-muted);font-variant-numeric:tabular-nums}
+  .ck-card{display:flex;flex-direction:column;min-width:0;margin:0;padding:14px 16px 12px;background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-surface);box-shadow:var(--ttsc-shadow-sm)}
+  .s4{grid-column:span 4}.s6{grid-column:span 6}.s8{grid-column:span 8}.s12{grid-column:span 12}
+  .ck-hd{margin-bottom:6px}
+  .ck-hd h3{margin:0;font-size:14px;line-height:20px;font-weight:600;color:var(--ttsc-text)}
+  .ck-hd .sub{margin:2px 0 0;font-size:12px;line-height:16px;color:var(--ttsc-text-muted)}
+  .ck-chart{min-width:0;width:100%}
+  .ck-note{margin-top:auto;padding-top:6px;font-size:11px;line-height:16px;color:var(--ttsc-text-muted)}
+  .ck-legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin:6px 0 0;font-size:11px;line-height:16px;color:var(--ttsc-text-2)}
+  .ck-legend span{display:inline-flex;align-items:center;gap:5px;min-width:0}
+  .ck-legend i{width:8px;height:8px;border-radius:var(--ttsc-radius-pill);background:var(--c);flex-shrink:0}
+  .ck-legend .sw{width:16px;height:0;border-top:2px solid var(--ttsc-accent);flex-shrink:0}
+  .ck-legend .sw.dash{border-top-style:dashed}
+  .ck-u5{--c:var(--ttsc-primary-700)}
+  [data-theme="dark"] .ck-u5{--c:var(--ttsc-primary-400)}
+  /* KPIs com sparkline */
+  .ck-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:2px}
+  .ck-kpi{display:flex;flex-direction:column;min-width:0;gap:1px}
+  .ck-kpi .lbl{font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ttsc-text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ck-kpi .val{font-size:17px;line-height:22px;font-weight:700;color:var(--ttsc-text);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .ck-kpi .delta{font-size:11px;line-height:16px;color:var(--ttsc-accent-text);display:inline-flex;gap:4px;align-items:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ck-kpi .delta.down{color:var(--ttsc-danger-text)}
+  .ck-kpi .delta i{font-size:11px}
+  /* Multi-donut */
+  .ck-md{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .ck-md-item{display:flex;flex-direction:column;min-width:0}
+  .ck-md-t{margin:0 0 2px;font-size:11px;line-height:16px;font-weight:600;color:var(--ttsc-text-2);text-align:center;font-variant-numeric:tabular-nums}
+  .ck-md-mount{min-width:0}
+  /* Treemap: rótulos HTML sobre os retângulos (os nativos giram e truncam) */
+  .ck-tm{position:relative;width:100%}
+  .ck-tm-labels{position:absolute;inset:0;pointer-events:none}
+  .ck-tm-lab{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;overflow:hidden;padding:2px 4px;color:var(--ttsc-text);line-height:1.15;pointer-events:none}
+  .ck-tm-lab b{font-size:11px;font-weight:600;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ck-tm-lab span{font-size:10px;color:var(--ttsc-text-2);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .ck-tm-lab span.p{color:var(--ttsc-text-muted);font-size:9px}
+  .ck-tm-lab.sm b{font-size:10px}
+  .ck-tm-lab.sm span{font-size:9px}
+  /* Semigauge: marca do teto sobre o arco */
+  .ck-semi{position:relative;width:100%}
+  .ck-tick{position:absolute;width:2px;height:14px;background:var(--ttsc-danger);transform:translateX(-1px);pointer-events:none}
+  .ck-tick-lb{position:absolute;font-size:10px;line-height:12px;color:var(--ttsc-danger-text);white-space:nowrap;pointer-events:none}
+  /* Tooltip custom: o chrome vem do .apexcharts-tooltip tokenizado abaixo */
+  .ck-tip{min-width:150px;padding:2px 0;font-size:12px;line-height:18px;color:var(--ttsc-text)}
+  .ck-tip-t{font-weight:600;font-size:12px;color:var(--ttsc-text);margin-bottom:4px}
+  .ck-tip-r{display:flex;justify-content:space-between;gap:18px;color:var(--ttsc-text-2)}
+  .ck-tip-r b{font-weight:600;color:var(--ttsc-text);font-variant-numeric:tabular-nums}
+  .ck-tip-r b.up{color:var(--ttsc-accent-text)}
+  .ck-tip-r b.down{color:var(--ttsc-danger-text)}
+  .ck-tip-s{margin-top:5px;padding-top:5px;border-top:1px solid var(--ttsc-border-soft);font-size:11px;color:var(--ttsc-text-muted)}
+  /* Chips numerados e header flex */
+  .ck-hd h3{display:flex;align-items:center;gap:8px}
+  .ck-chip{margin-left:auto;flex-shrink:0;font-size:10px;line-height:14px;font-weight:700;padding:1px 7px;border-radius:var(--ttsc-radius-pill);border:1px solid var(--ttsc-border);background:var(--ttsc-surface-2);color:var(--ttsc-text-muted);font-variant-numeric:tabular-nums}
+  /* Índice do catálogo */
+  html{scroll-behavior:smooth}
+  .ck-sec{scroll-margin-top:10px}
+  .ck-toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:2px}
+  .ck-toc a{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-pill);font-size:12px;color:var(--ttsc-text-2);text-decoration:none;background:var(--ttsc-surface)}
+  .ck-toc a b{font-weight:700;color:var(--ttsc-text)}
+  .ck-toc a span{color:var(--ttsc-text-muted);font-size:11px;font-variant-numeric:tabular-nums}
+  .ck-toc a:hover{background:var(--ttsc-surface-2);color:var(--ttsc-text)}
+  /* Mapa de decisão */
+  .ck-map{width:100%;border-collapse:collapse;font-size:12px;line-height:16px}
+  .ck-map th,.ck-map td{padding:5px 10px;border-bottom:1px solid var(--ttsc-border-soft);text-align:left}
+  .ck-map th{font-size:11px;font-weight:600;color:var(--ttsc-text-muted);background:var(--ttsc-surface-2)}
+  .ck-map td:last-child{color:var(--ttsc-text-2);white-space:nowrap}
+  .ck-map tr:last-child td{border-bottom:0}
+  .ck-map b{font-weight:700;color:var(--ttsc-text);font-variant-numeric:tabular-nums}
+  /* Sunburst (SVG puro) */
+  .ck-sb{display:flex;gap:16px;align-items:flex-start;margin-top:2px}
+  .ck-sb-chart{flex:0 0 54%;min-width:0;position:relative}
+  .ck-sb-chart svg,.ck-fn svg,.ck-mk svg,.ck-vn svg{display:block;width:100%;height:auto}
+  .ck-sb path{cursor:pointer;transition:opacity .15s}
+  .ck-sb path.hl{opacity:.55}
+  .ck-sb path:focus-visible,.ck-sb svg path:focus{outline:none;stroke:var(--ttsc-text);stroke-width:2}
+  .ck-sb-legend{flex:1;min-width:0;display:flex;flex-direction:column;gap:10px}
+  .ck-sb-legend .seg h4{margin:0 0 2px;font-size:12px;line-height:16px;font-weight:600;color:var(--ttsc-text);display:flex;gap:6px;align-items:center;font-variant-numeric:tabular-nums}
+  .ck-sb-legend .seg h4 i{width:8px;height:8px;border-radius:var(--ttsc-radius-pill);flex-shrink:0}
+  .ck-sb-legend .seg p{margin:0;font-size:11px;line-height:16px;color:var(--ttsc-text-2);font-variant-numeric:tabular-nums}
+  .ck-sb-legend small{color:var(--ttsc-text-muted)}
+  @media (max-width:760px){.ck-sb{flex-direction:column}.ck-sb-chart{flex:auto}}
+  /* Waffle */
+  .ck-wf{display:grid;grid-template-columns:repeat(10,1fr);gap:2px;margin-top:4px}
+  .ck-wf-q{aspect-ratio:1/1;border-radius:var(--ttsc-radius-xs);min-width:0}
+  .ck-wf-q:hover{outline:1px solid var(--ttsc-text-2);outline-offset:-1px}
+  /* Marimekko */
+  .ck-mk g{cursor:pointer}
+  .ck-mk g:hover rect{stroke:var(--ttsc-text);stroke-width:1.2}
+  /* Venn */
+  .ck-vn circle{transition:fill-opacity .15s}
+  .ck-vn g:hover circle{fill-opacity:.55}
+  /* Funil/pirâmide (SVG puro) */
+  .ck-fn g{transition:opacity .15s;cursor:default}
+  .ck-fn g:hover{opacity:.85}
+</style>
+<style>
+  /* Apex: tooltip, eixos e legenda nos tokens (os dois temas) — padrão ApexCharts/Advanced */
+  .apexcharts-tooltip.apexcharts-theme-light,.apexcharts-tooltip.apexcharts-theme-dark{background:var(--ttsc-surface)!important;color:var(--ttsc-text)!important;border:1px solid var(--ttsc-border)!important;box-shadow:var(--ttsc-shadow-popover)!important;border-radius:var(--ttsc-radius-sm)!important}
+  .apexcharts-tooltip.apexcharts-theme-light .apexcharts-tooltip-title,.apexcharts-tooltip.apexcharts-theme-dark .apexcharts-tooltip-title{background:var(--ttsc-canvas-2)!important;border-bottom:1px solid var(--ttsc-border)!important;color:var(--ttsc-text-2)!important}
+  .apexcharts-tooltip{padding:9px 11px!important}
+  .apexcharts-legend-text{color:var(--ttsc-text-2)!important;font-size:11px!important;font-weight:500!important}
+  .apexcharts-legend .apexcharts-legend-series .apexcharts-legend-text{font-size:11px!important;font-weight:500!important}
+  /* O bundle força legendas em coluna; na galeria a leitura é horizontal. */
+  .apexcharts-legend.apx-legend-position-top,.apexcharts-legend.apx-legend-position-bottom{flex-direction:row!important;flex-wrap:wrap;align-items:center;gap:6px 2px}
+  .apexcharts-legend.apx-legend-position-top .apexcharts-legend-series,.apexcharts-legend.apx-legend-position-bottom .apexcharts-legend-series{margin:0 12px 0 0!important}
+  .apexcharts-xaxistooltip,.apexcharts-yaxistooltip{background:var(--ttsc-surface)!important;border-color:var(--ttsc-border)!important;color:var(--ttsc-text)!important}
+  .apexcharts-canvas{margin:0 auto!important}
+  :focus-visible{outline:2px solid var(--ttsc-accent);outline-offset:2px}
+  @media (max-width:1024px){
+    .s4{grid-column:span 6}
+    .s6,.s8,.s12{grid-column:span 12}
+  }
+  @media (max-width:640px){
+    .ck{padding:12px;gap:10px}
+    .s4,.s6,.s8,.s12{grid-column:span 12}
+    .ck-card{padding:12px}
+    .ck-kpis{gap:8px}
+    .ck-sec{flex-direction:column;gap:2px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  }
+</style>
+</head>
+<body>
+<div class="ck">
+  <figure class="ck-card s12">
+    <div class="ck-hd"><h3>Índice do Catálogo</h3><p class="sub">41 modelos em 8 seções · clique para rolar até a família</p></div>
+    <nav class="ck-toc" aria-label="Índice das seções">
+      <a href="#ck-s1"><b>1.</b> Comparação <span>9</span></a>
+      <a href="#ck-s2"><b>2.</b> Tendência <span>8</span></a>
+      <a href="#ck-s3"><b>3.</b> Composição <span>7</span></a>
+      <a href="#ck-s4"><b>4.</b> Distribuição <span>2</span></a>
+      <a href="#ck-s5"><b>5.</b> Indicadores <span>3</span></a>
+      <a href="#ck-s6"><b>6.</b> Estatística <span>7</span></a>
+      <a href="#ck-s7"><b>7.</b> Hierarquia e Customizados <span>4</span></a>
+      <a href="#ck-s8"><b>8.</b> Calendário e Densidade <span>1</span></a>
+    </nav>
+  </figure>
+
+  <figure class="ck-card s12">
+    <div class="ck-hd"><h3>Mapa de Decisão</h3><p class="sub">Da pergunta de gestão ao modelo · números = cards deste catálogo</p></div>
+    <table class="ck-map">
+      <caption style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Mapa de decisão: pergunta de gestão e modelo correspondente no catálogo.</caption>
+      <thead><tr><th scope="col">Pergunta de gestão</th><th scope="col">Modelo</th></tr></thead>
+      <tbody>
+        <tr><td>Como está contra a meta ou o teto?</td><td><b>6</b>, <b>9</b>, <b>23</b>–<b>25</b></td></tr>
+        <tr><td>Onde perdemos gente no funil?</td><td><b>5</b> · <b>33</b> · SankeyFlow</td></tr>
+        <tr><td>Como se distribuem as notas?</td><td><b>26</b> boxplot · <b>27</b> histograma</td></tr>
+        <tr><td>O que mudou de posição?</td><td><b>32</b> bump</td></tr>
+        <tr><td>Composição hierárquica?</td><td><b>37</b> sunburst · <b>20</b> treemap</td></tr>
+        <tr><td>Atividade diária do ano?</td><td><b>41</b> calendar heatmap</td></tr>
+        <tr><td>Duas medidas por indivíduo?</td><td><b>21</b> scatter · <b>22</b> bubble</td></tr>
+        <tr><td>De-para entre dois momentos?</td><td><b>8</b> dumbbell · <b>31</b> slope</td></tr>
+        <tr><td>Poucas causas, maioria do efeito?</td><td><b>30</b> pareto</td></tr>
+        <tr><td>Fluxo de composição ao longo do tempo?</td><td><b>35</b> streamgraph · <b>12</b> área empilhada</td></tr>
+      </tbody>
+    </table>
+  </figure>
+
+  <header class="ck-sec" id="ck-s1"><h2>1. Comparação</h2><p>9 modelos · barras, metas, intervalos e dumbbell</p></header>
+
+  <figure class="ck-card s4">
+    <div class="ck-hd"><h3>Matrículas Novas por Mês<span class="ck-chip">1</span></h3><p class="sub">Mai–out de 2026 · valor no rótulo</p></div>
+    <div id="ck-basic" class="ck-chart" role="img" aria-label="Barras de maio a outubro de 2026: novas matrículas sobem de 42 para 61, com recuo em julho (45); total de 306 no período."></div>
+    <figcaption class="ck-note">Use para comparar poucos períodos com leitura exata; grade e eixo Y desligados porque o rótulo carrega o valor.</figcaption>
+  </figure>
+
+  <figure class="ck-card s4">
+    <div class="ck-hd"><h3>Receita por Unidade<span class="ck-chip">2</span></h3><p class="sub">Janeiro–outubro de 2026 · valores em R$ mil</p></div>
+    <div id="ck-ranked" class="ck-chart" role="img" aria-label="Ranking de receita por unidade: Centro lidera com R$ 1.512 mil e Oeste tem R$ 879 mil; total de R$ 5.655 mil."></div>
+    <figcaption class="ck-note">Ranking curto com nomes longos: barra horizontal, grade pontilhada ligada e valor na ponta de cada barra.</figcaption>
+  </figure>
+
+  <figure class="ck-card s4">
+    <div class="ck-hd"><h3>Novas vs. Canceladas<span class="ck-chip">3</span></h3><p class="sub">Mai–out de 2026 · matrículas por mês</p></div>
+    <div id="ck-grouped" class="ck-chart" role="img" aria-label="Barras agrupadas: novas matrículas crescem de 42 para 61 e as canceladas variam de 5 a 9; no período, 306 novas e 43 canceladas."></div>
+    <figcaption class="ck-note">Duas séries lado a lado com legenda embaixo; grade desligada para o foco ficar nos pares de barras.</figcaption>
+  </figure>
+
+  <figure class="ck-card s6">
+    <div class="ck-hd"><h3>Novas Matrículas por Turno<span class="ck-chip">4</span></h3><p class="sub">Mai–out de 2026 · segmentos somam o mês</p></div>
+    <div id="ck-stacked" class="ck-chart" role="img" aria-label="Barras empilhadas por turno: manhã cresce de 18 para 26, tarde de 15 para 21 e noite de 9 para 14 matrículas por mês."></div>
+    <figcaption class="ck-note">Partes que somam um total por período: rótulos internos dispensam a grade e a legenda nomeia os turnos.</figcaption>
+  </figure>
+
+  <figure class="ck-card s6">
+    <div class="ck-hd"><h3>Composição de Canal<span class="ck-chip">5</span></h3><p class="sub">Mai–out de 2026 · participação em %</p></div>
+    <div id="ck-100" class="ck-chart" role="img" aria-label="Barras 100% empilhadas: renovação sobe de 62% para 67%, portal cai de 20% para 15% e indicação fica entre 18% e 20%."></div>
+    <figcaption class="ck-note">Quando os totais diferem, compare proporções: empilhado 100% com grade ligada e eixo de 0 a 100%.</figcaption>
+  </figure>
+  <figure class="ck-card s4">
+    <div class="ck-hd"><h3>Ocupação vs. Meta<span class="ck-chip">6</span></h3><p class="sub">Outubro de 2026 · % de lotação das salas</p></div>
+    <div id="ck-goal" class="ck-chart" role="img" aria-label="Ocupação por unidade contra a meta de 85%: Leste 94%, Centro 90% e Norte 86% acima; Oeste em 85% e Zona Sul 80%."></div>
+    <figcaption class="ck-note">Linha de meta fixa a referência (85%); grade desligada e valor de cada barra em cima, nunca só cor.</figcaption>
+  </figure>
+
+  <figure class="ck-card s8">
+    <div class="ck-hd"><h3>Calendário de Projetos<span class="ck-chip">7</span></h3><p class="sub">Outubro–dezembro de 2026 · início e fim por projeto</p></div>
+    <div id="ck-range" class="ck-chart" role="img" aria-label="Linha do tempo: reforma da quadra vai de 05/10 a 18/12; rematrícula 2027 de 01/12 a 20/12; festival de 12/11 a 21/11."></div>
+    <figcaption class="ck-note">Início e fim por projeto em pílulas; grade desligada e tooltip custom com as datas e a duração em dias.</figcaption>
+  </figure>
+
+  <figure class="ck-card s8">
+    <div class="ck-hd"><h3>Receita 2025 → 2026<span class="ck-chip">8</span></h3><p class="sub">Janeiro–outubro · R$ mil por unidade</p></div>
+    <div id="ck-dumbbell" class="ck-chart" role="img" aria-label="Dumbbell de receita anual: Centro sai de R$ 1.289 mil para R$ 1.512 mil (+17,3%); Oeste cai de R$ 897 mil para R$ 879 mil (−2,0%)."></div>
+    <div class="ck-legend" aria-label="Séries do dumbbell">
+      <span><i style="--c:var(--ttsc-text-muted)"></i>2025</span>
+      <span><i style="--c:var(--ttsc-accent)"></i>2026</span>
+      <span><i style="--c:var(--ttsc-border-strong)"></i>Haste de variação</span>
+    </div>
+    <figcaption class="ck-note">De-para entre dois anos por unidade: haste fina na grade e tooltip custom com o Δ percentual.</figcaption>
+  </figure>
+
+  <figure class="ck-card s4">
+    <div class="ck-hd"><h3>Ocupação do Contraturno<span class="ck-chip">9</span></h3><p class="sub">Outubro de 2026 · % de lotação das salas</p></div>
+    <div id="ck-bullet" class="ck-chart" role="img" aria-label="Bullet: ocupação do contraturno em 74%, na faixa de atenção (60 a 80%) e abaixo da meta de 80%."></div>
+    <figcaption class="ck-note">Faixas sombreadas: crítico até 60% (vermelho suave) e atenção de 60 a 80% (âmbar suave); a linha escura é a meta de 80%.</figcaption>
+  </figure>
+  <header class="ck-sec" id="ck-s2"><h2>2. Tendência</h2><p>8 modelos · linhas, áreas, degraus, projeção e eixo duplo</p></header>
+
+  <figure class="ck-card s6">
+    <div class="ck-hd"><h3>Receita Mensal<span class="ck-chip">10</span></h3><p class="sub">Janeiro–outubro de 2026 · valores em R$ mil</p></div>
+    <div id="ck-line" class="ck-chart" role="img" aria-label="Linha de receita: sobe de R$ 486 mil em janeiro para R$ 708 mil em outubro, com recuo em abril (R$ 512 mil)."></div>
+    <figcaption class="ck-note">Tendência com leitura de mês exato: marcadores nos pontos e grade pontilhada ligada.</figcaption>
+  </figure>
+
+  <figure class="ck-card s6">
+    <div class="ck-hd"><h3>Frequência Média por Semana<span class="ck-chip">11</span></h3><p class="sub">Semanas S1–S12 de 2026 · % de presença</p></div>
+    <div id="ck-area" class="ck-chart" role="img" aria-label="Área de frequência: varia entre 82,1% e 91,7% e termina em 88,4% na semana 12."></div>
+    <figcaption class="ck-note">Volume de um único indicador: gradiente suave e grade desligada para focar no formato da curva.</figcaption>
+  </figure>
+
+  <figure class="ck-card s6">
+    <div class="ck-hd"><h3>Receita por Segmento<span class="ck-chip">12</span></h3><p class="sub">Janeiro–outubro de 2026 · valores em R$ mil</p></div>
+    <div id="ck-astacked" class="ck-chart" role="img" aria-label="Áreas empilhadas: mensalidades crescem de R$ 300 mil para R$ 438 mil e contraturno acelera de R$ 74 mil para R$ 133 mil por mês."></div>
+    <figcaption class="ck-note">Composição que evolui junto: áreas suaves empilhadas com legenda embaixo e sem grade.</figcaption>
+  </figure>
+
+  <figure class="ck-card s6">
+    <div class="ck-hd"><h3>Matrículas por Unidade<span class="ck-chip">13</span></h3><p class="sub">Janeiro–outubro de 2026 · três maiores unidades</p></div>
+    <div id="ck-multi" class="ck-chart" role="img" aria-label="Três linhas: Centro vai de 598 para 612, Leste de 512 para 528 e Zona Sul de 430 para 447 matrículas."></div>
+    <figcaption class="ck-note">Até quatro trajetórias no mesmo eixo (que inicia em 400 para destacar o movimento); grade desligada e legenda obrigatória.</figcaption>
+  </figure>
+
+  <figure class="ck-card s4">
+    <div class="ck-hd"><h3>Saldo Diário de Caixa<span class="ck-chip">14</span></h3><p class="sub">02–15 de outubro de 2026 · valores em R$ mil</p></div>
+    <div id="ck-step" class="ck-chart" role="img" aria-label="Saldo em degraus: mínimo de R$ 408 mil em 03/10 e máximo de R$ 470 mil em 15/10."></div>
+    <figcaption class="ck-note">Valor que só muda em evento: cada degrau vale até o lançamento seguinte; grade ligada.</figcaption>
+  </figure>
+  <figure class="ck-card s8">
+    <div class="ck-hd"><h3>Receita Realizada e Prevista<span class="ck-chip">15</span></h3><p class="sub">Janeiro–dezembro de 2026 · valores em R$ mil</p></div>
+    <div id="ck-forecast" class="ck-chart" role="img" aria-label="Receita realizada até outubro (R$ 708 mil) e prevista em dezembro (R$ 812 mil); o ponto de outubro costura os dois trechos."></div>
+    <div class="ck-legend" aria-label="Séries da projeção">
+      <span><span class="sw"></span>Realizado até out</span>
+      <span><span class="sw dash"></span>Previsto · projeção</span>
+    </div>
+    <figcaption class="ck-note">Sólido até o último mês fechado e tracejado na projeção: mesma cor em dois trechos costurados por nulos; tooltip custom com o período.</figcaption>
+  </figure>
+
+  <figure class="ck-card s8">
+    <div class="ck-hd"><h3>Matrículas e Receita<span class="ck-chip">16</span></h3><p class="sub">Mai–out de 2026 · dois eixos independentes</p></div>
+    <div id="ck-combo" class="ck-chart" role="img" aria-label="Combo: matrículas novas sobem de 42 para 61 e a receita de R$ 534 mil para R$ 708 mil entre maio e outubro."></div>
+    <figcaption class="ck-note">Duas unidades no mesmo recorte: colunas no eixo da esquerda, linha no da direita e legenda embaixo.</figcaption>
+  </figure>
+
+  <figure class="ck-card s4">
+    <div class="ck-hd"><h3>Indicadores em Sparkline<span class="ck-chip">17</span></h3><p class="sub">Outubro de 2026 · tendência dos últimos pontos</p></div>
+    <div class="ck-kpis">
+      <div class="ck-kpi">
+        <span class="lbl">Receita out</span>
+        <span class="val">R$ 708 mil</span>
+        <span class="delta"><i class="fa-light fa-arrow-trend-up" aria-hidden="true"></i>+8,1% vs. set.</span>
+        <div id="ck-spark-1" class="ck-chart" role="img" aria-label="Tendência de receita: alta de R$ 486 mil para R$ 708 mil entre janeiro e outubro."></div>
+      </div>
+      <div class="ck-kpi">
+        <span class="lbl">Novas matrículas</span>
+        <span class="val">61</span>
+        <span class="delta"><i class="fa-light fa-arrow-trend-up" aria-hidden="true"></i>+5,2% vs. set.</span>
+        <div id="ck-spark-2" class="ck-chart" role="img" aria-label="Novas matrículas em alta, de 38 em janeiro para 61 em outubro."></div>
+      </div>
+      <div class="ck-kpi">
+        <span class="lbl">Frequência média</span>
+        <span class="val">88,4%</span>
+        <span class="delta down"><i class="fa-light fa-arrow-trend-down" aria-hidden="true"></i>−1,0 p.p. vs. semana anterior</span>
+        <div id="ck-spark-3" class="ck-chart" role="img" aria-label="Frequência média semanal entre 82,1% e 91,7%, com queda na última semana."></div>
+      </div>
+    </div>
+    <figcaption class="ck-note">Sparkline de 48 px dentro do KPI: sem eixo e sem tooltip — o valor vem sempre em texto com seta.</figcaption>
+  </figure>
+  <header class="ck-sec" id="ck-s3"><h2>3. Composição</h2><p>7 modelos · donut, small multiples, treemap, funil, pirâmide, streamgraph e OHLC</p></header>
+
+  <figure class="ck-card s4">
+    <div class="ck-hd"><h3>Matrículas por Turno<span class="ck-chip">18</span></h3><p class="sub">Outubro de 2026 · total no centro</p></div>
+    <div id="ck-donut" class="ck-chart" role="img" aria-label="Rosca de matrículas por turno: manhã 864 (42,1%), tarde 728 (35,5%) e noite 459 (22,4%); total de 2.051."></div>
+    <figcaption class="ck-note">Composição direta de 3 a 5 fatias: total central e legenda embaixo nomeando cada fatia.</figcaption>
+  </figure>
+
+  <figure class="ck-card s8">
+    <div class="ck-hd"><h3>Status por Turno<span class="ck-chip">19</span></h3><p class="sub">Outubro de 2026 · matrículas por situação</p></div>
+    <div class="ck-md" id="ck-md">
+      <div class="ck-md-item">
+        <p class="ck-md-t">Manhã · 864</p>
+        <div id="ck-md-1" class="ck-md-mount" role="img" aria-label="Rosca da manhã: 812 ativas, 34 trancadas e 18 transferidas em 864 matrículas."></div>
+      </div>
+      <div class="ck-md-item">
+        <p class="ck-md-t">Tarde · 728</p>
+        <div id="ck-md-2" class="ck-md-mount" role="img" aria-label="Rosca da tarde: 687 ativas, 29 trancadas e 12 transferidas em 728 matrículas."></div>
+      </div>
+      <div class="ck-md-item">
+        <p class="ck-md-t">Noite · 459</p>
+        <div id="ck-md-3" class="ck-md-mount" role="img" aria-label="Rosca da noite: 428 ativas, 22 trancadas e 9 transferidas em 459 matrículas."></div>
+      </div>
+    </div>
+    <div class="ck-legend" aria-label="Status das matrículas">
+      <span><i style="--c:var(--ttsc-accent)"></i>Ativas</span>
+      <span><i style="--c:var(--ttsc-warning)"></i>Trancadas</span>
+      <span><i style="--c:var(--ttsc-info)"></i>Transferidas</span>
+    </div>
+    <figcaption class="ck-note">Small multiples por turno: mesma paleta e mesma ordem de status; uma única legenda compartilhada embaixo.</figcaption>
+  </figure>
+
+  <figure class="ck-card s12">
+    <div class="ck-hd"><h3>Receita 2025 por Categoria<span class="ck-chip">20</span></h3><p class="sub">Janeiro–outubro de 2025 · área proporcional ao valor</p></div>
+    <div class="ck-tm">
+      <div id="ck-treemap" class="ck-chart" role="img" aria-label="Treemap de receita 2025: mensalidades R$ 3.184 mil (60,8%) e materiais R$ 1.102 mil (21,0%); total de R$ 5.236 mil."></div>
+      <div class="ck-tm-labels" aria-hidden="true"></div>
+    </div>
+    <figcaption class="ck-note">Muitas categorias em uma figura: rótulos HTML sincronizados com os retângulos e tooltip com o valor completo.</figcaption>
+  </figure>
+
+  <figure class="ck-card s6">
+    <div class="ck-hd"><h3>Funil de Matrícula<span class="ck-chip">33</span></h3><p class="sub">Ciclo 2027 · etapas de captação</p></div>
+    <div id="ck-funnel" class="ck-chart ck-fn" role="img" aria-label="Funil de matrícula: 6.840 interessados, 4.644 inscritos, 2.412 aprovados e 2.051 matriculados; conversão total de 30% do topo."></div>
+    <figcaption class="ck-note">A 8.5.0 tem tipo funil nativo; este segue em SVG puro — determinístico e independente da lib; para navegação por teclado prefira o FunnelBars em CSS.</figcaption>
+  </figure>
+
+  <figure class="ck-card s6">
+    <div class="ck-hd"><h3>Base de Alunos por Segmento<span class="ck-chip">34</span></h3><p class="sub">Outubro de 2026 · 2.051 matrículas</p></div>
+    <div id="ck-pyramid" class="ck-chart ck-fn" role="img" aria-label="Pirâmide da base de alunos: fundamental 894 (43,6%), médio 738 (36,0%) e técnico 419 (20,4%)."></div>
+    <figcaption class="ck-note">Pirâmide como funil invertido em SVG puro (a 8.5.0 tem tipo `pyramid` nativo): a largura é o total do segmento, do técnico no topo ao fundamental na base.</figcaption>
+  </figure>
+
+  <figure class="ck-card s6">
+    <div class="ck-hd"><h3>Matrículas por Modalidade<span class="ck-chip">35</span></h3><p class="sub">Janeiro–dezembro de 2026 · participação em %</p></div>
+    <div id="ck-stream" class="ck-chart" role="img" aria-label="Streamgraph de modalidades: presencial cresce de 1.210 para 1.278 matrículas, híbrido de 386 para 470 e EAD cai de 412 para 316 entre janeiro e dezembro."></div>
+    <figcaption class="ck-note">Fluxo de composição ao longo do ano: área suave empilhada 100%, sem eixo interno — a forma importa mais que a escala.</figcaption>
+  </figure>
+
+  <figure class="ck-card s6">
+    <div class="ck-hd"><h3>BTC/USDT · Preço e Volume<span class="ck-chip">36</span></h3><p class="sub">10–23 de outubro de 2026 · preços em US$</p></div>
+    <div id="ck-ohlc" class="ck-chart" role="img" aria-label="Candlestick com volume: BTC sobe de 66.850 para 69.920 em 14 dias, com mínimo de 66.150 e pico de volume de US$ 2,4 bi."></div>
+    <figcaption class="ck-note">Combo candlestick + volume no mesmo painel: as barras ficam comprimidas no eixo duplo para não disputar espaço com os preços.</figcaption>
+  </figure>
+
+  <header class="ck-sec" id="ck-s4"><h2>4. Distribuição</h2><p>2 modelos · dispersão e bolha</p></header>
+
+  <figure class="ck-card s6">
+    <div class="ck-hd"><h3>Horas de Estudo vs. Nota<span class="ck-chip">21</span></h3><p class="sub">Bimestre atual · 15 alunos do 9º ano</p></div>
+    <div id="ck-scatter" class="ck-chart" role="img" aria-label="Dispersão de 15 alunos: quem estuda de 2 a 3 horas tem notas de 4,8 a 5,6; acima de 7 horas, notas de 8,2 a 9,6."></div>
+    <figcaption class="ck-note">Correlação de duas medidas com tooltip custom por aluno; grade ligada nos dois eixos.</figcaption>
+  </figure>
+
+  <figure class="ck-card s6">
+    <div class="ck-hd"><h3>Frequência × Nota por Unidade<span class="ck-chip">22</span></h3><p class="sub">Outubro de 2026 · tamanho da bolha = alunos</p></div>
+    <div id="ck-bubble" class="ck-chart" role="img" aria-label="Bolhas por unidade: Leste tem frequência de 93% e nota 8,6; Oeste, 78% e nota 6,8; o tamanho segue o total de alunos."></div>
+    <div class="ck-legend" aria-label="Unidades">
+      <span><i style="--c:var(--ttsc-accent)"></i>Centro</span>
+      <span><i style="--c:var(--ttsc-info)"></i>Leste</span>
+      <span><i style="--c:var(--ttsc-success)"></i>Zona Sul</span>
+      <span><i style="--c:var(--ttsc-warning)"></i>Norte</span>
+      <span class="ck-u5"><i></i>Oeste</span>
+    </div>
+    <figcaption class="ck-note">Três medidas em uma figura: X frequência, Y nota média e o tamanho da bolha como número de alunos.</figcaption>
+  </figure>
+  <header class="ck-sec" id="ck-s5"><h2>5. Indicadores</h2><p>3 modelos · gauge radial, semicírculo com teto e anéis</p></header>
+
+  <figure class="ck-card s4">
+    <div class="ck-hd"><h3>Taxa de Renovação<span class="ck-chip">23</span></h3><p class="sub">Outubro de 2026 · renovações contratadas</p></div>
+    <div id="ck-gauge" class="ck-chart" role="img" aria-label="Gauge: renovação em 87%, três pontos percentuais abaixo da meta de 90%."></div>
+    <figcaption class="ck-note">Um número contra a meta: trilha em cinza e valor central em texto — a meta de 90% fica declarada aqui, não só na cabeça.</figcaption>
+  </figure>
+
+  <figure class="ck-card s4">
+    <div class="ck-hd"><h3>Inadimplência<span class="ck-chip">24</span></h3><p class="sub">Outubro de 2026 · teto de 5%</p></div>
+    <div class="ck-semi">
+      <div id="ck-semi" class="ck-chart" role="img" aria-label="Semigauge de inadimplência: 6,4%, acima do teto de 5% — por isso o arco em vermelho."></div>
+      <span class="ck-tick" aria-hidden="true"></span>
+      <span class="ck-tick-lb" aria-hidden="true">teto 5%</span>
+    </div>
+    <figcaption class="ck-note">Semicírculo com o teto marcado no topo do arco: o preenchimento é vermelho porque passou do limite de 5%.</figcaption>
+  </figure>
+
+  <figure class="ck-card s4">
+    <div class="ck-hd"><h3>Indicadores em Anéis<span class="ck-chip">25</span></h3><p class="sub">Outubro de 2026 · frequência, arrecadação e NPS</p></div>
+    <div id="ck-rings" class="ck-chart" role="img" aria-label="Três anéis: frequência 92%, arrecadação 88% e NPS 72."></div>
+    <figcaption class="ck-note">Dois a quatro percentuais no mesmo card: a legenda carrega os valores junto dos nomes.</figcaption>
+  </figure>
+
+  <header class="ck-sec" id="ck-s6"><h2>6. Estatística</h2><p>7 modelos · boxplot, histograma, polar, pirâmide, pareto, slope e bump</p></header>
+
+  <figure class="ck-card s6">
+    <div class="ck-hd"><h3>Notas por Turma<span class="ck-chip">26</span></h3><p class="sub">Bimestre atual · mínimo, quartis, mediana e máximo</p></div>
+    <div id="ck-boxplot" class="ck-chart" role="img" aria-label="Boxplot de notas por turma: 6º ano tem mediana 5,6 e máximo 8,1; 1ª EM tem mediana 6,4, mínimo 4,8 e máximo 9,4."></div>
+    <figcaption class="ck-note">Dispersão e outliers por categoria em uma figura; grade ligada para comparar quartis entre turmas.</figcaption>
+  </figure>
+
+  <figure class="ck-card s6">
+    <div class="ck-hd"><h3>Distribuição das Notas<span class="ck-chip">27</span></h3><p class="sub">2.051 alunos · faixas de 1 ponto</p></div>
+    <div id="ck-hist" class="ck-chart" role="img" aria-label="Histograma de notas: concentração entre 6 e 9, com pico na faixa 8–8,9 (528 alunos) e média 7,5."></div>
+    <figcaption class="ck-note">Frequência por faixa em barras contíguas; sem grade e com a linha da média (7,5) anotada no eixo das categorias.</figcaption>
+  </figure>
+
+  <figure class="ck-card s4">
+    <div class="ck-hd"><h3>Ocorrências por Dia da Semana<span class="ck-chip">28</span></h3><p class="sub">Semana típica do ano letivo</p></div>
+    <div id="ck-polar" class="ck-chart" role="img" aria-label="Área polar de ocorrências: pico na terça (14) e quarta (12); domingo com 2 e sábado com 3."></div>
+    <figcaption class="ck-note">Ciclo semanal em anel; a legenda carrega o valor de cada dia — a cor apenas reforça.</figcaption>
+  </figure>
+
+  <figure class="ck-card s8">
+    <div class="ck-hd"><h3>Alunos por Série e Sexo<span class="ck-chip">29</span></h3><p class="sub">Outubro de 2026 · barras divergentes</p></div>
+    <div id="ck-pyramidpop" class="ck-chart" role="img" aria-label="Pirâmide por série: 598 meninos e 652 meninas; o alargamento na 1ª EM (262 alunos) reflete a entrada de alunos de fora."></div>
+    <figcaption class="ck-note">Duas populações em espelho: feminino entra negativo e o rótulo usa valor absoluto; eixo simétrico, sem grade.</figcaption>
+  </figure>
+
+  <figure class="ck-card s6">
+    <div class="ck-hd"><h3>Motivos de Evasão<span class="ck-chip">30</span></h3><p class="sub">2026 · % das evasões e acumulado</p></div>
+    <div id="ck-pareto" class="ck-chart" role="img" aria-label="Pareto de evasão: financeiro responde por 38% e, com mudança e reprovação, chega a 77% antes da linha de 80%."></div>
+    <figcaption class="ck-note">Poucas causas, maioria do efeito: a linha de 80% marca onde o acúmulo muda de regime; sem legenda, tooltip por motivo.</figcaption>
+  </figure>
+
+  <figure class="ck-card s6">
+    <div class="ck-hd"><h3>Alunos por Unidade<span class="ck-chip">31</span></h3><p class="sub">Dez/2025 → out/2026 · quatro unidades</p></div>
+    <div id="ck-slope" class="ck-chart" role="img" aria-label="Slope de unidades: Centro sobe de 574 para 612, Leste de 498 para 528, Zona Sul de 429 para 447 e Oeste cai de 165 para 152."></div>
+    <figcaption class="ck-note">Dois momentos, uma linha por unidade: rótulos nos extremos, sem grade e sem eixo Y — leia as pontas.</figcaption>
+  </figure>
+
+  <figure class="ck-card s12">
+    <div class="ck-hd"><h3>Posição no Ranking de Receita<span class="ck-chip">32</span></h3><p class="sub">Mai–out de 2026 · 1º é o topo</p></div>
+    <div id="ck-bump" class="ck-chart" role="img" aria-label="Bump das posições: Centro lidera quase todo o período; Leste assume o 1º em julho e agosto; Oeste alterna entre 3º e 4º."></div>
+    <figcaption class="ck-note">Mudança de posição ao longo do tempo com o eixo invertido (1º no topo); grade pontilhada e marcadores em cada mês.</figcaption>
+  </figure>
+
+  <header class="ck-sec" id="ck-s7"><h2>7. Hierarquia e Customizados</h2><p>4 modelos · sunburst, waffle, marimekko e venn em SVG puro com tokens</p></header>
+
+  <figure class="ck-card s8">
+    <div class="ck-hd"><h3>Matrículas por Segmento e Curso<span class="ck-chip">37</span></h3><p class="sub">Outubro de 2026 · 2.051 alunos</p></div>
+    <div class="ck-sb">
+      <div id="ck-sunburst" class="ck-sb-chart" role="img" aria-label="Sunburst de 2.051 alunos: fundamental 894 (anos iniciais 382, anos finais 512), médio 738 (1ª série 262, 2ª série 249, 3ª série 227) e técnico 419 (informática 178, enfermagem 141, administração 100). Cada setor recebe foco pelo teclado."></div>
+      <div class="ck-sb-legend" id="ck-sb-legend"></div>
+    </div>
+    <figcaption class="ck-note">Dois níveis em anéis concêntricos; passe o mouse ou use Tab para destacar o ramo inteiro — SVG direto nos tokens, sem Apex.</figcaption>
+  </figure>
+
+  <figure class="ck-card s4">
+    <div class="ck-hd"><h3>Alunos por Status<span class="ck-chip">38</span></h3><p class="sub">Outubro de 2026 · 1 quadradinho ≈ 1%</p></div>
+    <div id="ck-waffle" class="ck-chart" role="img" aria-label="Waffle de 100 quadrados: 94 ativos (1.927 alunos), 4 aprovisionados (76) e 2 inativos (48) num total de 2.051."></div>
+    <figcaption class="ck-note">Pictograma de partes do todo: cor por status e contagem em texto; o tooltip mostra a faixa de cada dezena.</figcaption>
+  </figure>
+
+  <figure class="ck-card s8">
+    <div class="ck-hd"><h3>Receita por Unidade e Categoria<span class="ck-chip">39</span></h3><p class="sub">Janeiro–outubro de 2026 · largura = receita, altura = mix</p></div>
+    <div id="ck-marimekko" class="ck-chart ck-mk" role="img" aria-label="Marimekko de receita: Centro tem 26,7% do total de R$ 5.655 mil com 64% em mensalidades; Oeste tem 15,5% com mix mais distribuído (58%, 24% e 18%)."></div>
+    <figcaption class="ck-note">Duas dimensões sem eixos: a largura da coluna é a receita da unidade e a altura é o mix 100% por categoria; hover destaca a coluna.</figcaption>
+  </figure>
+
+  <figure class="ck-card s4">
+    <div class="ck-hd"><h3>Programas dos Alunos<span class="ck-chip">40</span></h3><p class="sub">Outubro de 2026 · bolsa, transporte e contraturno</p></div>
+    <div id="ck-venn" class="ck-chart ck-vn" role="img" aria-label="Venn de programas: apenas bolsa 167, apenas transporte 191, apenas contraturno 390, bolsa e transporte 118, bolsa e contraturno 94, transporte e contraturno 156 e os três programas 47; 1.163 dos 2.051 alunos participam de pelo menos um."></div>
+    <figcaption class="ck-note">Três conjuntos e sete interseções com contagem em texto; os 888 alunos fora dos programas não aparecem no desenho.</figcaption>
+  </figure>
+
+  <header class="ck-sec" id="ck-s8"><h2>8. Calendário e Densidade</h2><p>1 modelo · heatmap anual de ocorrências</p></header>
+
+  <figure class="ck-card s12">
+    <div class="ck-hd"><h3>Ocorrências no Ano Letivo 2026<span class="ck-chip">41</span></h3><p class="sub">28/12/2025 – 26/12/2026 · semanas nas colunas, dias nas linhas</p></div>
+    <div id="ck-calheat" class="ck-chart" role="img" aria-label="Heatmap anual de ocorrências: ano letivo entre as semanas 5 e 49 com 8 a 20 registros por dia útil; férias e fins de semana abaixo de 5."></div>
+    <div class="ck-legend" aria-label="Faixas do heatmap">
+      <span><i style="--c:var(--ttsc-primary-50)"></i>0</span>
+      <span><i style="--c:var(--ttsc-primary-200)"></i>1–5</span>
+      <span><i style="--c:var(--ttsc-primary-300)"></i>6–10</span>
+      <span><i style="--c:var(--ttsc-primary-400)"></i>11–15</span>
+      <span><i style="--c:var(--ttsc-primary-700)"></i>16+</span>
+    </div>
+    <figcaption class="ck-note">Use para presença ou ocorrências por dia do ano: cinco faixas da escala primary, tooltip custom com a data e o valor.</figcaption>
+  </figure>
+
+</div>
+<script>
+if (window.TTSC) TTSC.init();
+
+var CK = { reg: [], mo: null, ro: null };
+var RM = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- tokens e formatadores (padrão ApexChartsAdvanced) ---------- */
+function isDark() {
+  var el = document.documentElement;
+  return el.getAttribute('data-theme') === 'dark' || el.classList.contains('dark');
+}
+function readTokens() {
+  var cs = getComputedStyle(document.documentElement);
+  var t = function (n) { return cs.getPropertyValue(n).trim(); };
+  var c = function (n) { return cssColor(t(n)); };
+  return {
+    dark: isDark(),
+    accent: c('--ttsc-accent'), accentOn: c('--ttsc-accent-on'), accentText: c('--ttsc-accent-text'),
+    success: c('--ttsc-success'), warning: c('--ttsc-warning'), warningText: c('--ttsc-warning-text'),
+    danger: c('--ttsc-danger'), dangerText: c('--ttsc-danger-text'),
+    info: c('--ttsc-info'), infoText: c('--ttsc-info-text'),
+    p50: c('--ttsc-primary-50'), p200: c('--ttsc-primary-200'), p300: c('--ttsc-primary-300'), p400: c('--ttsc-primary-400'),
+    p700: c('--ttsc-primary-700'), p800: c('--ttsc-primary-800'), p950: c('--ttsc-primary-950'),
+    surface: c('--ttsc-surface'), surface2: c('--ttsc-surface-2'), canvas: c('--ttsc-canvas'), canvas2: c('--ttsc-canvas-2'),
+    text: c('--ttsc-text'), text2: c('--ttsc-text-2'), muted: c('--ttsc-text-muted'),
+    border: c('--ttsc-border'), borderSoft: c('--ttsc-border-soft'), borderStrong: c('--ttsc-border-strong')
+  };
+}
+/* Tokens com @property chegam em oklch; o Apex calcula sombras com hex. */
+function cssColor(v) {
+  if (!v) return v;
+  if (v.indexOf('oklch(') === 0) return oklchToHex(v);
+  return v;
+}
+function oklchToHex(str) {
+  var m = str.match(/oklch\(\s*([\d.]+%?)\s+([\d.]+)\s+([\d.]+)(?:deg)?(?:\s*\/\s*([\d.]+%?))?\s*\)/);
+  if (!m) return str;
+  var L = m[1].slice(-1) === '%' ? parseFloat(m[1]) / 100 : parseFloat(m[1]);
+  var Cc = parseFloat(m[2]);
+  var h = parseFloat(m[3]) * Math.PI / 180;
+  var A = Cc * Math.cos(h), B = Cc * Math.sin(h);
+  var l_ = L + 0.3963377774 * A + 0.2158037573 * B;
+  var m_ = L - 0.1055613458 * A - 0.0638541728 * B;
+  var s_ = L - 0.0894841775 * A - 1.2914855480 * B;
+  var l = l_ * l_ * l_, mm = m_ * m_ * m_, s = s_ * s_ * s_;
+  var r = 4.0767416621 * l - 3.3077115913 * mm + 0.2309699292 * s;
+  var g = -1.2684380046 * l + 2.6097574011 * mm - 0.3413193965 * s;
+  var b = -0.0041960863 * l - 0.7034186147 * mm + 1.7076147010 * s;
+  var enc = function (x) {
+    x = x <= 0.0031308 ? 12.92 * x : 1.055 * Math.pow(x, 1 / 2.4) - 0.055;
+    return Math.max(0, Math.min(255, Math.round(x * 255)));
+  };
+  return '#' + [enc(r), enc(g), enc(b)].map(function (x) { return x.toString(16).padStart(2, '0'); }).join('');
+}
+var NF0 = new Intl.NumberFormat('pt-BR');
+var NF1 = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+var NF2 = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+function pct1(v) { return NF1.format(v) + '%'; }
+function brlMil(v) { return 'R$ ' + NF0.format(v) + ' mil'; }
+function dataBR(iso) { var p = iso.split('-'); return p[2] + '/' + p[1] + '/' + p[0]; }
+function toRgb(c) {
+  if (c.charAt(0) === '#') {
+    var h = c.slice(1);
+    if (h.length === 3) h = h.charAt(0) + h.charAt(0) + h.charAt(1) + h.charAt(1) + h.charAt(2) + h.charAt(2);
+    return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
+  }
+  var m = c.match(/[\d.]+/g);
+  return m ? [+m[0], +m[1], +m[2]] : [0, 0, 0];
+}
+function mix(a, b, w) {
+  var A = toRgb(a), B = toRgb(b);
+  var h = function (x) { return Math.round(x).toString(16).padStart(2, '0'); };
+  return '#' + h(A[0] * w + B[0] * (1 - w)) + h(A[1] * w + B[1] * (1 - w)) + h(A[2] * w + B[2] * (1 - w));
+}
+function lum(hex) { var c = toRgb(hex); return (0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2]) / 255; }
+/* Texto legível sobre uma cor — sempre a partir dos tokens primary-50/950. */
+function onColor(C, hex) { return lum(hex) > 0.55 ? C.p950 : C.p50; }
+function treemapColors(C) {
+  var w = C.dark ? [0.10, 0.16, 0.22, 0.28, 0.34, 0.40, 0.46, 0.52] : [0.22, 0.33, 0.44, 0.55, 0.66, 0.77, 0.88, 0.96];
+  return w.map(function (x) { return mix(C.accent, C.surface, x); });
+}
+/* ---------- base do Apex ---------- */
+function apexBase(C) {
+  return {
+    chart: {
+      fontFamily: 'Inter, system-ui, sans-serif', foreColor: C.muted, background: 'transparent',
+      toolbar: { show: false }, zoom: { enabled: false },
+      animations: { enabled: !RM, speed: 380 },
+      defaultLocale: 'pt-br',
+      locales: [{
+        name: 'pt-br', options: {
+          months: ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'],
+          shortMonths: ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'],
+          days: ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado'],
+          shortDays: ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'],
+          toolbar: { download: 'Baixar SVG', selection: 'Selecionar', selectionZoom: 'Zoom', zoomIn: 'Ampliar', zoomOut: 'Reduzir', pan: 'Mover', reset: 'Restaurar' }
+        }
+      }]
+    },
+    theme: { mode: C.dark ? 'dark' : 'light' },
+    tooltip: { theme: C.dark ? 'dark' : 'light' },
+    grid: { borderColor: C.border, strokeDashArray: 3, padding: { left: 6, right: 6, top: 0, bottom: 0 } },
+    dataLabels: { enabled: false },
+    legend: { labels: { colors: C.text2 }, fontSize: '12px' }
+  };
+}
+function xax(C, categories, extra) {
+  var o = { labels: { style: { colors: C.muted, fontSize: '11px' } }, axisBorder: { show: false }, axisTicks: { show: false } };
+  if (categories) o.categories = categories;
+  if (extra) for (var k in extra) o[k] = extra[k];
+  return o;
+}
+function gridOn(C) { return { borderColor: C.border, strokeDashArray: 3, padding: { left: 6, right: 6, top: 0, bottom: 0 } }; }
+function gridOff(C) { return { show: false, borderColor: C.border, padding: { left: 4, right: 4, top: 0, bottom: 0 } }; }
+function legendBottom(C, align) {
+  return { show: true, position: 'bottom', horizontalAlign: align || 'center', fontSize: '11px', markers: { size: 6, strokeWidth: 0 }, itemMargin: { horizontal: 12, vertical: 0 }, labels: { colors: C.text2 } };
+}
+
+/* ---------- dados determinísticos · Colégio Horizonte ---------- */
+var HZ = {
+  unidades: ['Centro', 'Leste', 'Zona Sul', 'Norte', 'Oeste'],
+  meses6: ['mai', 'jun', 'jul', 'ago', 'set', 'out'],
+  meses: ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out'],
+  novas6: [42, 48, 45, 52, 58, 61],
+  canceladas6: [8, 6, 9, 7, 5, 8],
+  receita6: [534, 552, 587, 601, 655, 708],
+  receita: [486, 502, 518, 512, 534, 552, 587, 601, 655, 708],
+  turnoNovas: [['Manhã', [18, 20, 19, 22, 25, 26]], ['Tarde', [15, 17, 16, 18, 19, 21]], ['Noite', [9, 11, 10, 12, 14, 14]]],
+  canais: [['Renovação', [62, 63, 65, 64, 66, 67]], ['Indicação', [18, 19, 18, 20, 19, 18]], ['Portal', [20, 18, 17, 16, 15, 15]]],
+  ocupacaoOrd: [['Centro', 90], ['Leste', 94], ['Oeste', 85], ['Norte', 86], ['Zona Sul', 80]],
+  receitaUn: [[1289, 1512], [1102, 1247], [1046, 1072], [902, 945], [897, 879]],
+  projetos: [
+    ['Reforma da quadra', '2026-10-05', '2026-12-18'],
+    ['Semana de provas', '2026-11-02', '2026-11-07'],
+    ['Festival Horizonte', '2026-11-12', '2026-11-21'],
+    ['Fechamento do bimestre', '2026-11-24', '2026-11-30'],
+    ['Rematrícula 2027', '2026-12-01', '2026-12-20']
+  ],
+  segmentos: [['Mensalidades', [300, 310, 319, 315, 330, 342, 369, 378, 412, 438]], ['Materiais', [112, 115, 118, 117, 122, 126, 131, 128, 134, 137]], ['Contraturno', [74, 77, 81, 80, 82, 84, 87, 95, 109, 133]]],
+  matUn: [['Centro', [598, 600, 602, 605, 606, 608, 609, 610, 611, 612]], ['Leste', [512, 514, 515, 517, 518, 520, 522, 524, 526, 528]], ['Zona Sul', [430, 432, 434, 435, 437, 439, 441, 443, 445, 447]]],
+  freqSem: [85.4, 87.2, 86.1, 89.3, 91.7, 90.2, 88.6, 83.9, 82.1, 86.8, 89.4, 88.4],
+  saldoDias: ['02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15'],
+  saldo: [412, 408, 421, 419, 427, 415, 438, 442, 431, 446, 452, 448, 461, 470],
+  turnos: [['Manhã', 864, [812, 34, 18]], ['Tarde', 728, [687, 29, 12]], ['Noite', 459, [428, 22, 9]]],
+  tm2025: [['Mensalidades', 3184], ['Materiais', 1102], ['Contraturno', 587], ['Uniforme', 152], ['Transporte', 121], ['Idiomas', 54], ['Eventos', 24], ['Outros', 12]],
+  alunos: [['Ana', 2.0, 5.1], ['Bia', 2.5, 4.8], ['Caio', 3.0, 5.6], ['Duda', 3.5, 6.0], ['Enzo', 4.0, 6.3], ['Flávia', 4.5, 5.8], ['Gustavo', 5.0, 6.8], ['Helena', 5.5, 7.1], ['Igor', 6.0, 7.4], ['Júlia', 6.5, 7.0], ['Kauã', 7.0, 8.2], ['Lara', 7.5, 8.6], ['Marcos', 8.0, 8.9], ['Nádia', 8.5, 9.2], ['Otávio', 9.0, 9.6]],
+  unidadesKpi: [['Centro', 89, 8.2, 612], ['Leste', 93, 8.6, 528], ['Zona Sul', 86, 7.9, 447], ['Norte', 82, 7.4, 312], ['Oeste', 78, 6.8, 152]]
+};
+
+var DATA = {
+  barBasic: { meses: HZ.meses6, valores: HZ.novas6 },
+  barRanked: { itens: [['Centro', 1512], ['Leste', 1247], ['Zona Sul', 1072], ['Norte', 945], ['Oeste', 879]] },
+  barGrouped: { meses: HZ.meses6, series: [{ name: 'Novas', data: HZ.novas6 }, { name: 'Canceladas', data: HZ.canceladas6 }] },
+  barStacked: { meses: HZ.meses6, series: HZ.turnoNovas.map(function (t) { return { name: t[0], data: t[1] }; }) },
+  bar100: { meses: HZ.meses6, series: HZ.canais.map(function (t) { return { name: t[0], data: t[1] }; }) },
+  barGoal: { unidades: HZ.ocupacaoOrd.map(function (u) { return u[0]; }), valores: HZ.ocupacaoOrd.map(function (u) { return u[1]; }), meta: 85 },
+  rangeBar: { itens: HZ.projetos },
+  dumbbell: { unidades: HZ.unidades, pares: HZ.receitaUn },
+  bulletVertical: { categoria: 'Out/2026', valor: 74, meta: 80 },
+  lineSmooth: { meses: HZ.meses, valores: HZ.receita },
+  areaGradient: { semanas: ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8', 'S9', 'S10', 'S11', 'S12'], valores: HZ.freqSem },
+  areaStacked: { meses: HZ.meses, series: HZ.segmentos.map(function (t) { return { name: t[0], data: t[1] }; }) },
+  multiLine: { meses: HZ.meses, series: HZ.matUn.map(function (t) { return { name: t[0], data: t[1] }; }) },
+  stepLine: { dias: HZ.saldoDias, valores: HZ.saldo },
+  forecastLine: {
+    meses12: HZ.meses.concat(['nov', 'dez']),
+    real: HZ.receita.concat([null, null]),
+    prev: [null, null, null, null, null, null, null, null, null, 708, 769, 812]
+  },
+  comboDualAxis: { meses: HZ.meses6, barras: HZ.novas6, linha: HZ.receita6 },
+  sparkline: { nome: 'Receita', valores: HZ.receita, cor: 'accent' },
+  donut: { rotulos: ['Manhã', 'Tarde', 'Noite'], valores: [864, 728, 459] },
+  multiDonut: { turnos: HZ.turnos, status: ['Ativas', 'Trancadas', 'Transferidas'] },
+  treemap: { itens: HZ.tm2025 },
+  scatter: { alunos: HZ.alunos },
+  bubble: { itens: HZ.unidadesKpi },
+  gauge: { valor: 87, rotulo: 'Renovação de matrículas', meta: 90 },
+  semiGauge: { valor: 6.4, teto: 5, escala: 10, rotulo: 'Inadimplência' },
+  rings: { series: [['Frequência', 92], ['Arrecadação', 88], ['NPS', 72]] },
+  /* ---------- Wave 2 ---------- */
+  boxplot: {
+    turmas: ['6º ano', '7º ano', '8º ano', '9º ano', '1ª EM'],
+    dados: [[3.2, 4.8, 5.6, 6.4, 8.1], [2.8, 4.4, 5.4, 6.6, 8.4], [3.6, 4.9, 5.8, 6.8, 8.8], [4.1, 5.2, 6.1, 7.0, 9.1], [4.8, 5.6, 6.4, 7.2, 9.4]]
+  },
+  histogram: {
+    faixas: ['0–0,9', '1–1,9', '2–2,9', '3–3,9', '4–4,9', '5–5,9', '6–6,9', '7–7,9', '8–8,9', '9–10'],
+    valores: [0, 3, 21, 38, 104, 172, 341, 453, 528, 391],
+    mediaFaixa: '7–7,9', media: 7.5
+  },
+  polarArea: { dias: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'], valores: [2, 11, 14, 12, 10, 11, 3] },
+  pyramid: {
+    series: ['6º EF', '7º EF', '8º EF', '9º EF', '1ª EM', '2ª EM', '3ª EM'],
+    masc: [66, 63, 60, 58, 124, 119, 108],
+    fem: [69, 69, 64, 63, 138, 130, 119]
+  },
+  pareto: {
+    motivos: ['Financeiro', 'Mudança de cidade', 'Reprovação', 'Distância', 'Outros'],
+    valores: [38, 24, 15, 13, 10],
+    acumulado: [38, 62, 77, 90, 100]
+  },
+  slope: {
+    momentos: ['Dez/2025', 'Out/2026'],
+    unidades: [['Centro', 574, 612], ['Leste', 498, 528], ['Zona Sul', 429, 447], ['Oeste', 165, 152]]
+  },
+  bump: {
+    meses: HZ.meses6,
+    series: [['Centro', [1, 1, 2, 2, 1, 1]], ['Leste', [2, 2, 1, 1, 2, 2]], ['Zona Sul', [3, 3, 3, 4, 3, 3]], ['Oeste', [4, 4, 4, 3, 4, 4]]]
+  },
+  funnelNative: { etapas: [['Interessados', 6840], ['Inscritos', 4644], ['Aprovados', 2412], ['Matriculados', 2051]] },
+  pyramidNative: { segmentos: [['Técnico', 419], ['Médio', 738], ['Fundamental', 894]] },
+  streamgraph: {
+    meses: ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'],
+    series: [
+      ['Presencial', [1210, 1215, 1221, 1228, 1234, 1241, 1247, 1253, 1259, 1265, 1271, 1277]],
+      ['Híbrido', [386, 390, 395, 400, 406, 412, 418, 425, 442, 458, 464, 470]],
+      ['EAD', [412, 408, 403, 397, 391, 384, 377, 369, 352, 328, 322, 316]]
+    ]
+  },
+  ohlcVolume: {
+    ohlc: [
+      [66850, 67420, 66210, 67180], [67180, 67960, 66900, 67740], [67740, 68250, 67280, 67510],
+      [67510, 68040, 66720, 66930], [66930, 67380, 66150, 66480], [66480, 67120, 66240, 67010],
+      [67010, 67880, 66820, 67720], [67720, 68940, 67510, 68680], [68680, 69260, 68140, 68420],
+      [68420, 69010, 67880, 68160], [68160, 68730, 67640, 68540], [68540, 69820, 68330, 69590],
+      [69590, 70410, 69280, 70170], [70170, 70760, 69640, 69920]
+    ],
+    vol: [1.8, 1.6, 1.5, 1.9, 2.1, 1.7, 1.6, 2.3, 1.8, 1.6, 1.9, 2.4, 2.1, 1.7]
+  },
+  calendarHeatmap: { semanas: 52 },
+  sunburst: {
+    total: 2051,
+    segmentos: [
+      { label: 'Fundamental', value: 894, children: [['Anos Iniciais', 382], ['Anos Finais', 512]] },
+      { label: 'Médio', value: 738, children: [['1ª série', 262], ['2ª série', 249], ['3ª série', 227]] },
+      { label: 'Técnico', value: 419, children: [['Informática', 178], ['Enfermagem', 141], ['Administração', 100]] }
+    ]
+  },
+  waffle: { total: 2051, grupos: [['Ativos', 94, 1927], ['Aprovisionados', 4, 76], ['Inativos', 2, 48]] },
+  marimekko: {
+    total: 5655,
+    categorias: ['Mensalidades', 'Materiais', 'Contraturno'],
+    colunas: [['Centro', 1512, [64, 21, 15]], ['Leste', 1247, [62, 22, 16]], ['Zona Sul', 1072, [61, 22, 17]], ['Norte', 945, [60, 23, 17]], ['Oeste', 879, [58, 24, 18]]]
+  },
+  venn: {
+    total: 2051,
+    circulos: [['Bolsa', 426], ['Transporte', 512], ['Contraturno', 687]],
+    partes: [['Apenas bolsa', 167], ['Apenas transporte', 191], ['Apenas contraturno', 390], ['Bolsa e transporte', 118], ['Bolsa e contraturno', 94], ['Transporte e contraturno', 156], ['Os três', 47]]
+  }
+};
+/* ---------- builders · Comparação ---------- */
+function buildBarBasic(el, d, opts) {
+  var C = readTokens(), base = apexBase(C), h = (opts && opts.height) || 180;
+  var chart = new ApexCharts(el, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'bar', height: h }),
+    series: [{ name: 'Novas matrículas', data: d.valores }],
+    colors: [C.accent],
+    plotOptions: { bar: { borderRadius: 6, borderRadiusApplication: 'end', columnWidth: '46%' } },
+    dataLabels: { enabled: true, offsetY: -4, style: { fontSize: '11px', fontWeight: 600, colors: [C.text] }, formatter: function (v) { return NF0.format(v); } },
+    grid: gridOff(C),
+    xaxis: xax(C, d.meses),
+    yaxis: { show: false, min: 0, max: 70 },
+    legend: { show: false },
+    tooltip: Object.assign({}, base.tooltip, { y: { formatter: function (v) { return NF0.format(v) + ' matrículas'; } } })
+  }));
+  chart.render();
+  return [chart];
+}
+
+function buildBarRanked(el, d, opts) {
+  var C = readTokens(), base = apexBase(C), h = (opts && opts.height) || 190;
+  var cats = d.itens.map(function (r) { return r[0]; }).reverse();
+  var vals = d.itens.map(function (r) { return r[1]; }).reverse();
+  var chart = new ApexCharts(el, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'bar', height: h }),
+    series: [{ name: 'Receita', data: vals }],
+    colors: [C.accent],
+    plotOptions: { bar: { horizontal: true, borderRadius: 5, borderRadiusApplication: 'end', barHeight: '56%' } },
+    dataLabels: { enabled: true, offsetX: 6, style: { fontSize: '11px', fontWeight: 600, colors: [C.text2] }, formatter: function (v) { return NF0.format(v); } },
+    grid: gridOn(C),
+    xaxis: xax(C, cats, { min: 0, max: 1600, tickAmount: 4, labels: { formatter: function (v) { return NF0.format(v); }, style: { colors: C.muted, fontSize: '11px' } } }),
+    yaxis: { labels: { style: { colors: C.text2, fontSize: '11px' } }, axisBorder: { show: false }, axisTicks: { show: false } },
+    legend: { show: false },
+    tooltip: Object.assign({}, base.tooltip, { y: { formatter: brlMil } })
+  }));
+  chart.render();
+  return [chart];
+}
+
+function buildBarGrouped(el, d, opts) {
+  var C = readTokens(), base = apexBase(C), h = (opts && opts.height) || 190;
+  var chart = new ApexCharts(el, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'bar', height: h }),
+    series: d.series,
+    colors: [C.accent, C.danger],
+    plotOptions: { bar: { borderRadius: 3, borderRadiusApplication: 'end', columnWidth: '54%' } },
+    grid: gridOff(C),
+    xaxis: xax(C, d.meses),
+    yaxis: { min: 0, max: 80, tickAmount: 4, labels: { formatter: function (v) { return NF0.format(v); }, style: { colors: C.muted, fontSize: '11px' } } },
+    legend: legendBottom(C),
+    tooltip: Object.assign({}, base.tooltip, { y: { formatter: function (v) { return NF0.format(v) + ' matrículas'; } } })
+  }));
+  chart.render();
+  return [chart];
+}
+
+function buildBarStacked(el, d, opts) {
+  var C = readTokens(), base = apexBase(C), h = (opts && opts.height) || 200;
+  var chart = new ApexCharts(el, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'bar', height: h, stacked: true }),
+    series: d.series,
+    colors: [C.accent, C.info, C.warning],
+    plotOptions: { bar: { columnWidth: '52%', borderRadius: 3, borderRadiusApplication: 'end', borderRadiusWhenStacked: 'last' } },
+    dataLabels: { enabled: true, style: { fontSize: '10px', fontWeight: 600, colors: [onColor(C, C.accent), onColor(C, C.info), onColor(C, C.warning)] }, formatter: function (v) { return v ? NF0.format(v) : ''; } },
+    grid: gridOff(C),
+    xaxis: xax(C, d.meses),
+    yaxis: { min: 0, max: 70, tickAmount: 4, labels: { formatter: function (v) { return NF0.format(v); }, style: { colors: C.muted, fontSize: '11px' } } },
+    legend: legendBottom(C),
+    tooltip: Object.assign({}, base.tooltip, { y: { formatter: function (v) { return NF0.format(v) + ' matrículas'; } } })
+  }));
+  chart.render();
+  return [chart];
+}
+
+function buildBar100(el, d, opts) {
+  var C = readTokens(), base = apexBase(C), h = (opts && opts.height) || 190;
+  var chart = new ApexCharts(el, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'bar', height: h, stacked: true }),
+    series: d.series,
+    colors: [C.accent, C.info, C.warning],
+    plotOptions: { bar: { columnWidth: '52%', stackType: '100%', borderRadius: 3, borderRadiusApplication: 'end', borderRadiusWhenStacked: 'last' } },
+    dataLabels: { enabled: true, style: { fontSize: '10px', fontWeight: 600, colors: [onColor(C, C.accent), onColor(C, C.info), onColor(C, C.warning)] }, formatter: function (v) { return v + '%'; } },
+    grid: gridOn(C),
+    xaxis: xax(C, d.meses),
+    yaxis: { min: 0, max: 100, tickAmount: 4, labels: { formatter: function (v) { return v + '%'; }, style: { colors: C.muted, fontSize: '11px' } } },
+    legend: legendBottom(C),
+    tooltip: Object.assign({}, base.tooltip, { y: { formatter: function (v) { return v + '% do mês'; } } })
+  }));
+  chart.render();
+  return [chart];
+}
+function buildBarGoal(el, d, opts) {
+  var C = readTokens(), base = apexBase(C), h = (opts && opts.height) || 190;
+  var chart = new ApexCharts(el, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'bar', height: h }),
+    series: [{ name: 'Ocupação', data: d.valores }],
+    colors: [C.accent],
+    plotOptions: { bar: { borderRadius: 4, borderRadiusApplication: 'end', columnWidth: '48%' } },
+    dataLabels: { enabled: true, offsetY: -4, style: { fontSize: '11px', fontWeight: 600, colors: [C.text] }, formatter: function (v) { return v + '%'; } },
+    annotations: { yaxis: [{ y: d.meta, borderColor: C.warning, strokeDashArray: 0, label: { text: 'Meta ' + d.meta, position: 'right', textAnchor: 'end', offsetX: -8, borderWidth: 1, borderColor: C.warning, style: { background: C.surface, color: C.warningText, fontSize: '11px', fontWeight: 600 } } }] },
+    grid: gridOff(C),
+    xaxis: xax(C, d.unidades),
+    yaxis: { min: 0, max: 100, tickAmount: 4, labels: { formatter: function (v) { return v + '%'; }, style: { colors: C.muted, fontSize: '11px' } } },
+    legend: { show: false },
+    tooltip: Object.assign({}, base.tooltip, { y: { formatter: function (v) { return v + '% de ocupação · meta ' + d.meta + '%'; } } })
+  }));
+  chart.render();
+  return [chart];
+}
+
+function buildRangeBar(el, d, opts) {
+  var C = readTokens(), base = apexBase(C), h = (opts && opts.height) || 190;
+  var raw = d.itens.slice().reverse();
+  var rows = raw.map(function (p) {
+    return { x: p[0], y: [new Date(p[1]).getTime(), new Date(p[2]).getTime()], iso: [p[1], p[2]] };
+  });
+  var rgTip = function (ctx) {
+    var i = ctx.dataPointIndex, r = rows[i];
+    if (!r) return '';
+    var dias = Math.round((r.y[1] - r.y[0]) / 86400000);
+    return '<div class="ck-tip"><div class="ck-tip-t">' + r.x + '</div>' +
+      '<div class="ck-tip-r"><span>Início</span><b>' + dataBR(r.iso[0]) + '</b></div>' +
+      '<div class="ck-tip-r"><span>Fim</span><b>' + dataBR(r.iso[1]) + '</b></div>' +
+      '<div class="ck-tip-r"><span>Duração</span><b>' + NF0.format(dias) + ' dias</b></div></div>';
+  };
+  var chart = new ApexCharts(el, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'rangeBar', height: h }),
+    series: [{ name: 'Período', data: rows }],
+    colors: [C.accent, C.info, C.success, C.warning, C.dark ? C.p400 : C.p300],
+    plotOptions: { bar: { horizontal: true, barHeight: '46%', borderRadius: 9, distributed: true } },
+    grid: gridOff(C),
+    xaxis: xax(C, null, { type: 'datetime', labels: { format: 'dd/MM', style: { colors: C.muted, fontSize: '11px' } } }),
+    yaxis: { labels: { style: { colors: C.text2, fontSize: '11px' } }, axisBorder: { show: false }, axisTicks: { show: false } },
+    legend: { show: false },
+    tooltip: Object.assign({}, base.tooltip, { custom: rgTip })
+  }));
+  chart.render();
+  return [chart];
+}
+
+function buildDumbbell(el, d, opts) {
+  var C = readTokens(), base = apexBase(C), h = (opts && opts.height) || 200;
+  var con = d.pares.map(function (p, i) { return { x: d.unidades[i], y: [p[0], p[1]] }; });
+  var ptA = d.pares.map(function (p, i) { return { x: d.unidades[i], y: p[0] }; });
+  var ptB = d.pares.map(function (p, i) { return { x: d.unidades[i], y: p[1] }; });
+  var dumbTip = function (ctx) {
+    var i = ctx.dataPointIndex, p = d.pares[i];
+    if (!p) return '';
+    var delta = (p[1] - p[0]) / p[0] * 100;
+    var up = delta >= 0;
+    return '<div class="ck-tip"><div class="ck-tip-t">' + d.unidades[i] + ' · receita anual (R$ mil)</div>' +
+      '<div class="ck-tip-r"><span>2025</span><b>' + NF0.format(p[0]) + '</b></div>' +
+      '<div class="ck-tip-r"><span>2026</span><b>' + NF0.format(p[1]) + '</b></div>' +
+      '<div class="ck-tip-r"><span>Variação</span><b class="' + (up ? 'up' : 'down') + '">' + (up ? '+' : '−') + NF1.format(Math.abs(delta)) + '%</b></div>' +
+      '<div class="ck-tip-s">De ' + brlMil(p[0]) + ' para ' + brlMil(p[1]) + ' (' + (up ? '+' : '−') + NF1.format(Math.abs(delta)) + '%).</div></div>';
+  };
+  var chart = new ApexCharts(el, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'bar', height: h }),
+    series: [
+      { name: 'Variação', type: 'rangeBar', data: con },
+      { name: '2025', type: 'line', data: ptA },
+      { name: '2026', type: 'line', data: ptB }
+    ],
+    /* Workaround histórico da 4.7.0: scatter em combo com rangeBar não renderizava;
+       os pontos são duas séries de linha com stroke 0 e marcadores — mesmo desenho.
+       Valide o scatter na 8.5.0 antes de trocar. */
+    colors: [C.borderStrong, C.muted, C.accent],
+    plotOptions: { bar: { horizontal: false, columnWidth: '6%', borderRadius: 2 } },
+    stroke: { width: [0, 0, 0] },
+    markers: { size: [0, 7, 7], colors: [C.borderStrong, C.muted, C.accent], strokeWidth: 2, strokeColors: C.surface, hover: { size: 9 } },
+    grid: gridOn(C),
+    xaxis: xax(C, d.unidades, { type: 'category' }),
+    yaxis: { min: 700, max: 1600, tickAmount: 3, labels: { formatter: function (v) { return NF0.format(v); }, style: { colors: C.muted, fontSize: '11px' } } },
+    legend: { show: false },
+    tooltip: Object.assign({}, base.tooltip, { custom: dumbTip })
+  }));
+  chart.render();
+  return [chart];
+}
+
+function buildBulletVertical(el, d, opts) {
+  var C = readTokens(), base = apexBase(C), h = (opts && opts.height) || 180;
+  var chart = new ApexCharts(el, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'bar', height: h }),
+    series: [{ name: 'Realizado', data: [d.valor] }],
+    colors: [C.accent],
+    plotOptions: { bar: { columnWidth: '34%', borderRadius: 6, borderRadiusApplication: 'end' } },
+    dataLabels: { enabled: true, offsetY: -5, style: { fontSize: '12px', fontWeight: 700, colors: [C.text] }, formatter: function (v) { return NF0.format(v) + '%'; } },
+    annotations: { yaxis: [
+      { y: 0, y2: 60, fillColor: C.danger, opacity: 0.07 },
+      { y: 60, y2: 80, fillColor: C.warning, opacity: 0.10 },
+      { y: d.meta, borderColor: C.text, strokeDashArray: 4, label: { text: 'Meta ' + d.meta, position: 'right', textAnchor: 'end', offsetX: -8, borderWidth: 1, borderColor: C.border, style: { background: C.surface, color: C.text2, fontSize: '11px', fontWeight: 600 } } }
+    ] },
+    grid: gridOff(C),
+    xaxis: xax(C, [d.categoria]),
+    yaxis: { min: 0, max: 100, tickAmount: 4, labels: { formatter: function (v) { return v + '%'; }, style: { colors: C.muted, fontSize: '11px' } } },
+    legend: { show: false },
+    tooltip: Object.assign({}, base.tooltip, { y: { formatter: function (v) { return NF0.format(v) + '% de ocupação · meta ' + d.meta + '%'; } } })
+  }));
+  chart.render();
+  return [chart];
+}
+/* ---------- builders · Tendência ---------- */
+function buildLineSmooth(el, d, opts) {
+  var C = readTokens(), base = apexBase(C), h = (opts && opts.height) || 200;
+  var chart = new ApexCharts(el, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'line', height: h }),
+    series: [{ name: 'Receita', data: d.valores }],
+    colors: [C.accent],
+    stroke: { curve: 'smooth', width: 2.5 },
+    markers: { size: 4, strokeWidth: 2, strokeColors: C.surface, hover: { size: 6 } },
+    grid: gridOn(C),
+    xaxis: xax(C, d.meses),
+    yaxis: { min: 400, max: 800, tickAmount: 4, labels: { formatter: function (v) { return NF0.format(v); }, style: { colors: C.muted, fontSize: '11px' } } },
+    legend: { show: false },
+    tooltip: Object.assign({}, base.tooltip, { y: { formatter: brlMil } })
+  }));
+  chart.render();
+  return [chart];
+}
+
+function buildAreaGradient(el, d, opts) {
+  var C = readTokens(), base = apexBase(C), h = (opts && opts.height) || 200;
+  var chart = new ApexCharts(el, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'area', height: h }),
+    series: [{ name: 'Frequência', data: d.valores }],
+    colors: [C.accent],
+    stroke: { curve: 'smooth', width: 2 },
+    fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.35, opacityTo: 0.02, stops: [0, 100] } },
+    markers: { size: 0, hover: { size: 4 } },
+    grid: gridOff(C),
+    xaxis: xax(C, d.semanas),
+    yaxis: { min: 70, max: 100, tickAmount: 3, labels: { formatter: function (v) { return v + '%'; }, style: { colors: C.muted, fontSize: '11px' } } },
+    legend: { show: false },
+    tooltip: Object.assign({}, base.tooltip, { y: { formatter: pct1 } })
+  }));
+  chart.render();
+  return [chart];
+}
+
+function buildAreaStacked(el, d, opts) {
+  var C = readTokens(), base = apexBase(C), h = (opts && opts.height) || 200;
+  var chart = new ApexCharts(el, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'area', height: h, stacked: true }),
+    series: d.series,
+    colors: [C.accent, C.info, C.warning],
+    stroke: { curve: 'smooth', width: 2 },
+    fill: { type: 'solid', opacity: 0.9 },
+    markers: { size: 0, hover: { size: 4 } },
+    grid: gridOff(C),
+    xaxis: xax(C, d.meses),
+    yaxis: { min: 0, max: 900, tickAmount: 3, labels: { formatter: function (v) { return NF0.format(v); }, style: { colors: C.muted, fontSize: '11px' } } },
+    legend: legendBottom(C),
+    tooltip: Object.assign({}, base.tooltip, { y: { formatter: brlMil } })
+  }));
+  chart.render();
+  return [chart];
+}
+
+function buildMultiLine(el, d, opts) {
+  var C = readTokens(), base = apexBase(C), h = (opts && opts.height) || 190;
+  var chart = new ApexCharts(el, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'line', height: h }),
+    series: d.series,
+    colors: [C.accent, C.info, C.warning],
+    stroke: { curve: 'smooth', width: 2 },
+    markers: { size: 0, hover: { size: 4 } },
+    grid: gridOff(C),
+    xaxis: xax(C, d.meses),
+    yaxis: { min: 400, max: 640, tickAmount: 3, labels: { formatter: function (v) { return NF0.format(v); }, style: { colors: C.muted, fontSize: '11px' } } },
+    legend: legendBottom(C),
+    tooltip: Object.assign({}, base.tooltip, { y: { formatter: function (v) { return NF0.format(v) + ' matrículas'; } } })
+  }));
+  chart.render();
+  return [chart];
+}
+
+function buildStepLine(el, d, opts) {
+  var C = readTokens(), base = apexBase(C), h = (opts && opts.height) || 190;
+  var chart = new ApexCharts(el, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'line', height: h }),
+    series: [{ name: 'Saldo', data: d.valores }],
+    colors: [C.accent],
+    stroke: { curve: 'stepline', width: 2.5 },
+    markers: { size: 0, hover: { size: 4 } },
+    grid: gridOn(C),
+    xaxis: xax(C, d.dias),
+    yaxis: { min: 380, max: 500, tickAmount: 3, labels: { formatter: function (v) { return NF0.format(v); }, style: { colors: C.muted, fontSize: '11px' } } },
+    legend: { show: false },
+    tooltip: Object.assign({}, base.tooltip, { y: { formatter: brlMil } })
+  }));
+  chart.render();
+  return [chart];
+}
+function buildForecastLine(el, d, opts) {
+  var C = readTokens(), base = apexBase(C), h = (opts && opts.height) || 210;
+  var fcTip = function (ctx) {
+    var i = ctx.dataPointIndex;
+    var m = d.meses12[i];
+    var html = '<div class="ck-tip"><div class="ck-tip-t">' + m.charAt(0).toUpperCase() + m.slice(1) + '/2026 · R$ mil</div>';
+    if (d.real[i] != null) html += '<div class="ck-tip-r"><span>Realizado</span><b>' + NF0.format(d.real[i]) + '</b></div>';
+    if (d.prev[i] != null) html += '<div class="ck-tip-r"><span>Previsto</span><b>' + NF0.format(d.prev[i]) + '</b></div>';
+    html += '<div class="ck-tip-s">' + (i > 9 ? 'Projeção — sujeita a revisão.' : 'Realizado consolidado até outubro.') + '</div></div>';
+    return html;
+  };
+  var chart = new ApexCharts(el, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'line', height: h }),
+    series: [
+      { name: 'Realizado', data: d.real },
+      { name: 'Previsto', data: d.prev }
+    ],
+    colors: [C.accent, C.accent],
+    stroke: { curve: 'smooth', width: [2.5, 2.5], dashArray: [0, 6] },
+    markers: { size: [4, 0], strokeWidth: 2, strokeColors: C.surface, hover: { size: 6 } },
+    grid: gridOn(C),
+    xaxis: xax(C, d.meses12),
+    yaxis: { min: 400, max: 900, tickAmount: 5, labels: { formatter: function (v) { return NF0.format(v); }, style: { colors: C.muted, fontSize: '11px' } } },
+    legend: { show: false },
+    tooltip: Object.assign({}, base.tooltip, { custom: fcTip })
+  }));
+  chart.render();
+  return [chart];
+}
+
+function buildComboDualAxis(el, d, opts) {
+  var C = readTokens(), base = apexBase(C), h = (opts && opts.height) || 210;
+  var comboTip = function (ctx) {
+    var i = ctx.dataPointIndex;
+    if (i < 0) return '';
+    return '<div class="ck-tip"><div class="ck-tip-t">' + d.meses[i] + '/2026</div>' +
+      '<div class="ck-tip-r"><span>Novas matrículas</span><b>' + NF0.format(d.barras[i]) + '</b></div>' +
+      '<div class="ck-tip-r"><span>Receita</span><b>' + brlMil(d.linha[i]) + '</b></div>' +
+      '<div class="ck-tip-s">Eixos independentes — leia cada série no seu eixo.</div></div>';
+  };
+  var chart = new ApexCharts(el, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'bar', height: h }),
+    series: [
+      { name: 'Novas matrículas', type: 'bar', data: d.barras },
+      { name: 'Receita', type: 'line', data: d.linha }
+    ],
+    colors: [C.dark ? C.p700 : C.p200, C.accent],
+    plotOptions: { bar: { columnWidth: '42%', borderRadius: 3, borderRadiusApplication: 'end' } },
+    stroke: { width: [0, 2.5], curve: 'smooth' },
+    markers: { size: [0, 4], strokeWidth: 2, strokeColors: C.surface },
+    grid: gridOn(C),
+    xaxis: xax(C, d.meses),
+    yaxis: [
+      { min: 0, max: 80, tickAmount: 4, labels: { formatter: function (v) { return NF0.format(v); }, style: { colors: C.muted, fontSize: '11px' } } },
+      { min: 400, max: 800, opposite: true, tickAmount: 4, labels: { formatter: function (v) { return NF0.format(v); }, style: { colors: C.muted, fontSize: '11px' } } }
+    ],
+    legend: legendBottom(C),
+    tooltip: Object.assign({}, base.tooltip, { custom: comboTip })
+  }));
+  chart.render();
+  return [chart];
+}
+
+function buildSparkline(el, d, opts) {
+  var C = readTokens();
+  var chart = new ApexCharts(el, {
+    chart: { type: 'area', height: 48, fontFamily: 'Inter, system-ui, sans-serif', foreColor: C.muted, background: 'transparent', sparkline: { enabled: true }, toolbar: { show: false }, zoom: { enabled: false }, animations: { enabled: !RM, speed: 380 }, theme: { mode: C.dark ? 'dark' : 'light' } },
+    series: [{ name: d.nome, data: d.valores }],
+    colors: [C[d.cor]],
+    stroke: { curve: 'smooth', width: 2 },
+    fill: { type: 'gradient', gradient: { opacityFrom: 0.3, opacityTo: 0 } },
+    dataLabels: { enabled: false },
+    tooltip: { enabled: false }
+  });
+  chart.render();
+  return [chart];
+}
+/* ---------- builders · Composição ---------- */
+function donutOpts(C, base, d, h, total, labelFontSize) {
+  return Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'donut', height: h }),
+    series: d.valores,
+    labels: d.rotulos,
+    colors: [C.accent, C.info, C.warning],
+    stroke: { colors: [C.surface], width: 2 },
+    dataLabels: { enabled: false },
+    legend: { show: false },
+    plotOptions: { pie: { donut: { size: '66%', labels: { show: true,
+      name: { show: true, color: C.muted, fontSize: '11px', fontWeight: 500 },
+      value: { show: true, color: C.text, fontSize: labelFontSize, fontWeight: 700, formatter: function (v) { return NF0.format(v); } },
+      total: { show: true, label: 'Matrículas', color: C.muted, fontSize: '11px', fontWeight: 500, formatter: function (w) { return NF0.format(w.globals.seriesTotals.reduce(function (a, b) { return a + b; }, 0)); } }
+    } } } },
+    tooltip: Object.assign({}, base.tooltip, { y: { formatter: function (v) { return NF0.format(v) + ' matrículas · ' + pct1(v / total * 100); } } })
+  });
+}
+function buildDonut(el, d, opts) {
+  var C = readTokens(), base = apexBase(C), h = (opts && opts.height) || 210;
+  var total = d.valores.reduce(function (a, b) { return a + b; }, 0);
+  var o = donutOpts(C, base, d, h, total, '20px');
+  o.legend = legendBottom(C);
+  var chart = new ApexCharts(el, o);
+  chart.render();
+  return [chart];
+}
+function buildMultiDonut(el, d, opts) {
+  var C = readTokens(), base = apexBase(C);
+  var mounts = el.querySelectorAll('.ck-md-mount');
+  var charts = [];
+  mounts.forEach(function (m, i) {
+    var t = d.turnos[i];
+    if (!t) return;
+    var o = donutOpts(C, base, { rotulos: d.status, valores: t[2] }, (opts && opts.height) || 170, t[1], '15px');
+    o.plotOptions.pie.donut.size = '64%';
+    o.plotOptions.pie.donut.labels.total.label = '';
+    var chart = new ApexCharts(m, o);
+    chart.render();
+    charts.push(chart);
+  });
+  return charts;
+}
+
+function layoutTreemap(el, itens) {
+  var wrap = el.closest('.ck-tm');
+  if (!wrap) return;
+  var layer = wrap.querySelector('.ck-tm-labels');
+  if (!layer) return;
+  var rects = el.querySelectorAll('rect.apexcharts-treemap-rect');
+  if (!rects.length) return;
+  var base = wrap.getBoundingClientRect();
+  var total = itens.reduce(function (a, r) { return a + r[1]; }, 0);
+  var frag = document.createDocumentFragment();
+  rects.forEach(function (r) {
+    var j = parseInt(r.getAttribute('j'), 10);
+    var row = itens[j];
+    if (!row) return;
+    var b = r.getBoundingClientRect();
+    if (b.width < 36 || b.height < 26) return;
+    var e = document.createElement('div');
+    var sm = b.width < 110 || b.height < 58;
+    e.className = 'ck-tm-lab' + (sm ? ' sm' : '');
+    e.style.left = (b.left - base.left) + 'px';
+    e.style.top = (b.top - base.top) + 'px';
+    e.style.width = b.width + 'px';
+    e.style.height = b.height + 'px';
+    e.innerHTML = '<b>' + row[0] + '</b><span>R$ ' + NF0.format(row[1]) + ' mil</span>' + (sm ? '' : '<span class="p">' + pct1(row[1] / total * 100) + '</span>');
+    frag.appendChild(e);
+  });
+  layer.innerHTML = '';
+  layer.appendChild(frag);
+}
+function buildTreemap(el, d, opts) {
+  var C = readTokens(), base = apexBase(C), h = (opts && opts.height) || 200;
+  var chart = new ApexCharts(el, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'treemap', height: h }),
+    series: [{ data: d.itens.map(function (r) { return { x: r[0], y: r[1] }; }) }],
+    colors: treemapColors(C),
+    plotOptions: { treemap: { enableShades: false, distributed: true, borderRadius: 3, useFillColorAsStroke: false } },
+    dataLabels: { enabled: false },
+    stroke: { width: 2, colors: [C.surface] },
+    legend: { show: false },
+    grid: { padding: { left: 0, right: 0, top: 0, bottom: 0 } },
+    tooltip: Object.assign({}, base.tooltip, { x: { show: true }, y: { formatter: brlMil } })
+  }));
+  chart.render().then(function () {
+    setTimeout(function () { layoutTreemap(el, d.itens); }, RM ? 30 : 460);
+  });
+  return [chart];
+}
+/* ---------- builders · Distribuição ---------- */
+function buildScatter(el, d, opts) {
+  var C = readTokens(), base = apexBase(C), h = (opts && opts.height) || 190;
+  var scTip = function (ctx) {
+    var a = d.alunos[ctx.dataPointIndex];
+    if (!a) return '';
+    return '<div class="ck-tip"><div class="ck-tip-t">' + a[0] + '</div>' +
+      '<div class="ck-tip-r"><span>Horas de estudo/semana</span><b>' + NF1.format(a[1]) + ' h</b></div>' +
+      '<div class="ck-tip-r"><span>Nota média</span><b>' + NF1.format(a[2]) + '</b></div>' +
+      '<div class="ck-tip-s">Um ponto por aluno.</div></div>';
+  };
+  var chart = new ApexCharts(el, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'scatter', height: h }),
+    series: [{ name: 'Alunos', data: d.alunos.map(function (a) { return [a[1], a[2]]; }) }],
+    colors: [C.accent],
+    markers: { size: 7, strokeWidth: 2, strokeColors: C.surface, hover: { size: 9 } },
+    grid: gridOn(C),
+    xaxis: xax(C, null, { min: 0, max: 10, tickAmount: 5, labels: { formatter: function (v) { return NF0.format(v) + ' h'; }, style: { colors: C.muted, fontSize: '11px' } } }),
+    yaxis: { min: 4, max: 10, tickAmount: 3, labels: { formatter: function (v) { return NF1.format(v); }, style: { colors: C.muted, fontSize: '11px' } } },
+    legend: { show: false },
+    tooltip: Object.assign({}, base.tooltip, { custom: scTip })
+  }));
+  chart.render();
+  return [chart];
+}
+
+function buildBubble(el, d, opts) {
+  var C = readTokens(), base = apexBase(C), h = (opts && opts.height) || 190;
+  var bubTip = function (ctx) {
+    var u = d.itens[ctx.seriesIndex];
+    if (!u) return '';
+    return '<div class="ck-tip"><div class="ck-tip-t">' + u[0] + '</div>' +
+      '<div class="ck-tip-r"><span>Frequência</span><b>' + u[1] + '%</b></div>' +
+      '<div class="ck-tip-r"><span>Nota média</span><b>' + NF1.format(u[2]) + '</b></div>' +
+      '<div class="ck-tip-r"><span>Alunos</span><b>' + NF0.format(u[3]) + '</b></div>' +
+      '<div class="ck-tip-s">O tamanho da bolha é o total de alunos.</div></div>';
+  };
+  var chart = new ApexCharts(el, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'bubble', height: h }),
+    series: d.itens.map(function (u) { return { name: u[0], data: [[u[1], u[2], u[3]]] }; }),
+    colors: [C.accent, C.info, C.success, C.warning, C.dark ? C.p400 : C.p700],
+    grid: gridOn(C),
+    xaxis: xax(C, null, { min: 70, max: 100, tickAmount: 3, labels: { formatter: function (v) { return v + '%'; }, style: { colors: C.muted, fontSize: '11px' } } }),
+    yaxis: { min: 6, max: 10, tickAmount: 4, labels: { formatter: function (v) { return NF1.format(v); }, style: { colors: C.muted, fontSize: '11px' } } },
+    legend: { show: false },
+    tooltip: Object.assign({}, base.tooltip, { custom: bubTip })
+  }));
+  chart.render();
+  return [chart];
+}
+
+/* ---------- builders · Indicadores ---------- */
+function buildGauge(el, d, opts) {
+  var C = readTokens(), base = apexBase(C), h = (opts && opts.height) || 200;
+  var chart = new ApexCharts(el, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'radialBar', height: h }),
+    series: [d.valor],
+    labels: [d.rotulo],
+    colors: [C.accent],
+    plotOptions: { radialBar: {
+      hollow: { size: '64%', background: 'transparent' },
+      track: { background: C.surface2, strokeWidth: '100%', margin: 6 },
+      startAngle: -135, endAngle: 135,
+      dataLabels: {
+        show: true,
+        name: { show: true, fontSize: '11px', fontWeight: 500, color: C.muted, offsetY: 24 },
+        value: { show: true, fontSize: '28px', fontWeight: 700, color: C.text, offsetY: -6, formatter: function (v) { return Math.round(v) + '%'; } }
+      }
+    } },
+    fill: { type: 'gradient', gradient: { shade: 'dark', type: 'horizontal', shadeIntensity: 0.35, gradientToColors: [C.dark ? C.p300 : C.p700], inverseColors: false, opacityFrom: 1, opacityTo: 1, stops: [0, 100] } },
+    stroke: { lineCap: 'round' },
+    legend: { show: false },
+    tooltip: { enabled: false }
+  }));
+  chart.render();
+  return [chart];
+}
+
+function positionSemiTick(el, d) {
+  var wrap = el.closest('.ck-semi');
+  if (!wrap) return;
+  var tick = wrap.querySelector('.ck-tick'), lab = wrap.querySelector('.ck-tick-lb');
+  if (!tick || !lab) return;
+  var paths = el.querySelectorAll('path');
+  var track = null, best = 0;
+  paths.forEach(function (p) {
+    var b = p.getBoundingClientRect();
+    var a = b.width * b.height;
+    if (a > best) { best = a; track = p; }
+  });
+  if (!track) return;
+  var b = track.getBoundingClientRect(), w = wrap.getBoundingClientRect();
+  var cx = b.left + b.width / 2 - w.left;
+  var top = b.top - w.top;
+  tick.style.left = cx + 'px';
+  tick.style.top = top + 'px';
+  lab.style.left = (cx + 10) + 'px';
+  lab.style.top = Math.max(2, top - 9) + 'px';
+}
+function buildSemiGauge(el, d, opts) {
+  var C = readTokens(), base = apexBase(C), h = (opts && opts.height) || 200;
+  var chart = new ApexCharts(el, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'radialBar', height: h, offsetY: 20 }),
+    series: [d.valor / d.escala * 100],
+    labels: [d.rotulo],
+    colors: [C.danger],
+    plotOptions: { radialBar: {
+      hollow: { size: '62%', background: 'transparent' },
+      track: { background: C.surface2, strokeWidth: '100%', margin: 6 },
+      startAngle: -90, endAngle: 90,
+      dataLabels: {
+        show: true,
+        name: { show: true, fontSize: '11px', fontWeight: 500, color: C.muted, offsetY: 34 },
+        value: { show: true, fontSize: '26px', fontWeight: 700, color: C.dangerText, offsetY: 16, formatter: function (v) { return NF1.format(v * d.escala / 100) + '%'; } }
+      }
+    } },
+    fill: { type: 'solid' },
+    stroke: { lineCap: 'butt' },
+    legend: { show: false },
+    tooltip: { enabled: false }
+  }));
+  chart.render().then(function () {
+    setTimeout(function () { positionSemiTick(el, d); }, RM ? 30 : 460);
+  });
+  return [chart];
+}
+
+function buildRings(el, d, opts) {
+  var C = readTokens(), base = apexBase(C), h = (opts && opts.height) || 210;
+  var chart = new ApexCharts(el, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'radialBar', height: h }),
+    series: d.series.map(function (s) { return s[1]; }),
+    labels: d.series.map(function (s) { return s[0]; }),
+    colors: [C.accent, C.info, C.success],
+    plotOptions: { radialBar: {
+      hollow: { size: '38%', background: 'transparent' },
+      track: { background: C.surface2, strokeWidth: '100%', margin: 6 },
+      dataLabels: { show: false, name: { show: false }, value: { show: false }, total: { show: false } }
+    } },
+    fill: { type: 'solid' },
+    stroke: { lineCap: 'round' },
+    legend: {
+      show: true, position: 'bottom', fontSize: '11px',
+      markers: { size: 6, strokeWidth: 0 }, itemMargin: { horizontal: 10, vertical: 0 },
+      labels: { colors: C.text2 },
+      formatter: function (seriesName, o) {
+        var v = d.series[o.seriesIndex][1];
+        return seriesName + ': ' + v + (seriesName === 'NPS' ? '' : '%');
+      }
+    },
+    tooltip: { enabled: false }
+  }));
+  chart.render();
+  return [chart];
+}
+/* ---------- builders · Wave 2 · Estatística (Apex) ---------- */
+function buildBoxplot(el, d, opts) {
+  var C = readTokens(), base = apexBase(C), h = (opts && opts.height) || 220;
+  var boxTip = function (ctx) {
+    var v = d.dados[ctx.dataPointIndex];
+    if (!v) return '';
+    return '<div class="ck-tip"><div class="ck-tip-t">' + d.turmas[ctx.dataPointIndex] + '</div>' +
+      '<div class="ck-tip-r"><span>Mínimo</span><b>' + NF1.format(v[0]) + '</b></div>' +
+      '<div class="ck-tip-r"><span>1º quartil</span><b>' + NF1.format(v[1]) + '</b></div>' +
+      '<div class="ck-tip-r"><span>Mediana</span><b>' + NF1.format(v[2]) + '</b></div>' +
+      '<div class="ck-tip-r"><span>3º quartil</span><b>' + NF1.format(v[3]) + '</b></div>' +
+      '<div class="ck-tip-r"><span>Máximo</span><b>' + NF1.format(v[4]) + '</b></div></div>';
+  };
+  var chart = new ApexCharts(el, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'boxPlot', height: h }),
+    series: [{ name: 'Notas', data: d.turmas.map(function (t, i) { return { x: t, y: d.dados[i] }; }) }],
+    colors: [C.accent],
+    plotOptions: { bar: { columnWidth: '42%' }, boxPlot: { colors: { upper: C.accent, lower: C.dark ? C.p300 : C.p200 } } },
+    stroke: { colors: C.muted },
+    grid: gridOn(C),
+    xaxis: xax(C, d.turmas),
+    yaxis: { min: 0, max: 10, tickAmount: 5, labels: { formatter: function (v) { return NF1.format(v); }, style: { colors: C.muted, fontSize: '11px' } } },
+    legend: { show: false },
+    tooltip: Object.assign({}, base.tooltip, { custom: boxTip })
+  }));
+  chart.render();
+  return [chart];
+}
+
+function buildHistogram(el, d, opts) {
+  var C = readTokens(), base = apexBase(C), h = (opts && opts.height) || 210;
+  var chart = new ApexCharts(el, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'bar', height: h }),
+    series: [{ name: 'Alunos', data: d.valores }],
+    colors: [C.accent],
+    plotOptions: { bar: { columnWidth: '98%', borderRadius: 0 } },
+    grid: gridOff(C),
+    annotations: { xaxis: [{ x: d.mediaFaixa, borderColor: C.dark ? C.p300 : C.p700, strokeDashArray: 4, label: { text: 'Média ' + NF1.format(d.media), position: 'top', textAnchor: 'middle', borderWidth: 1, borderColor: C.border, style: { background: C.surface, color: C.text2, fontSize: '11px', fontWeight: 600 } } }] },
+    xaxis: xax(C, d.faixas, { labels: { style: { colors: C.muted, fontSize: '10px' } } }),
+    yaxis: { min: 0, max: 600, tickAmount: 4, labels: { formatter: function (v) { return NF0.format(v); }, style: { colors: C.muted, fontSize: '11px' } } },
+    legend: { show: false },
+    tooltip: Object.assign({}, base.tooltip, { y: { formatter: function (v) { return NF0.format(v) + ' alunos'; } } })
+  }));
+  chart.render();
+  return [chart];
+}
+
+function buildPolarArea(el, d, opts) {
+  var C = readTokens(), base = apexBase(C), h = (opts && opts.height) || 210;
+  var chart = new ApexCharts(el, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'polarArea', height: h }),
+    series: [{ name: 'Ocorrências', data: d.valores }],
+    labels: d.dias,
+    colors: treemapColors(C).slice(0, 7),
+    plotOptions: { polarArea: { rings: { strokeColor: C.border, strokeWidth: 1 }, spokes: { strokeWidth: 1, connectorColors: C.border } } },
+    dataLabels: { enabled: false },
+    legend: {
+      show: true, position: 'bottom', fontSize: '11px', markers: { size: 6, strokeWidth: 0 },
+      itemMargin: { horizontal: 8, vertical: 0 }, labels: { colors: C.text2 },
+      formatter: function (name, o) { return name + ': ' + NF0.format(d.valores[o.seriesIndex]); }
+    },
+    tooltip: Object.assign({}, base.tooltip, { y: { formatter: function (v) { return NF0.format(v) + ' ocorrências'; } } })
+  }));
+  chart.render();
+  return [chart];
+}
+
+function buildPyramid(el, d, opts) {
+  var C = readTokens(), base = apexBase(C), h = (opts && opts.height) || 230;
+  var pyrTip = function (ctx) {
+    var i = ctx.dataPointIndex, m = d.masc[i], f = Math.abs(d.fem[i]);
+    if (i < 0 || m == null) return '';
+    return '<div class="ck-tip"><div class="ck-tip-t">' + d.series[i] + '</div>' +
+      '<div class="ck-tip-r"><span>Masculino</span><b>' + NF0.format(m) + '</b></div>' +
+      '<div class="ck-tip-r"><span>Feminino</span><b>' + NF0.format(f) + '</b></div>' +
+      '<div class="ck-tip-r"><span>Total da série</span><b>' + NF0.format(m + f) + '</b></div></div>';
+  };
+  var chart = new ApexCharts(el, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'bar', height: h }),
+    series: [{ name: 'Masculino', data: d.masc }, { name: 'Feminino', data: d.fem }],
+    colors: [C.info, C.accent],
+    plotOptions: { bar: { horizontal: true, barHeight: '78%' } },
+    dataLabels: { enabled: true, style: { fontSize: '10px', fontWeight: 600, colors: [onColor(C, C.info), onColor(C, C.accent)] }, formatter: function (v) { return NF0.format(Math.abs(v)); } },
+    grid: gridOff(C),
+    xaxis: xax(C, d.series, { min: -160, max: 160, tickAmount: 4, labels: { formatter: function (v) { return NF0.format(Math.abs(v)); }, style: { colors: C.muted, fontSize: '11px' } } }),
+    yaxis: { labels: { style: { colors: C.text2, fontSize: '11px' } }, axisBorder: { show: false }, axisTicks: { show: false } },
+    legend: legendBottom(C),
+    tooltip: Object.assign({}, base.tooltip, { custom: pyrTip })
+  }));
+  chart.render();
+  return [chart];
+}
+
+function buildPareto(el, d, opts) {
+  var C = readTokens(), base = apexBase(C), h = (opts && opts.height) || 210;
+  var parTip = function (ctx) {
+    var i = ctx.dataPointIndex;
+    if (i < 0) return '';
+    return '<div class="ck-tip"><div class="ck-tip-t">' + d.motivos[i] + '</div>' +
+      '<div class="ck-tip-r"><span>Participação</span><b>' + d.valores[i] + '%</b></div>' +
+      '<div class="ck-tip-r"><span>Acumulado</span><b>' + d.acumulado[i] + '%</b></div>' +
+      '<div class="ck-tip-s">' + (d.acumulado[i] <= 80 ? 'Dentro da régua 80/20.' : 'Cauda longa depois dos 80%.') + '</div></div>';
+  };
+  var chart = new ApexCharts(el, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'bar', height: h }),
+    series: [
+      { name: 'Motivo', type: 'bar', data: d.valores },
+      { name: 'Acumulado', type: 'line', data: d.acumulado }
+    ],
+    colors: [C.accent, C.info],
+    plotOptions: { bar: { columnWidth: '46%', borderRadius: 3, borderRadiusApplication: 'end' } },
+    stroke: { width: [0, 2.5] },
+    markers: { size: [0, 4], strokeWidth: 2, strokeColors: C.surface },
+    annotations: { yaxis: [{ y: 80, yAxisIndex: 1, borderColor: C.warning, strokeDashArray: 4, label: { text: '80%', position: 'right', textAnchor: 'end', offsetX: -8, borderWidth: 1, borderColor: C.warning, style: { background: C.surface, color: C.warningText, fontSize: '11px', fontWeight: 600 } } }] },
+    grid: gridOn(C),
+    xaxis: xax(C, d.motivos),
+    yaxis: [
+      { min: 0, max: 45, tickAmount: 3, labels: { formatter: function (v) { return v + '%'; }, style: { colors: C.muted, fontSize: '11px' } } },
+      { min: 0, max: 100, opposite: true, tickAmount: 4, labels: { formatter: function (v) { return v + '%'; }, style: { colors: C.muted, fontSize: '11px' } } }
+    ],
+    dataLabels: { enabled: true, offsetY: -4, style: { fontSize: '10px', fontWeight: 600, colors: [C.text, C.text] }, formatter: function (v, o) { return o.seriesIndex === 0 ? v + '%' : ''; } },
+    legend: { show: false },
+    tooltip: Object.assign({}, base.tooltip, { custom: parTip })
+  }));
+  chart.render();
+  return [chart];
+}
+
+function buildSlope(el, d, opts) {
+  var C = readTokens(), base = apexBase(C), h = (opts && opts.height) || 210;
+  var slTip = function (ctx) {
+    var u = d.unidades[ctx.seriesIndex];
+    if (!u) return '';
+    var delta = (u[2] - u[1]) / u[1] * 100;
+    return '<div class="ck-tip"><div class="ck-tip-t">' + u[0] + '</div>' +
+      '<div class="ck-tip-r"><span>Dez/2025</span><b>' + NF0.format(u[1]) + '</b></div>' +
+      '<div class="ck-tip-r"><span>Out/2026</span><b>' + NF0.format(u[2]) + '</b></div>' +
+      '<div class="ck-tip-r"><span>Δ</span><b class="' + (delta >= 0 ? 'up' : 'down') + '">' + (delta >= 0 ? '+' : '−') + NF1.format(Math.abs(delta)) + '%</b></div></div>';
+  };
+  var chart = new ApexCharts(el, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'line', height: h }),
+    series: d.unidades.map(function (u) { return { name: u[0], data: [u[1], u[2]] }; }),
+    colors: [C.accent, C.info, C.warning, C.danger],
+    stroke: { curve: 'straight', width: 2.5 },
+    markers: { size: 5, strokeWidth: 2, strokeColors: C.surface, hover: { size: 7 } },
+    dataLabels: { enabled: true, offsetY: -8, style: { fontSize: '11px', fontWeight: 600, colors: [C.accentText, C.infoText, C.warningText, C.dangerText] }, formatter: function (v) { return NF0.format(v); } },
+    grid: gridOff(C),
+    xaxis: xax(C, d.momentos),
+    yaxis: { show: false, min: 100, max: 680 },
+    legend: legendBottom(C),
+    tooltip: Object.assign({}, base.tooltip, { custom: slTip })
+  }));
+  chart.render();
+  return [chart];
+}
+
+function buildBump(el, d, opts) {
+  var C = readTokens(), base = apexBase(C), h = (opts && opts.height) || 210;
+  var bumpTip = function (ctx) {
+    var s = d.series[ctx.seriesIndex];
+    if (!s) return '';
+    return '<div class="ck-tip"><div class="ck-tip-t">' + s[0] + '</div>' +
+      '<div class="ck-tip-r"><span>Mês</span><b>' + d.meses[ctx.dataPointIndex] + '/2026</b></div>' +
+      '<div class="ck-tip-r"><span>Posição</span><b>' + s[1][ctx.dataPointIndex] + 'º lugar</b></div></div>';
+  };
+  var chart = new ApexCharts(el, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'line', height: h }),
+    series: d.series.map(function (s) { return { name: s[0], data: s[1] }; }),
+    colors: [C.accent, C.info, C.warning, C.danger],
+    stroke: { curve: 'straight', width: 2.5 },
+    markers: { size: 5, strokeWidth: 2, strokeColors: C.surface, hover: { size: 7 } },
+    grid: gridOn(C),
+    xaxis: xax(C, d.meses),
+    yaxis: { reversed: true, min: 0, max: 5, tickAmount: 5, labels: { formatter: function (v) { return (v >= 1 && v <= 4) ? v + 'º' : ''; }, style: { colors: C.muted, fontSize: '11px' } } },
+    legend: legendBottom(C),
+    tooltip: Object.assign({}, base.tooltip, { custom: bumpTip })
+  }));
+  chart.render();
+  return [chart];
+}
+/* ---------- builders · Wave 2 · funil/pirâmide em SVG puro ---------- */
+function funnelSvg(el, rows, C, invert) {
+  el.innerHTML = '';
+  var NS = 'http://www.w3.org/2000/svg';
+  var n = rows.length, sh = 50, gap = 6, W = 560, maxW = 540, x0 = 10;
+  var vbH = n * sh + (n - 1) * gap;
+  var maxV = 0;
+  rows.forEach(function (r) { maxV = Math.max(maxV, r[1]); });
+  var pctBase = invert ? rows.reduce(function (a, r) { return a + r[1]; }, 0) : rows[0][1];
+  var widths = rows.map(function (r) { return r[1] / maxV * maxW; });
+  var svg = document.createElementNS(NS, 'svg');
+  svg.setAttribute('viewBox', '0 0 ' + W + ' ' + vbH);
+  var y = 0;
+  var shades = invert
+    ? rows.map(function (r, i) { return mix(C.accent, C.surface, 0.5 - i * 0.25); })
+    : rows.map(function (r, i) { return mix(C.accent, C.surface, i * 0.22); });
+  rows.forEach(function (r, i) {
+    var wTop = widths[i];
+    var wBot = widths[i + 1] != null ? widths[i + 1] : widths[i];
+    var cx = x0 + maxW / 2;
+    var fill = shades[i];
+    var g = document.createElementNS(NS, 'g');
+    var pts = [
+      [cx - wTop / 2, y], [cx + wTop / 2, y],
+      [cx + wBot / 2, y + sh], [cx - wBot / 2, y + sh]
+    ].map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' ');
+    var poly = document.createElementNS(NS, 'polygon');
+    poly.setAttribute('points', pts);
+    poly.setAttribute('fill', fill);
+    poly.setAttribute('stroke', C.surface);
+    poly.setAttribute('stroke-width', '2');
+    var t = document.createElementNS(NS, 'title');
+    t.textContent = r[0] + ': ' + NF0.format(r[1]) + ' (' + pct1(r[1] / pctBase * 100) + ')';
+    poly.appendChild(t);
+    g.appendChild(poly);
+    var l1 = document.createElementNS(NS, 'text');
+    l1.setAttribute('x', cx); l1.setAttribute('y', y + sh / 2 - 4);
+    l1.setAttribute('text-anchor', 'middle');
+    l1.setAttribute('font-size', '14'); l1.setAttribute('font-weight', '600');
+    l1.setAttribute('fill', onColor(C, fill));
+    l1.textContent = r[0];
+    var l2 = document.createElementNS(NS, 'text');
+    l2.setAttribute('x', cx); l2.setAttribute('y', y + sh / 2 + 13);
+    l2.setAttribute('text-anchor', 'middle');
+    l2.setAttribute('font-size', '13');
+    l2.setAttribute('fill', onColor(C, fill));
+    l2.textContent = NF0.format(r[1]) + ' · ' + pct1(r[1] / pctBase * 100);
+    g.appendChild(l1); g.appendChild(l2);
+    svg.appendChild(g);
+    y += sh + gap;
+  });
+  el.appendChild(svg);
+  return [];
+}
+function buildFunnelNative(el, d, opts) {
+  var C = readTokens();
+  return funnelSvg(el, d.etapas, C, false);
+}
+function buildPyramidNative(el, d, opts) {
+  var C = readTokens();
+  return funnelSvg(el, d.segmentos, C, true);
+}
+
+/* ---------- builders · Wave 2 · streamgraph e OHLC (Apex) ---------- */
+function buildStreamgraph(el, d, opts) {
+  var C = readTokens(), base = apexBase(C), h = (opts && opts.height) || 210;
+  var stTip = function (ctx) {
+    var i = ctx.dataPointIndex;
+    if (i < 0) return '';
+    var html = '<div class="ck-tip"><div class="ck-tip-t">' + d.meses[i].charAt(0).toUpperCase() + d.meses[i].slice(1) + '/2026</div>';
+    d.series.forEach(function (s) {
+      html += '<div class="ck-tip-r"><span>' + s[0] + '</span><b>' + NF0.format(s[1][i]) + '</b></div>';
+    });
+    var tot = d.series.reduce(function (a, s) { return a + s[1][i]; }, 0);
+    html += '<div class="ck-tip-s">Total: ' + NF0.format(tot) + ' matrículas.</div></div>';
+    return html;
+  };
+  var chart = new ApexCharts(el, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'area', height: h, stacked: true, stackType: '100%' }),
+    series: d.series.map(function (s) { return { name: s[0], data: s[1] }; }),
+    colors: [C.accent, C.info, C.warning],
+    stroke: { curve: 'smooth', width: 1.5 },
+    fill: { type: 'solid', opacity: 0.85 },
+    markers: { size: 0, hover: { size: 4 } },
+    grid: { show: false, padding: { left: 0, right: 0, top: 0, bottom: 0 } },
+    xaxis: xax(C, d.meses, { labels: { style: { colors: C.muted, fontSize: '10px' } } }),
+    yaxis: { show: false, min: 0, max: 100 },
+    legend: legendBottom(C),
+    tooltip: Object.assign({}, base.tooltip, { custom: stTip })
+  }));
+  chart.render();
+  return [chart];
+}
+
+function buildOhlcVolume(el, d, opts) {
+  var C = readTokens(), base = apexBase(C), h = (opts && opts.height) || 230;
+  var ohlcTip = function (ctx) {
+    var i = ctx.dataPointIndex;
+    if (i < 0 || !d.ohlc[i]) return '';
+    var v = d.ohlc[i], dt = new Date(2026, 9, 10 + i);
+    var dtBR = ('0' + dt.getDate()).slice(-2) + '/' + ('0' + (dt.getMonth() + 1)).slice(-2) + '/2026';
+    var chg = (v[3] - v[0]) / v[0] * 100;
+    return '<div class="ck-tip"><div class="ck-tip-t">' + dtBR + ' · BTC/USDT</div>' +
+      '<div class="ck-tip-r"><span>Abertura</span><b>' + NF0.format(v[0]) + '</b></div>' +
+      '<div class="ck-tip-r"><span>Máxima</span><b>' + NF0.format(v[1]) + '</b></div>' +
+      '<div class="ck-tip-r"><span>Mínima</span><b>' + NF0.format(v[2]) + '</b></div>' +
+      '<div class="ck-tip-r"><span>Fechamento</span><b>' + NF0.format(v[3]) + '</b></div>' +
+      '<div class="ck-tip-r"><span>Variação</span><b class="' + (chg >= 0 ? 'up' : 'down') + '">' + (chg >= 0 ? '+' : '−') + NF1.format(Math.abs(chg)) + '%</b></div>' +
+      '<div class="ck-tip-s">Volume: US$ ' + NF1.format(d.vol[i]) + ' bi.</div></div>';
+  };
+  var chart = new ApexCharts(el, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'candlestick', height: h }),
+    series: [
+      { name: 'BTC/USDT', type: 'candlestick', data: d.ohlc.map(function (v, i) { return { x: new Date(2026, 9, 10 + i).getTime(), y: v }; }) },
+      { name: 'Volume', type: 'bar', data: d.vol.map(function (v, i) { return { x: new Date(2026, 9, 10 + i).getTime(), y: v }; }) }
+    ],
+    colors: [C.success, C.dark ? C.p800 : C.p200],
+    plotOptions: { candlestick: { colors: { upward: C.success, downward: C.danger }, wick: { useFillColor: true } }, bar: { columnWidth: '28%' } },
+    stroke: { width: [1, 0] },
+    fill: { opacity: [1, 0.55] },
+    grid: gridOn(C),
+    xaxis: xax(C, null, { type: 'datetime', labels: { format: 'dd/MM', style: { colors: C.muted, fontSize: '11px' } } }),
+    yaxis: [
+      { min: 64000, max: 74000, tickAmount: 4, labels: { formatter: function (v) { return NF0.format(v); }, style: { colors: C.muted, fontSize: '11px' } } },
+      { min: 0, max: 10, opposite: true, tickAmount: 2, labels: { formatter: function (v) { return NF1.format(v) + ' bi'; }, style: { colors: C.muted, fontSize: '10px' } }, axisBorder: { show: false }, axisTicks: { show: false } }
+    ],
+    legend: legendBottom(C),
+    tooltip: Object.assign({}, base.tooltip, { custom: ohlcTip })
+  }));
+  chart.render();
+  return [chart];
+}
+
+function buildCalendarHeatmap(el, d, opts) {
+  var C = readTokens(), base = apexBase(C), h = (opts && opts.height) || 210;
+  var names = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+  var series = [];
+  for (var dd = 0; dd < 7; dd++) {
+    var data = [];
+    for (var w = 0; w < d.semanas; w++) {
+      var v;
+      if (dd === 0 || dd === 6) v = (w * 31 + dd * 7) % 4;
+      else if (w < 5 || w > 49) v = (w * 17 + dd * 5) % 6;
+      else v = 8 + ((w * 13 + dd * 11) % 10) + (dd === 2 ? 3 : 0);
+      data.push({ x: 'S' + (w + 1), y: v });
+    }
+    series.push({ name: names[dd], data: data });
+  }
+  var calTip = function (ctx) {
+    var day = ctx.seriesIndex, wk = ctx.dataPointIndex;
+    if (wk < 0 || day < 0) return '';
+    var v = series[day].data[wk].y;
+    var dt = new Date(2025, 11, 28 + wk * 7 + day);
+    var dtBR = ('0' + dt.getDate()).slice(-2) + '/' + ('0' + (dt.getMonth() + 1)).slice(-2) + '/' + dt.getFullYear();
+    return '<div class="ck-tip"><div class="ck-tip-t">' + names[day] + ' · ' + dtBR + '</div>' +
+      '<div class="ck-tip-r"><span>Ocorrências</span><b>' + NF0.format(v) + '</b></div>' +
+      '<div class="ck-tip-s">Semana ' + (wk + 1) + ' de 52.</div></div>';
+  };
+  var chart = new ApexCharts(el, Object.assign({}, base, {
+    chart: Object.assign({}, base.chart, { type: 'heatmap', height: h }),
+    series: series,
+    colors: [C.accent],
+    plotOptions: { heatmap: { enableShades: false, distributed: false, useFillColorAsStroke: false, radius: 2, colorScale: {
+      ranges: [
+        { from: 0, to: 0, color: C.p50, name: '0' },
+        { from: 1, to: 5, color: C.p200, name: '1–5' },
+        { from: 6, to: 10, color: C.p300, name: '6–10' },
+        { from: 11, to: 15, color: C.p400, name: '11–15' },
+        { from: 16, to: 20, color: C.p700, name: '16+' }
+      ]
+    } } },
+    dataLabels: { enabled: false },
+    legend: { show: false },
+    grid: { padding: { left: 0, right: 0, top: 0, bottom: 0 } },
+    xaxis: xax(C, null, { labels: { style: { colors: C.muted, fontSize: '9px' } } }),
+    yaxis: { labels: { style: { colors: C.text2, fontSize: '10px' } } },
+    tooltip: Object.assign({}, base.tooltip, { custom: calTip })
+  }));
+  chart.render();
+  return [chart];
+}
+
+/* ---------- builders · Wave 2 · hierarquia e customizados (SVG puro) ---------- */
+function svgEl(tag, attrs) {
+  var e = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  for (var k in attrs) e.setAttribute(k, attrs[k]);
+  return e;
+}
+function buildSunburst(el, d, opts) {
+  var C = readTokens();
+  el.innerHTML = '';
+  var total = d.total;
+  var segColors = [C.accent, C.info, C.warning];
+  var svg = svgEl('svg', { viewBox: '0 0 230 230', 'aria-hidden': 'true' });
+  var cx = 115, cy = 115;
+  function polar(r, a) { return [cx + r * Math.cos(a), cy + r * Math.sin(a)]; }
+  function arcPath(r0, r1, b0, b1) {
+    var p0 = polar(r1, b0), p1 = polar(r1, b1), p2 = polar(r0, b1), p3 = polar(r0, b0);
+    var lg = (b1 - b0) > Math.PI ? 1 : 0;
+    return 'M' + p0[0].toFixed(2) + ' ' + p0[1].toFixed(2) +
+      ' A' + r1 + ' ' + r1 + ' 0 ' + lg + ' 1 ' + p1[0].toFixed(2) + ' ' + p1[1].toFixed(2) +
+      ' L' + p2[0].toFixed(2) + ' ' + p2[1].toFixed(2) +
+      ' A' + r0 + ' ' + r0 + ' 0 ' + lg + ' 0 ' + p3[0].toFixed(2) + ' ' + p3[1].toFixed(2) + ' Z';
+  }
+  var gap = 0.03, a0 = -Math.PI / 2;
+  d.segmentos.forEach(function (seg, si) {
+    var sc = segColors[si];
+    var span = seg.value / total * Math.PI * 2;
+    var p = svgEl('path', {
+      d: arcPath(48, 78, a0 + gap / 2, a0 + span - gap / 2),
+      fill: sc, stroke: C.surface, 'stroke-width': '1.5', tabindex: '0', 'data-seg': si
+    });
+    p.setAttribute('role', 'img');
+    p.setAttribute('aria-label', seg.label + ': ' + NF0.format(seg.value) + ' alunos (' + pct1(seg.value / total * 100) + ')');
+    var t = svgEl('title', {}); t.textContent = seg.label + ': ' + NF0.format(seg.value); p.appendChild(t);
+    svg.appendChild(p);
+    if (span > 0.9) {
+      var mid = a0 + span / 2, lp = polar(63, mid);
+      var tx = svgEl('text', { x: lp[0].toFixed(1), y: lp[1].toFixed(1), 'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-size': '9.5', 'font-weight': '600', fill: onColor(C, sc) });
+      tx.textContent = seg.label;
+      svg.appendChild(tx);
+    }
+    var ca = a0;
+    seg.children.forEach(function (ch, ci) {
+      var cspan = ch[1] / total * Math.PI * 2;
+      var ccol = mix(sc, C.surface, 0.18 + ci * 0.16);
+      var cp = svgEl('path', {
+        d: arcPath(86, 112, ca + gap / 2, ca + cspan - gap / 2),
+        fill: ccol, stroke: C.surface, 'stroke-width': '1.5', tabindex: '0', 'data-seg': si
+      });
+      cp.setAttribute('role', 'img');
+      cp.setAttribute('aria-label', seg.label + ' · ' + ch[0] + ': ' + NF0.format(ch[1]) + ' alunos (' + pct1(ch[1] / total * 100) + ')');
+      var ct = svgEl('title', {}); ct.textContent = ch[0] + ': ' + NF0.format(ch[1]); cp.appendChild(ct);
+      svg.appendChild(cp);
+      ca += cspan;
+    });
+    a0 += span;
+  });
+  var t1 = svgEl('text', { x: cx, y: cy - 3, 'text-anchor': 'middle', 'font-size': '17', 'font-weight': '700', fill: C.text });
+  t1.textContent = NF0.format(total);
+  var t2 = svgEl('text', { x: cx, y: cy + 12, 'text-anchor': 'middle', 'font-size': '9', fill: C.muted });
+  t2.textContent = 'alunos';
+  svg.appendChild(t1); svg.appendChild(t2);
+  svg.addEventListener('mouseover', function (ev) {
+    var t = ev.target.closest ? ev.target.closest('path[data-seg]') : null;
+    if (!t) return;
+    svg.querySelectorAll('path.hl').forEach(function (q) { q.classList.remove('hl'); });
+    svg.querySelectorAll('path[data-seg="' + t.getAttribute('data-seg') + '"]').forEach(function (q) { q.classList.add('hl'); });
+  });
+  svg.addEventListener('mouseleave', function () {
+    svg.querySelectorAll('path.hl').forEach(function (q) { q.classList.remove('hl'); });
+  });
+  el.appendChild(svg);
+  var lg = document.getElementById('ck-sb-legend');
+  if (lg) {
+    lg.innerHTML = '';
+    d.segmentos.forEach(function (seg, si) {
+      var b = document.createElement('div');
+      b.className = 'seg';
+      var kids = seg.children.map(function (c) { return c[0] + ' ' + NF0.format(c[1]); }).join(' · ');
+      b.innerHTML = '<h4><i style="background:' + segColors[si] + '"></i>' + seg.label + ' · ' + NF0.format(seg.value) + ' <small>(' + pct1(seg.value / total * 100) + ')</small></h4><p>' + kids + '</p>';
+      lg.appendChild(b);
+    });
+  }
+  return [];
+}
+
+function buildWaffle(el, d, opts) {
+  var C = readTokens();
+  el.innerHTML = '';
+  var colorOf = { 'Ativos': C.accent, 'Aprovisionados': C.warning, 'Inativos': C.borderStrong };
+  var wrap = document.createElement('div');
+  wrap.className = 'ck-wf';
+  wrap.setAttribute('aria-hidden', 'true');
+  var idx = 0;
+  d.grupos.forEach(function (g) {
+    for (var i = 0; i < g[1]; i++) {
+      idx++;
+      var q = document.createElement('div');
+      q.className = 'ck-wf-q';
+      q.style.background = colorOf[g[0]];
+      var bs = Math.floor((idx - 1) / 10) * 10 + 1, be = bs + 9;
+      q.title = 'Quadrado ' + idx + ' de 100 · ' + g[0] + ' · faixa ' + bs + '–' + be;
+      wrap.appendChild(q);
+    }
+  });
+  el.appendChild(wrap);
+  var line = document.createElement('p');
+  line.className = 'ck-legend';
+  line.innerHTML = '<span><i style="--c:var(--ttsc-accent)"></i>Ativos: 1.927</span>' +
+    '<span><i style="--c:var(--ttsc-warning)"></i>Aprovisionados: 76</span>' +
+    '<span><i style="--c:var(--ttsc-border-strong)"></i>Inativos: 48</span>' +
+    '<span>Total: 2.051 · 1 quadradinho ≈ 20,5 alunos</span>';
+  el.appendChild(line);
+  return [];
+}
+
+function buildMarimekko(el, d, opts) {
+  var C = readTokens();
+  el.innerHTML = '';
+  var NS = 'http://www.w3.org/2000/svg';
+  var catColors = [C.accent, C.info, C.warning];
+  var W = 640, H = 240, x0 = 2, y0 = 18, plotH = 168, gap = 3;
+  var usable = W - 4 - gap * (d.colunas.length - 1);
+  var svg = svgEl('svg', { viewBox: '0 0 ' + W + ' ' + H, 'aria-hidden': 'true' });
+  var x = x0;
+  d.colunas.forEach(function (col) {
+    var w = col[1] / d.total * usable;
+    var g = svgEl('g', {});
+    var y = y0 + plotH;
+    d.categorias.forEach(function (cat, k) {
+      var bh = col[2][k] / 100 * plotH;
+      var r = svgEl('rect', { x: x.toFixed(1), y: (y - bh).toFixed(1), width: w.toFixed(1), height: bh.toFixed(1), fill: catColors[k], stroke: C.surface, 'stroke-width': '1.5' });
+      var t = svgEl('title', {});
+      t.textContent = col[0] + ' · ' + cat + ': ' + col[2][k] + '% de R$ ' + NF0.format(col[1]) + ' mil';
+      r.appendChild(t);
+      g.appendChild(r);
+      if (bh > 20 && w > 44) {
+        var tx = svgEl('text', { x: (x + w / 2).toFixed(1), y: (y - bh / 2).toFixed(1), 'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-size': '11', 'font-weight': '600', fill: onColor(C, catColors[k]) });
+        tx.textContent = col[2][k] + '%';
+        g.appendChild(tx);
+      }
+      y -= bh;
+    });
+    var top = svgEl('text', { x: (x + w / 2).toFixed(1), y: y0 - 6, 'text-anchor': 'middle', 'font-size': '11', 'font-weight': '600', fill: C.text2 });
+    top.textContent = pct1(col[1] / d.total * 100);
+    g.appendChild(top);
+    var bot = svgEl('text', { x: (x + w / 2).toFixed(1), y: y0 + plotH + 16, 'text-anchor': 'middle', 'font-size': '11', fill: C.text2 });
+    bot.textContent = col[0];
+    g.appendChild(bot);
+    svg.appendChild(g);
+    x += w + gap;
+  });
+  el.appendChild(svg);
+  var line = document.createElement('p');
+  line.className = 'ck-legend';
+  line.innerHTML = '<span><i style="--c:var(--ttsc-accent)"></i>Mensalidades</span>' +
+    '<span><i style="--c:var(--ttsc-info)"></i>Materiais</span>' +
+    '<span><i style="--c:var(--ttsc-warning)"></i>Contraturno</span>' +
+    '<span>Largura = receita da unidade</span>';
+  el.appendChild(line);
+  return [];
+}
+
+function buildVenn(el, d, opts) {
+  var C = readTokens();
+  el.innerHTML = '';
+  var colors = [C.accent, C.info, C.warning];
+  var svg = svgEl('svg', { viewBox: '0 0 420 258', 'aria-hidden': 'true' });
+  var circles = [
+    { c: [150, 100], r: 80, i: 0 },
+    { c: [270, 100], r: 80, i: 1 },
+    { c: [210, 176], r: 80, i: 2 }
+  ];
+  circles.forEach(function (ci) {
+    var g = svgEl('g', {});
+    var e = svgEl('circle', { cx: ci.c[0], cy: ci.c[1], r: ci.r, fill: colors[ci.i], 'fill-opacity': '0.4', stroke: colors[ci.i], 'stroke-width': '1.5', 'stroke-opacity': '0.85' });
+    var t = svgEl('title', {});
+    t.textContent = d.circulos[ci.i][0] + ': ' + NF0.format(d.circulos[ci.i][1]) + ' alunos';
+    e.appendChild(t);
+    g.appendChild(e);
+    svg.appendChild(g);
+  });
+  var names = [
+    ['Bolsa', 78, 42], ['Transporte', 342, 42], ['Contraturno', 210, 254]
+  ];
+  names.forEach(function (n) {
+    var tx = svgEl('text', { x: n[1], y: n[2], 'text-anchor': 'middle', 'font-size': '12', 'font-weight': '700', fill: C.text2 });
+    tx.textContent = n[0];
+    svg.appendChild(tx);
+  });
+  var counts = [
+    ['167', 96, 64], ['191', 324, 64], ['390', 210, 224],
+    ['118', 210, 74], ['94', 146, 150], ['156', 274, 150], ['47', 210, 118]
+  ];
+  counts.forEach(function (c) {
+    var tx = svgEl('text', { x: c[1], y: c[2], 'text-anchor': 'middle', 'dominant-baseline': 'middle', 'font-size': '13', 'font-weight': '700', fill: C.text });
+    tx.textContent = c[0];
+    svg.appendChild(tx);
+  });
+  el.appendChild(svg);
+  return [];
+}
+
+/* ---------- fábrica window.TTSCChartKit ---------- */
+var BUILDERS = {
+  barBasic: buildBarBasic, barRanked: buildBarRanked, barGrouped: buildBarGrouped,
+  barStacked: buildBarStacked, bar100: buildBar100, barGoal: buildBarGoal,
+  rangeBar: buildRangeBar, dumbbell: buildDumbbell, bulletVertical: buildBulletVertical,
+  lineSmooth: buildLineSmooth, areaGradient: buildAreaGradient, areaStacked: buildAreaStacked,
+  multiLine: buildMultiLine, stepLine: buildStepLine, forecastLine: buildForecastLine,
+  comboDualAxis: buildComboDualAxis, sparkline: buildSparkline,
+  donut: buildDonut, multiDonut: buildMultiDonut, treemap: buildTreemap,
+  scatter: buildScatter, bubble: buildBubble,
+  gauge: buildGauge, semiGauge: buildSemiGauge, rings: buildRings,
+  /* Wave 2 */
+  boxplot: buildBoxplot, histogram: buildHistogram, polarArea: buildPolarArea,
+  pyramid: buildPyramid, pareto: buildPareto, slope: buildSlope, bump: buildBump,
+  funnelNative: buildFunnelNative, pyramidNative: buildPyramidNative,
+  streamgraph: buildStreamgraph, ohlcVolume: buildOhlcVolume, calendarHeatmap: buildCalendarHeatmap,
+  sunburst: buildSunburst, waffle: buildWaffle, marimekko: buildMarimekko, venn: buildVenn
+};
+
+var REG = [];
+function mount(family, el, data, opts) {
+  if (!el || !BUILDERS[family]) return null;
+  var entry = { charts: [], family: family };
+  entry.rebuild = function () {
+    entry.charts = BUILDERS[family](el, data || DATA[family], opts || {});
+    return entry.charts;
+  };
+  entry.rebuild();
+  REG.push(entry);
+  return entry;
+}
+
+var MOUNTS = [
+  { f: 'barBasic', el: 'ck-basic' },
+  { f: 'barRanked', el: 'ck-ranked' },
+  { f: 'barGrouped', el: 'ck-grouped' },
+  { f: 'barStacked', el: 'ck-stacked' },
+  { f: 'bar100', el: 'ck-100' },
+  { f: 'barGoal', el: 'ck-goal' },
+  { f: 'rangeBar', el: 'ck-range' },
+  { f: 'dumbbell', el: 'ck-dumbbell' },
+  { f: 'bulletVertical', el: 'ck-bullet' },
+  { f: 'lineSmooth', el: 'ck-line' },
+  { f: 'areaGradient', el: 'ck-area' },
+  { f: 'areaStacked', el: 'ck-astacked' },
+  { f: 'multiLine', el: 'ck-multi' },
+  { f: 'stepLine', el: 'ck-step' },
+  { f: 'forecastLine', el: 'ck-forecast' },
+  { f: 'comboDualAxis', el: 'ck-combo' },
+  { f: 'sparkline', el: 'ck-spark-1' },
+  { f: 'sparkline', el: 'ck-spark-2', data: { nome: 'Novas matrículas', valores: [38, 36, 41, 40, 42, 48, 45, 52, 58, 61], cor: 'info' } },
+  { f: 'sparkline', el: 'ck-spark-3', data: { nome: 'Frequência média', valores: HZ.freqSem, cor: 'success' } },
+  { f: 'donut', el: 'ck-donut' },
+  { f: 'multiDonut', el: 'ck-md' },
+  { f: 'treemap', el: 'ck-treemap' },
+  { f: 'funnelNative', el: 'ck-funnel' },
+  { f: 'pyramidNative', el: 'ck-pyramid' },
+  { f: 'streamgraph', el: 'ck-stream' },
+  { f: 'ohlcVolume', el: 'ck-ohlc' },
+  { f: 'scatter', el: 'ck-scatter' },
+  { f: 'bubble', el: 'ck-bubble' },
+  { f: 'gauge', el: 'ck-gauge' },
+  { f: 'semiGauge', el: 'ck-semi' },
+  { f: 'rings', el: 'ck-rings' },
+  { f: 'boxplot', el: 'ck-boxplot' },
+  { f: 'histogram', el: 'ck-hist' },
+  { f: 'polarArea', el: 'ck-polar' },
+  { f: 'pyramid', el: 'ck-pyramidpop' },
+  { f: 'pareto', el: 'ck-pareto' },
+  { f: 'slope', el: 'ck-slope' },
+  { f: 'bump', el: 'ck-bump' },
+  { f: 'sunburst', el: 'ck-sunburst' },
+  { f: 'waffle', el: 'ck-waffle' },
+  { f: 'marimekko', el: 'ck-marimekko' },
+  { f: 'venn', el: 'ck-venn' },
+  { f: 'calendarHeatmap', el: 'ck-calheat' }
+];
+
+function observeTheme() {
+  if (CK.mo) CK.mo.disconnect();
+  CK.mo = new MutationObserver(function () { window.TTSCChartKit.updateTheme(); });
+  CK.mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class'] });
+}
+function relayoutOverlays() {
+  var tm = document.getElementById('ck-treemap');
+  if (tm) layoutTreemap(tm, DATA.treemap.itens);
+  var sg = document.getElementById('ck-semi');
+  if (sg) positionSemiTick(sg, DATA.semiGauge);
+}
+function observeResize() {
+  if (!('ResizeObserver' in window)) return;
+  if (CK.ro) CK.ro.disconnect();
+  var raf = 0;
+  CK.ro = new ResizeObserver(function () {
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(relayoutOverlays);
+  });
+  var a = document.querySelector('.ck-tm'), b = document.querySelector('.ck-semi');
+  if (a) CK.ro.observe(a);
+  if (b) CK.ro.observe(b);
+}
+
+var API = window.TTSCChartKit = {
+  init: function () {
+    if (REG.length) return API;
+    MOUNTS.forEach(function (m) {
+      mount(m.f, typeof m.el === 'string' ? document.getElementById(m.el) : m.el, m.data, m.opts);
+    });
+    observeTheme();
+    observeResize();
+    return API;
+  },
+  destroy: function () {
+    REG.forEach(function (e) { e.charts.forEach(function (c) { try { c.destroy(); } catch (err) { /* já removido */ } }); });
+    REG.length = 0;
+    if (CK.mo) { CK.mo.disconnect(); CK.mo = null; }
+    if (CK.ro) { CK.ro.disconnect(); CK.ro = null; }
+    var layer = document.querySelector('.ck-tm-labels');
+    if (layer) layer.innerHTML = '';
+    ['ck-sunburst', 'ck-waffle', 'ck-marimekko', 'ck-venn', 'ck-funnel', 'ck-pyramid', 'ck-sb-legend'].forEach(function (id) {
+      var e = document.getElementById(id);
+      if (e) e.innerHTML = '';
+    });
+    return API;
+  },
+  updateTheme: function () {
+    REG.forEach(function (e) { e.charts.forEach(function (c) { try { c.destroy(); } catch (err) { /* já removido */ } }); });
+    REG.forEach(function (e) { e.rebuild(); });
+    return API;
+  },
+  charts: function () { return REG.reduce(function (a, e) { return a.concat(e.charts); }, []); },
+  relayout: relayoutOverlays
+};
+Object.keys(BUILDERS).forEach(function (k) {
+  API[k] = function (el, data, opts) { return mount(k, el, data, opts); };
+});
+
+/* ApexCharts 8.5.0 (npm) vendorizada em vendor/apexcharts (ver README do ApexCharts). */
+var apex = document.createElement('script');
+apex.src = '../../vendor/apexcharts/apexcharts.min.js';
+apex.onload = function () { if (window.ApexCharts) window.TTSCChartKit.init(); };
+document.head.appendChild(apex);
+</script>
+</body>
+</html>

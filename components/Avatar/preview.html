@@ -1,0 +1,91 @@
+<!-- @dsCard group="Componentes" height=300 subtitle="ttsc-avatar · iniciais, tons, tamanhos, status online/away/busy/offline, grupo empilhado" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Avatar</title>
+<style>
+  .ttsc-avatar-indicator { inset-inline-end: -8px; bottom: -8px; }
+  .ttsc-avatar-status { width: 10px; height: 10px; }
+  .ttsc-avatar-fallback { font-size: 12px; font-weight: 600; color: var(--ttsc-text); text-transform: uppercase; }
+  .ttsc-avatar.size-12 .ttsc-avatar-fallback, .ttsc-avatar.size-14 .ttsc-avatar-fallback { font-size: 15px; }
+  .ttsc-avatar.size-12 .ttsc-avatar-status, .ttsc-avatar.size-14 .ttsc-avatar-status { width: 12px; height: 12px; }
+  .ttsc-avatar-tone-1 { background: var(--ttsc-accent-soft); color: var(--ttsc-accent-text); border-color: var(--ttsc-accent-border); }
+  .ttsc-avatar-tone-2 { background: var(--ttsc-surface-2); color: var(--ttsc-info-text); }
+  .ttsc-avatar-tone-3 { background: var(--ttsc-surface-2); color: var(--ttsc-warning-text); }
+  .ttsc-avatar-tone-4 { background: var(--ttsc-surface-2); color: var(--ttsc-text-2); }
+  .ttsc-avatar-group { display: flex; align-items: center; }
+  .ttsc-avatar-group > .ttsc-avatar + .ttsc-avatar { margin-inline-start: -6px; }
+.ttsc-avatar-group .ttsc-avatar-fallback { font-size: 11px; }
+  .ttsc-avatar-group .ttsc-avatar-fallback { box-shadow: 0 0 0 2px var(--ttsc-surface); }
+  .ttsc-avatar-more .ttsc-avatar-fallback { background: var(--ttsc-surface-2); color: var(--ttsc-text-2); font-size: 11px; }
+  .av-card { background: var(--ttsc-surface); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-sm); padding: 12px 16px; }
+  .av-person { display: flex; align-items: center; gap: 10px; min-width: 180px; }
+  .av-name { font-size: 13px; font-weight: 500; color: var(--ttsc-text); }
+  .av-meta { font-size: 12px; color: var(--ttsc-text-muted); }
+  .av-row { display: flex; flex-wrap: wrap; align-items: center; gap: 24px; }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="ds-label">Tamanhos e tons (iniciais)</div>
+  <div class="av-row">
+    <div class="ttsc-avatar size-8" role="img" aria-label="Ana Beatriz Souza"><div class="ttsc-avatar-fallback ttsc-avatar-tone-1" aria-hidden="true">AS</div></div>
+    <div class="ttsc-avatar" role="img" aria-label="Carlos Henrique Lima"><div class="ttsc-avatar-fallback" aria-hidden="true">CL</div></div>
+    <div class="ttsc-avatar size-12" role="img" aria-label="Juliana Ferreira"><div class="ttsc-avatar-fallback ttsc-avatar-tone-2" aria-hidden="true">JF</div></div>
+    <div class="ttsc-avatar size-14" role="img" aria-label="Mariana Costa"><div class="ttsc-avatar-fallback ttsc-avatar-tone-3" aria-hidden="true">MC</div></div>
+    <div class="ttsc-avatar size-14" role="img" aria-label="Rafael Nunes"><div class="ttsc-avatar-fallback ttsc-avatar-tone-4" aria-hidden="true">RN</div></div>
+  </div>
+
+  <div class="ds-label">Presença (fila de atendimento do SAC)</div>
+  <div class="av-card av-row">
+    <div class="av-person">
+      <div class="ttsc-avatar" data-ttsc-avatar-name="Patrícia Almeida" data-ttsc-avatar-presence="online"></div>
+      <div><div class="av-name">Patrícia Almeida</div><div class="av-meta">Online</div></div>
+    </div>
+    <div class="av-person">
+      <div class="ttsc-avatar" data-ttsc-avatar-name="Bruno Carvalho" data-ttsc-avatar-presence="away"></div>
+      <div><div class="av-name">Bruno Carvalho</div><div class="av-meta">Ausente há 12 min</div></div>
+    </div>
+    <div class="av-person">
+      <div class="ttsc-avatar" data-ttsc-avatar-name="Larissa Mendes" data-ttsc-avatar-presence="busy"></div>
+      <div><div class="av-name">Larissa Mendes</div><div class="av-meta">Em aula ao vivo</div></div>
+    </div>
+    <div class="av-person">
+      <div class="ttsc-avatar" data-ttsc-avatar-name="Thiago Rocha" data-ttsc-avatar-presence="offline"></div>
+      <div><div class="av-name">Thiago Rocha</div><div class="av-meta">Offline</div></div>
+    </div>
+  </div>
+
+  <div class="ds-label">Grupo empilhado (professores da turma 3º A)</div>
+  <div class="ds-row">
+    <div class="ttsc-avatar-group">
+      <div class="ttsc-avatar size-8" role="img" aria-label="Carlos Henrique Lima"><div class="ttsc-avatar-fallback" aria-hidden="true">CL</div></div>
+      <div class="ttsc-avatar size-8" role="img" aria-label="Juliana Ferreira"><div class="ttsc-avatar-fallback ttsc-avatar-tone-2" aria-hidden="true">JF</div></div>
+      <div class="ttsc-avatar size-8" role="img" aria-label="Mariana Costa"><div class="ttsc-avatar-fallback ttsc-avatar-tone-3" aria-hidden="true">MC</div></div>
+      <div class="ttsc-avatar size-8" role="img" aria-label="Ana Beatriz Souza"><div class="ttsc-avatar-fallback ttsc-avatar-tone-1" aria-hidden="true">AS</div></div>
+      <span class="ttsc-avatar ttsc-avatar-more size-8" aria-label="Mais 5 professores"><span class="ttsc-avatar-fallback">+5</span></span>
+    </div>
+    <span class="ds-note">9 professores</span>
+  </div>
+</div>
+<script>
+  TTSC.init();
+  (function () {
+    function initials(name) {
+      var p = String(name || '').trim().split(/\s+/).filter(Boolean);
+      if (!p.length) return '?';
+      return (p[0][0] + (p.length > 1 ? p[p.length - 1][0] : '')).toUpperCase();
+    }
+    var labels = { online: 'online', away: 'ausente', busy: 'ocupado', offline: 'offline' };
+    document.querySelectorAll('.ttsc-avatar[data-ttsc-avatar-name]').forEach(function (a) {
+      var name = a.dataset.ttscAvatarName, pr = a.dataset.ttscAvatarPresence;
+      a.setAttribute('role', 'img');
+      a.insertAdjacentHTML('afterbegin', '<div class="ttsc-avatar-fallback" aria-hidden="true">' + initials(name) + '</div>');
+      if (pr) {
+        a.insertAdjacentHTML('beforeend', '<div class="ttsc-avatar-indicator"><div class="ttsc-avatar-status ttsc-avatar-status-' + pr + '"></div></div>');
+        a.setAttribute('aria-label', name + ', ' + labels[pr]);
+      } else a.setAttribute('aria-label', name);
+    });
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!-- @dsCard group="Formulários" height=250 subtitle="ttsc-color · input type=color estilizado, hex com validação, paleta radiogroup, prévia com contraste automático, padrão (NULL)" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>ColorPicker</title>
+<style>
+  .ttsc-color-input { inline-size: 34px; block-size: 34px; padding: 3px; flex: none; cursor: pointer; border: 1px solid var(--input); border-radius: var(--ttsc-radius-sm); background: var(--ttsc-surface); }
+  .ttsc-color-input::-webkit-color-swatch-wrapper { padding: 0; }
+  .ttsc-color-input::-webkit-color-swatch { border: 0; border-radius: var(--ttsc-radius-xs); }
+  .ttsc-color-input:focus-visible { outline: 2px solid var(--ttsc-accent); outline-offset: 2px; }
+  .ttsc-color-hex { inline-size: 110px; font-family: ui-monospace, monospace; text-transform: uppercase; }
+  .ttsc-color-palette { display: flex; flex-wrap: wrap; gap: 8px; }
+  .ttsc-color-swatch { inline-size: 22px; block-size: 22px; border-radius: var(--ttsc-radius-pill); cursor: pointer; background: var(--swatch); border: 0; box-shadow: inset 0 0 0 1px var(--ttsc-border-strong); }
+  .ttsc-color-swatch[aria-checked="true"] { box-shadow: 0 0 0 2px var(--ttsc-surface), 0 0 0 4px var(--ttsc-text); }
+  .ttsc-color-swatch:focus-visible { outline: 2px solid var(--ttsc-accent); outline-offset: 4px; }
+  .ttsc-color-preview { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; font-size: 12px; font-weight: 500; border-radius: var(--ttsc-radius-sm); border: 1px dashed transparent; }
+  .ttsc-color-preview[data-empty] { border-color: var(--ttsc-border-strong); color: var(--ttsc-text-muted); background: transparent; }
+  .ttsc-form-message { color: var(--ttsc-danger-text); }
+  .cp-card { border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); background: var(--ttsc-surface); padding: 14px 16px; }
+  .cp-cal { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; font-size: 11px; color: var(--ttsc-text-muted); }
+  .cp-cal .ttsc-color-preview { padding: 2px 5px; font-size: 10.5px;  }
+  .cp-cal > div { min-width: 0; border: 1px solid var(--ttsc-border-soft); border-radius: var(--ttsc-radius-sm); padding: 6px; min-height: 48px; display: flex; flex-direction: column; gap: 4px; }
+</style>
+</head>
+<body>
+<div class="ds-pad" style="display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start">
+  <div class="cp-card ds-stack" data-ttsc-color-picker id="cp">
+    <div class="ttsc-form-item">
+      <label class="ttsc-form-label" for="event-color">Cor no calendário</label>
+      <div class="flex items-center gap-2">
+        <input type="color" class="ttsc-color-input" id="event-color" name="color" data-ttsc-color-input value="#3b82f6">
+        <input type="text" class="ttsc-input ttsc-input-sm ttsc-color-hex" data-ttsc-color-hex maxlength="7" aria-label="Código hexadecimal" aria-describedby="cp-err">
+        <button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-sm" data-ttsc-color-clear>Padrão do tipo</button>
+      </div>
+      <div class="ttsc-form-message" id="cp-err" role="alert">Use o formato #RRGGBB.</div>
+    </div>
+    <div class="ds-label">Cores sugeridas</div>
+    <div class="ttsc-color-palette" role="radiogroup" aria-label="Cores sugeridas">
+      <button type="button" class="ttsc-color-swatch" role="radio" data-ttsc-color-swatch="#3ECF8E" aria-label="Verde institucional" title="Verde institucional" style="--swatch:#3ECF8E"></button>
+      <button type="button" class="ttsc-color-swatch" role="radio" data-ttsc-color-swatch="#3B82F6" aria-label="Azul informação" title="Azul informação" style="--swatch:#3B82F6"></button>
+      <button type="button" class="ttsc-color-swatch" role="radio" data-ttsc-color-swatch="#8B5CF6" aria-label="Violeta" title="Violeta" style="--swatch:#8B5CF6"></button>
+      <button type="button" class="ttsc-color-swatch" role="radio" data-ttsc-color-swatch="#EC4899" aria-label="Rosa" title="Rosa" style="--swatch:#EC4899"></button>
+      <button type="button" class="ttsc-color-swatch" role="radio" data-ttsc-color-swatch="#DC2626" aria-label="Vermelho prova" title="Vermelho prova" style="--swatch:#DC2626"></button>
+      <button type="button" class="ttsc-color-swatch" role="radio" data-ttsc-color-swatch="#EAB308" aria-label="Amarelo feriado" title="Amarelo feriado" style="--swatch:#EAB308"></button>
+      <button type="button" class="ttsc-color-swatch" role="radio" data-ttsc-color-swatch="#0F766E" aria-label="Verde-petróleo" title="Verde-petróleo" style="--swatch:#0F766E"></button>
+      <button type="button" class="ttsc-color-swatch" role="radio" data-ttsc-color-swatch="#475569" aria-label="Cinza reunião" title="Cinza reunião" style="--swatch:#475569"></button>
+    </div>
+    <div class="ds-row"><span class="ds-note">Prévia:</span><span class="ttsc-color-preview" data-ttsc-color-preview>Semana de Integração dos Calouros</span></div>
+    <div class="ds-note" id="cp-log" aria-live="polite">ttsc.color.change → aguardando</div>
+  </div>
+  <div class="cp-card ds-stack">
+    <div class="ds-label">Agenda — março de 2026</div>
+    <div class="cp-cal" id="cp-cal">
+      <div>16<span class="ttsc-color-preview" data-cal-live>Calouros</span></div>
+      <div>17<span class="ttsc-color-preview" style="background:#DC2626;color:#fff">Prova</span></div>
+      <div>19<span class="ttsc-color-preview" style="background:#EAB308;color:#000">Feriado</span></div>
+      <div>20<span class="ttsc-color-preview" data-empty>Reunião</span></div>
+    </div>
+  </div>
+</div>
+<script>
+  TTSC.init();
+  (function (w) {
+    var HEX = /^#?([0-9a-f]{3}|[0-9a-f]{6})$/i;
+    function normalize(v) { var m = HEX.exec(String(v || '').trim()); if (!m) return null; var h = m[1]; if (h.length === 3) h = h.split('').map(function (c) { return c + c; }).join(''); return '#' + h.toUpperCase(); }
+    function lum(hex) { return [1, 3, 5].map(function (i) { var c = parseInt(hex.slice(i, i + 2), 16) / 255; return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4); }).reduce(function (a, c, i) { return a + c * [0.2126, 0.7152, 0.0722][i]; }, 0); }
+    function P(root) {
+      var self = this; this.root = root; root.ttscColor = this;
+      this.native = root.querySelector('[data-ttsc-color-input]'); this.hex = root.querySelector('[data-ttsc-color-hex]');
+      this.preview = root.querySelector('[data-ttsc-color-preview]'); this.swatches = Array.prototype.slice.call(root.querySelectorAll('[data-ttsc-color-swatch]'));
+      this.value = normalize(this.native.value) || '';
+      this.native.addEventListener('input', function () { self.setValue(self.native.value); });
+      this.hex.addEventListener('input', function () { var v = normalize(self.hex.value); self.hex.setAttribute('aria-invalid', v || self.hex.value === '' ? 'false' : 'true'); if (v) self.setValue(v, { keepHex: true }); });
+      this.hex.addEventListener('blur', function () { if (self.hex.getAttribute('aria-invalid') !== 'true') self.hex.value = self.value; });
+      this.swatches.forEach(function (s, i) {
+        s.addEventListener('click', function () { self.setValue(s.dataset.ttscColorSwatch); });
+        s.addEventListener('keydown', function (e) { var st = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key]; if (!st) return; e.preventDefault(); var n = self.swatches[(i + st + self.swatches.length) % self.swatches.length]; n.focus(); n.click(); });
+      });
+      root.querySelector('[data-ttsc-color-clear]').addEventListener('click', function () { self.setValue(''); });
+      this.setValue(this.value, { silent: true });
+    }
+    P.contrastText = function (hex) { var L = lum(hex); return (L + 0.05) / 0.05 >= 1.05 / (L + 0.05) ? '#000' : '#fff'; };
+    P.prototype.getValue = function () { return this.value; };
+    P.prototype.setValue = function (input, o) {
+      o = o || {}; var v = input === '' ? '' : normalize(input); if (v === null) return;
+      var changed = v !== this.value, found = false; this.value = v;
+      if (v) this.native.value = v.toLowerCase(); if (!o.keepHex) this.hex.value = v;
+      this.swatches.forEach(function (s) { var on = normalize(s.dataset.ttscColorSwatch) === v; found = found || on; s.setAttribute('aria-checked', String(on)); s.tabIndex = on ? 0 : -1; });
+      if (!found && this.swatches[0]) this.swatches[0].tabIndex = 0;
+      [this.preview, document.querySelector('[data-cal-live]')].forEach(function (p) { if (!p) return; p.toggleAttribute('data-empty', !v); p.style.background = v || ''; p.style.color = v ? P.contrastText(v) : ''; });
+      if (changed && !o.silent) this.root.dispatchEvent(new CustomEvent('ttsc.color.change', { bubbles: true, detail: { value: v } }));
+    };
+    w.TTSCColorPicker = P;
+  })(window);
+  var picker = new TTSCColorPicker(document.getElementById('cp'));
+  document.getElementById('cp').addEventListener('ttsc.color.change', function (e) {
+    document.getElementById('cp-log').textContent = 'ttsc.color.change → ' + (e.detail.value || 'NULL (padrão do tipo)') + (e.detail.value ? ' · texto ' + TTSCColorPicker.contrastText(e.detail.value) : '');
+  });
+</script>
+</body>
+</html>

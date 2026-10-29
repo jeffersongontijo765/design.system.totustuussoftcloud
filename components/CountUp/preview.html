@@ -1,0 +1,65 @@
+<!-- @dsCard group="Geral" height=180 subtitle="countUp.js 2.8.0 · KPIs pt-BR (separador ., decimal ,), prefixo R$, sufixo %, update()" -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><title>CountUp</title>
+<style>
+  .cu-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+  .cu-kpi { background: var(--ttsc-surface); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); padding: 14px; display: flex; flex-direction: column; gap: 6px; }
+  .cu-head { display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: var(--ttsc-text-muted); }
+  .cu-head i { color: var(--ttsc-text-muted); }
+  .cu-value { font-size: 22px; line-height: 28px; font-weight: 600; color: var(--ttsc-text); font-variant-numeric: tabular-nums; }
+  .cu-delta { font-size: 11px; color: var(--ttsc-text-muted); }
+  .cu-delta .up { color: var(--ttsc-accent-text); font-weight: 600; }
+  .cu-delta .down { color: var(--ttsc-danger-text); font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="cu-grid">
+    <div class="cu-kpi">
+      <div class="cu-head">Matrículas ativas <i class="fa-light fa-user-graduate"></i></div>
+      <div class="cu-value" data-countup="1248" aria-label="1.248 matrículas ativas">0</div>
+      <div class="cu-delta"><span class="up">+4,2%</span> vs. 2025</div>
+    </div>
+    <div class="cu-kpi">
+      <div class="cu-head">Receita do mês <i class="fa-light fa-sack-dollar"></i></div>
+      <div class="cu-value" data-countup="386452.9" data-decimals="2" data-prefix="R$ " aria-label="R$ 386.452,90 de receita no mês">0</div>
+      <div class="cu-delta"><span class="up">+R$ 12.310,00</span> vs. set.</div>
+    </div>
+    <div class="cu-kpi">
+      <div class="cu-head">Adimplência <i class="fa-light fa-chart-pie"></i></div>
+      <div class="cu-value" data-countup="93.7" data-decimals="1" data-suffix="%" aria-label="93,7% de adimplência">0</div>
+      <div class="cu-delta"><span class="down">−0,8 p.p.</span> vs. set.</div>
+    </div>
+    <div class="cu-kpi">
+      <div class="cu-head">Turmas abertas <i class="fa-light fa-chalkboard-user"></i></div>
+      <div class="cu-value" data-countup="64" aria-label="64 turmas abertas">0</div>
+      <div class="cu-delta">3 unidades</div>
+    </div>
+  </div>
+  <div class="ds-row">
+    <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-sm" id="btn-replay"><i class="fa-light fa-play"></i> Reproduzir</button>
+    <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-sm" id="btn-update"><i class="fa-light fa-arrows-rotate"></i> Nova matrícula (update)</button>
+  </div>
+</div>
+<script src="../../vendor/countup/countUp.umd.js"></script>
+<script>
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var counters = [].map.call(document.querySelectorAll('[data-countup]'), function (el) {
+    var c = new countUp.CountUp(el, parseFloat(el.dataset.countup), {
+      decimalPlaces: parseInt(el.dataset.decimals || '0', 10),
+      separator: '.', decimal: ',',
+      prefix: el.dataset.prefix || '', suffix: el.dataset.suffix || '',
+      duration: reduce ? 0 : 0.6
+    });
+    if (c.error) { el.textContent = el.dataset.countup; } else { c.start(); }
+    return c;
+  });
+  document.getElementById('btn-replay').addEventListener('click', function () { counters.forEach(function (c) { c.reset(); c.start(); }); });
+  var total = 1248;
+  document.getElementById('btn-update').addEventListener('click', function () { total += 1; counters[0].update(total); });
+  TTSC.init();
+</script>
+</body>
+</html>

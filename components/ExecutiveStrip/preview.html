@@ -1,0 +1,342 @@
+<!-- @dsCard group="Componentes do painel" height=827 width=1280 subtitle="Faixa executiva — ticker ao vivo, score em anel com frentes, tiles de KPI com delta, progresso de meta, limites de orçamento e watchlist de indicadores" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>ExecutiveStrip</title>
+<style>
+  html,body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font-family:Inter,system-ui,sans-serif;font-size:13px;-webkit-font-smoothing:antialiased}
+  :focus-visible{outline:2px solid var(--ttsc-accent);outline-offset:2px}
+  .demo{padding:16px;display:grid;gap:14px;max-width:1240px;margin:0 auto}
+  .card{background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-surface);box-shadow:var(--ttsc-shadow-sm);min-width:0}
+  .card:hover{border-color:var(--ttsc-border-strong)}
+  .card-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+  .card-t{margin:0;font-size:14px;font-weight:600;color:var(--ttsc-text)}
+  .card-s{margin:2px 0 0;font-size:11px;color:var(--ttsc-text-muted)}
+  .muted{color:var(--ttsc-text-muted)} .tnum{font-variant-numeric:tabular-nums}
+  .sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+  /* faixa de título */
+  .es-head{display:flex;align-items:end;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .es-head h2{margin:0;font-size:16px;font-weight:700;color:var(--ttsc-text)}
+  .es-head .sub{margin:2px 0 0;font-size:12px;color:var(--ttsc-text-muted)}
+  .es-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .seg{display:inline-flex;border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-control);background:var(--ttsc-surface);padding:2px;gap:2px}
+  .seg button{border:0;background:transparent;color:var(--ttsc-text-2);font:inherit;font-size:12px;font-weight:600;padding:5px 12px;border-radius:calc(var(--ttsc-radius-control) - 3px);cursor:pointer}
+  .seg button[aria-pressed="true"]{background:var(--ttsc-accent);color:var(--ttsc-accent-on)}
+  .btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--ttsc-border);background:var(--ttsc-surface);color:var(--ttsc-text-2);font:inherit;font-size:12px;font-weight:600;padding:6px 12px;border-radius:var(--ttsc-radius-control);cursor:pointer}
+  .btn:hover{border-color:var(--ttsc-border-strong);color:var(--ttsc-text)}
+  .btn-primary{background:var(--ttsc-accent);border-color:var(--ttsc-accent);color:var(--ttsc-accent-on)}
+  .btn-primary:hover{background:var(--ttsc-accent-hover);border-color:var(--ttsc-accent-hover);color:var(--ttsc-accent-on)}
+  .meta{font-size:11px;color:var(--ttsc-text-muted)}
+
+  /* ticker */
+  .es-ticker{display:flex;align-items:center;gap:10px;border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-surface);background:var(--ttsc-surface);padding:8px 12px;overflow:hidden}
+  .live{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;letter-spacing:.06em;color:var(--ttsc-danger-text);white-space:nowrap}
+  .live::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--ttsc-danger)}
+  @media (prefers-reduced-motion: no-preference){ .live::before{animation:es-blink 1.6s infinite} @keyframes es-blink{0%,100%{opacity:1}50%{opacity:.25}} }
+  .es-tape{display:flex;gap:0;overflow-x:auto;scrollbar-width:thin;scroll-snap-type:x proximity}
+  .es-tape li{list-style:none;display:inline-flex;align-items:baseline;gap:6px;white-space:nowrap;padding:0 14px;border-left:1px solid var(--ttsc-border-soft);scroll-snap-align:start;font-size:12px;color:var(--ttsc-text-2)}
+  .es-tape li:first-child{border-left:0}
+  .es-tape .k{color:var(--ttsc-text-muted)}
+  .es-tape .v{font-weight:600;color:var(--ttsc-text);font-variant-numeric:tabular-nums}
+  .up{color:var(--ttsc-accent-text)} .down{color:var(--ttsc-danger-text)} .flat{color:var(--ttsc-text-muted)}
+
+  /* grade da faixa */
+  .es-strip{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:14px}
+  .es-hero{grid-column:span 5;padding:16px;display:flex;gap:16px;align-items:center}
+  .es-ring{position:relative;width:128px;height:128px;flex:0 0 auto}
+  .es-ring svg{width:128px;height:128px;transform:rotate(-90deg)}
+  .es-ring .track{stroke:var(--ttsc-surface-2);fill:none;stroke-width:10}
+  .es-ring .fill{stroke:var(--ttsc-accent);fill:none;stroke-width:10;stroke-linecap:round;stroke-dasharray:326.7;stroke-dashoffset:29.4}
+  .es-ring .val{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+  .es-ring .val b{display:block;font-size:26px;font-weight:700;color:var(--ttsc-text);font-variant-numeric:tabular-nums;line-height:1.1}
+  .es-ring .val span{display:block;font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ttsc-text-muted)}
+  .es-hero .info{min-width:0}
+  .es-hero .state{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:2px 8px;border-radius:var(--ttsc-radius-pill);background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text)}
+  .es-hero h3{margin:8px 0 2px;font-size:14px;font-weight:600;color:var(--ttsc-text)}
+  .es-hero p{margin:0;font-size:12px;color:var(--ttsc-text-muted);line-height:1.5}
+  .es-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+  .badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:600;padding:2px 8px;border-radius:var(--ttsc-radius-pill);border:1px solid var(--ttsc-border);color:var(--ttsc-text-2);white-space:nowrap;background:var(--ttsc-surface)}
+  .badge i{font-size:10px;color:var(--ttsc-text-muted)}
+  .es-delta{display:inline-flex;align-items:center;gap:4px;margin-top:10px;font-size:12px;font-weight:600}
+  .es-delta.up{color:var(--ttsc-accent-text)} .es-delta.down{color:var(--ttsc-danger-text)}
+
+  .es-fronts{grid-column:span 7;padding:16px}
+  .fronts{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+  .fronts li{display:grid;grid-template-columns:minmax(96px,140px) minmax(0,1fr) 44px;gap:12px;align-items:center}
+  .fronts .fl{font-size:12px;font-weight:500;color:var(--ttsc-text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .fronts .track{position:relative;height:8px;border-radius:var(--ttsc-radius-pill);background:var(--ttsc-surface-2);overflow:hidden}
+  .fronts .fill{position:absolute;inset:0 auto 0 0;border-radius:var(--ttsc-radius-pill);background:var(--ttsc-accent);width:var(--w)}
+  .fronts .fill.warn{background:var(--ttsc-warning)}
+  .fronts .fv{font-size:12px;font-weight:700;color:var(--ttsc-text);text-align:right;font-variant-numeric:tabular-nums}
+  .fronts .goal{grid-template-columns:minmax(96px,140px) minmax(0,1fr) 44px}
+  .fronts .meta-note{font-size:11px;color:var(--ttsc-text-muted);padding-left:calc(min(140px,40%) + 12px)}
+
+  /* tiles */
+  .es-tiles{grid-column:span 12;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:14px;list-style:none;margin:0;padding:0}
+  .tile{padding:14px;display:flex;flex-direction:column;gap:6px}
+  .tile .lbl{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ttsc-text-muted)}
+  .tile .val{font-size:22px;font-weight:700;color:var(--ttsc-text);font-variant-numeric:tabular-nums;line-height:1.1}
+  .tile .note{font-size:11px;color:var(--ttsc-text-muted)}
+  .tile .d{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600}
+  .tile .d.up{color:var(--ttsc-accent-text)} .tile .d.down{color:var(--ttsc-danger-text)} .tile .d.flat{color:var(--ttsc-text-muted)}
+
+  /* linha inferior: progresso, limites, watchlist */
+  .es-wide{grid-column:span 4;padding:16px}
+  .goal-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+  .goal-head b{font-size:18px;font-weight:700;color:var(--ttsc-text);font-variant-numeric:tabular-nums}
+  .goal-bar{position:relative;height:10px;border-radius:var(--ttsc-radius-pill);background:var(--ttsc-surface-2);overflow:hidden;margin:10px 0 8px}
+  .goal-bar .fill{position:absolute;inset:0 auto 0 0;width:62%;border-radius:var(--ttsc-radius-pill);background:var(--ttsc-accent)}
+  .goal-steps{display:flex;justify-content:space-between;font-size:11px;color:var(--ttsc-text-muted)}
+
+  .limits{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:10px}
+  .limits li{display:grid;grid-template-columns:minmax(88px,120px) minmax(0,1fr) auto;gap:10px;align-items:center}
+  .limits .ln{font-size:12px;color:var(--ttsc-text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .limits .track{position:relative;height:8px;border-radius:var(--ttsc-radius-pill);background:var(--ttsc-surface-2);overflow:hidden}
+  .limits .fill{position:absolute;inset:0 auto 0 0;border-radius:var(--ttsc-radius-pill);background:var(--ttsc-accent);width:var(--w)}
+  .limits .fill.near{background:var(--ttsc-warning)}
+  .limits .lv{font-size:11px;color:var(--ttsc-text-2);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .limits-total{display:flex;justify-content:space-between;gap:8px;margin-top:12px;padding-top:10px;border-top:1px solid var(--ttsc-border-soft);font-size:12px}
+  .limits-total b{font-variant-numeric:tabular-nums;color:var(--ttsc-text)}
+  .limits-warn{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:11px;color:var(--ttsc-warning-text)}
+
+  .watch{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:2px}
+  .watch li{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px solid var(--ttsc-border-soft)}
+  .watch li:last-child{border-bottom:0}
+  .watch .wl{display:flex;flex-direction:column;min-width:0}
+  .watch .wl b{font-size:12px;font-weight:600;color:var(--ttsc-text)}
+  .watch .wl span{font-size:10px;color:var(--ttsc-text-muted)}
+  .watch .wr{display:flex;align-items:center;gap:8px}
+  .watch .wv{font-size:12px;font-weight:700;color:var(--ttsc-text);font-variant-numeric:tabular-nums}
+  .chip{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:var(--ttsc-radius-pill);border:1px solid var(--ttsc-border)}
+  .chip::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+  .chip.up{color:var(--ttsc-accent-text)} .chip.down{color:var(--ttsc-danger-text)} .chip.flat{color:var(--ttsc-text-muted)}
+
+  @media (max-width:1024px){
+    .es-hero{grid-column:span 12}
+    .es-fronts{grid-column:span 12}
+    .es-tiles{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .es-wide{grid-column:span 6}
+  }
+  @media (max-width:640px){
+    .es-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .es-wide{grid-column:span 12}
+    .es-ring{width:104px;height:104px}
+    .es-ring svg{width:104px;height:104px}
+    .fronts .meta-note{padding-left:0}
+  }
+</style>
+</head>
+<body>
+<main class="demo" aria-labelledby="es-title">
+
+  <div class="es-head">
+    <div>
+      <h2 id="es-title">Painel Executivo · Colégio Horizonte</h2>
+      <p class="sub">Índice composto de acadêmico, financeiro, pessoas e infraestrutura · Unidade principal</p>
+    </div>
+    <div class="es-tools">
+      <div class="seg" role="group" aria-label="Período do comparativo">
+        <button type="button" data-period="month" aria-pressed="true">Mês</button>
+        <button type="button" data-period="semester" aria-pressed="false">Semestre</button>
+      </div>
+      <button type="button" class="btn" id="es-refresh"><i class="fa-light fa-rotate" aria-hidden="true"></i> Atualizar</button>
+      <span class="meta" id="es-updated" role="status" aria-live="polite">Atualizado há 4 min</span>
+    </div>
+  </div>
+
+  <!-- Ticker ao vivo -->
+  <section class="es-ticker" aria-label="Eventos ao vivo da operação">
+    <span class="live" aria-hidden="false">AO VIVO</span>
+    <ul class="es-tape">
+      <li><span class="k">Matrícula</span> <span class="v">Nova inscrição</span> <span>· Ensino Médio · há 2 min</span></li>
+      <li><span class="k">Financeiro</span> <span class="v">Pgto. recebido R$ 1.850,00</span> <span>· Boleto 8842 · há 5 min</span></li>
+      <li><span class="k">Ocorrências</span> <span class="v">Portaria resolvida</span> <span>· Bloco B · há 11 min</span></li>
+      <li><span class="k">Acadêmico</span> <span class="v">Conselho de classe concluído</span> <span>· 9º ano A · há 18 min</span></li>
+      <li><span class="k">Portal</span> <span class="v">142 acessos de responsáveis</span> <span>· hoje · há 23 min</span></li>
+    </ul>
+  </section>
+
+  <div class="es-strip">
+
+    <!-- Score em anel -->
+    <section class="card es-hero" aria-labelledby="es-hero-t">
+      <div class="es-ring" role="img" aria-label="Índice de desempenho institucional: 91 de 100, classificado como Excelente.">
+        <svg viewBox="0 0 120 120" aria-hidden="true">
+          <circle class="track" cx="60" cy="60" r="52"></circle>
+          <circle class="fill" cx="60" cy="60" r="52"></circle>
+        </svg>
+        <div class="val"><b>91</b><span>de 100</span></div>
+      </div>
+      <div class="info">
+        <span class="state"><i class="fa-light fa-award" aria-hidden="true"></i> Excelente</span>
+        <h3 id="es-hero-t">Índice de desempenho institucional</h3>
+        <p>Composto por acadêmico, financeiro, pessoas e infraestrutura · meta 85.</p>
+        <div class="es-badges">
+          <span class="badge"><i class="fa-light fa-ranking-star" aria-hidden="true"></i> Top 4% da rede</span>
+          <span class="badge"><i class="fa-light fa-certificate" aria-hidden="true"></i> Conceito A+</span>
+          <span class="badge"><i class="fa-light fa-fire" aria-hidden="true"></i> 6 anos consecutivos</span>
+        </div>
+        <span class="es-delta up"><i class="fa-light fa-arrow-trend-up" aria-hidden="true"></i> <span data-delta>+2,3 pts vs. período anterior</span></span>
+      </div>
+    </section>
+
+    <!-- Frentes -->
+    <section class="card es-fronts" aria-labelledby="es-fronts-t">
+      <div class="card-h">
+        <div><h3 id="es-fronts-t" class="card-t">Frentes da operação</h3>
+        <p class="card-s">Pontuação de 0 a 100 por frente · meta 85</p></div>
+        <span class="meta">Ponderado pelo peso de cada frente</span>
+      </div>
+      <ul class="fronts">
+        <li><span class="sl">Acadêmico</span>
+          <div class="track" role="img" aria-label="Acadêmico: 91 de 100"><div class="fill" style="--w:91%"></div></div>
+          <span class="fv">91</span></li>
+        <li><span class="sl">Pessoas & Gestão</span>
+          <div class="track" role="img" aria-label="Pessoas e gestão: 88 de 100"><div class="fill" style="--w:88%"></div></div>
+          <span class="fv">88</span></li>
+        <li><span class="sl">Financeiro</span>
+          <div class="track" role="img" aria-label="Financeiro: 84 de 100, um ponto abaixo da meta"><div class="fill warn" style="--w:84%"></div></div>
+          <span class="fv">84</span></li>
+        <li><span class="sl">Infraestrutura</span>
+          <div class="track" role="img" aria-label="Infraestrutura: 79 de 100, seis pontos abaixo da meta"><div class="fill warn" style="--w:79%"></div></div>
+          <span class="fv">79</span></li>
+      </ul>
+      <p class="fronts .meta-note meta" style="padding-left:0;margin-top:10px">Financeiro e infraestrutura abaixo da meta — veja os limites de orçamento abaixo.</p>
+    </section>
+
+    <!-- Tiles de KPI -->
+    <ul class="es-tiles" aria-label="Indicadores do período">
+      <li class="card tile">
+        <span class="lbl">Frequência média</span>
+        <span class="val" data-month="96,1%" data-semester="94,8%">96,1%</span>
+        <span class="d up"><i class="fa-light fa-arrow-trend-up" aria-hidden="true"></i> <span data-month="+1,4 p.p. vs. mês" data-semester="+2,1 p.p. no semestre">+1,4 p.p. vs. mês</span></span>
+        <span class="note">Meta institucional 95%</span>
+      </li>
+      <li class="card tile">
+        <span class="lbl">Desempenho docente</span>
+        <span class="val" data-month="92,4%" data-semester="90,9%">92,4%</span>
+        <span class="d up"><i class="fa-light fa-arrow-trend-up" aria-hidden="true"></i> <span data-month="+3,1 p.p. no trimestre" data-semester="+5,4 p.p. no semestre">+3,1 p.p. no trimestre</span></span>
+        <span class="note">Avaliação de pares e gestores</span>
+      </li>
+      <li class="card tile">
+        <span class="lbl">Taxa de conclusão</span>
+        <span class="val" data-month="97,8%" data-semester="96,2%">97,8%</span>
+        <span class="d up"><i class="fa-light fa-arrow-trend-up" aria-hidden="true"></i> <span data-month="+0,6 p.p. vs. ano anterior" data-semester="+1,2 p.p. vs. ano anterior">+0,6 p.p. vs. ano anterior</span></span>
+        <span class="note">Coorte 2025.2</span>
+      </li>
+      <li class="card tile">
+        <span class="lbl">Arrecadação</span>
+        <span class="val" data-month="82,3%" data-semester="88,1%">82,3%</span>
+        <span class="d down"><i class="fa-light fa-arrow-trend-down" aria-hidden="true"></i> <span data-month="-3,2 p.p. vs. mês" data-semester="-1,4 p.p. no semestre">-3,2 p.p. vs. mês</span></span>
+        <span class="note">18 famílias em atraso · venc. 15/11</span>
+      </li>
+      <li class="card tile">
+        <span class="lbl">Segurança do campus</span>
+        <span class="val">99,2%</span>
+        <span class="d flat"><i class="fa-light fa-minus" aria-hidden="true"></i> <span>0 incidentes no período</span></span>
+        <span class="note">Turnos completo e noturno</span>
+      </li>
+      <li class="card tile">
+        <span class="lbl">Engajamento dos pais</span>
+        <span class="val" data-month="88,6%" data-semester="84,2%">88,6%</span>
+        <span class="d up"><i class="fa-light fa-arrow-trend-up" aria-hidden="true"></i> <span data-month="+12% de logins no portal" data-semester="+19% de logins no semestre">+12% de logins no portal</span></span>
+        <span class="note">Responsáveis ativos no portal</span>
+      </li>
+    </ul>
+
+    <!-- Progresso de meta -->
+    <section class="card es-wide" aria-labelledby="es-goal-t">
+      <div class="card-h">
+        <div><h3 id="es-goal-t" class="card-t">Fechamento do período</h3>
+        <p class="card-s">Rotina de encerramento de novembro</p></div>
+        <b class="tnum">62%</b>
+      </div>
+      <div class="goal-bar" role="img" aria-label="Fechamento do período: 62% concluído, dia 6 de 10."><div class="fill"></div></div>
+      <div class="goal-steps"><span>Dia 6 de 10</span><span>prazo 30/11</span></div>
+      <p class="meta" style="margin:10px 0 0">Lançamentos de nota e conciliação em dia; pendências de amortização revisadas.</p>
+    </section>
+
+    <!-- Limites de orçamento -->
+    <section class="card es-wide" aria-labelledby="es-lim-t">
+      <div class="card-h">
+        <div><h3 id="es-lim-t" class="card-t">Limites de orçamento</h3>
+        <p class="card-s">Novembro · usado por rubrica</p></div>
+      </div>
+      <ul class="limits">
+        <li><span class="ln">Manutenção</span>
+          <div class="track" role="img" aria-label="Manutenção: R$ 82,4 mil de R$ 100 mil"><div class="fill" style="--w:82%"></div></div>
+          <span class="lv">R$ 82,4 / 100 mil</span></li>
+        <li><span class="ln">Marketing</span>
+          <div class="track" role="img" aria-label="Marketing: R$ 47,1 mil de R$ 50 mil, próximo do limite"><div class="fill near" style="--w:94%"></div></div>
+          <span class="lv">R$ 47,1 / 50 mil</span></li>
+        <li><span class="ln">Eventos</span>
+          <div class="track" role="img" aria-label="Eventos: R$ 12,9 mil de R$ 40 mil"><div class="fill" style="--w:32%"></div></div>
+          <span class="lv">R$ 12,9 / 40 mil</span></li>
+      </ul>
+      <div class="limits-total"><span>Total usado · 3 rubricas</span><b>R$ 142,4 / 190 mil</b></div>
+      <p class="limits-warn"><i class="fa-light fa-triangle-exclamation" aria-hidden="true"></i> Marketing a 94% — revise antes de novo compromisso.</p>
+    </section>
+
+    <!-- Watchlist -->
+    <section class="card es-wide" aria-labelledby="es-watch-t">
+      <div class="card-h">
+        <div><h3 id="es-watch-t" class="card-t">Watchlist de indicadores</h3>
+        <p class="card-s">Economia e mercado · atualizado há 4 min</p></div>
+      </div>
+      <ul class="watch">
+        <li><span class="wl"><b>Selic</b><span>meta 2026</span></span>
+          <span class="wr"><span class="wv">5,40% a.a.</span><span class="chip flat">Estável</span></span></li>
+        <li><span class="wl"><b>IPCA 12m</b><span>acumulado</span></span>
+          <span class="wr"><span class="wv">4,21%</span><span class="chip down">Queda</span></span></li>
+        <li><span class="wl"><b>Câmbio USD/BRL</b><span>comercial</span></span>
+          <span class="wr"><span class="wv">R$ 5,42</span><span class="chip up">Alta</span></span></li>
+        <li><span class="wl"><b>IGP-M</b><span>prévia do mês</span></span>
+          <span class="wr"><span class="wv">0,52%</span><span class="chip up">Alta</span></span></li>
+      </ul>
+    </section>
+
+  </div>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  // TTSCExecutiveStrip — faixa executiva: período, atualização e estado do ticker.
+  function TTSCExecutiveStrip(root) {
+    this.root = root;
+    this.period = 'month';
+    this.bind();
+  }
+  TTSCExecutiveStrip.prototype.bind = function () {
+    var self = this;
+    this.root.querySelectorAll('[data-period]').forEach(function (btn) {
+      btn.addEventListener('click', function () { self.setPeriod(btn.getAttribute('data-period')); });
+    });
+    var refresh = this.root.querySelector('#es-refresh');
+    var updated = this.root.querySelector('#es-updated');
+    if (refresh && updated) {
+      refresh.addEventListener('click', function () {
+        updated.textContent = 'Atualizado agora · ' + new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        self.root.dispatchEvent(new CustomEvent('ttsc:executive-strip:refresh', { bubbles: true }));
+      });
+    }
+  };
+  TTSCExecutiveStrip.prototype.setPeriod = function (period) {
+    this.period = period;
+    var self = this;
+    this.root.querySelectorAll('[data-period]').forEach(function (btn) {
+      var active = btn.getAttribute('data-period') === period;
+      btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+    this.root.querySelectorAll('[data-' + period + ']').forEach(function (el) {
+      el.textContent = el.getAttribute('data-' + period);
+    });
+    this.root.dispatchEvent(new CustomEvent('ttsc:executive-strip:period', { bubbles: true, detail: { period: period } }));
+  };
+  window.TTSCExecutiveStrip = { init: function (el) { return new TTSCExecutiveStrip(el); } };
+  window.TTSCExecutiveStrip.init(document.querySelector('main'));
+})();
+</script>
+</body>
+</html>

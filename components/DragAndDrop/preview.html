@@ -1,0 +1,112 @@
+<!-- @dsCard group="Formulários" height=250 subtitle="DnD nativo HTML5 · reordenar fila (alça, indicador, botões e Alt+setas, aria-live) + área de soltar arquivo com validação" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>DragAndDrop</title>
+<style>
+  .dd-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+  .ttsc-sortable { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+  .ttsc-sortable-item { position: relative; display: flex; align-items: center; gap: 10px; padding: 4px 6px 4px 10px; background: var(--ttsc-surface); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-control); color: var(--ttsc-text); font-size: 13px; }
+  .ttsc-sortable-item:focus-visible { outline: 2px solid var(--ttsc-accent); outline-offset: 2px; }
+  .ttsc-sortable-handle { cursor: grab; color: var(--ttsc-text-muted); }
+  .ttsc-sortable-item:hover .ttsc-sortable-handle { color: var(--ttsc-text); }
+  .ttsc-sortable-pos { min-width: 22px; text-align: center; font-weight: 600; color: var(--ttsc-text-2); font-variant-numeric: tabular-nums; }
+  .ttsc-sortable-label { flex: 1; min-width: 0; }
+  .ttsc-sortable-label small { color: var(--ttsc-text-muted); font-size: 11px; margin-left: 6px; }
+  .ttsc-sortable-item.is-dragging { opacity: .4; border-style: dashed; border-color: var(--ttsc-border-strong); }
+  .ttsc-sortable-item.is-drop-before::before, .ttsc-sortable-item.is-drop-after::after { content: ""; position: absolute; inset-inline: 0; height: 2px; background: var(--ttsc-accent); border-radius: var(--ttsc-radius-pill); }
+  .ttsc-sortable-item.is-drop-before::before { top: -5px; } .ttsc-sortable-item.is-drop-after::after { bottom: -5px; }
+  .sr-status { min-height: 16px; font-size: 12px; color: var(--ttsc-text-muted); margin: 6px 0 0; }
+  .ttsc-dropzone-native { position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 20px; border: 1.5px dashed var(--ttsc-border-strong); border-radius: var(--ttsc-radius-surface); background: var(--ttsc-canvas-2); color: var(--ttsc-text-2); font-size: 13px; text-align: center; cursor: pointer; }
+  .ttsc-dropzone-native i { font-size: 20px; color: var(--ttsc-text-muted); }
+  .ttsc-dropzone-native small { color: var(--ttsc-text-muted); font-size: 12px; }
+  .ttsc-dropzone-native.is-over { border-color: var(--ttsc-accent); background: var(--ttsc-accent-soft); color: var(--ttsc-accent-text); }
+  .ttsc-dropzone-native.is-rejected { border-color: var(--ttsc-danger); color: var(--ttsc-danger-text); }
+  .ttsc-dropzone-native:focus-within { outline: 2px solid var(--ttsc-accent); outline-offset: 2px; }
+  .ttsc-dropzone-native .sr-input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+  .dd-file { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--ttsc-text); padding: 6px 10px; border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-sm); background: var(--ttsc-surface); }
+  .dd-file.is-bad { color: var(--ttsc-danger-text); }
+</style>
+</head>
+<body>
+<div class="ds-pad dd-grid">
+  <div>
+    <div class="ds-label" style="margin-bottom:8px">Fila de espera — ADM-2026-1N (arraste pela alça)</div>
+    <ol class="ttsc-sortable" data-ttsc-sortable aria-label="Fila de espera da turma ADM-2026-1N">
+      <li class="ttsc-sortable-item" data-ttsc-sortable-item data-id="w1" draggable="true" tabindex="0"><span class="ttsc-sortable-handle" data-ttsc-sortable-handle aria-hidden="true"><i class="fa-light fa-grip-dots-vertical"></i></span><span class="ttsc-sortable-pos">1</span><span class="ttsc-sortable-label">Larissa Gomes<small>desde 12/01</small></span><button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon ttsc-btn-sm" data-ttsc-sortable-up aria-label="Mover Larissa Gomes para cima"><i class="fa-light fa-arrow-up"></i></button><button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon ttsc-btn-sm" data-ttsc-sortable-down aria-label="Mover Larissa Gomes para baixo"><i class="fa-light fa-arrow-down"></i></button></li>
+      <li class="ttsc-sortable-item is-drop-after" data-ttsc-sortable-item data-id="w2" draggable="true" tabindex="0"><span class="ttsc-sortable-handle" data-ttsc-sortable-handle aria-hidden="true"><i class="fa-light fa-grip-dots-vertical"></i></span><span class="ttsc-sortable-pos">2</span><span class="ttsc-sortable-label">João Pedro Cardoso<small>desde 14/01</small></span><button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon ttsc-btn-sm" data-ttsc-sortable-up aria-label="Mover João Pedro Cardoso para cima"><i class="fa-light fa-arrow-up"></i></button><button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon ttsc-btn-sm" data-ttsc-sortable-down aria-label="Mover João Pedro Cardoso para baixo"><i class="fa-light fa-arrow-down"></i></button></li>
+      <li class="ttsc-sortable-item is-dragging" data-ttsc-sortable-item data-id="w3" draggable="true" tabindex="0"><span class="ttsc-sortable-handle" data-ttsc-sortable-handle aria-hidden="true"><i class="fa-light fa-grip-dots-vertical"></i></span><span class="ttsc-sortable-pos">3</span><span class="ttsc-sortable-label">Marcelo Dias<small>desde 20/01</small></span><button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon ttsc-btn-sm" data-ttsc-sortable-up aria-label="Mover Marcelo Dias para cima"><i class="fa-light fa-arrow-up"></i></button><button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon ttsc-btn-sm" data-ttsc-sortable-down aria-label="Mover Marcelo Dias para baixo"><i class="fa-light fa-arrow-down"></i></button></li>
+      <li class="ttsc-sortable-item" data-ttsc-sortable-item data-id="w4" draggable="true" tabindex="0"><span class="ttsc-sortable-handle" data-ttsc-sortable-handle aria-hidden="true"><i class="fa-light fa-grip-dots-vertical"></i></span><span class="ttsc-sortable-pos">4</span><span class="ttsc-sortable-label">Isabela Moreira<small>desde 02/02</small></span><button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon ttsc-btn-sm" data-ttsc-sortable-up aria-label="Mover Isabela Moreira para cima"><i class="fa-light fa-arrow-up"></i></button><button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon ttsc-btn-sm" data-ttsc-sortable-down aria-label="Mover Isabela Moreira para baixo"><i class="fa-light fa-arrow-down"></i></button></li>
+    </ol>
+    <p class="sr-status" data-ttsc-sortable-status aria-live="polite">Estados estáticos: item 3 “arrastando”, indicador de soltura após o item 2.</p>
+  </div>
+  <div class="ds-stack" style="gap:8px">
+    <div class="ds-label">Comprovante de pagamento</div>
+    <label class="ttsc-dropzone-native" data-ttsc-dropzone data-ttsc-dropzone-max="5242880">
+      <input type="file" name="proof" accept=".pdf,image/*" class="sr-input">
+      <i class="fa-light fa-cloud-arrow-up" aria-hidden="true"></i>
+      <span>Arraste o comprovante aqui ou <u>escolha um arquivo</u></span>
+      <small>PDF ou imagem, até 5 MB</small>
+    </label>
+    <div id="dd-files" class="ds-stack" style="gap:6px" aria-live="polite"></div>
+  </div>
+</div>
+<script>
+  TTSC.init();
+  function TTSCSortable(list) {
+    var self = this; this.list = list; this.handle = '[data-ttsc-sortable-handle]'; this.dragged = null; this.armed = false;
+    this.status = list.parentElement.querySelector('[data-ttsc-sortable-status]');
+    list.addEventListener('pointerdown', function (e) { self.armed = !!e.target.closest(self.handle); });
+    list.addEventListener('dragstart', function (e) {
+      var item = e.target.closest('[data-ttsc-sortable-item]'); if (!item || !self.armed) { e.preventDefault(); return; }
+      self.dragged = item; e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', item.dataset.id);
+      requestAnimationFrame(function () { item.classList.add('is-dragging'); });
+    });
+    list.addEventListener('dragover', function (e) {
+      if (!self.dragged) return; e.preventDefault();
+      var over = e.target.closest('[data-ttsc-sortable-item]'); self.clear(); if (!over || over === self.dragged) return;
+      var r = over.getBoundingClientRect(); over.classList.add(e.clientY < r.top + r.height / 2 ? 'is-drop-before' : 'is-drop-after');
+    });
+    list.addEventListener('drop', function (e) {
+      if (!self.dragged) return; e.preventDefault();
+      var t = list.querySelector('.is-drop-before, .is-drop-after');
+      if (t) { var from = self.items().indexOf(self.dragged); if (t.classList.contains('is-drop-before')) t.before(self.dragged); else t.after(self.dragged); self.commit(self.dragged, from); }
+    });
+    list.addEventListener('dragend', function () { if (self.dragged) self.dragged.classList.remove('is-dragging'); self.dragged = null; self.clear(); });
+    list.addEventListener('click', function (e) { var b = e.target.closest('[data-ttsc-sortable-up], [data-ttsc-sortable-down]'); if (b) self.move(b.closest('[data-ttsc-sortable-item]'), b.hasAttribute('data-ttsc-sortable-up') ? -1 : 1); });
+    list.addEventListener('keydown', function (e) { var it = e.target.closest('[data-ttsc-sortable-item]'); if (it && e.altKey && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) { e.preventDefault(); self.move(it, e.key === 'ArrowUp' ? -1 : 1); it.focus(); } });
+  }
+  TTSCSortable.prototype.items = function () { return Array.prototype.slice.call(this.list.querySelectorAll('[data-ttsc-sortable-item]')); };
+  TTSCSortable.prototype.order = function () { return this.items().map(function (i) { return i.dataset.id; }); };
+  TTSCSortable.prototype.clear = function () { this.list.querySelectorAll('.is-drop-before, .is-drop-after, .is-dragging').forEach(function (i) { if (i !== this.dragged) i.classList.remove('is-drop-before', 'is-drop-after', 'is-dragging'); }, this); };
+  TTSCSortable.prototype.move = function (item, d) { var all = this.items(), from = all.indexOf(item), to = from + d; if (to < 0 || to >= all.length) return; this.clear(); if (d < 0) all[to].before(item); else all[to].after(item); this.commit(item, from); };
+  TTSCSortable.prototype.commit = function (item, from) {
+    var ids = this.order(), to = ids.indexOf(item.dataset.id); if (from === to) return;
+    this.items().forEach(function (it, i) { it.querySelector('.ttsc-sortable-pos').textContent = i + 1; });
+    this.status.textContent = item.querySelector('.ttsc-sortable-label').firstChild.textContent + ' movido(a) para a posição ' + (to + 1) + ' de ' + ids.length + ' → UPDATE position (simulação).';
+    this.list.dispatchEvent(new CustomEvent('ttsc.sortable.change', { bubbles: true, detail: { ids: ids, item: item, from: from, to: to } }));
+  };
+  document.querySelectorAll('[data-ttsc-sortable]').forEach(function (l) { new TTSCSortable(l); });
+
+  document.querySelectorAll('[data-ttsc-dropzone]').forEach(function (zone) {
+    var input = zone.querySelector('input[type=file]'), max = +zone.dataset.ttscDropzoneMax || Infinity, depth = 0, out = document.getElementById('dd-files');
+    function accepts(f) { var rules = input.accept.split(',').map(function (s) { return s.trim().toLowerCase(); }), n = f.name.toLowerCase(), t = f.type.toLowerCase(); return rules.some(function (r) { return r[0] === '.' ? n.slice(-r.length) === r : r.slice(-2) === '/*' ? t.indexOf(r.slice(0, -1)) === 0 : t === r; }); }
+    function take(files, assign) {
+      var acc = [], rej = [];
+      files.slice(0, 1).forEach(function (f) { if (!accepts(f)) rej.push({ file: f, reason: 'Tipo não permitido' }); else if (f.size > max) rej.push({ file: f, reason: 'Acima de 5 MB' }); else acc.push(f); });
+      if (assign && acc.length) { var dt = new DataTransfer(); acc.forEach(function (f) { dt.items.add(f); }); input.files = dt.files; }
+      zone.classList.toggle('is-rejected', rej.length > 0);
+      out.innerHTML = acc.map(function (f) { return '<div class="dd-file"><i class="fa-light fa-file-check"></i>' + f.name + ' · ' + Math.ceil(f.size / 1024) + ' KB</div>'; }).join('') +
+        rej.map(function (r) { return '<div class="dd-file is-bad"><i class="fa-light fa-file-xmark"></i>' + r.file.name + ' — ' + r.reason + '</div>'; }).join('');
+      zone.dispatchEvent(new CustomEvent('ttsc.dropzone.files', { bubbles: true, detail: { accepted: acc, rejected: rej } }));
+    }
+    zone.addEventListener('dragenter', function (e) { if (Array.prototype.indexOf.call(e.dataTransfer.types, 'Files') > -1) { depth++; zone.classList.add('is-over'); } });
+    zone.addEventListener('dragleave', function () { if (--depth <= 0) { depth = 0; zone.classList.remove('is-over'); } });
+    zone.addEventListener('dragover', function (e) { e.preventDefault(); });
+    zone.addEventListener('drop', function (e) { e.preventDefault(); depth = 0; zone.classList.remove('is-over'); take(Array.prototype.slice.call(e.dataTransfer.files), true); });
+    input.addEventListener('change', function () { take(Array.prototype.slice.call(input.files), false); });
+    out.innerHTML = '<div class="dd-file"><i class="fa-light fa-file-check"></i>comprovante-outubro.pdf · 182 KB</div><div class="dd-file is-bad"><i class="fa-light fa-file-xmark"></i>planilha.xlsx — Tipo não permitido</div>';
+  });
+  ['dragover', 'drop'].forEach(function (t) { window.addEventListener(t, function (e) { if (!e.target.closest || !e.target.closest('[data-ttsc-dropzone], [data-ttsc-sortable]')) e.preventDefault(); }); });
+</script>
+</body>
+</html>

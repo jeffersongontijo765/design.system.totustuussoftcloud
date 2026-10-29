@@ -1,0 +1,101 @@
+<!-- @dsCard group="Navegação" height=290 subtitle="data-ttsc-stepper · wizard de matrícula: concluído, ativo, pendente, validação que cancela o avanço, first/last" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Stepper</title>
+<style>
+  .ttsc-stepper { border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); background: var(--ttsc-surface); padding: 16px; }
+  .ttsc-stepper-nav { display: flex; list-style: none; margin: 0 0 16px; padding: 0; }
+  .ttsc-stepper-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; position: relative; text-align: center; }
+  .ttsc-stepper-item:not(:last-child)::after { content: ""; position: absolute; top: 14px; inset-inline-start: calc(50% + 18px); inset-inline-end: calc(-50% + 18px); height: 2px; background: var(--ttsc-border); border-radius: var(--ttsc-radius-pill); }
+  .ttsc-stepper-item.completed::after { background: var(--ttsc-accent); }
+  .ttsc-stepper-dot { width: 28px; height: 28px; border-radius: var(--ttsc-radius-pill); display: inline-flex; align-items: center; justify-content: center; border: 1.5px solid var(--ttsc-border-strong); background: var(--ttsc-surface); color: var(--ttsc-text-muted); font-size: 12px; font-weight: 600; }
+  .ttsc-stepper-dot i { display: none; }
+  .ttsc-stepper-label { font-size: 12px; color: var(--ttsc-text-muted); }
+  .ttsc-stepper-item.active .ttsc-stepper-dot { background: var(--ttsc-accent); border-color: var(--ttsc-accent); color: var(--ttsc-accent-on); box-shadow: 0 0 0 4px var(--ttsc-accent-soft); }
+  .ttsc-stepper-item.active .ttsc-stepper-label { color: var(--ttsc-text); font-weight: 500; }
+  .ttsc-stepper-item.completed .ttsc-stepper-dot { background: var(--ttsc-accent-soft); border-color: var(--ttsc-accent-border); color: var(--ttsc-accent-text); cursor: pointer; }
+  .ttsc-stepper-item.completed .ttsc-stepper-dot i { display: inline; }
+  .ttsc-stepper-item.completed [data-ttsc-stepper-number] { display: none; }
+  .ttsc-stepper-item.completed .ttsc-stepper-label { color: var(--ttsc-text-2); cursor: pointer; }
+  .ttsc-stepper.first [data-ttsc-stepper-back], .ttsc-stepper.last [data-ttsc-stepper-next], .ttsc-stepper:not(.last) .ttsc-stepper-submit { display: none; }
+  .ttsc-stepper-actions { justify-content: space-between; margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--ttsc-border-soft); }
+  .ttsc-stepper section h3 { margin: 0 0 12px; font-size: 14px; font-weight: 600; color: var(--ttsc-text); outline: none; }
+  .sp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; }
+  .ttsc-form-message { color: var(--ttsc-danger-text); }
+  .sp-sum { display: grid; grid-template-columns: 140px 1fr; gap: 6px 12px; font-size: 13px; margin: 0; }
+  .sp-sum dt { color: var(--ttsc-text-muted); } .sp-sum dd { margin: 0; color: var(--ttsc-text); }
+  .ttsc-input, .ttsc-select { height: 34px; padding: 0 10px; font-size: 13px; border-radius: var(--ttsc-radius-control); }
+</style>
+</head>
+<body>
+<div class="ds-pad">
+<form id="enrollment-wizard" class="ttsc-stepper" data-ttsc-stepper="true" data-ttsc-stepper-active-step="2" novalidate>
+  <ol class="ttsc-stepper-nav" aria-label="Etapas da matrícula">
+    <li class="ttsc-stepper-item" data-ttsc-stepper-item="#step-student"><span class="ttsc-stepper-dot"><span data-ttsc-stepper-number>1</span><i class="fa-light fa-check"></i></span><span class="ttsc-stepper-label">Dados do aluno</span></li>
+    <li class="ttsc-stepper-item" data-ttsc-stepper-item="#step-course"><span class="ttsc-stepper-dot"><span data-ttsc-stepper-number>2</span><i class="fa-light fa-check"></i></span><span class="ttsc-stepper-label">Curso e turma</span></li>
+    <li class="ttsc-stepper-item" data-ttsc-stepper-item="#step-billing"><span class="ttsc-stepper-dot"><span data-ttsc-stepper-number>3</span><i class="fa-light fa-check"></i></span><span class="ttsc-stepper-label">Financeiro</span></li>
+    <li class="ttsc-stepper-item" data-ttsc-stepper-item="#step-confirm"><span class="ttsc-stepper-dot"><span data-ttsc-stepper-number>4</span><i class="fa-light fa-check"></i></span><span class="ttsc-stepper-label">Confirmação</span></li>
+  </ol>
+
+  <section id="step-student" role="group" aria-labelledby="h-student">
+    <h3 id="h-student" tabindex="-1">Dados do aluno</h3>
+    <div class="sp-grid">
+      <div class="ttsc-form-item"><label class="ttsc-form-label" for="sp-name">Nome completo</label><input class="ttsc-input" id="sp-name" name="student_name" value="Ana Beatriz Souza" required></div>
+      <div class="ttsc-form-item"><label class="ttsc-form-label" for="sp-cpf">CPF</label><input class="ttsc-input" id="sp-cpf" name="student_cpf" value="123.456.789-09" required pattern="\d{3}\.\d{3}\.\d{3}-\d{2}"><div class="ttsc-form-message" role="alert">Informe um CPF no formato 000.000.000-00.</div></div>
+    </div>
+  </section>
+  <section id="step-course" role="group" aria-labelledby="h-course">
+    <h3 id="h-course" tabindex="-1">Curso e turma</h3>
+    <div class="sp-grid">
+      <div class="ttsc-form-item"><label class="ttsc-form-label" for="sp-course">Curso</label>
+        <select class="ttsc-select" id="sp-course" name="course_uuid" required><option value="adm" selected>Administração (ADM-01)</option><option value="ped">Pedagogia (PED-02)</option></select></div>
+      <div class="ttsc-form-item"><label class="ttsc-form-label" for="sp-class">Turma</label>
+        <select class="ttsc-select" id="sp-class" name="class_uuid" required><option value="">Selecione…</option><option value="1n">ADM-2026-1N — Noturno · 8 vagas</option><option value="1m">ADM-2026-1M — Matutino · 15 vagas</option></select>
+        <div class="ttsc-form-message" role="alert">Escolha uma turma com vaga para avançar.</div></div>
+    </div>
+  </section>
+  <section id="step-billing" role="group" aria-labelledby="h-billing">
+    <h3 id="h-billing" tabindex="-1">Financeiro</h3>
+    <dl class="sp-sum"><dt>Taxa de matrícula</dt><dd>R$ 350,00</dd><dt>Mensalidade</dt><dd>R$ 1.290,00 · vencimento dia 10</dd><dt>Forma de pagamento</dt><dd>Boleto bancário</dd></dl>
+  </section>
+  <section id="step-confirm" role="group" aria-labelledby="h-confirm">
+    <h3 id="h-confirm" tabindex="-1">Confirmação</h3>
+    <dl class="sp-sum"><dt>Aluno</dt><dd>Ana Beatriz Souza</dd><dt>Turma</dt><dd id="sp-chosen">—</dd><dt>Primeira cobrança</dt><dd>10/02/2026</dd></dl>
+  </section>
+
+  <div class="ttsc-form-actions ttsc-stepper-actions">
+    <button type="button" class="ttsc-btn ttsc-btn-ghost" data-ttsc-stepper-back><i class="fa-light fa-arrow-left"></i> Voltar</button>
+    <span class="ds-note" id="sp-log" aria-live="polite">Clique em Avançar sem escolher a turma para ver a validação.</span>
+    <button type="button" class="ttsc-btn ttsc-btn-primary" data-ttsc-stepper-next>Avançar <i class="fa-light fa-arrow-right"></i></button>
+    <button type="submit" class="ttsc-btn ttsc-btn-primary ttsc-stepper-submit"><i class="fa-light fa-check"></i> Confirmar matrícula</button>
+  </div>
+</form>
+</div>
+<script>
+  TTSC.init();
+  var form = document.getElementById('enrollment-wizard');
+  var stepper = ttscStepper.getOrCreateInstance(form);
+  var log = document.getElementById('sp-log');
+  function current() { var n = 1; stepper.getItemElements().forEach(function (it, i) { if (it.classList.contains('active')) n = i + 1; }); return n; }
+  function syncAria() { stepper.getItemElements().forEach(function (it) { if (it.classList.contains('active')) it.setAttribute('aria-current', 'step'); else it.removeAttribute('aria-current'); }); }
+  syncAria();
+  form.addEventListener('change', function (e) {
+    var payload = e.detail && e.detail.payload;
+    if (!payload) { if (e.target.getAttribute) e.target.setAttribute('aria-invalid', e.target.checkValidity() ? 'false' : 'true'); return; }
+    var cur = current(); if (payload.step < cur) return;
+    var section = document.querySelector(stepper.getItemElement(cur).getAttribute('data-ttsc-stepper-item'));
+    var bad = Array.prototype.filter.call(section.querySelectorAll('input, select'), function (el) { var ok = el.checkValidity(); el.setAttribute('aria-invalid', ok ? 'false' : 'true'); return !ok; });
+    if (bad.length) { payload.cancel = true; bad[0].focus(); log.textContent = 'change cancelado: ' + bad.length + ' campo(s) inválido(s) no passo ' + cur + '.'; }
+  });
+  form.addEventListener('changed', function () {
+    syncAria();
+    var sel = document.getElementById('sp-class'); document.getElementById('sp-chosen').textContent = sel.value ? sel.options[sel.selectedIndex].text : '—';
+    log.textContent = 'changed → passo ' + current() + ' de ' + stepper.getTotalSteps() + '.';
+  });
+  form.querySelector('.ttsc-stepper-nav').addEventListener('click', function (e) {
+    var item = e.target.closest('[data-ttsc-stepper-item].completed'); if (item) stepper.go(stepper.getStep(item));
+  });
+  form.addEventListener('submit', function (e) { e.preventDefault(); log.textContent = 'Matrícula MAT-2026-000123 confirmada (simulação).'; });
+</script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!-- @dsCard group="Componentes" height=1144 width=1280 page subtitle="Padrão do template (/developer/dashboard) · cabeçalho da visão, busca, ordenação, linha expansível, lote, ações, paginação global" -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>DataTable</title>
+<style>html, body { margin: 0; } #main-viewport { padding: 14px 16px 24px; } </style>
+</head>
+<body>
+<main id="main-viewport" class="bg-slate-50">
+  <div id="model-page" class="space-y-3.5" aria-live="polite"></div>
+</main>
+<div id="backdrop-overlay" class="fixed inset-0 bg-slate-900/40 backdrop-blur-[2px] z-40 transition-opacity hidden" onclick="window.closeAllDrawers && window.closeAllDrawers()"></div>
+<script>
+  TTSCModelKit.syncTheme();
+  var ROUTE = '/academico/turmas';
+  fetch('../../models/academico.json').then(function (r) { return r.json(); }).then(function (sheet) {
+    TTSCModelKit.render(
+      { portal: { label: 'Administração' }, module: { label: 'Acadêmico' }, page: { label: 'Turmas', route: ROUTE } },
+      sheet.pages[ROUTE], {"header": false, "banner": false, "tabs": false}
+    );
+    TTSCModelKit.switchTab('table');
+    setTimeout(function () { var c=document.querySelectorAll('#model-table .row-checkbox');if(c[2]){c[2].click();} }, 300);
+  });
+</script>
+</body>
+</html>

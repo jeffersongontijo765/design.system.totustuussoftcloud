@@ -1,0 +1,67 @@
+<!-- @dsCard group="Componentes" height=377 subtitle="Matriz de intensidade por linha e coluna com legenda e níveis de cor" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>HeatmapMatrix</title>
+<style>
+  html,body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font-family:Inter,system-ui,sans-serif;font-size:13px;-webkit-font-smoothing:antialiased}
+  .demo{padding:16px;display:grid;gap:14px;max-width:1100px}
+  .card{background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-surface);padding:16px}
+  .card-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+  .card-t{margin:0;font-size:14px;font-weight:600;color:var(--ttsc-text)}
+  .card-s{margin:2px 0 0;font-size:11px;color:var(--ttsc-text-muted)}
+  .pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:var(--ttsc-radius-pill);border:1px solid var(--ttsc-border);color:var(--ttsc-text-2);white-space:nowrap;background:var(--ttsc-surface)}
+  .pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+  .pill-ok{color:var(--ttsc-success);border-color:color-mix(in srgb,var(--ttsc-success) 40%,transparent)}
+  .pill-warn{color:var(--ttsc-warning-text);border-color:color-mix(in srgb,var(--ttsc-warning) 45%,transparent)}
+  .pill-bad{color:var(--ttsc-danger-text);border-color:color-mix(in srgb,var(--ttsc-danger) 40%,transparent)}
+  .pill-info{color:var(--ttsc-info-text);border-color:color-mix(in srgb,var(--ttsc-info) 40%,transparent)}
+  .av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text);flex-shrink:0}
+  .ib{width:30px;height:30px;border-radius:8px;border:1px solid var(--ttsc-border);background:var(--ttsc-surface);display:grid;place-items:center;color:var(--ttsc-text-2);cursor:pointer}
+  .ib:hover{background:var(--ttsc-canvas-2)}
+  .ib-ok:hover{color:var(--ttsc-success)} .ib-no:hover{color:var(--ttsc-danger-text)}
+  .muted{color:var(--ttsc-text-muted)} .tnum{font-variant-numeric:tabular-nums}
+  :focus-visible{outline:2px solid var(--ttsc-accent);outline-offset:2px}
+
+  .heat{width:100%;border-collapse:separate;border-spacing:4px;font-size:11px}
+  .heat caption{text-align:left;caption-side:top;padding-bottom:8px;color:var(--ttsc-text-muted);font-size:11px}
+  .heat th{font-weight:600;color:var(--ttsc-text-2);text-align:center;padding:2px 4px}
+  .heat th[scope=row]{text-align:left;white-space:nowrap;font-weight:500;color:var(--ttsc-text)}
+  .heat td.hc{height:36px;text-align:center;border-radius:6px;font-variant-numeric:tabular-nums;color:var(--ttsc-text);background:color-mix(in srgb,var(--ttsc-accent) calc(var(--lv) * 22%),var(--ttsc-surface-2)) !important;color:var(--ttsc-text) !important}
+  /* o app força fundo transparente em td no tema escuro (!important); a grade precisa vencer essa regra */
+  .heat td.hc[data-lv="3"],.heat td.hc[data-lv="4"]{color:var(--ttsc-accent-on) !important}
+  .heat-legend{display:flex;gap:6px;align-items:center;margin-top:10px;font-size:11px;color:var(--ttsc-text-muted)}
+  .heat-legend i{display:inline-block;width:18px;height:12px;border-radius:3px}
+</style>
+</head>
+<body>
+<main class="demo">
+
+  <section class="card" aria-labelledby="hm-t">
+    <div class="card-h">
+      <div><h2 id="hm-t" class="card-t">Frequência por turma e dia da semana</h2><p class="card-s">Percentual de presença, últimas 4 semanas</p></div>
+      <span class="pill pill-warn">2 turmas abaixo de 75%</span>
+    </div>
+    <table class="heat">
+      <caption>Quanto mais escuro, maior a presença</caption>
+      <thead><tr><th scope="col"><span class="muted">Turma</span></th><th scope="col">Seg</th><th scope="col">Ter</th><th scope="col">Qua</th><th scope="col">Qui</th><th scope="col">Sex</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">1º A · Manhã</th><td class="hc" style="--lv:4" data-lv="4">96%</td><td class="hc" style="--lv:4" data-lv="4">94%</td><td class="hc" style="--lv:4" data-lv="4">95%</td><td class="hc" style="--lv:3" data-lv="3">89%</td><td class="hc" style="--lv:3" data-lv="3">87%</td></tr>
+        <tr><th scope="row">1º B · Tarde</th><td class="hc" style="--lv:3" data-lv="3">88%</td><td class="hc" style="--lv:3" data-lv="3">86%</td><td class="hc" style="--lv:2" data-lv="2">81%</td><td class="hc" style="--lv:2" data-lv="2">79%</td><td class="hc" style="--lv:1" data-lv="1">72%</td></tr>
+        <tr><th scope="row">2º A · Noite</th><td class="hc" style="--lv:2" data-lv="2">78%</td><td class="hc" style="--lv:1" data-lv="1">71%</td><td class="hc" style="--lv:2" data-lv="2">76%</td><td class="hc" style="--lv:1" data-lv="1">69%</td><td class="hc" style="--lv:0" data-lv="0">58%</td></tr>
+        <tr><th scope="row">3º A · Manhã</th><td class="hc" style="--lv:4" data-lv="4">93%</td><td class="hc" style="--lv:4" data-lv="4">92%</td><td class="hc" style="--lv:3" data-lv="3">90%</td><td class="hc" style="--lv:3" data-lv="3">88%</td><td class="hc" style="--lv:3" data-lv="3">86%</td></tr>
+      </tbody>
+    </table>
+    <div class="heat-legend" aria-hidden="true">
+      <span>Menos</span>
+      <i style="background:color-mix(in srgb,var(--ttsc-accent) 0%,var(--ttsc-surface-2))"></i>
+      <i style="background:color-mix(in srgb,var(--ttsc-accent) 22%,var(--ttsc-surface-2))"></i>
+      <i style="background:color-mix(in srgb,var(--ttsc-accent) 44%,var(--ttsc-surface-2))"></i>
+      <i style="background:color-mix(in srgb,var(--ttsc-accent) 66%,var(--ttsc-surface-2))"></i>
+      <i style="background:color-mix(in srgb,var(--ttsc-accent) 88%,var(--ttsc-surface-2))"></i>
+      <span>Mais</span>
+    </div>
+  </section>
+
+</main>
+</body>
+</html>

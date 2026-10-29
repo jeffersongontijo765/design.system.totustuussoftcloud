@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="pt-br" dir="ltr" data-theme="light">
+<head>
+<meta charset="utf-8"><script>
+/* Starter Kit: segue o tema do preview (frame pai) e grava as chaves reais de tema de cada layout:
+   app/web/erros = html.dark + data-theme + localStorage 'ttsc-theme'; auth = 'od-theme'; portal de suporte = 'portal_theme'. */
+(function () {
+  function apply() {
+    var p = null; try { p = parent.document.documentElement.getAttribute('data-theme'); } catch (e) {}
+    var t = p === 'dark' ? 'dark' : 'light', h = document.documentElement;
+    h.setAttribute('data-theme', t); h.classList.toggle('dark', t === 'dark'); h.classList.toggle('light', t !== 'dark');
+    try { ['ttsc-theme', 'od-theme', 'theme', 'portal_theme'].forEach(function (k) { localStorage.setItem(k, t); }); } catch (e) {}
+  }
+  apply();
+  try { if (parent !== window) new MutationObserver(apply).observe(parent.document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class'] }); } catch (e) {}
+})();
+</script><script>try{localStorage.setItem('ttsc_cookie_consent','accepted_all')}catch(e){}</script>
+    <script>
+(function() {
+    'use strict';
+
+    // Tenant date display mask (PHP date() syntax). The database always stores
+    // ISO dates; this only affects client-side date rendering (ttscD helpers).
+    // Default 'Y-m-d' (English/ISO standard) when no tenant preference is set.
+    window.ttscFmtDate = "Y-m-d";
+
+    // Tenant timezone (default America/Sao_Paulo) and the server timezone used
+    // to interpret naive stored datetimes. Display-only — storage stays ISO.
+    window.ttscFmtTz = "America/Sao_Paulo";
+    window.ttscFmtServerTz = "UTC";
+
+    // Locale -> [Intl locale, currency code, symbol]
+    var lm = {
+        'en':    ['en-US', 'USD', '$'],
+        'pt-br': ['pt-BR', 'BRL', 'R$'],
+        'es':    ['es-ES', 'EUR', '€'],
+        'fr':    ['fr-FR', 'EUR', '€'],
+        'de':    ['de-DE', 'EUR', '€'],
+        'it':    ['it-IT', 'EUR', '€'],
+        'zh':    ['zh-CN', 'CNY', '¥'],
+        'ja':    ['ja-JP', 'JPY', '¥'],
+        'ru':    ['ru-RU', 'RUB', '₽'],
+        'ar':    ['ar-SA', 'SAR', 'ر.س.']
+    };
+
+    // Explicit currency override -> [Intl locale, currency code, symbol]
+    var cm = {
+        'BRL': ['pt-BR', 'BRL', 'R$'],
+        'USD': ['en-US', 'USD', '$'],
+        'EUR': ['de-DE', 'EUR', '€'],
+        'GBP': ['en-GB', 'GBP', '£'],
+        'ARS': ['es-AR', 'ARS', '$'],
+        'MXN': ['es-MX', 'MXN', '$'],
+        'CNY': ['zh-CN', 'CNY', '¥'],
+        'JPY': ['ja-JP', 'JPY', '¥'],
+        'RUB': ['ru-RU', 'RUB', '₽'],
+        'SAR': ['ar-SA', 'SAR', 'ر.س.']
+    };
+
+    function normLocale() {
+        var l = (document.documentElement.lang || 'en').toLowerCase().replace(/_/g, '-');
+        if (l.indexOf('pt') === 0) l = 'pt-br';
+        else if (l.indexOf('es-') === 0) l = 'es';
+        else if (l.indexOf('en-') === 0) l = 'en';
+        else if (l.indexOf('fr-') === 0) l = 'fr';
+        else if (l.indexOf('de-') === 0) l = 'de';
+        else if (l.indexOf('it-') === 0) l = 'it';
+        else if (l.indexOf('zh-') === 0) l = 'zh';
+        else if (l.indexOf('ja-') === 0) l = 'ja';
+        else if (l.indexOf('ru-') === 0) l = 'ru';
+        else if (l.indexOf('ar-') === 0) l = 'ar';
+        return l;
+    }
+
+    function resolve() {
+        var ov = (window.ttscFmtCurrency || '').toString().toUpperCase();
+        if (cm[ov]) return cm[ov];
+        return lm[normLocale()] || ['en-US', 'USD', '$'];
+    }
+
+    function fmt(v, o) {
+        v = parseFloat(v) || 0;
+        o = o || { minimumFractionDigits: 2, maximumFractionDigits: 2 };
+        return v.toLocaleString(resolve()[0], o);
+    }
+
+    window.ttscM = {
+        get loc() { return resolve()[0]; },
+        get cur() { return resolve()[1]; },
+        get sym() { return resolve()[2]; },
+        fmt: fmt,
+        money: function(v, o) {
+            return resolve()[2] + ' ' + fmt(v, o);
+        },
+        currency: function(c) { window.ttscFmtCurrency = c || ''; }
+    };
+})();
+
+// ── Date formatting (window.ttscD) ────────────────────────────
+// Single source of truth for client-side date/datetime rendering.
+// Honors the tenant display mask (window.ttscFmtDate) and timezone
+// (window.ttscFmtTz). Stored datetimes are interpreted in the server
+// timezone (window.ttscFmtServerTz); date-only values never shift.
+(function() {
+    'use strict';
+
+    var l = (document.documentElement.lang || 'en').toLowerCase().replace(/_/g, '-');
+    if (l.indexOf('pt') === 0) l = 'pt-br';
+    var m = {
+        'en': 'en-US', 'pt-br': 'pt-BR', 'es': 'es-ES', 'fr': 'fr-FR', 'de': 'de-DE',
+        'it': 'it-IT', 'zh': 'zh-CN', 'ja': 'ja-JP', 'ru': 'ru-RU', 'ar': 'ar-SA'
+    }[l] || 'en-US';
+
+    function pad(n) { return (n < 10 ? '0' : '') + n; }
+
+    // Offset (ms) of the instant `d` in IANA timezone `tz` (0 when invalid).
+    function tzOff(d, tz) {
+        try {
+            var parts = new Intl.DateTimeFormat('en-US', {
+                timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit',
+                hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+            }).formatToParts(d);
+            var get = function(t) {
+                for (var i = 0; i < parts.length; i++) { if (parts[i].type === t) return parseInt(parts[i].value, 10); }
+                return 0;
+            };
+            var h = get('hour');
+            if (h === 24) h = 0; // hour12:false midnight quirk
+            return Date.UTC(get('year'), get('month') - 1, get('day'), h, get('minute'), get('second')) - d.getTime();
+        } catch (e) { return 0; }
+    }
+
+    // Wall-clock components of `d` in `tz` (local when tz empty).
+    function comps(d, tz) {
+        if (!tz) {
+            return { Y: d.getFullYear(), m: pad(d.getMonth() + 1), d: pad(d.getDate()), H: pad(d.getHours()), i: pad(d.getMinutes()), s: pad(d.getSeconds()) };
+        }
+        var parts = new Intl.DateTimeFormat('en-US', {
+            timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit',
+            hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+        }).formatToParts(d);
+        var get = function(t) {
+            for (var i = 0; i < parts.length; i++) { if (parts[i].type === t) return parseInt(parts[i].value, 10); }
+            return 0;
+        };
+        var h = get('hour');
+        if (h === 24) h = 0;
+        return { Y: get('year'), m: pad(get('month')), d: pad(get('day')), H: pad(h), i: pad(get('minute')), s: pad(get('second')) };
+    }
+
+    // Parse a stored value into an instant (Date):
+    //  - explicit offset / Z → native parse
+    //  - date-only → UTC midnight (tz-agnostic)
+    //  - naive datetime + server tz known → interpret wall time in server tz
+    //  - otherwise → native (browser-local) parse, legacy behavior
+    function parse(v) {
+        if (v instanceof Date) return v;
+        var s = String(v);
+        var mo = /^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2})(?::(\d{2}))?)?(\.\d+)?(Z|[+-]\d{2}:?\d{2})?$/.exec(s);
+        if (mo) {
+            if (mo[8]) return new Date(s);
+            var hasTime = mo[4] !== undefined;
+            var utc = Date.UTC(+mo[1], +mo[2] - 1, +mo[3], +(mo[4] || 0), +(mo[5] || 0), +(mo[6] || 0));
+            if (!hasTime) return new Date(utc);
+            var stz = window.ttscFmtServerTz || '';
+            if (stz) {
+                var inst = utc - tzOff(new Date(utc), stz);
+                return new Date(utc - tzOff(new Date(inst), stz));
+            }
+            return new Date(s);
+        }
+        return new Date(s);
+    }
+
+    function monthName(x, tz, full) {
+        return x.toLocaleString(m, { month: full ? 'long' : 'short', timeZone: tz || undefined });
+    }
+    function dayName(x, tz) {
+        return x.toLocaleString(m, { weekday: 'short', timeZone: tz || undefined });
+    }
+
+    function fmtMask(d, f, tz) {
+        var c = comps(d, tz), out = '', i, ch;
+        for (i = 0; i < f.length; i++) {
+            ch = f.charAt(i);
+            if (ch === 'Y') out += c.Y;
+            else if (ch === 'y') out += pad(c.Y % 100);
+            else if (ch === 'm') out += c.m;
+            else if (ch === 'n') out += parseInt(c.m, 10);
+            else if (ch === 'd') out += c.d;
+            else if (ch === 'j') out += parseInt(c.d, 10);
+            else if (ch === 'H') out += c.H;
+            else if (ch === 'G') out += parseInt(c.H, 10);
+            else if (ch === 'h') out += pad(parseInt(c.H, 10) % 12 || 12);
+            else if (ch === 'g') out += (parseInt(c.H, 10) % 12 || 12);
+            else if (ch === 'i') out += c.i;
+            else if (ch === 's') out += c.s;
+            else if (ch === 'M') out += monthName(d, tz, false);
+            else if (ch === 'F') out += monthName(d, tz, true);
+            else if (ch === 'D') out += dayName(d, tz);
+            else if (ch === 'A') out += (parseInt(c.H, 10) < 12 ? 'AM' : 'PM');
+            else if (ch === 'a') out += (parseInt(c.H, 10) < 12 ? 'am' : 'pm');
+            else out += ch;
+        }
+        return out;
+    }
+
+    function render(v, o, withTime) {
+        var d = parse(v);
+        if (isNaN(d.getTime())) return String(v);
+        var mask = window.ttscFmtDate || '';
+        // Date-only values are day-granularity: render their stored components
+        // as-is (UTC) — never shifted by timezone or the browser's local time.
+        var dateOnly = typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v);
+        var tz = dateOnly ? 'UTC' : (window.ttscFmtTz || '');
+        if (mask) return fmtMask(d, mask, tz);
+        var opts = Object.assign({}, o, tz ? { timeZone: tz } : {});
+        return withTime ? d.toLocaleString(m, opts) : d.toLocaleDateString(m, opts);
+    }
+
+    window.ttscD = {
+        d: function(v, o) { return render(v, o, false); },
+        dt: function(v, o) { return render(v, o, true); }
+    };
+})();
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrar - TotusTuus SoftCloud</title>
+    
+    <!-- Fonts -->
+    <!-- Design System Global -->
+    <link href="assets/css/ttsc.css" rel="stylesheet">
+    <link href="assets/css/ttsc.supabase.css" rel="stylesheet">
+    
+    <!-- Auth Specific CSS -->
+    <link href="assets/css/ttsc.auth.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="assets/fa.css">
+    <link rel="stylesheet" href="assets/css/ttsc.notifications.css">
+    <link href="assets/css/ttsc.rtl.css" rel="stylesheet">
+    <meta name="csrf-token" content="3a8dd84bd34af93fee266e371ebfa1e66fb0d655e455da4b9662555be9a9d241">
+        
+    <!-- Prevent theme FOUC -->
+    <script>
+        (function() {
+            try {
+                var theme = localStorage.getItem('od-theme');
+                if (theme === 'light') {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                } else if (theme === 'dark') {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                }
+            } catch(e) {}
+        })();
+    </script>
+</head>
+<body>
+    <a href="#main-content" class="sr-only sr-only-focusable">Ir para o conteúdo principal</a>
+
+    <div style="position:fixed;top:20px;right:20px;z-index:100;display:flex;gap:16px;align-items:center;">
+        
+<style>
+/* ── Language Selector ── */
+.lang-select {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+.lang-select-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--sb-text, #0f172a);
+  background: transparent;
+  border: 1px solid var(--sb-border, #e2e8f0);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: inherit;
+  line-height: 1;
+  white-space: nowrap;
+}
+.lang-select-trigger:hover {
+  background: rgba(0, 0, 0, 0.03);
+  border-color: var(--accent, #10b981);
+}
+.lang-select-trigger:active {
+  transform: scale(0.97);
+}
+.lang-select-trigger img,
+.lang-flag-img {
+  width: 18px !important;
+  height: 13px !important;
+  border-radius: 2px !important;
+  object-fit: cover !important;
+  flex-shrink: 0 !important;
+  display: inline-block !important;
+  vertical-align: middle !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+.lang-option .lang-flag-img {
+  width: 20px !important;
+  height: 14px !important;
+  margin-right: 8px !important;
+}
+.lang-select-trigger .lang-label {
+  font-size: 12px;
+  color: var(--sb-text, #0f172a);
+}
+.lang-select-trigger .lang-chevron {
+  font-size: 8px;
+  color: var(--sb-text-muted, #94a3b8);
+  transition: transform 0.2s ease;
+}
+.lang-select-trigger.is-open .lang-chevron {
+  transform: rotate(180deg);
+}
+
+/* Dropdown panel */
+.lang-select-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  min-width: 200px;
+  background: var(--surface, #fff);
+  border: 1px solid var(--sb-border, #e2e8f0);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 4px;
+  z-index: 9999;
+  display: none;
+  animation: langFadeIn 0.12s ease;
+}
+.lang-select-dropdown.is-open {
+  display: block;
+}
+@keyframes langFadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.lang-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 7px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--sb-text, #0f172a);
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  font-family: inherit;
+  text-align: left;
+  line-height: 1;
+}
+.lang-option:hover {
+  background: rgba(16, 185, 129, 0.06);
+}
+.lang-option.is-active {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+}
+.lang-option .lang-name {
+  flex: 1;
+}
+.lang-option .lang-check {
+  font-size: 10px;
+  color: #10b981;
+  opacity: 0;
+  transition: opacity 0.12s;
+}
+.lang-option.is-active .lang-check {
+  opacity: 1;
+}
+
+/* Dark mode */
+.dark .lang-select-trigger {
+  color: #f1f5f9;
+  border-color: #334155;
+}
+.dark .lang-select-trigger:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+.dark .lang-select-dropdown {
+  background: #1a1d24 !important;
+  border-color: #282c37 !important;
+}
+.dark .lang-option {
+  color: #f1f5f9;
+}
+.dark .lang-option:hover {
+  background: rgba(16, 185, 129, 0.1) !important;
+}
+.dark .lang-option.is-active {
+  background: rgba(16, 185, 129, 0.15) !important;
+  color: #10b981 !important;
+}
+
+/* Login page variant — Full Supabase Select Dropdown */
+.lang-select--login .lang-select-trigger {
+  padding: 8px 14px;
+  min-height: 38px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 8px;
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--border, #d1d5db);
+  color: var(--fg, #0f172a);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+.lang-select--login .lang-select-trigger:hover {
+  border-color: #10b981;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.15);
+}
+
+.dark .lang-select--login .lang-select-trigger,
+html.dark .lang-select--login .lang-select-trigger {
+  background: #242832 !important;
+  border-color: #323745 !important;
+  color: #f3f4f6 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+}
+
+.dark .lang-select--login .lang-select-trigger:hover,
+html.dark .lang-select--login .lang-select-trigger:hover {
+  border-color: #10b981 !important;
+}
+
+.dark .lang-select--login .lang-select-dropdown,
+html.dark .lang-select--login .lang-select-dropdown {
+  background: #1a1d24 !important;
+  border-color: #282c37 !important;
+  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5) !important;
+}
+
+/* Landing page variant */
+.lang-select--landing .lang-select-trigger {
+  padding: 6px 14px;
+  font-size: 13px;
+  border-radius: 8px;
+}
+</style>
+
+<div class="lang-select lang-select--login">
+  <button type="button" class="lang-select-trigger" id="langSelectTrigger-login" aria-haspopup="listbox" aria-expanded="false">
+    <img src="assets/media/flags/brazil.svg" alt="" loading="lazy" class="lang-flag-img">
+        <span class="lang-label">Português</span>
+        <i class="fa-light fa-chevron-down lang-chevron"></i>
+  </button>
+  <div class="lang-select-dropdown" id="langSelectDropdown-login" role="listbox" aria-label="Selecionar idioma">
+          <button type="button"
+              class="lang-option "
+              data-locale="en"
+              data-switch-lang
+              role="option"
+              aria-selected="false">
+        <img src="assets/media/flags/united-states.svg" alt="" loading="lazy" class="lang-flag-img">
+        <span class="lang-name">English</span>
+        <i class="fa-light fa-check lang-check"></i>
+      </button>
+          <button type="button"
+              class="lang-option is-active"
+              data-locale="pt-br"
+              data-switch-lang
+              role="option"
+              aria-selected="true">
+        <img src="assets/media/flags/brazil.svg" alt="" loading="lazy" class="lang-flag-img">
+        <span class="lang-name">Português</span>
+        <i class="fa-light fa-check lang-check"></i>
+      </button>
+          <button type="button"
+              class="lang-option "
+              data-locale="es"
+              data-switch-lang
+              role="option"
+              aria-selected="false">
+        <img src="assets/media/flags/spain.svg" alt="" loading="lazy" class="lang-flag-img">
+        <span class="lang-name">Español</span>
+        <i class="fa-light fa-check lang-check"></i>
+      </button>
+          <button type="button"
+              class="lang-option "
+              data-locale="fr"
+              data-switch-lang
+              role="option"
+              aria-selected="false">
+        <img src="assets/media/flags/france.svg" alt="" loading="lazy" class="lang-flag-img">
+        <span class="lang-name">Français</span>
+        <i class="fa-light fa-check lang-check"></i>
+      </button>
+          <button type="button"
+              class="lang-option "
+              data-locale="de"
+              data-switch-lang
+              role="option"
+              aria-selected="false">
+        <img src="assets/media/flags/germany.svg" alt="" loading="lazy" class="lang-flag-img">
+        <span class="lang-name">Deutsch</span>
+        <i class="fa-light fa-check lang-check"></i>
+      </button>
+          <button type="button"
+              class="lang-option "
+              data-locale="it"
+              data-switch-lang
+              role="option"
+              aria-selected="false">
+        <img src="assets/media/flags/italy.svg" alt="" loading="lazy" class="lang-flag-img">
+        <span class="lang-name">Italiano</span>
+        <i class="fa-light fa-check lang-check"></i>
+      </button>
+          <button type="button"
+              class="lang-option "
+              data-locale="zh"
+              data-switch-lang
+              role="option"
+              aria-selected="false">
+        <img src="assets/media/flags/china.svg" alt="" loading="lazy" class="lang-flag-img">
+        <span class="lang-name">中文</span>
+        <i class="fa-light fa-check lang-check"></i>
+      </button>
+          <button type="button"
+              class="lang-option "
+              data-locale="ja"
+              data-switch-lang
+              role="option"
+              aria-selected="false">
+        <img src="assets/media/flags/japan.svg" alt="" loading="lazy" class="lang-flag-img">
+        <span class="lang-name">日本語</span>
+        <i class="fa-light fa-check lang-check"></i>
+      </button>
+          <button type="button"
+              class="lang-option "
+              data-locale="ru"
+              data-switch-lang
+              role="option"
+              aria-selected="false">
+        <img src="assets/media/flags/russia.svg" alt="" loading="lazy" class="lang-flag-img">
+        <span class="lang-name">Русский</span>
+        <i class="fa-light fa-check lang-check"></i>
+      </button>
+          <button type="button"
+              class="lang-option "
+              data-locale="ar"
+              data-switch-lang
+              role="option"
+              aria-selected="false">
+        <img src="assets/media/flags/saudi-arabia.svg" alt="" loading="lazy" class="lang-flag-img">
+        <span class="lang-name">العربية</span>
+        <i class="fa-light fa-check lang-check"></i>
+      </button>
+      </div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  // Switch language: save preference and reload
+  function switchLanguage(locale) {
+    try { localStorage.setItem('ttsc-locale', locale); } catch(e) {}
+    document.cookie = 'ttsc-locale=' + locale + ';path=/;max-age=31536000';
+    window.location.reload();
+  }
+
+  // Hide broken flag images
+  document.querySelectorAll('.lang-flag-img').forEach(function(img) {
+    img.addEventListener('error', function() { this.style.display = 'none'; });
+  });
+
+  // Event delegation: toggle dropdown + switch language
+  document.addEventListener('click', function(e) {
+      if (!(e.target instanceof Element)) return;
+    // Check for language switch click (CSP-safe, no onclick)
+    var langOption = e.target.closest('[data-switch-lang]');
+    if (langOption) {
+      var locale = langOption.getAttribute('data-locale');
+      if (locale) switchLanguage(locale);
+      return;
+    }
+
+    // Check for trigger toggle
+    var trigger = e.target.closest('.lang-select-trigger');
+    if (trigger) {
+      var parent = trigger.closest('.lang-select');
+      if (!parent) return;
+      var dropdown = parent.querySelector('.lang-select-dropdown');
+      var isOpen = dropdown.classList.contains('is-open');
+
+      // Close all other dropdowns
+      document.querySelectorAll('.lang-select-dropdown.is-open').forEach(function(d) {
+        d.classList.remove('is-open');
+      });
+      document.querySelectorAll('.lang-select-trigger.is-open').forEach(function(t) {
+        t.classList.remove('is-open');
+        t.setAttribute('aria-expanded', 'false');
+      });
+
+      if (!isOpen) {
+        dropdown.classList.add('is-open');
+        trigger.classList.add('is-open');
+        trigger.setAttribute('aria-expanded', 'true');
+      }
+      return;
+    }
+
+    // Click outside → close all dropdowns
+    document.querySelectorAll('.lang-select-dropdown.is-open').forEach(function(d) {
+      d.classList.remove('is-open');
+    });
+    document.querySelectorAll('.lang-select-trigger.is-open').forEach(function(t) {
+      t.classList.remove('is-open');
+      t.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.lang-select-dropdown.is-open').forEach(function(d) {
+        d.classList.remove('is-open');
+      });
+      document.querySelectorAll('.lang-select-trigger.is-open').forEach(function(t) {
+        t.classList.remove('is-open');
+        t.setAttribute('aria-expanded', 'false');
+      });
+    }
+  });
+})();
+</script>
+        <button class="auth-theme-toggle" id="auth-theme-toggle" title="Alternar tema" aria-label="Alternar tema de cores" style="margin-left: 8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+        </button>
+    </div>
+
+    <main id="main-content" class="sb-login-page">
+        <div class="sb-login-container">
+            <!-- Brand Panel (shared by all auth pages) -->
+            <div class="sb-login-brand">
+                <div class="sb-login-brand-content">
+                    <div class="sb-login-logo">
+                        <img src="assets/media/app/favicon.svg" alt="TotusTuus Logo" style="width:48px;height:48px;object-fit:contain">
+                    </div>
+                    <h1 class="sb-login-title">TotusTuus<br/>SoftCloud</h1>
+                    <p class="sb-login-tagline">
+                        Plataforma unificada de gestão para instituições de ensino. Segura, escalável e feita para o futuro.                    </p>
+                    <div class="sb-login-features">
+                        <div class="sb-login-feature">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            <span>Criptografia de ponta a ponta</span>
+                        </div>
+                        <div class="sb-login-feature">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                            <span>Autenticação multifator</span>
+                        </div>
+                        <div class="sb-login-feature">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            <span>Controle de acesso baseado em papéis</span>
+                        </div>
+                        <div class="sb-login-feature">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                            <span>Monitoramento de atividade 24/7</span>
+                        </div>
+                    </div>
+                    <div class="sb-login-footer-text">
+                        &copy; 2026 TotusTuus SoftCloud<br/>
+                        <span>Todos os direitos reservados.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Panel -->
+            <div class="sb-login-form">
+                <div class="sb-login-form-inner">
+                    
+<!-- Mobile-only logo + title -->
+<div class="sb-login-mobile-header">
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect width="32" height="32" rx="8"/>
+        <path d="M10 22V10h4l4 8 4-8h4v12h-4V14l-4 8-4-8v8h-4Z"/>
+    </svg>
+    <span class="sb-login-mobile-brand">TotusTuus</span>
+</div>
+
+<!-- Error message -->
+
+<div class="sb-login-form-header">
+    <h2>Bem-vindo de volta</h2>
+    <p>Entre na sua conta para continuar</p>
+</div>
+
+<form method="POST" action="#/login" id="loginForm" novalidate>
+    <input type="hidden" name="csrf_token" value="3a8dd84bd34af93fee266e371ebfa1e66fb0d655e455da4b9662555be9a9d241">    <input type="hidden" name="portal" value="admin">
+
+    <div class="sb-field">
+        <label for="email">Endereço de e-mail</label>
+        <div class="sb-input-wrap">
+            <svg class="sb-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <input type="email" id="email" name="email" class="sb-input" placeholder="seu@email.com" required autofocus autocomplete="email">
+        </div>
+    </div>
+
+    <div class="sb-field">
+        <div class="sb-field-label-row">
+            <label for="password">Senha</label>
+            <a href="#/forgot-password" class="sb-forgot-link">Esqueceu a senha?</a>
+        </div>
+        <div class="sb-input-wrap">
+            <svg class="sb-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+            <input type="password" id="password" name="password" class="sb-input" placeholder="Digite sua senha" required autocomplete="current-password">
+            <button type="button" class="sb-pw-toggle" id="pwToggle" aria-label="Alternar visibilidade da senha" tabindex="-1">
+                <svg id="pwEye" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <button type="submit" id="submitBtn" class="sb-btn sb-btn-primary sb-btn-full">
+        <span>Entrar</span>
+        <svg class="sb-btn-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </button>
+</form>
+
+<div class="sb-divider-text">
+    <span>Acesso aos portais</span>
+</div>
+
+<div class="sb-portal-grid">
+    <a href="#/login-developer" class="sb-portal-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+        Desenvolvedor    </a>
+    <a href="#/login-student" class="sb-portal-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c0 1.1 2.7 3 6 3s6-1.9 6-3v-5"/></svg>
+        Aluno    </a>
+    <a href="#/login-teacher" class="sb-portal-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        Professor    </a>
+    <a href="#/login-parents" class="sb-portal-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/></svg>
+        Responsáveis    </a>
+    <a href="#/login-thirdparty" class="sb-portal-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Terceiros    </a>
+</div>
+
+<div class="sb-login-register">
+    <span>Não tem uma conta?</span>
+    <a href="#/register">Criar conta</a>
+</div>
+
+<script>
+(function() {
+    var toggle = document.getElementById('pwToggle');
+    var input = document.getElementById('password');
+    var eye = document.getElementById('pwEye');
+    if (toggle && input && eye) {
+        toggle.addEventListener('click', function() {
+            var isPassword = input.type === 'password';
+            input.type = isPassword ? 'text' : 'password';
+            eye.innerHTML = isPassword 
+                ? '<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24M1 1l22 22"/>'
+                : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+        });
+    }
+    var form = document.getElementById('loginForm');
+    var btn = document.getElementById('submitBtn');
+    if (form && btn) {
+        form.addEventListener('submit', function() {
+            btn.disabled = true;
+            btn.innerHTML = '<svg class="sb-spinner" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-dasharray="31.4 31.4" stroke-linecap="round"/></svg><span>Entrando...</span>';
+        });
+    }
+})();
+</script>
+
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+        
+    <!-- Theme Toggle Logic -->
+    <script>
+        function toggleAuthTheme() {
+            var html = document.documentElement;
+            var isLight = html.getAttribute('data-theme') === 'light';
+            if (isLight) {
+                html.setAttribute('data-theme', 'dark');
+                try { localStorage.setItem('od-theme', 'dark'); } catch(e) {}
+            } else {
+                html.setAttribute('data-theme', 'light');
+                try { localStorage.setItem('od-theme', 'light'); } catch(e) {}
+            }
+        }
+        (function() {
+            var btn = document.getElementById('auth-theme-toggle');
+            if (btn) {
+                btn.addEventListener('click', toggleAuthTheme);
+            }
+        })();
+    </script>
+    
+    <!-- JS i18n bridge: must be loaded BEFORE auth.v2.js -->
+    <script>
+window.__locale = "pt-br";
+window.__translations = {"new_ticket_created_toast":"Novo ticket criado","new_message_toast":"Nova mensagem recebida","operation_completed":"Operação concluída com sucesso!","error_processing":"Erro ao processar solicitação","connection_error":"Erro de conexão. Por favor, tente novamente.","sending":"Enviando...","loading":"Carregando...","no_results":"Nenhum resultado encontrado","success":"Sucesso","error":"Erro.","warning":"Aviso","info":"Informação","saved":"Salvo","deleted":"Excluído","approved":"Aprovado","rejected":"Rejeitado","cancelled":"Cancelado","submitted":"Enviado","received":"Recebido","resolved":"Resolvido","copied":"Copiado!","published":"Publicado!","updated":"Atualizado.","removed":"Removido","connected":"Conectado!","failed":"Falhou","network_error":"Erro de rede","request_failed":"Solicitação falhou","selected_records":"registros selecionados","edit_record":"Editar Registro","unknown":"Desconhecido","confirm_delete_record":"Excluir este registro?","export_requested":"Exportação {0} solicitada","name_required":"Nome é obrigatório","path_required":"Caminho é obrigatório","verified_redirecting":"Verificado! Redirecionando...","resending_code":"Reenviando código...","code_resent":"Código reenviado!","error_resending":"Erro ao reenviar","code_sent_to":"Código enviado para {0}","setting_up":"Configurando {0}...","error_setting_up_mfa":"Erro ao configurar MFA","qr_code_saved":"QR Code salvo! Verifique o aplicativo autenticador.","no_token_found":"Nenhum token encontrado. Faça login para obter um token de acesso.","token_auto_filled":"Token preenchido automaticamente!","passkey_not_supported":"O navegador não suporta Passkeys","passkey_registered":"Passkey registrada!","device_trusted":"Dispositivo marcado como confiável","removed_success":"Removido","api_communication_failed":"Falha na comunicação com a API","configuration_saved":"Configuração salva!","settings_saved":"Configurações salvas.","settings_saved_successfully":"Configurações salvas com sucesso","calendar_saved":"Calendário salvo.","classroom_saved":"Sala salva.","color_updated":"Cor atualizada!","font_updated":"Fonte atualizada!","unit_added":"Unidade adicionada!","data_updated":"Dados atualizados.","data_updated_excl":"Dados atualizados!","test_connection":"Testar conexão","test_sent":"Teste enviado","connection_test_completed":"Teste de conexão concluído","function_in_development":"Esta funcionalidade está em desenvolvimento.","course_saved":"Curso salvo com sucesso.","course_deleted":"Curso excluído com sucesso.","enrollment_saved":"Matrícula salva com sucesso.","enrollment_deleted":"Matrícula excluída com sucesso.","enrollment_finalized":"Matrícula finalizada com sucesso!","enrollment_reactivated":"Matrícula reativada.","enrollment_confirmed":"Matrícula confirmada: {0}","enrollment_select_student":"Por favor, pesquise e selecione uma matrícula.","enrollment_select_course":"Por favor, selecione um curso.","enrollment_select_period":"Por favor, selecione um período acadêmico.","enrollment_enter_cpf":"Digite um CPF ou nome de aluno para continuar.","enrollment_select_at_least":"Selecione pelo menos um aluno.","enrollment_select_reason":"Por favor, selecione um motivo.","enrollment_select_target":"Por favor, selecione um curso de destino.","enrollment_select_type":"Por favor, selecione um tipo de documento.","enrollment_enter_title":"Por favor, digite um título.","enrollment_select_document_type":"Por favor, selecione um tipo de documento.","enrollment_saved_lock":"Bloqueio salvo com sucesso.","enrollment_select_model":"Selecione um modelo.","enrollment_select_student_for":"Selecione um aluno.","enrollment_select_class":"Selecione uma turma.","enrollment_select_class_batch":"Selecione uma turma para emissão em lote.","enrollment_select_class_subject":"Selecione turma e disciplina.","enrollment_select_eval_type":"Selecione o tipo de avaliação.","document_saved":"Documento salvo com sucesso.","document_deleted":"Documento excluído com sucesso.","document_issued":"Documento emitido! Protocolo: {0}","document_archived":"Documento arquivado","document_restored":"Documento restaurado","document_on_loan":"Documento marcado como emprestado.","document_returned":"Documento devolvido.","document_saved_model":"Modelo salvo!","model_published":"Modelo publicado!","published_excl":"Publicado!","saved_successfully":"Salvo com sucesso!","saved_successfully_period":"Salvo com sucesso.","grid_saved":"Grade salva.","grid_level_saved":"Nível da grade salvo com sucesso.","grade_saved":"Nota salva com sucesso.","grade_deleted":"Nota excluída com sucesso.","occurrence_saved":"Ocorrência salva com sucesso.","occurrence_deleted":"Ocorrência excluída com sucesso.","period_saved":"Período salvo com sucesso.","period_deleted":"Período excluído com sucesso.","request_saved":"Solicitação salva com sucesso.","request_deleted":"Solicitação excluída com sucesso.","request_approved":"Solicitação aprovada.","request_cancelled":"Solicitação cancelada.","request_rejected":"Solicitação rejeitada.","internship_saved":"Estágio salvo com sucesso.","internship_deleted":"Estágio excluído com sucesso.","event_saved":"Evento salvo.","event_removed":"Evento removido.","group_saved":"Grupo salvo.","slot_added":"Slot adicionado.","slot_deleted":"Slot excluído.","process_saved":"Processo salvo.","schedule_group_saved":"Grupo salvo.","responsible_saved":"Responsável salvo.","holiday_added":"Feriado adicionado.","holiday_deleted":"Feriado excluído.","class_recorded":"Aula registrada.","class_deleted":"Aula excluída.","next_called":"Próximo chamado com sucesso.","ticket_issued":"Ticket emitido com sucesso.","error_issuing_ticket":"Erro ao emitir ticket.","error_calling_next":"Erro de conexão ao chamar próximo.","error_issuing_ticket_conn":"Erro de conexão ao emitir ticket.","rule_saved":"Regra salva.","rule_removed":"Regra removida.","upload_concluded":"Upload concluído!","transfer_saved":"Transferência salva com sucesso.","config_updated":"Config atualizada","score_saved":"Nota salva!","enter_score":"Digite uma nota","invalid_score":"Nota inválida","no_essays_selected":"Nenhuma redação selecionada","add_evaluation":"Adicione pelo menos uma avaliação antes de salvar.","enter_recovery_grade":"Digite pelo menos uma nota de recuperação.","enter_eval_name":"Digite o nome\/título da avaliação.","select_eval_type":"Selecione o tipo de avaliação.","select_class_subject":"Selecione turma e disciplina.","error_saving_evaluation":"Erro ao salvar avaliação.","error_updating_thesis":"Erro ao atualizar tese.","ocr_completed":"OCR concluído! Confiança: {0}%","ocr_failed":"OCR falhou","processed_essays":"{0} redação(ões) processada(s)","processed_essays_partial":"{0} redação(ões) processada(s), {1} falhou(aram)","moving_essay":"Movendo redação para {0}...","essay_moved":"Redação movida para {0}","error_updating_status":"Erro de rede ao atualizar status da redação","project_loaded":"Projeto carregado","project_created":"Projeto \u0022{0}\u0022 criado!","failed_create_project":"Falha ao criar projeto","select_project":"Por favor, selecione um projeto","no_file_loaded":"Nenhum arquivo carregado ou nenhum projeto selecionado","no_project_selected":"Nenhum projeto selecionado","schema_parsed":"Esquema analisado com sucesso!","parse_failed":"Falha na análise","auto_match_failed":"Correspondência automática falhou","mapping_approved":"Mapeamento aprovado","error_approving_mapping":"Erro ao aprovar mapeamento","columns_matched":"{0} colunas correspondidas!","invalid_json_pipeline":"JSON inválido no pipeline de transformação","transform_saved":"Transformação salva","save_failed":"Falha ao salvar","validation_passed":"Validação aprovada!","validation_errors":"Validação encontrou {0} erro(s)","validation_failed":"Validação falhou","dry_run_completed":"Execução de teste concluída! ~{0} linhas a migrar.","dry_run_failed":"Execução de teste falhou","migration_started":"Execução da migração iniciada!","execution_failed":"Falha ao iniciar execução","delete_failed":"Falha ao excluir","move_failed":"Falha ao mover","status_updated":"Status atualizado","update_failed":"Falha ao atualizar","card_tokenized":"Cartão tokenizado com sucesso","default_method_updated":"Método padrão atualizado","payment_method_removed":"Método de pagamento removido","failed_to_set_default":"Falha ao definir como padrão","failed_to_remove_method":"Falha ao remover método de pagamento","failed_parse_response":"Falha ao analisar resposta","failed_load_gateways":"Falha ao carregar configurações de gateway do servidor","gateway_config_saved":"Configuração de gateway salva com sucesso","connection_failed":"Conexão falhou","refund_succeeded":"Reembolso realizado com sucesso","refund_failed":"Falha no reembolso","charge_succeeded":"Cobrança realizada com sucesso! ID do pagamento: {0}","plan_changed":"Plano alterado com sucesso","rule_created":"Regra criada","rule_deleted":"Regra excluída","rule_updated":"Regra atualizada","rule_executed":"Regra executada com sucesso","step_created":"Etapa criada","step_deleted":"Etapa excluída","step_updated":"Etapa atualizada","dunning_completed":"Cobrança concluída","dunning_failed":"Cobrança falhou","new_negotiation":"Nova negociação","failed_to_create":"Falha ao criar","failed_to_delete":"Falha ao excluir","failed_to_remove":"Falha ao remover","failed_to_update":"Falha ao atualizar","failed_save_step":"Falha ao salvar etapa","select_instance":"Selecione uma instância primeiro","backup_created":"Backup criado!","select_database":"Selecione um banco de dados","enter_sql_query":"Digite uma consulta SQL","select_database_first":"Selecione um banco de dados primeiro","connection_ok":"Conexão OK!","base_db_connection_ok":"Conexão com banco de dados base OK!","base_db_connection_default":"Conexão com banco de dados base estabelecida (padrão do aplicativo)","tenant_db_connection_ok":"Conexão com banco de dados do inquilino OK!","tenant_db_test_error":"Não foi possível testar a conexão do inquilino: {0}","applied":"Aplicado!","reverted":"Revertido!","webhook_created":"Webhook criado!","health_check_complete":"Verificação de saúde concluída","health_check_failed":"Verificação de saúde falhou","health_check_failed_msg":"Verificação de saúde falhou: {0}","config_updated_int":"Config atualizada","check_complete":"Verificação concluída","token_generated":"Token gerado: {0}\\n\\nArmazene em um local seguro. Não será exibido novamente.","job_triggered":"Trabalho acionado","settings_saved_supplies":"Configurações salvas com sucesso","approved_supply":"Aprovado","rejected_supply":"Rejeitado","submitted_supply":"Enviado","received_supply":"Recebido","cancelled_supply":"Cancelado","preferences_saved":"Preferências salvas com sucesso!","preferences_save_error":"Erro ao salvar preferências no servidor","preferences_reset":"Preferências redefinidas","export_module_not_loaded":"Módulo de exportação não carregado. Verifique se ttsc.export.js está disponível.","exporting_report":"Exportando relatório {0} como {1}...","report_exported":"Relatório {0} exportado com sucesso!","export_error":"Erro na exportação: {0}","generating_report":"Gerando relatório {0}...","report_generated":"Relatório {0} gerado com sucesso!","ip_blocked":"IP {0} bloqueado com sucesso!","export_solicited":"Exportação {0} solicitada.","key_created_error":"Erro ao criar chave","registration_error":"Erro no cadastro","name_required_security":"Nome é obrigatório","removed_security":"Removido","error_copying":"Erro ao copiar","error_communicating":"Erro de comunicação.","error_communicating_server":"Erro de comunicação com o servidor.","error_updating_lgpd":"Erro ao atualizar.","error_processing_lgpd":"Erro ao processar.","error_reactivating":"Erro ao reativar.","status_updated_lgpd":"Status atualizado!","status_updated_success":"Status atualizado com sucesso!","unsupported_format":"Formato não suportado: {0}. Use CSV, JSON, XML, SQL ou TXT.","imported_endpoints":"{0} endpoints importados com sucesso!","error_processing_data":"Erro ao processar dados: {0}","endpoint_exists":"Endpoint já existe","path_start_with_api":"O caminho deve começar com \/api\/","select_file_json":"Selecione um arquivo ou cole o JSON","json_exported":"JSON exportado com sucesso!","json_formatted":"JSON formatado!","invalid_json":"O conteúdo não é JSON válido","endpoint_created":"Endpoint criado localmente. (Sincronização com backend necessária para persistência)","schema_name_required":"Nome do esquema é obrigatório","schema_created":"Esquema criado localmente.","imported_count":"{0} endpoints importados com sucesso!","error_import_data":"Erro ao processar dados: {0}","execution_failed_auto":"Execução falhou","rule_executed_refreshing":"Regra executada com sucesso! Atualizando...","rule_name_required":"Nome da regra é obrigatório.","toggle_failed":"Falha ao alternar","error_executing":"Erro: {0}","chat":"Chat","history":"Histórico","notifications":"Notificações","print":"Imprimir","search":"Pesquisar","reopen":"Reabrir","phone":"Telefone","configuration_saved_portal":"Configuração salva!","batch_requests":"{0} solicitação(ões) em lote criada(s)","request_created_for":"Solicitação criada para {0}","updated_config":"Atualizado.","batch_issued":"Lote: {0} emitido(s), {1} falhou(aram) de {2}","error_issuing":"Erro ao emitir","revoked":"Revogado!","mandatory_mfa_enabled":"MFA obrigatório ativado!","mandatory_mfa_disabled":"MFA obrigatório desativado!","error_tenant":"Erro","error_saving_step_date":"Erro ao salvar data da etapa.","error_saving_lock":"Erro ao salvar bloqueio.","error_saving_transfer":"Erro ao salvar transferência.","error_saving_ppc":"Erro ao salvar PPC.","error_saving_document":"Erro ao salvar documento.","error_saving_enrollment":"Erro ao salvar matrícula.","error_saving_attendance":"Erro ao salvar frequência.","error_saving_grade":"Erro ao salvar nota.","error_saving_internship":"Erro ao salvar estágio.","error_saving_occurrence":"Erro ao salvar ocorrência.","error_saving_period":"Erro ao salvar período.","error_saving_request":"Erro ao salvar solicitação.","error_saving_subject":"Erro ao salvar disciplina.","error_saving_thesis":"Erro ao salvar tese.","error_saving_course":"Erro ao salvar curso.","error_saving_class":"Erro ao salvar turma.","error_saving_model":"Erro ao salvar modelo","error_deleting_document":"Erro ao excluir documento.","error_deleting_enrollment":"Erro ao excluir matrícula.","error_deleting_grade":"Erro ao excluir nota.","error_deleting_internship":"Erro ao excluir estágio.","error_deleting_occurrence":"Erro ao excluir ocorrência.","error_deleting_period":"Erro ao excluir período.","error_deleting_request":"Erro ao excluir solicitação.","error_deleting_subject":"Erro ao excluir disciplina.","error_deleting_thesis":"Erro ao excluir tese.","error_deleting_class":"Erro ao excluir turma.","error_deleting_course":"Erro ao excluir curso.","conn_error_saving_attendance":"Erro de conexão ao salvar frequência.","conn_error_saving_class":"Erro de conexão ao salvar turma.","conn_error_saving_course":"Erro de conexão ao salvar curso.","conn_error_saving_document":"Erro de conexão ao salvar documento.","conn_error_saving_enrollment":"Erro de conexão ao salvar matrícula.","conn_error_saving_grade":"Erro de conexão ao salvar nota.","conn_error_saving_internship":"Erro de conexão ao salvar estágio.","conn_error_saving_occurrence":"Erro de conexão ao salvar ocorrência.","conn_error_saving_period":"Erro de conexão ao salvar período.","conn_error_saving_ppc":"Erro de conexão ao salvar PPC.","conn_error_saving_request":"Erro de conexão ao salvar solicitação.","conn_error_saving_subject":"Erro de conexão ao salvar disciplina.","conn_error_saving_thesis":"Erro de conexão ao salvar tese.","conn_error_saving_step":"Erro de conexão ao salvar etapa.","conn_error_saving_doc_lock":"Erro de conexão ao salvar documento.","conn_error_saving_lock":"Erro de conexão ao salvar bloqueio.","conn_error_saving_request_while":"Erro de conexão ao salvar solicitação.","conn_error_saving_transfer":"Erro de conexão ao salvar transferência.","conn_error_deleting_class":"Erro de conexão ao excluir turma.","conn_error_deleting_course":"Erro de conexão ao excluir curso.","conn_error_deleting_document":"Erro de conexão ao excluir documento.","conn_error_deleting_enrollment":"Erro de conexão ao excluir matrícula.","conn_error_deleting_grade":"Erro de conexão ao excluir nota.","conn_error_deleting_internship":"Erro de conexão ao excluir estágio.","conn_error_deleting_occurrence":"Erro de conexão ao excluir ocorrência.","conn_error_deleting_period":"Erro de conexão ao excluir período.","conn_error_deleting_request":"Erro de conexão ao excluir solicitação.","conn_error_deleting_subject":"Erro de conexão ao excluir disciplina.","conn_error_deleting_thesis":"Erro de conexão ao excluir tese.","conn_error_deleting_records":"Erro de rede ao excluir registros.","conn_error_deleting_error":"Erro ao excluir: {0}","conn_error_error_saving":"Erro ao salvar.","connection_error_period":"Erro de conexão.","communication_error":"Erro de comunicação.","communication_error_try":"Erro de comunicação. Tente novamente.","no_data_export":"Nenhum dado para exportar","no_document_selected":"Nenhum documento selecionado","select_file_paste":"Selecione um arquivo ou cole o JSON","unknown_error":"Erro desconhecido","error_generic":"Erro: {0}","network_error_generic":"Erro de rede: {0}","connection_error_generic":"Erro de conexão: {0}","save_the_model_first":"Salve o modelo primeiro.","save_the_calendar_first":"Salve o calendário primeiro.","save_the_group_first":"Salve o grupo primeiro.","retry_queued":"Tentativa enfileirada","retry_failed":"Tentativa falhou","error_saving":"Erro ao salvar.","error_publishing":"Erro ao publicar","error_updating":"Erro ao atualizar.","saved_excl":"Salvo!","deleted_excl":"Excluído!","deleted_period":"Excluído.","saved_period":"Salvo.","connection_error_generic_period":"Erro de conexão.","communication_error_period":"Erro de comunicação.","error_period":"Erro.","click_textfield_or_select_block":"Clique em um campo de texto ou selecione um bloco primeiro.","no_content_in_file":"Nenhum conteúdo encontrado no arquivo.","markdown_imported":"Markdown importado com sucesso!","document_title_required":"O título do documento é obrigatório.","error_request":"Ocorreu um erro na requisição.","session_expired_title":"Sessão Expirada","session_expired_msg":"Sua sessão expirou. Por favor, faça login novamente para continuar.","session_expired":"Sessão Expirada","toast_session_expired":"Sua sessão expirou. Atualize a página ou faça login novamente.","csrf_token_mismatch":"Token de segurança da sessão expirou. Recarregue a página.","dr_sac_drawer_save":"Salvar","dr_sac_drawer_close":"Fechar","dr_sac_drawer_cancel":"Cancelar","dr_sac_drawer_test":"Testar","dr_sac_drawer_create_rule":"Criar Regra","dr_sac_drawer_save_article":"Salvar Artigo","dr_sac_drawer_create_ticket":"Criar Chamado","dr_sac_drawer_duplicity_heading":"Chamados similares abertos","dr_sac_drawer_kb_related_articles":"Artigos relacionados","dr_sac_drawer_additional_fields":"Campos Adicionais","dr_sac_drawer_no_customers_found":"Nenhum cliente encontrado","dr_sac_drawer_article_separator":"\n\n--- Artigo: ","dr_sac_drawer_duplicates_exist":"Já existem chamados similares abertos:\n","dr_sac_drawer_create_anyway":"\nDeseja criar mesmo assim?","dr_sac_drawer_error_prefix":"Erro: ","dr_sac_drawer_unknown_error":"Erro desconhecido","dr_sac_drawer_time_ago_now":"agora","dr_sac_drawer_time_ago_minutes":"min","dr_sac_drawer_time_ago_hours":"h","dr_sac_drawer_badge_cap":"99+","dr_sac_drawer_js_unknown_entity":"Entidade desconhecida: ","dr_sac_drawer_js_edit_prefix":"Editar ","dr_sac_drawer_js_new_prefix":"Novo ","dr_sac_drawer_js_select_default":"Selecionar...","dr_sac_drawer_js_saved_successfully":"Salvo com sucesso!","dr_sac_drawer_js_error_prefix":"Erro: ","dr_sac_drawer_js_failed_to_save":"Falha ao salvar","dr_sac_drawer_js_network_error":"Erro de rede","dr_sac_drawer_entity_channel":"Canal","dr_sac_drawer_entity_queue":"Fila","dr_sac_drawer_entity_category":"Categoria","dr_sac_drawer_entity_priority":"Prioridade","dr_sac_drawer_entity_team":"Equipe","dr_sac_drawer_entity_agent":"Agente","dr_sac_drawer_entity_sla_policy":"Política de SLA","dr_sac_drawer_entity_macro":"Macro","dr_sac_drawer_entity_tag":"Tag","dr_sac_drawer_entity_ticket_type":"Tipo de Chamado","dr_sac_drawer_entity_subcategory":"Subcategoria","dr_sac_drawer_entity_severity":"Severidade","dr_sac_drawer_entity_impact":"Impacto","dr_sac_drawer_entity_urgency":"Urgência","dr_sac_drawer_entity_unit":"Unidade","dr_sac_drawer_entity_department":"Departamento","dr_sac_drawer_entity_organization":"Organização","dr_sac_drawer_entity_holiday":"Feriado","dr_sac_drawer_entity_business_hours":"Horário Comercial","dr_sac_drawer_entity_custom_field":"Campo Customizado","dr_sac_drawer_entity_close_reason":"Motivo de Fechamento","dr_sac_drawer_entity_resolution_code":"Código de Resolução","dr_sac_drawer_entity_escalation_rule":"Regra de Escalonamento","dr_sac_drawer_entity_workflow":"Fluxo de Trabalho","dr_sac_drawer_entity_response_template":"Modelo de Resposta","dr_sac_drawer_label_name":"Nome","dr_sac_drawer_label_slug":"Slug","dr_sac_drawer_label_description":"Descrição","dr_sac_drawer_label_icon":"Ícone (FontAwesome)","dr_sac_drawer_label_color":"Cor","dr_sac_drawer_label_order":"Ordem","dr_sac_drawer_label_active":"Ativo","dr_sac_drawer_label_channel_id":"ID do Canal","dr_sac_drawer_label_parent_category":"Categoria Pai (ID)","dr_sac_drawer_label_response_time":"Tempo Resposta (min)","dr_sac_drawer_label_resolution_time":"Tempo Resolução (min)","dr_sac_drawer_label_queue_id":"ID da Fila","dr_sac_drawer_label_user_uuid":"UUID do Usuário","dr_sac_drawer_label_team_id":"ID da Equipe","dr_sac_drawer_label_max_tickets":"Máx. Chamados","dr_sac_drawer_label_available":"Disponível","dr_sac_drawer_label_priority_id":"ID da Prioridade","dr_sac_drawer_label_category_id":"ID da Categoria","dr_sac_drawer_label_escalation_time":"Tempo Escalonamento (min)","dr_sac_drawer_label_business_hours_only":"Apenas H. Comercial","dr_sac_drawer_label_content":"Conteúdo","dr_sac_drawer_label_level":"Nível","dr_sac_drawer_label_level_with_desc":"Nível (1=Crítico, 4=Baixo)","dr_sac_drawer_label_code":"Código","dr_sac_drawer_label_address":"Endereço","dr_sac_drawer_label_phone":"Telefone","dr_sac_drawer_label_email":"E-mail","dr_sac_drawer_label_unit_id":"ID da Unidade","dr_sac_drawer_label_trade_name":"Nome Fantasia","dr_sac_drawer_label_document":"CNPJ\/CPF","dr_sac_drawer_label_date":"Data","dr_sac_drawer_label_recurring":"Recorrente (todo ano)","dr_sac_drawer_label_day_of_week":"Dia da Semana","dr_sac_drawer_label_start":"Início","dr_sac_drawer_label_end":"Fim","dr_sac_drawer_label_business_day":"Dia Útil","dr_sac_drawer_label_internal_name":"Nome Interno","dr_sac_drawer_label_label":"Rótulo","dr_sac_drawer_label_type":"Tipo","dr_sac_drawer_label_options_json":"Opções (JSON)","dr_sac_drawer_label_required":"Obrigatório","dr_sac_drawer_label_placeholder":"Placeholder","dr_sac_drawer_label_default_value":"Valor Padrão","dr_sac_drawer_label_event":"Evento","dr_sac_drawer_label_minutes":"Minutos","dr_sac_drawer_label_priority_id_short":"ID Prioridade","dr_sac_drawer_label_queue_id_short":"ID Fila","dr_sac_drawer_label_category_id_short":"ID Categoria","dr_sac_drawer_label_severity_id":"ID Severidade","dr_sac_drawer_label_destination":"Destino","dr_sac_drawer_label_destination_id":"ID do Destino","dr_sac_drawer_label_notify_previous":"Notificar Anterior","dr_sac_drawer_label_notify_supervisor":"Notificar Supervisor","dr_sac_drawer_label_max_levels":"Máx. Níveis","dr_sac_drawer_label_trigger":"Gatilho","dr_sac_drawer_label_trigger_config":"Config. Gatilho (JSON)","dr_sac_drawer_label_steps":"Passos (array JSON)","dr_sac_drawer_label_email_subject":"Assunto do E-mail","dr_sac_drawer_ph_chat_online":"ex.: Chat Online","dr_sac_drawer_ph_chat_online_slug":"ex.: chat-online","dr_sac_drawer_ph_support_n1":"ex.: Suporte N1","dr_sac_drawer_ph_channel_id":"0 para geral","dr_sac_drawer_ph_support_technical":"ex.: Suporte Técnico","dr_sac_drawer_ph_parent_category":"0 se raiz","dr_sac_drawer_ph_high":"ex.: Alta","dr_sac_drawer_ph_high_slug":"ex.: alta","dr_sac_drawer_ph_sla_gold":"ex.: SLA Ouro","dr_sac_drawer_ph_welcome":"ex.: Boas-vindas","dr_sac_drawer_ph_urgent":"ex.: urgente","dr_sac_drawer_ph_incident":"ex.: Incidente","dr_sac_drawer_ph_incident_slug":"ex.: incidente","dr_sac_drawer_ph_critical":"ex.: Crítico","dr_sac_drawer_ph_critical_slug":"ex.: critico","dr_sac_drawer_ph_user_uuid":"UUID do usuário","dr_sac_drawer_ph_auto_triage":"ex.: Triagem Automática","dr_sac_drawer_ph_trigger_config":"{}","dr_sac_drawer_ph_steps":"[{\u0022action\u0022:\u0022assign_team\u0022,\u0022params\u0022:{\u0022team_id\u0022:1}}]","dr_sac_drawer_ph_thank_you":"ex.: Agradecimento","dr_sac_drawer_ph_email_subject":"Seu chamado foi resolvido","dr_sac_drawer_day_sunday":"Domingo","dr_sac_drawer_day_monday":"Segunda-feira","dr_sac_drawer_day_tuesday":"Terça-feira","dr_sac_drawer_day_wednesday":"Quarta-feira","dr_sac_drawer_day_thursday":"Quinta-feira","dr_sac_drawer_day_friday":"Sexta-feira","dr_sac_drawer_day_saturday":"Sábado","dr_sac_drawer_type_text":"Texto","dr_sac_drawer_type_long_text":"Texto Longo","dr_sac_drawer_type_number":"Número","dr_sac_drawer_type_decimal":"Decimal","dr_sac_drawer_type_currency":"Moeda","dr_sac_drawer_type_date":"Data","dr_sac_drawer_type_datetime":"Data\/Hora","dr_sac_drawer_type_time":"Hora","dr_sac_drawer_type_yes_no":"Sim\/Não","dr_sac_drawer_type_single_select":"Seleção Única","dr_sac_drawer_type_multi_select":"Múltipla Escolha","dr_sac_drawer_type_email":"E-mail","dr_sac_drawer_type_phone":"Telefone","dr_sac_drawer_type_url":"URL","dr_sac_drawer_type_cpf_cnpj":"CPF\/CNPJ","dr_sac_drawer_event_sla_response":"SLA - Resposta","dr_sac_drawer_event_sla_resolution":"SLA - Resolução","dr_sac_drawer_event_status_timeout":"Status - Timeout","dr_sac_drawer_event_customer_wait":"Aguardando Cliente","dr_sac_drawer_event_agent_inactivity":"Inatividade do Agente","dr_sac_drawer_dest_agent":"Agente","dr_sac_drawer_dest_team":"Equipe","dr_sac_drawer_dest_queue":"Fila","dr_sac_drawer_dest_department":"Departamento","dr_sac_drawer_trigger_ticket_created":"Chamado Criado","dr_sac_drawer_trigger_status_changed":"Status Alterado","dr_sac_drawer_trigger_scheduled":"Agendado","dr_sac_drawer_trigger_webhook":"Webhook","dr_sac_drawer_template_type_public":"Público","dr_sac_drawer_template_type_internal":"Interno","dr_sac_drawer_template_type_email":"E-mail","dr_sac_drawer_js_test_completed":"Teste concluído","all_registered_subjects":"todas as disciplinas cadastradas","js_90d_average":"90d Médio","js_access_restricted":"403 - Acesso Restrito a Administradores","js_action":"Ação","js_actions":"Ações","js_active":"Ativo","js_actor_id":"actor_id","js_add_competency":"Adicionar ${item}","js_admin":"Admin","js_admin_exemplo_com":"admin@exemplo.com","js_admin_logger_view":"admin.logger.view","js_admissiondrawertitle":"admissionDrawerTitle","js_alerta":"alerta","js_alerts_updated_successfully":"Alertas atualizados com sucesso.","js_all_tables":"Todos Tabelas","js_ambiente":"Ambiente","js_an_unexpected_error_occurred":"Ocorreu um erro inesperado.","js_api_offline_block_local":"API offline — bloqueio salvo apenas localmente","js_are_you_sure_you_want_to_clear_old_logs_":"Tem certeza que deseja limpar logs antigos? Esta ação não pode ser desfeita.","js_are_you_sure_you_want_to_delete":"Are Você sure Você want Para Excluir","js_are_you_sure_you_want_to_delete_this_his":"Tem certeza que deseja excluir este ${item}?","js_are_you_sure_you_want_to_delete_this_rec":"Tem certeza que deseja excluir este ${item}?","js_are_you_sure_you_want_to_reset_all_setti":"Tem certeza que deseja resetar todas as configurações para os valores padrão?","js_are_you_sure_you_want_to_reverse_this_de":"Tem certeza que deseja reverter esta execução de depreciação?","js_area":"Área","js_area_stacked":"Área (Empilhado)","js_area_timeline":"Area Linha do Tempo","js_asset":"Ativo","js_asset_name":"Ativo Nome","js_audit":"Auditoria","js_auth":"Autenticação","js_automation_created":"Regra de automação criada!","js_backoff_s":"Backoff (s)","js_bar":"Barra","js_bar_grouped":"Barra (Grouped)","js_blocked_successfully":"bloqueado com sucesso!","js_book_value":"Contábil Valor","js_browser_not_supported":"Navegador não suportado.","js_brute_force_detected":"brute_force_detected","js_bubble":"Bolha","js_camera_in_use":"Câmera em uso.","js_camera_requires_https_or_localhost":"Câmera requer HTTPS ou localhost.","js_camera_unavailable":"Câmera indisponível.","js_canal":"Canal","js_category":"Categoria","js_checked":"Selecionado","js_clear_all_execution_history":"Limpar todo o histórico de execução?","js_clique_para_remover":"Clique para remover","js_close_service":"Fechar ${item}","js_code":"Código","js_collection":"Cobrança","js_column":"Coluna","js_combo_bar_line":"Combo (Barra + Linha)","js_company":"Empresa","js_competency_created":"Competência criada!","js_completed":"Concluído!","js_condition":"Condição","js_configure_a_delivery_provider":"Configurar um provedor de entrega.","js_confirm_block_ip":"Tem certeza que deseja bloquear permanentemente o IP {ip}?","js_confirm_deal_as_won":"Confirmar negócio como GANHO?","js_confirmation":"Confirmação","js_connect_a_camera_to_this_computer_and_tr":"Conecte uma câmera a este computador e tente novamente.","js_connecting_camera":"Conectando câmera…","js_connection_error":"Erro de conexão","js_contactdrawertitle":"contactDrawerTitle","js_convert_this_lead_to_won":"Converter este lead para ganho?","js_convert_this_session_to_a_ticket_the_cha":"Converter esta sessão em ticket? O chat será encerrado.","js_convert_to_ticket":"Converter Para Ticket","js_converting_lead":"Erro ao converter lead","js_cpf_email_phone":"cpf, email, phone","js_create":"Criar","js_create_a_new_notification":"Criar nova notificação.","js_create_a_notification_automation_rule":"Criar uma regra de automação de notificação.","js_create_a_notification_template":"Criar um modelo de notificação.","js_create_evaluation":"Criar Avaliação","js_create_profile":"Criar ${item}","js_create_rubric":"Criar ${item}","js_create_simulation":"Criar Simulado","js_creating":"Criando...","js_cron_expression":"Cron Expressão","js_csv":".CSV","js_ctrl_k":"Ctrl+K","js_current_value":"Atual Valor","js_custom":"Personalizado…","js_data_scheduled":"Dados Scheduled","js_days":"dias","js_dealdrawertitle":"dealDrawerTitle","js_define_grading_rubric_and_scoring":"Definir rubrica de avaliação e pontuação.","js_delete":"Delete \\\\\\\\\u0022","js_delete_logs":"Excluir Logs","js_delete_profile":"Excluir ${item}:","js_delete_rubric":"Excluir ${item}:","js_delete_simulation":"Excluir ${item}:","js_delete_this_asset":"Excluir este ${item}?","js_delete_this_automation":"Excluir este ${item}?","js_delete_this_automation_rule":"Excluir este ${item}?","js_delete_this_benefit":"Excluir este ${item}?","js_delete_this_campaign":"Excluir este ${item}?","js_delete_this_contact":"Excluir este ${item}?","js_delete_this_deal":"Excluir este ${item}?","js_delete_this_inventory_item":"Excluir este ${item}?","js_delete_this_lead":"Excluir este ${item}?","js_delete_this_maintenance":"Excluir este ${item}?","js_delete_this_notification":"Excluir este ${item}?","js_delete_this_order":"Excluir este ${item}?","js_delete_this_product":"Excluir este ${item}?","js_delete_this_provider":"Excluir este ${item}?","js_delete_this_publication":"Excluir este ${item}?","js_delete_this_record":"Excluir este ${item}?","js_delete_this_request":"Excluir este ${item}?","js_delete_this_rule":"Excluir este ${item}?","js_delete_this_stage":"Excluir este ${item}?","js_delete_this_supplier":"Excluir este ${item}?","js_delete_this_template":"Excluir este ${item}?","js_delete_this_transport_route":"Excluir este ${item}?","js_delete_this_view":"Excluir este ${item}?","js_delete_this_warehouse":"Excluir este ${item}?","js_deleting":"Erro ao excluir","js_detailed_data_for_this_execution_is_no_l":"Os dados detalhados para esta execução não estão mais disponíveis.","js_dias_da_semana":"Dias da Semana","js_disposal_date":"Descarte Data","js_donut":"Rosca","js_download":"Download","js_drag_cards_between_columns_to_change_sta":"Arraste cartões entre as colunas para alterar o status.","js_dt_info":"Exibindo _START_ a _END_ de _TOTAL_ registros","js_duration_min":"Duração (min)","js_e_mail":"E-mail","js_edit":"Edit: ","js_edit_asset":"Editar ${item}","js_edit_automation":"Editar ${item}","js_edit_competency":"Editar ${item}","js_edit_disposal":"Editar ${item}","js_edit_document":"Editar ${item}","js_edit_evaluation":"Editar Avaliação","js_edit_inventory":"Editar ${item}","js_edit_maintenance":"Editar ${item}","js_edit_meeting":"Editar ${item}","js_edit_notification":"Editar ${item}","js_edit_policy":"Editar ${item}","js_edit_profile":"Editar ${item}","js_edit_provider":"Editar ${item}","js_edit_rubric":"Editar ${item}","js_edit_rule":"Editar ${item}","js_edit_simulation":"Editar ${item}","js_edit_template":"Editar ${item}","js_edit_transfer":"Editar ${item}","js_editing":"Editing: ","js_email_phone":"E-mail \/ Telefone","js_employee":"Funcionário","js_employee_and_date_are_mandatory":"Funcionário e data são obrigatórios.","js_end":"Término","js_end_date":"Data de Término","js_end_the_meeting":"Encerrar ${item}?","js_error":"Error: ","js_error_1":"Erro","js_error_creating_task":"Error creating task","js_error_loading":"Erro ao ${verb}","js_error_prefix":"Error: ","js_esocialdrawertitle":"esocialDrawerTitle","js_especial":"Especial","js_est_cost":"Custo Est.","js_evaluation_created":"Avaliação criada!","js_event_ips":"event.ips","js_event_severity_high":"event.severity === \\\\\\\\\u0022high\\\\\\\\\u0022","js_evento":"Evento","js_exporting":"Erro ao exportar","js_expression":"Expressão","js_failed_to_load":"Falha ao carregar","js_false_label":"Falso Label","js_field":"Campo","js_fields":"Campos","js_fill_in_the_asset_details":"Preencha os detalhes do ativo.","js_finalizing":"Finalizando...","js_flow_saved_successfully":"Fluxo salvo com sucesso","js_fluxo":"Fluxo","js_fonte":"Fonte","js_forecast":"Previsão","js_formato":"Formato","js_from_location":"De (Location)","js_funnel":"Funil","js_gatilho":"Gatilho","js_gauge":"Medidor","js_generate_report":"Gerar ${item}","js_generating":"Gerando","js_generating_file":"Gerando arquivo...","js_generating_file_1":"Gerando Arquivo","js_generating_file_2":"Gerando Arquivo","js_geo_map":"Geo Mapa","js_gpcareerdrawertitle":"gpCareerDrawerTitle","js_gpclimatedrawertitle":"gpClimateDrawerTitle","js_gpmetricsdrawertitle":"gpMetricsDrawerTitle","js_gptalentdrawertitle":"gpTalentDrawerTitle","js_grouped_by":"Agrupado by","js_heatmap":"Mapa de Calor","js_hidden_columns":"oculto","js_in_progress":"Em Andamento","js_insured_value":"Segurado Valor","js_insurer":"Seguradora","js_inventory_date":"Inventário Data","js_ip_address":"ip_address","js_ip_address_email":"ip_address, email","js_ips_blocked_successfully":"IP(s) bloqueado(s) com sucesso!","js_items_selected":"itens selecionados","js_json":".JSON","js_keyframes_sbtoastin_from_opacity_0_trans":"@keyframes sbToastIn { from { opacity:0; transform:translateX(40px) scale(0.95); } to { opacity:1; transform:translateX(0) scale(1); } }","js_last":"Last: ","js_last_30_days":"Últimos ${item}","js_last_7_days":"Últimos ${item}","js_last_month":"Último ${item}","js_last_run":"Last run: ","js_last_year":"Último ${item}","js_lead":"Lead","js_lead_successfully_converted_to_deal":"Lead convertido para negócio com sucesso!","js_leaddrawertitle":"leadDrawerTitle","js_level":"Nível","js_line":"Linha","js_line_multi":"Linha (Multi)","js_loading":"Carregando...","js_loading_ticket":"Erro ao carregar ticket","js_local":"Local","js_location":"Localização","js_login_blocked":"login_blocked","js_login_bloqueado_actor_id_ip_tenant":"Login bloqueado: {actor_id} - {ip} - {tenant}","js_login_failed":"login_failed","js_mascarar":"Mascarar","js_max_attempts":"Máx Tentativas","js_max_iterations":"Máx Iterations","js_max_value":"Máx Valor","js_message":"Mensagem","js_method":"Método","js_min_severity":"Mín Severidade","js_min_value":"Mín Valor","js_name":"Nome","js_name_is_mandatory":"Nome é obrigatório.","js_name_is_required":"Nome é obrigatório.","js_network_error":"Erro de rede","js_network_error_occurred":"Ocorreu um erro de rede.","js_network_error_saving_data":"Erro de rede ao salvar dados.","js_new_asset":"Nov${2:+o:a} ${item}","js_new_automation_rule":"Nov${2:+o:a} ${item}","js_new_campaign":"Nov${2:+o:a} ${item}","js_new_disposal":"Nov${2:+o:a} ${item}","js_new_document":"Nov${2:+o:a} ${item}","js_new_inventory":"Nov${2:+o:a} ${item}","js_new_maintenance":"Nov${2:+o:a} ${item}","js_new_meeting":"Nov${2:+o:a} ${item}","js_new_notification":"Nov${2:+o:a} ${item}","js_new_policy":"Nov${2:+o:a} ${item}","js_new_provider":"Nov${2:+o:a} ${item}","js_new_template":"Nov${2:+o:a} ${item}","js_new_transfer":"Nov${2:+o:a} ${item}","js_no_camera_found":"Nenhuma câmera encontrada.","js_no_records_found":"Nenhum registro encontrado.","js_no_results_to_copy":"Nenhum resultado para copiar.","js_no_results_to_copy_run_tests_first":"Nenhum resultado para copiar. Execute os testes primeiro.","js_no_sla":"Nenhum ${item}","js_no_teste":"Erro Não teste","js_nome":"Nome","js_not_found":"Não encontrado","js_notificar":"Notificar","js_notifications":"Notificações","js_novo_gr_fico":"Novo Gráfico","js_occurrences":"Ocorrências","js_of":"de","js_operator":"Operador","js_page":"Página","js_para":"Para","js_participant_added":"Participante adicionado!","js_payrolldrawertitle":"payrollDrawerTitle","js_pdf":".PDF","js_permanently_delete_this_record":"Excluir permanentemente este registro?","js_permission":"Permissão","js_permission_needed":"Permissão necessária.","js_permissions":"Permissions: ","js_pie":"Pizza","js_please_fill_all_required_fields":"Por favor, preencha todos os campos obrigatórios.","js_policy":"Policy #","js_position":"Posição","js_priority":"Prioridade","js_prob":"Prob.","js_proceeds":"Receitas","js_processing":"Processando...","js_processing_records":"Processando ${item}","js_pronto":"Pronto","js_quantidade_de_ramos":"Quantidade de Ramos","js_question_created":"Pergunta criada!","js_queue":"Fila","js_r":"R$ ","js_radar":"Radar","js_reason":"Motivo","js_records":"registros","js_remove_this_account":"Remover este ${item}?","js_remove_this_column_os_cards_voltam_para_":"Remover Este column? Os Cartões voltam para \\\\\\\\\u0022Open\\\\\\\\\u0022.","js_remove_this_link":"Remover este ${item}?","js_requester":"Solicitante","js_requesting_leave":"Erro ao solicitar leave","js_resolve_este_alerta":"Resolve este alerta?","js_responsible":"Responsável","js_retention_days":"Retenção (days)","js_return_event_severity_high":"Retornar event.severity === \\\\\\\\\u0022high\\\\\\\\\u0022","js_revoke_this_token":"Revogar este ${item}?","js_rhcompensationdrawertitle":"rhCompensationDrawerTitle","js_rhperformancedrawertitle":"rhPerformanceDrawerTitle","js_rhrecruitmentdrawertitle":"rhRecruitmentDrawerTitle","js_rhtrainingdrawertitle":"rhTrainingDrawerTitle","js_role":"Função","js_run":"Run: ","js_run_tests_before_exporting":"Execute os testes antes de exportar.","js_running":"Executando...","js_salvando":"Salvando...","js_salvo":"Salvo ✓","js_sankey":"Sankey","js_saving":"Erro ao salvar","js_saving_contact":"Erro ao salvar contact","js_saving_deal":"Erro ao salvar deal","js_saving_lead":"Erro ao salvar lead","js_saving_product":"Erro ao salvar product","js_saving_record":"Erro ao salvar record","js_saving_stage":"Erro ao salvar stage","js_scatter":"Dispersão","js_schedule_a_new_meeting":"Agendar nova reunião.","js_score":"Pontuação","js_secops":"SecOps","js_security_incident":"${item} de Segurança","js_seg_sex":"seg-sex","js_segundos":"Segundos","js_select":"Selecionar...","js_select_employee_and_benefit":"Selecionar funcionário e benefício.","js_select_the_reference_month":"Selecionar o mês de referência.","js_session_expired":"Sua sessão expirou ou você precisa fazer login para acessar.","js_set_up_a_new_exam_simulation":"Configurar nova simulação de exame.","js_set_up_an_exam_profile_type":"Configurar um tipo de perfil de exame.","js_severity":"Severidade","js_showing":"Exibindo","js_source":"Origem","js_sql":".SQL","js_stacked_area":"Empilhado Area","js_stacked_bar":"Empilhado Barra","js_stage":"Etapa","js_start":"Início","js_start_date":"Data de Início","js_starting":"Iniciando...","js_status":"Status","js_strategy":"Estratégia","js_sunburst":"Sunburst","js_supervisor_exemplo_com":"supervisor@exemplo.com","js_swimlane":"Swimlane","js_sync_failed":"Sincronizar Failed","js_tag":"Tag","js_target":"Meta","js_task_code_not_found":"Task code not found","js_task_created":"Task created successfully","js_task_updated":"Task updated successfully","js_template":"Modelo","js_tenant_id":"ID do Tenant","js_terminationdrawertitle":"terminationDrawerTitle","js_testando":"Testando...","js_the_camera_is_being_used_by_another_app_":"A câmera está sendo usada por outro aplicativo. Feche outros apps e tente novamente.","js_the_stage_is_active_camera_may_take_a_mo":"A etapa está ativa. A câmera pode levar um momento para conectar.","js_this_month":"Este ${item}","js_this_week":"Este ${item}","js_this_will_permanently_remove_the_profile":"Este will permanently Remover the Perfil \\\\\\\\\u0022","js_this_will_remove_the_rubric":"Este will Remover the Rubrica \\\\\\\\\u0022","js_this_will_soft_delete_the_simulation":"Este will soft-delete the Simulação \\\\\\\\\u0022","js_this_year":"Este ${item}","js_ticket":"Ticket","js_ticket_1":"Ticket","js_ticket_2":"Ticket","js_timeline":"Linha do Tempo","js_timeout_min":"Timeout (min)","js_tipo":"Tipo","js_title":"Título","js_title_is_required":"Título é obrigatório.","js_to_location":"Para (Location)","js_today":"Hoje","js_topic_created":"Tópico criado!","js_total":"Total: ","js_total_items":"Total Itens","js_transfer_date":"Transferência Data","js_treemap":"Mapa de Árvore","js_true_label":"Verdadeiro Label","js_try_again":"Tentar novamente","js_txt":".TXT","js_type":"Tipo","js_unknown":"Desconhecido","js_unknown_error":"Desconhecido Erro","js_update":"Atualizar","js_update_automation_rule":"Atualizar regra de automação.","js_update_meeting_details":"Atualizar detalhes da reunião.","js_update_the_asset_details":"Atualize os detalhes do ativo.","js_updated":"Updated: ","js_updating_status":"Erro ao atualizar status","js_url_do_webhook":"URL do Webhook","js_use_chrome_firefox_or_edge_to_enable_str":"Use Chrome, Firefox ou Edge para ativar o streaming.","js_uuid_ou":"uuid ou *","js_validating_data":"Validando data...","js_valor":"Valor","js_value":"Valor","js_warning":"Aviso","js_waterfall":"Cascata","js_window_s":"Janela (s)","js_word_cloud":"Palavra Cloud","js_xlsx":".XLSX","js_xml":".XML","js_yes":"Sim","js_yesterday":"Ontem","js_you_have_unsaved_changes_discard":"Você tem alterações não salvas. Descartar?","lgpd_type_accidental_disclosure":"Divulgação Acidental","lgpd_type_breach":"Vazamento","lgpd_type_data_loss":"Perda de Dados","lgpd_type_other":"Outro","lgpd_type_ransomware":"Ransomware","lgpd_type_unauthorized_access":"Acesso Não Autorizado","notif_read":"Lida","notif_received_at":"Recebida em","notif_status":"Status","notif_unread":"Não lida","status_active":"Ativo","status_cancelled":"Cancelado","status_graduated":"Formado","status_locked":"Trancado","status_transferred":"Transferido","subjects_in_offer":"disciplinas em oferta","without_data":"Sem dados","js_searching":"Buscando...","js_error_loading_notifications":"Erro ao carregar notificações","js_no_notifications_found":"Nenhuma notificação encontrada","js_invalid_json_target_audience":"JSON inválido no público-alvo","js_title_required":"O título é obrigatório","js_notification_updated":"Notificação atualizada","js_notification_created":"Notificação criada","js_save_failed":"Falha ao salvar","js_send":"Enviar","js_notification_details":"Detalhes da notificação","js_attempt":"Tentativa","js_provider":"Provedor","js_date":"Data","js_no_delivery_logs":"Ainda não há logs de entrega","js_channel":"Canal","js_queued":"Na fila","js_sent":"Enviado","js_delivered":"Entregue","js_read":"Lida","js_failed":"Falhou","js_delivery_logs":"Logs de entrega","js_notification_not_found":"Notificação não encontrada","js_error_loading_notification":"Erro ao carregar notificação","js_notification_deleted":"Notificação excluída","js_delete_failed":"Falha ao excluir","js_no_notification_selected":"Nenhuma notificação selecionada","js_notification_requeued":"Notificação reenfileirada","js_resend_failed":"Falha ao reenviar","js_error_loading_templates":"Erro ao carregar modelos","js_no_templates_found":"Nenhum modelo encontrado","js_inactive":"Inativo","js_invalid_json_variables":"JSON inválido nas variáveis","js_name_code_body_required":"Nome, código e corpo são obrigatórios","js_template_updated":"Modelo atualizado","js_template_created":"Modelo criado","js_template_not_found":"Modelo não encontrado","js_error_loading_template":"Erro ao carregar modelo","js_template_deleted":"Modelo excluído","js_error_loading_rules":"Erro ao carregar regras","js_no_rules_found":"Nenhuma regra encontrada","js_invalid_json_conditions":"JSON inválido nas condições","js_invalid_json_actions":"JSON inválido nas ações","js_name_event_required":"Nome e evento são obrigatórios","js_rule_updated":"Regra atualizada","js_rule_created":"Regra criada","js_rule_not_found":"Regra não encontrada","js_rule_deleted":"Regra excluída","js_rule_toggled":"Regra alternada","js_toggle_failed":"Falha ao alternar","js_error_loading_providers":"Erro ao carregar provedores","js_no_providers_found":"Nenhum provedor encontrado","js_unlimited":"Ilimitado","js_healthy":"Saudável","js_degraded":"Degradado","js_name_code_channel_required":"Nome, código e canal são obrigatórios","js_provider_updated":"Provedor atualizado","js_provider_created":"Provedor criado","js_provider_not_found":"Provedor não encontrado","js_provider_deleted":"Provedor excluído","auth_error_invalid_credentials":"Credenciais inválidas","auth_error_rate_limit":"Acesso temporariamente bloqueado devido a muitas tentativas. Aguarde :minutes minutos antes de tentar novamente.","auth_error_ip_restricted":"Seu IP foi temporariamente restrito. Tente novamente mais tarde.","auth_error_session_expired":"Sessão expirada. Por favor, faça login novamente.","auth_error_google_not_configured":"Login do Google ainda não foi configurado. Use e-mail e senha ou selecione outro portal.","auth_error_microsoft_not_configured":"Login da Microsoft ainda não foi configurado. Use e-mail e senha ou selecione outro portal.","auth_error_user_locked":"Usuário bloqueado. Tente novamente em {0} minutos","auth_error_invalid_or_expired_code":"Código inválido ou expirado","auth_error_failed_email_mfa":"Falha ao enviar código MFA por e-mail","auth_error_invalid_or_expired_token":"Token inválido ou expirado","auth_error_user_not_found":"Usuário não encontrado","auth_error_two_step_required":"Verificação em duas etapas necessária","auth_error_invalid_mfa_code":"Código MFA inválido","auth_error_password_requirements":"A senha não atende aos requisitos mínimos","auth_error_invalid_user_or_email":"Usuário ou e-mail inválido","auth_error_failed_send_verification":"Falha ao enviar e-mail de verificação","auth_error_verification_email_sent":"E-mail de verificação enviado","auth_error_invalid_verification_token":"Token de verificação inválido","auth_error_invalid_or_expired_link":"Link de verificação inválido ou expirado","invalid_code":"Código inválido","verify":"Verificar","please_wait":"Aguarde...","mfa_required":"Verificação adicional necessária","login_successful":"Login realizado com sucesso!","session_expired_reload":"Sessão expirada. Recarregando a página...","fill_login_field":"Preencha o campo de login","enter_valid_email":"Digite um e-mail válido","cpf_must_11_digits":"O CPF deve ter 11 dígitos","fill_password":"Preencha a senha","password_min_6_chars":"A senha deve ter pelo menos 6 caracteres","enter_mfa_code":"Digite o código MFA","verifying":"Verificando...","mfa_verified":"MFA verificado com sucesso!","invalid_mfa_code":"Código MFA inválido","log_in":"Entrar","toast_title_success":"Sucesso","toast_title_error":"Erro","toast_title_warning":"Aviso","toast_title_info":"Informação","dr_addr_add":"Adicionar","dr_addr_add_title":"Adicionar Endereço","dr_addr_cancel":"Cancelar","dr_addr_city":"Cidade","dr_addr_close":"Fechar","dr_addr_complement":"Complemento","dr_addr_country":"País","dr_addr_label":"Rótulo","dr_addr_map_close":"Fechar","dr_addr_map_loading":"Carregando...","dr_addr_map_loading_map":"Carregando mapa...","dr_addr_map_location":"Localização","dr_addr_map_open_route":"Abertos Route","dr_addr_neighborhood":"Bairro","dr_addr_number":"Nº","dr_addr_postal_code":"Postal Código","dr_addr_primary":"Endereço principal","dr_addr_state":"Estado","dr_addr_street":"Rua","dr_addr_subtitle":"Gerencie seus endereços cadastrados","dr_addr_title":"Endereços","dr_addr_type":"Tipo","dr_addr_type_billing":"Faturamento","dr_addr_type_commercial":"Comercial","dr_addr_type_other":"Outro","dr_addr_type_residential":"Residencial","dr_confirm_cancel":"Cancelar","dr_confirm_close":"Fechar","dr_confirm_confirm":"Confirmar","dr_confirm_delete_ask":"Tem certeza?","dr_confirm_delete_audit":"(required for Auditoria trail)","dr_confirm_delete_confirm":"Confirmar Exclusão","dr_confirm_delete_desc":"Você are Sobre to Remover the record below. This action is recorded via Auditoria log.","dr_confirm_delete_placeholder":"ex.: Registro duplicado, descontinuidade...","dr_confirm_delete_reason":"Motivo da Exclusão","dr_confirm_delete_title":"Confirmar Exclusão","dr_confirm_delete_undo":"Esta ação não pode ser desfeita","dr_confirm_message":"Você are Sobre to execute the action below.","dr_confirm_question":"Tem certeza?","dr_confirm_subtitle":"Please Confirmar this action","dr_confirm_title":"Confirmar Ação","dr_email_add":"Adicionar","dr_email_add_title":"Add E-mail","dr_email_cancel":"Cancelar","dr_email_close":"Fechar","dr_email_field":"E-mail *","dr_email_label":"Rótulo","dr_email_primary":"Primary E-mail","dr_email_subtitle":"Manage your E-mail addresses","dr_email_title":"E-mails","dr_email_type":"Tipo","dr_email_type_other":"Outro","dr_email_type_personal":"Pessoal","dr_email_type_work":"Trabalho","dr_emergency_cancel":"Cancelar","dr_emergency_close":"Fechar","dr_emergency_name":"Contato Nome","dr_emergency_phone":"Telefone","dr_emergency_relation":"Parentesco","dr_emergency_save":"Salvar","dr_emergency_subtitle":"Editar emergency Contato","dr_emergency_title":"Emergency Contato","dr_family_add":"Adicionar","dr_family_add_title":"Adicionar Familiar","dr_family_birth_date":"Data de Birth","dr_family_cancel":"Cancelar","dr_family_child":"Filho(a)","dr_family_close":"Fechar","dr_family_cpf":"CPF","dr_family_email":"E-mail","dr_family_father":"Pai","dr_family_full_name":"Integral Nome *","dr_family_mother":"Mãe","dr_family_other":"Outro","dr_family_phone":"Telefone","dr_family_relationship":"Parentesco *","dr_family_select":"Selecionar...","dr_family_spouse":"Cônjuge","dr_family_subtitle":"Manage spouse, children e Responsáveis","dr_family_title":"Familiares","dr_phone_add":"Adicionar","dr_phone_add_title":"Add Telefone","dr_phone_cancel":"Cancelar","dr_phone_carrier":"Operadora:","dr_phone_close":"Fechar","dr_phone_country_ar":"🇦🇷 +54 (Argentina)","dr_phone_country_bo":"🇧🇴 +591 (Bolivia)","dr_phone_country_br":"🇧🇷 +55 (Brazil)","dr_phone_country_cl":"🇨🇱 +56 (Chile)","dr_phone_country_cn":"🇨🇳 +86 (China)","dr_phone_country_co":"🇨🇴 +57 (Colombia)","dr_phone_country_code":"Country Código","dr_phone_country_de":"🇩🇪 +49 (Germany)","dr_phone_country_ec":"🇪🇨 +593 (Ecuador)","dr_phone_country_es":"🇪🇸 +34 (Spain)","dr_phone_country_fr":"🇫🇷 +33 (France)","dr_phone_country_it":"🇮🇹 +39 (Italy)","dr_phone_country_jp":"🇯🇵 +81 (Japan)","dr_phone_country_pe":"🇵🇪 +51 (Peru)","dr_phone_country_pt":"🇵🇹 +351 (Portugal)","dr_phone_country_py":"🇵🇾 +595 (Paraguay)","dr_phone_country_uk":"🇬🇧 +44 (United Kingdom)","dr_phone_country_us":"🇺🇸 +1 (USA\/Canada)","dr_phone_country_uy":"🇺🇾 +598 (Uruguay)","dr_phone_country_ve":"🇻🇪 +58 (Venezuela)","dr_phone_field":"Telefone *","dr_phone_label":"Rótulo (ex.: Casa, Escritório)","dr_phone_label_hint":"Opcional label to identify the number (e.g., \\\\\u0022Home\\\\\u0022 for residential, \\\\\u0022Office\\\\\u0022 for business).","dr_phone_primary":"Primary Telefone","dr_phone_subtitle":"Manage your Telefone numbers","dr_phone_title":"Telefones","dr_phone_type":"Tipo","dr_phone_type_emergency":"Emergência","dr_phone_type_other":"Outro","dr_phone_type_personal":"Pessoal","dr_phone_type_work":"Trabalho","dr_profile_2nd_call":"2ª Chamada","dr_profile_2nd_invoice_copy":"2ª Via de Boleto","dr_profile_academic":"Acadêmico","dr_profile_academic_1":"Acadêmico","dr_profile_academic_10":"Acadêmico","dr_profile_academic_11":"Acadêmico","dr_profile_academic_12":"Acadêmico","dr_profile_academic_2":"Acadêmico","dr_profile_academic_3":"Acadêmico","dr_profile_academic_4":"Acadêmico","dr_profile_academic_5":"Acadêmico","dr_profile_academic_6":"Acadêmico","dr_profile_academic_7":"Acadêmico","dr_profile_academic_8":"Acadêmico","dr_profile_academic_9":"Acadêmico","dr_profile_academic_details":"Acadêmico Detalhes","dr_profile_academic_status":"Acadêmico Status","dr_profile_account":"Conta","dr_profile_address":"Address","dr_profile_addresses":"Endereços","dr_profile_admission":"Admissão","dr_profile_admission_1":"Admissão","dr_profile_agency":"Agência","dr_profile_alerts":"Alertas","dr_profile_alerts_1":"Alertas","dr_profile_all_clear":"Todos Limpar","dr_profile_appearance":"Aparência","dr_profile_assunto":"Assunto","dr_profile_bank":"Banco","dr_profile_birth":"Nascimento","dr_profile_bras_lia_gmt_3":"Brasília (GMT-3)","dr_profile_cancel":"Cancelar","dr_profile_cancel_1":"Cancelar","dr_profile_cancellation":"Cancelamento","dr_profile_cbo":"CBO","dr_profile_certificate":"Certificado","dr_profile_change_password":"Change Senha","dr_profile_city":"Cidade","dr_profile_city_1":"Cidade","dr_profile_complement":"Complemento","dr_profile_complement_1":"Complemento","dr_profile_complete":"% completo","dr_profile_complete_profile":"Complete Perfil","dr_profile_confirm_new_password":"Confirmar Nova Senha","dr_profile_consents":"Consentimentos","dr_profile_consents_1":"consentimentos","dr_profile_consents_10":"Consentimentos","dr_profile_consents_11":"Consentimentos","dr_profile_consents_2":"Consentimentos","dr_profile_consents_3":"Consentimentos","dr_profile_consents_4":"Consentimentos","dr_profile_consents_5":"Consentimentos","dr_profile_consents_6":"Consentimentos","dr_profile_consents_7":"Consentimentos","dr_profile_consents_8":"Consentimentos","dr_profile_consents_9":"Consentimentos","dr_profile_consents_privacy":"Consents \u0026 Privacidade","dr_profile_contract":"Contrato","dr_profile_cost_center":"Centro de Custo","dr_profile_country":"País","dr_profile_country_1":"País","dr_profile_course":"Curso","dr_profile_course_1":"Curso","dr_profile_course_credit":"Curso Credit","dr_profile_course_information":"Curso Informação","dr_profile_cpf":"CPF","dr_profile_ctps":"CTPS","dr_profile_current_password":"Current Senha","dr_profile_current_password_1":"Current Senha","dr_profile_date":"Data","dr_profile_day":"Dia","dr_profile_day_1":"Dia","dr_profile_declaration":"Declaração","dr_profile_default":"Padrão","dr_profile_delete":"Excluir","dr_profile_describe_in_detail":"Descreva em detalhes...","dr_profile_describe_in_detail_1":"Descreva em detalhes...","dr_profile_description":"Descrição","dr_profile_description_type":"Descrição \/ Tipo","dr_profile_device":"Dispositivo","dr_profile_discount":"Desconto","dr_profile_documentos":"Documentos","dr_profile_documents":"Documentos","dr_profile_documents_1":"Documentos","dr_profile_documents_10":"Documentos","dr_profile_documents_11":"Documentos","dr_profile_documents_2":"Documentos","dr_profile_documents_3":"Documentos","dr_profile_documents_4":"Documentos","dr_profile_documents_5":"Documentos","dr_profile_documents_6":"Documentos","dr_profile_documents_7":"Documentos","dr_profile_documents_8":"Documentos","dr_profile_documents_9":"Documentos","dr_profile_due_day":"Dia de Vencimento","dr_profile_due_day_1":"Dia de Vencimento","dr_profile_e_mails":"E-mails","dr_profile_edit":"Editar","dr_profile_edit_identity":"Editar Identidade","dr_profile_emergency_contact":"Emergency Contato","dr_profile_emergency_contact_1":"Emergency Contato","dr_profile_employee":"Funcionário","dr_profile_employee_1":"Funcionário","dr_profile_employee_10":"Funcionário","dr_profile_employee_11":"Funcionário","dr_profile_employee_12":"Funcionário","dr_profile_employee_2":"Funcionário","dr_profile_employee_3":"Funcionário","dr_profile_employee_4":"funcionário","dr_profile_employee_5":"Funcionário","dr_profile_employee_6":"Funcionário","dr_profile_employee_7":"Funcionário","dr_profile_employee_8":"Funcionário","dr_profile_employee_9":"Funcionário","dr_profile_enable_multi_factor_authentication_":"Enable multi-factor authentication for your persona ().","dr_profile_english":"Inglês","dr_profile_enrollment":"Matrícula","dr_profile_enrollment_1":"Matrícula","dr_profile_enrollment_lock":"Matrícula Lock","dr_profile_espa_ol":"Espanhol","dr_profile_expected_end":"Expected Término","dr_profile_family":"Família","dr_profile_financial":"Financeiro","dr_profile_financial_1":"Financeiro","dr_profile_financial_10":"Financeiro","dr_profile_financial_11":"Financeiro","dr_profile_financial_12":"Financeiro","dr_profile_financial_2":"Financeiro","dr_profile_financial_3":"Financeiro","dr_profile_financial_4":"Financeiro","dr_profile_financial_5":"Financeiro","dr_profile_financial_6":"Financeiro","dr_profile_financial_7":"Financeiro","dr_profile_financial_8":"Financeiro","dr_profile_financial_9":"Financeiro","dr_profile_financial_details":"Financeiro Detalhes","dr_profile_financial_renegotiation":"Financeiro Renegotiation","dr_profile_financial_status":"Financeiro Status","dr_profile_financial_summary":"Resumo Financeiro","dr_profile_gender":"Gênero","dr_profile_general_preferences":"Geral Preferences","dr_profile_gpa_ira":"GPA \/ IRA","dr_profile_gpa_ira_1":"GPA \/ IRA","dr_profile_grade_review":"Revisão de Notas","dr_profile_high":"Alta","dr_profile_how_you_prefer_to_be_called":"How Você prefer to be called","dr_profile_how_you_prefer_to_be_called_1":"How Você prefer to be called","dr_profile_identity":"Identidade","dr_profile_identity_1":"Identidade","dr_profile_identity_10":"Identidade","dr_profile_identity_11":"Identidade","dr_profile_identity_2":"Identidade","dr_profile_identity_3":"Identidade","dr_profile_identity_4":"Identidade","dr_profile_identity_5":"Identidade","dr_profile_identity_6":"Identidade","dr_profile_identity_7":"Identidade","dr_profile_identity_8":"Identidade","dr_profile_identity_9":"Identidade","dr_profile_identity_documents":"Identidade \u0026 Documentos","dr_profile_installment":"Parcela","dr_profile_installment_1":"Parcela","dr_profile_institution":"Instituição","dr_profile_institutional_ties":"Vínculos Institucionais","dr_profile_interface":"Interface","dr_profile_job_title":"Job Título","dr_profile_language":"Idioma","dr_profile_last_login":"Last Entrar","dr_profile_latest_documents":"Latest Documentos","dr_profile_lgpd_consents":"Consentimentos LGPD","dr_profile_local":"Local","dr_profile_login":"Entrar","dr_profile_low":"Baixa","dr_profile_manage":"Gerenciar","dr_profile_manaus_gmt_4":"Manaus (GMT-4)","dr_profile_marital_status":"Estado Civil","dr_profile_memberships":"Associações","dr_profile_memberships_1":"Associações","dr_profile_memberships_10":"Associações","dr_profile_memberships_11":"Associações","dr_profile_memberships_2":"Associações","dr_profile_memberships_3":"Associações","dr_profile_memberships_4":"Associações","dr_profile_memberships_5":"Associações","dr_profile_memberships_6":"Associações","dr_profile_memberships_7":"Associações","dr_profile_memberships_8":"Associações","dr_profile_memberships_9":"Associações","dr_profile_mfa":"MFA","dr_profile_mfa_required":"MFA Obrigatório","dr_profile_modality":"Modalidade","dr_profile_multi_factor_authentication_mfa":"Autenticação Multifator (MFA)","dr_profile_n":"Nº","dr_profile_n_1":"Nº","dr_profile_name":"Nome","dr_profile_name_1":"Nome","dr_profile_name_2":"Nome","dr_profile_name_3":"Nome","dr_profile_nationality":"Nacionalidade","dr_profile_neighborhood":"Bairro","dr_profile_neighborhood_1":"Bairro","dr_profile_nenhum_documento_encontrado":"Nenhum documento encontrado.","dr_profile_new_password":"Nova Senha","dr_profile_new_password_1":"Nova Senha","dr_profile_new_password_confirmation":"Novo Senha confirmation","dr_profile_new_request":"Novo Request","dr_profile_next_due_date":"Próximo Due Data","dr_profile_no_academic_data":"Não Acadêmico data.","dr_profile_no_academic_data_available":"Não Acadêmico data available.","dr_profile_no_active_membership_found":"Não Ativo membership found","dr_profile_no_address_registered":"Não address registered.","dr_profile_no_consents_registered":"Não consents registered.","dr_profile_no_documents":"Não documents.","dr_profile_no_emails_registered":"Não emails registered.","dr_profile_no_emergency_contact_registered":"Não emergency Contato registered.","dr_profile_no_employment_data_available":"Não employment data available.","dr_profile_no_events_registered_on_the_timelin":"Não events registered on the timeline.","dr_profile_no_family_registered":"Não family registered.","dr_profile_no_financial_data":"Não Financeiro data.","dr_profile_no_financial_data_available":"Não Financeiro data available.","dr_profile_no_pending_alerts":"Não Pendente alerts.","dr_profile_no_pending_alerts_or_actions":"Não Pendente Alertas or Ações","dr_profile_no_phone_registered":"Não Telefone registered.","dr_profile_no_requests_found":"Não Solicitações found.","dr_profile_no_summary_data_available":"Não summary data Disponível","dr_profile_no_ties_found":"Não ties found.","dr_profile_nome_social":"Nome Social","dr_profile_normal":"Normal","dr_profile_noronha_gmt_2":"Noronha (GMT-2)","dr_profile_notifications":"Notificações","dr_profile_open_requests":"Solicitações Abertas","dr_profile_other":"Outro","dr_profile_overview":"Visão Geral","dr_profile_overview_1":"Visão Geral","dr_profile_overview_10":"Visão Geral","dr_profile_overview_2":"Visão Geral","dr_profile_overview_3":"Visão Geral","dr_profile_overview_4":"Visão Geral","dr_profile_overview_5":"Visão Geral","dr_profile_overview_6":"Visão Geral","dr_profile_overview_7":"Visão Geral","dr_profile_overview_8":"Visão Geral","dr_profile_overview_9":"Visão Geral","dr_profile_password":"Senha","dr_profile_pending":"Pendente","dr_profile_pending_documents":"Pendente Documentos","dr_profile_pending_fields":"Pendente fields:","dr_profile_period":"Período","dr_profile_period_shift":"Period \/ Turno","dr_profile_person_with_disability":"Pessoa com Deficiência","dr_profile_persona":"Persona","dr_profile_personal_information_preferences_an":"Personal information, preferences, e Conta management","dr_profile_phone":"Telefone","dr_profile_phone_1":"Telefone","dr_profile_phone_2":"Telefone","dr_profile_phone_3":"Telefone","dr_profile_phones":"Telefones","dr_profile_pis_nis":"PIS\/NIS","dr_profile_pix_key":"Chave PIX","dr_profile_plan":"Plano","dr_profile_plan_1":"Plano","dr_profile_plan_and_values":"Plan e Valores","dr_profile_portugu_s_brasil":"Português (Brasil)","dr_profile_preferences":"Preferências","dr_profile_preferences_1":"Preferências","dr_profile_preferences_10":"Preferências","dr_profile_preferences_11":"Preferências","dr_profile_preferences_12":"Preferências","dr_profile_preferences_2":"Preferências","dr_profile_preferences_3":"Preferências","dr_profile_preferences_4":"Preferências","dr_profile_preferences_5":"Preferências","dr_profile_preferences_6":"Preferências","dr_profile_preferences_7":"Preferências","dr_profile_preferences_8":"preferências","dr_profile_preferences_9":"Preferências","dr_profile_preferred_contact":"Preferred Contato","dr_profile_prioridade":"Prioridade","dr_profile_priority":"Prioridade","dr_profile_profile":"Perfil","dr_profile_profile_1":"Perfil","dr_profile_profile_10":"Perfil","dr_profile_profile_11":"Perfil","dr_profile_profile_2":"Perfil","dr_profile_profile_3":"Perfil","dr_profile_profile_4":"Perfil","dr_profile_profile_5":"Perfil","dr_profile_profile_6":"Perfil","dr_profile_profile_7":"Perfil","dr_profile_profile_8":"Perfil","dr_profile_profile_9":"Perfil","dr_profile_profile_completeness":"Perfil Completeness","dr_profile_profile_completeness_1":"Perfil Completeness","dr_profile_profile_sections":"Perfil sections","dr_profile_profile_updated_successfully":"Perfil updated successfully.","dr_profile_progress":"Progresso","dr_profile_progress_1":"Progresso","dr_profile_protocolo":"Protocolo","dr_profile_quick_access":"Quick Acessar","dr_profile_recent_documents":"Recent Documentos","dr_profile_recent_events_from_all_modules":"Recent events from Todos modules","dr_profile_registration_progress":"Registration Progresso","dr_profile_relation":"Relação","dr_profile_relationship":"Parentesco","dr_profile_relationship_1":"Parentesco","dr_profile_req_priority":"Req Prioridade","dr_profile_req_type":"Req Tipo","dr_profile_requests":"Solicitações","dr_profile_requests_1":"Solicitações","dr_profile_requests_10":"Solicitações","dr_profile_requests_11":"Solicitações","dr_profile_requests_12":"Solicitações","dr_profile_requests_2":"Solicitações","dr_profile_requests_3":"Solicitações","dr_profile_requests_4":"Solicitações","dr_profile_requests_5":"Solicitações","dr_profile_requests_6":"Solicitações","dr_profile_requests_7":"Solicitações","dr_profile_requests_8":"Solicitações","dr_profile_requests_9":"Solicitações","dr_profile_required":"Obrigatório","dr_profile_salary":"Salário","dr_profile_schedule":"Agenda","dr_profile_security":"Segurança","dr_profile_security_1":"Segurança","dr_profile_security_10":"Segurança","dr_profile_security_11":"Segurança","dr_profile_security_12":"Segurança","dr_profile_security_2":"Segurança","dr_profile_security_3":"Segurança","dr_profile_security_4":"Segurança","dr_profile_security_5":"Segurança","dr_profile_security_6":"Segurança","dr_profile_security_7":"Segurança","dr_profile_security_8":"Segurança","dr_profile_security_9":"Segurança","dr_profile_select":"Selecionar...","dr_profile_sso":"SSO","dr_profile_status":"Status","dr_profile_status_1":"Status","dr_profile_status_2":"Status","dr_profile_status_3":"Status","dr_profile_status_4":"Status","dr_profile_status_5":"Status","dr_profile_street":"Rua","dr_profile_street_1":"Rua","dr_profile_subject":"Assunto","dr_profile_summary":"Resumo","dr_profile_summary_1":"Resumo","dr_profile_technical_support":"Técnico Suporte","dr_profile_theme":"Tema","dr_profile_timeline":"Linha do Tempo","dr_profile_timeline_1":"Linha do Tempo","dr_profile_timeline_10":"Linha do Tempo","dr_profile_timeline_11":"linha do tempo","dr_profile_timeline_12":"Linha do Tempo","dr_profile_timeline_2":"Linha do Tempo","dr_profile_timeline_3":"Linha do Tempo","dr_profile_timeline_4":"Linha do Tempo","dr_profile_timeline_5":"Linha do Tempo","dr_profile_timeline_6":"Linha do Tempo","dr_profile_timeline_7":"Linha do Tempo","dr_profile_timeline_8":"Linha do Tempo","dr_profile_timeline_9":"Linha do Tempo","dr_profile_timezone":"Fuso Horário","dr_profile_transcript":"Histórico Escolar","dr_profile_type":"Tipo","dr_profile_type_1":"Tipo","dr_profile_type_2":"Tipo","dr_profile_type_3":"Tipo","dr_profile_unit":"Unidade","dr_profile_urgent":"Urgente","dr_profile_validade":"Validade","dr_profile_version":"Versão","dr_profile_workload":"Carga de Trabalho","dr_profile_zip_code":"ZIP Código","dr_profile_zip_code_1":"ZIP Código","sac_select_record":"Select at least one record.","sac_deleted_success":"Deleted successfully!","sac_failed_delete":"Failed to delete","sac_load_error":"Error loading data","sac_network_load_error":"Network error when loading","sac_network_delete_error":"Network error deleting","sac_network_error":"Network error","sac_no_records_export":"No records to export.","sac_no_tickets_selected":"No tickets selected.","sac_error_resolving":"Error resolving ticket.","sac_failed_save":"Failed to save","sac_connection_error":"Connection error","sac_failed_submit":"Failed to submit","sac_write_message":"Please write a message","sac_message_sent":"Message sent","sac_article_created":"Article created","sac_view_saved":"View saved successfully!","sac_saved":"Saved","sac_export_failed":"Export failed","sac_select_customer":"Select a customer first","sac_type_message":"Type a message","sac_enter_title":"Enter the title","sac_thanks_feedback":"Thank you for your feedback!","sac_failed_feedback":"Failed to send feedback","sac_rule_created":"Rule created successfully","sac_rule_deleted":"Rule deleted","sac_failed_toggle":"Failed to toggle","sac_failed_move":"Failed to move ticket","sac_task_added":"Task added","sac_task_removed":"Task removed","sac_ticket_linked":"Ticket linked successfully","sac_link_removed":"Link removed","sac_permissions_saved":"Permissions saved!","sac_role_created":"Role created!","sac_followup_scheduled":"Follow-up scheduled","sac_followup_removed":"Follow-up removed","confirm_signout":"Encerrar Sessão","confirm_signout_question":"Tem certeza de que deseja sair?","signout_devices":"Sua sessão será encerrada com segurança em todos os dispositivos conectados.","yes_signout":"Sim, sair"};
+window.__translationsEn = {"new_ticket_created_toast":"New ticket created","new_message_toast":"New message received","operation_completed":"Operation completed successfully!","error_processing":"Error processing request","connection_error":"Connection error. Please try again.","sending":"Sending...","loading":"Loading...","no_results":"No results found","success":"Success","error":"Error.","warning":"Warning","info":"Info","saved":"Saved","deleted":"Deleted","approved":"Approved","rejected":"Rejected","cancelled":"Cancelled","submitted":"Submitted","received":"Received","resolved":"Resolved","copied":"Copied!","published":"Published!","updated":"Updated.","removed":"Removed","connected":"Connected!","failed":"Failed","network_error":"Network error","request_failed":"Request failed","selected_records":"selected records","edit_record":"Edit Record","unknown":"Unknown","confirm_delete_record":"Delete this record?","export_requested":"Export {0} requested","name_required":"Name is required","path_required":"Path is required","verified_redirecting":"Verified! Redirecting...","resending_code":"Resending code...","code_resent":"Code resent!","error_resending":"Error resending","code_sent_to":"Code sent to {0}","setting_up":"Setting up {0}...","error_setting_up_mfa":"Error setting up MFA","qr_code_saved":"QR Code saved! Check the authenticator app.","no_token_found":"No token found. Log in to get an access token.","token_auto_filled":"Token auto-filled!","passkey_not_supported":"Browser does not support Passkeys","passkey_registered":"Passkey registered!","device_trusted":"Device marked as trusted","removed_success":"Removed","api_communication_failed":"API communication failed","configuration_saved":"Configuration saved!","settings_saved":"Settings saved.","settings_saved_successfully":"Settings saved successfully","calendar_saved":"Calendar saved.","classroom_saved":"Classroom saved.","color_updated":"Color updated!","font_updated":"Font updated!","unit_added":"Unit added!","data_updated":"Data updated.","data_updated_excl":"Data updated!","test_connection":"Test connection","test_sent":"Test sent","connection_test_completed":"Connection test completed","function_in_development":"This functionality is under development.","course_saved":"Course saved successfully.","course_deleted":"Course deleted successfully.","enrollment_saved":"Enrollment saved successfully.","enrollment_deleted":"Enrollment deleted successfully.","enrollment_finalized":"Enrollment finalized successfully!","enrollment_reactivated":"Enrollment reactivated.","enrollment_confirmed":"Enrollment confirmed: {0}","enrollment_select_student":"Please search and select an enrollment.","enrollment_select_course":"Please select a course.","enrollment_select_period":"Please select an academic period.","enrollment_enter_cpf":"Enter a CPF or a student name to continue.","enrollment_select_at_least":"Select at least one student.","enrollment_select_reason":"Please select a reason.","enrollment_select_target":"Please select a target course.","enrollment_select_type":"Please select a document type.","enrollment_enter_title":"Please enter a title.","enrollment_select_document_type":"Please select a document type.","enrollment_saved_lock":"Lock saved successfully.","enrollment_select_model":"Select a model.","enrollment_select_student_for":"Select a student.","enrollment_select_class":"Select a class.","enrollment_select_class_batch":"Select a class for batch issuance.","enrollment_select_class_subject":"Select class and subject.","enrollment_select_eval_type":"Select the evaluation type.","document_saved":"Document saved successfully.","document_deleted":"Document deleted successfully.","document_issued":"Document issued! Protocol: {0}","document_archived":"Document archived","document_restored":"Document restored","document_on_loan":"Document marked as on loan.","document_returned":"Document returned.","document_saved_model":"Model saved!","model_published":"Model published!","published_excl":"Published!","saved_successfully":"Saved successfully!","saved_successfully_period":"Saved successfully.","grid_saved":"Grid saved.","grid_level_saved":"Grid Level saved successfully.","grade_saved":"Grade saved successfully.","grade_deleted":"Grade deleted successfully.","occurrence_saved":"Occurrence saved successfully.","occurrence_deleted":"Occurrence deleted successfully.","period_saved":"Period saved successfully.","period_deleted":"Period deleted successfully.","request_saved":"Request saved successfully.","request_deleted":"Request deleted successfully.","request_approved":"Request approved.","request_cancelled":"Request cancelled.","request_rejected":"Request rejected.","internship_saved":"Internship saved successfully.","internship_deleted":"Internship deleted successfully.","event_saved":"Event saved.","event_removed":"Event removed.","group_saved":"Group saved.","slot_added":"Slot added.","slot_deleted":"Slot deleted.","process_saved":"Process saved.","schedule_group_saved":"Group saved.","responsible_saved":"Responsible saved.","holiday_added":"Holiday added.","holiday_deleted":"Holiday deleted.","class_recorded":"Class recorded.","class_deleted":"Class recorded.","next_called":"Next called successfully.","ticket_issued":"Ticket issued successfully.","error_issuing_ticket":"Error issuing ticket.","error_calling_next":"Connection error calling next.","error_issuing_ticket_conn":"Connection error issuing ticket.","rule_saved":"Rule saved.","rule_removed":"Rule removed.","upload_concluded":"Upload completed!","transfer_saved":"Transfer saved successfully.","config_updated":"Config updated","score_saved":"Score saved!","enter_score":"Enter a score","invalid_score":"Invalid score","no_essays_selected":"No essays selected","add_evaluation":"Add at least one evaluation before saving.","enter_recovery_grade":"Enter at least one recovery grade.","enter_eval_name":"Enter the evaluation name\/title.","select_eval_type":"Select the evaluation type.","select_class_subject":"Select class and subject.","error_saving_evaluation":"Error saving evaluation.","error_updating_thesis":"Error updating thesis.","ocr_completed":"OCR completed! Confidence: {0}%","ocr_failed":"OCR failed","processed_essays":"Processed {0} essay(s)","processed_essays_partial":"Processed {0} essay(s), {1} failed","moving_essay":"Moving essay to {0}...","essay_moved":"Essay moved to {0}","error_updating_status":"Network error updating essay status","project_loaded":"Project loaded","project_created":"Project \u0022{0}\u0022 created!","failed_create_project":"Failed to create project","select_project":"Please select a project","no_file_loaded":"No file loaded or no project selected","no_project_selected":"No project selected","schema_parsed":"Schema parsed successfully!","parse_failed":"Parse failed","auto_match_failed":"Auto-match failed","mapping_approved":"Mapping approved","error_approving_mapping":"Error approving mapping","columns_matched":"{0} columns matched!","invalid_json_pipeline":"Invalid JSON in transform pipeline","transform_saved":"Transform saved","save_failed":"Save failed","validation_passed":"Validation passed!","validation_errors":"Validation found {0} error(s)","validation_failed":"Validation failed","dry_run_completed":"Dry run completed! ~{0} rows to migrate.","dry_run_failed":"Dry run failed","migration_started":"Migration execution started!","execution_failed":"Execution failed to start","delete_failed":"Delete failed","move_failed":"Move failed","status_updated":"Status updated","update_failed":"Update failed","card_tokenized":"Card tokenized successfully","default_method_updated":"Default method updated","payment_method_removed":"Payment method removed","failed_to_set_default":"Failed to set default","failed_to_remove_method":"Failed to remove payment method","failed_parse_response":"Failed to parse response","failed_load_gateways":"Failed to load gateway configurations from server","gateway_config_saved":"Gateway config saved successfully","connection_failed":"Connection failed","refund_succeeded":"Refund succeeded","refund_failed":"Refund failed","charge_succeeded":"Charge succeeded! Payment ID: {0}","plan_changed":"Plan changed successfully","rule_created":"Rule created","rule_deleted":"Rule deleted","rule_updated":"Rule updated","rule_executed":"Rule executed successfully","step_created":"Step created","step_deleted":"Step deleted","step_updated":"Step updated","dunning_completed":"Dunning completed","dunning_failed":"Dunning failed","new_negotiation":"New negotiation","failed_to_create":"Failed to create","failed_to_delete":"Failed to delete","failed_to_remove":"Failed to remove","failed_to_update":"Failed to update","failed_save_step":"Failed to save step","select_instance":"Select an instance first","backup_created":"Backup created!","select_database":"Select a database","enter_sql_query":"Enter a SQL query","select_database_first":"Select a database first","connection_ok":"Connection OK!","base_db_connection_ok":"Base database connection OK!","base_db_connection_default":"Base database connection established (application default)","tenant_db_connection_ok":"Tenant database connection OK!","tenant_db_test_error":"Could not test tenant connection: {0}","applied":"Applied!","reverted":"Reverted!","webhook_created":"Webhook created!","health_check_complete":"Health check complete","health_check_failed":"Health check failed","health_check_failed_msg":"Health check failed: {0}","config_updated_int":"Config updated","check_complete":"Check complete","token_generated":"Token generated: {0}\\n\\nStore it in a safe place. It won\u0027t be shown again.","job_triggered":"Job triggered","settings_saved_supplies":"Settings saved successfully","approved_supply":"Approved","rejected_supply":"Rejected","submitted_supply":"Submitted","received_supply":"Received","cancelled_supply":"Cancelled","preferences_saved":"Preferences saved successfully!","preferences_save_error":"Error saving preferences on server","preferences_reset":"Preferences reset","export_module_not_loaded":"Export module not loaded. Check if ttsc.export.js is available.","exporting_report":"Exporting report {0} as {1}...","report_exported":"Report {0} exported successfully!","export_error":"Export error: {0}","generating_report":"Generating report {0}...","report_generated":"Report {0} generated successfully!","ip_blocked":"IP {0} blocked successfully!","export_solicited":"Export {0} requested.","key_created_error":"Error creating key","registration_error":"Registration error","name_required_security":"Name is required","removed_security":"Removed","error_copying":"Error copying","error_communicating":"Error communicating.","error_communicating_server":"Error communicating with the server.","error_updating_lgpd":"Error updating.","error_processing_lgpd":"Error processing.","error_reactivating":"Error reactivating.","status_updated_lgpd":"Status updated!","status_updated_success":"Status updated successfully!","unsupported_format":"Unsupported format: {0}. Use CSV, JSON, XML, SQL or TXT.","imported_endpoints":"Imported {0} endpoints successfully!","error_processing_data":"Error processing data: {0}","endpoint_exists":"Endpoint already exists","path_start_with_api":"Path must start with \/api\/","select_file_json":"Select a file or paste the JSON","json_exported":"JSON exported successfully!","json_formatted":"JSON formatted!","invalid_json":"Content is not valid JSON","endpoint_created":"Endpoint created locally. (Backend sync required for persistence)","schema_name_required":"Schema name is required","schema_created":"Schema created locally.","imported_count":"Imported {0} endpoints successfully!","error_import_data":"Error processing data: {0}","execution_failed_auto":"Execution failed","rule_executed_refreshing":"Rule executed successfully! Refreshing...","rule_name_required":"Rule name is required.","toggle_failed":"Toggle failed","error_executing":"Error: {0}","chat":"Chat","history":"History","notifications":"Notifications","print":"Print","search":"Search","reopen":"Reopen","phone":"Phone","configuration_saved_portal":"Configuration saved!","batch_requests":"Batch {0} request(s) created","request_created_for":"Request created for {0}","updated_config":"Updated.","batch_issued":"Batch: {0} issued, {1} failed of {2}","error_issuing":"Error issuing","revoked":"Revoked!","mandatory_mfa_enabled":"Mandatory MFA enabled!","mandatory_mfa_disabled":"Mandatory MFA disabled!","error_tenant":"Error","error_saving_step_date":"Error saving step date.","error_saving_lock":"Error saving lock.","error_saving_transfer":"Error saving transfer.","error_saving_ppc":"Error saving PPC.","error_saving_document":"Error saving document.","error_saving_enrollment":"Error saving enrollment.","error_saving_attendance":"Error saving attendance.","error_saving_grade":"Error saving grade.","error_saving_internship":"Error saving internship.","error_saving_occurrence":"Error saving occurrence.","error_saving_period":"Error saving period.","error_saving_request":"Error saving request.","error_saving_subject":"Error saving subject.","error_saving_thesis":"Error saving thesis.","error_saving_course":"Error saving course.","error_saving_class":"Error saving class.","error_saving_model":"Error saving model","error_deleting_document":"Error deleting document.","error_deleting_enrollment":"Error deleting enrollment.","error_deleting_grade":"Error deleting grade.","error_deleting_internship":"Error deleting internship.","error_deleting_occurrence":"Error deleting occurrence.","error_deleting_period":"Error deleting period.","error_deleting_request":"Error deleting request.","error_deleting_subject":"Error deleting subject.","error_deleting_thesis":"Error deleting thesis.","error_deleting_class":"Error deleting class.","error_deleting_course":"Error deleting course.","conn_error_saving_attendance":"Connection error saving attendance.","conn_error_saving_class":"Connection error saving class.","conn_error_saving_course":"Connection error saving course.","conn_error_saving_document":"Connection error saving document.","conn_error_saving_enrollment":"Connection error saving enrollment.","conn_error_saving_grade":"Connection error saving grade.","conn_error_saving_internship":"Connection error saving internship.","conn_error_saving_occurrence":"Connection error saving occurrence.","conn_error_saving_period":"Connection error saving period.","conn_error_saving_ppc":"Connection error saving PPC.","conn_error_saving_request":"Connection error saving request.","conn_error_saving_subject":"Connection error saving subject.","conn_error_saving_thesis":"Connection error saving thesis.","conn_error_saving_step":"Connection error saving step.","conn_error_saving_doc_lock":"Connection error while saving document.","conn_error_saving_lock":"Connection error while saving lock.","conn_error_saving_request_while":"Connection error while saving request.","conn_error_saving_transfer":"Connection error while saving transfer.","conn_error_deleting_class":"Connection error deleting class.","conn_error_deleting_course":"Connection error deleting course.","conn_error_deleting_document":"Connection error deleting document.","conn_error_deleting_enrollment":"Connection error deleting enrollment.","conn_error_deleting_grade":"Connection error deleting grade.","conn_error_deleting_internship":"Connection error deleting internship.","conn_error_deleting_occurrence":"Connection error deleting occurrence.","conn_error_deleting_period":"Connection error deleting period.","conn_error_deleting_request":"Connection error deleting request.","conn_error_deleting_subject":"Connection error deleting subject.","conn_error_deleting_thesis":"Connection error deleting thesis.","conn_error_deleting_records":"Network error deleting records.","conn_error_deleting_error":"Delete error: {0}","conn_error_error_saving":"Error saving.","connection_error_period":"Connection error.","communication_error":"Communication error.","communication_error_try":"Communication error. Try again.","no_data_export":"No data to export","no_document_selected":"No document selected","select_file_paste":"Select a file or paste the JSON","unknown_error":"Unknown error","error_generic":"Error: {0}","network_error_generic":"Network error: {0}","connection_error_generic":"Connection error: {0}","save_the_model_first":"Save the model first.","save_the_calendar_first":"Save the calendar first.","save_the_group_first":"Save the group first.","retry_queued":"Retry queued","retry_failed":"Retry failed","error_saving":"Error saving.","error_publishing":"Error publishing","error_updating":"Error updating.","saved_excl":"Saved!","deleted_excl":"Deleted!","deleted_period":"Deleted.","saved_period":"Saved.","connection_error_generic_period":"Connection error.","communication_error_period":"Communication error.","error_period":"Error.","click_textfield_or_select_block":"Click a text field or select a block first.","no_content_in_file":"No content found in file.","markdown_imported":"Markdown imported successfully!","document_title_required":"Document title is mandatory.","error_request":"An error occurred with the request.","session_expired_title":"Session Expired","session_expired_msg":"Your session has expired. Please log in again to continue.","session_expired":"Session Expired","toast_session_expired":"Your session has expired. Please refresh or log in again.","csrf_token_mismatch":"Session security token expired. Please reload the page.","dr_sac_drawer_save":"Save","dr_sac_drawer_close":"Close","dr_sac_drawer_cancel":"Cancel","dr_sac_drawer_test":"Test","dr_sac_drawer_create_rule":"Create Rule","dr_sac_drawer_save_article":"Save Article","dr_sac_drawer_create_ticket":"Create Ticket","dr_sac_drawer_duplicity_heading":"Similar open tickets","dr_sac_drawer_kb_related_articles":"Related articles","dr_sac_drawer_additional_fields":"Additional Fields","dr_sac_drawer_no_customers_found":"No customers found","dr_sac_drawer_article_separator":"\n\n--- Article: ","dr_sac_drawer_duplicates_exist":"Similar open tickets already exist:\n","dr_sac_drawer_create_anyway":"\nDo you want to create it anyway?","dr_sac_drawer_error_prefix":"Error: ","dr_sac_drawer_unknown_error":"Unknown error","dr_sac_drawer_time_ago_now":"now","dr_sac_drawer_time_ago_minutes":"min","dr_sac_drawer_time_ago_hours":"h","dr_sac_drawer_badge_cap":"99+","dr_sac_drawer_js_unknown_entity":"Unknown entity: ","dr_sac_drawer_js_edit_prefix":"Edit ","dr_sac_drawer_js_new_prefix":"New ","dr_sac_drawer_js_select_default":"Select...","dr_sac_drawer_js_saved_successfully":"Saved successfully!","dr_sac_drawer_js_error_prefix":"Error: ","dr_sac_drawer_js_failed_to_save":"Failed to save","dr_sac_drawer_js_network_error":"Network error","dr_sac_drawer_entity_channel":"Channel","dr_sac_drawer_entity_queue":"Queue","dr_sac_drawer_entity_category":"Category","dr_sac_drawer_entity_priority":"Priority","dr_sac_drawer_entity_team":"Team","dr_sac_drawer_entity_agent":"Agent","dr_sac_drawer_entity_sla_policy":"SLA Policy","dr_sac_drawer_entity_macro":"Macro","dr_sac_drawer_entity_tag":"Tag","dr_sac_drawer_entity_ticket_type":"Ticket Type","dr_sac_drawer_entity_subcategory":"Subcategory","dr_sac_drawer_entity_severity":"Severity","dr_sac_drawer_entity_impact":"Impact","dr_sac_drawer_entity_urgency":"Urgency","dr_sac_drawer_entity_unit":"Unit","dr_sac_drawer_entity_department":"Department","dr_sac_drawer_entity_organization":"Organization","dr_sac_drawer_entity_holiday":"Holiday","dr_sac_drawer_entity_business_hours":"Business Hours","dr_sac_drawer_entity_custom_field":"Custom Field","dr_sac_drawer_entity_close_reason":"Close Reason","dr_sac_drawer_entity_resolution_code":"Resolution Code","dr_sac_drawer_entity_escalation_rule":"Escalation Rule","dr_sac_drawer_entity_workflow":"Workflow","dr_sac_drawer_entity_response_template":"Response Template","dr_sac_drawer_label_name":"Name","dr_sac_drawer_label_slug":"Slug","dr_sac_drawer_label_description":"Description","dr_sac_drawer_label_icon":"Icon (FontAwesome)","dr_sac_drawer_label_color":"Color","dr_sac_drawer_label_order":"Order","dr_sac_drawer_label_active":"Active","dr_sac_drawer_label_channel_id":"Channel ID","dr_sac_drawer_label_parent_category":"Parent Category (ID)","dr_sac_drawer_label_response_time":"Response Time (min)","dr_sac_drawer_label_resolution_time":"Resolution Time (min)","dr_sac_drawer_label_queue_id":"Queue ID","dr_sac_drawer_label_user_uuid":"User UUID","dr_sac_drawer_label_team_id":"Team ID","dr_sac_drawer_label_max_tickets":"Max. Tickets","dr_sac_drawer_label_available":"Available","dr_sac_drawer_label_priority_id":"Priority ID","dr_sac_drawer_label_category_id":"Category ID","dr_sac_drawer_label_escalation_time":"Escalation Time (min)","dr_sac_drawer_label_business_hours_only":"Business Hours Only","dr_sac_drawer_label_content":"Content","dr_sac_drawer_label_level":"Level","dr_sac_drawer_label_level_with_desc":"Level (1=Critical, 4=Low)","dr_sac_drawer_label_code":"Code","dr_sac_drawer_label_address":"Address","dr_sac_drawer_label_phone":"Phone","dr_sac_drawer_label_email":"Email","dr_sac_drawer_label_unit_id":"Unit ID","dr_sac_drawer_label_trade_name":"Trade Name","dr_sac_drawer_label_document":"CNPJ\/CPF","dr_sac_drawer_label_date":"Date","dr_sac_drawer_label_recurring":"Recurring (every year)","dr_sac_drawer_label_day_of_week":"Day of Week","dr_sac_drawer_label_start":"Start","dr_sac_drawer_label_end":"End","dr_sac_drawer_label_business_day":"Business Day","dr_sac_drawer_label_internal_name":"Internal Name","dr_sac_drawer_label_label":"Label","dr_sac_drawer_label_type":"Type","dr_sac_drawer_label_options_json":"Options (JSON)","dr_sac_drawer_label_required":"Required","dr_sac_drawer_label_placeholder":"Placeholder","dr_sac_drawer_label_default_value":"Default Value","dr_sac_drawer_label_event":"Event","dr_sac_drawer_label_minutes":"Minutes","dr_sac_drawer_label_priority_id_short":"Priority ID","dr_sac_drawer_label_queue_id_short":"Queue ID","dr_sac_drawer_label_category_id_short":"Category ID","dr_sac_drawer_label_severity_id":"Severity ID","dr_sac_drawer_label_destination":"Destination","dr_sac_drawer_label_destination_id":"Destination ID","dr_sac_drawer_label_notify_previous":"Notify Previous","dr_sac_drawer_label_notify_supervisor":"Notify Supervisor","dr_sac_drawer_label_max_levels":"Max. Levels","dr_sac_drawer_label_trigger":"Trigger","dr_sac_drawer_label_trigger_config":"Trigger Config (JSON)","dr_sac_drawer_label_steps":"Steps (JSON array)","dr_sac_drawer_label_email_subject":"Email Subject","dr_sac_drawer_ph_chat_online":"e.g.: Chat Online","dr_sac_drawer_ph_chat_online_slug":"e.g.: chat-online","dr_sac_drawer_ph_support_n1":"e.g.: Support N1","dr_sac_drawer_ph_channel_id":"0 for general","dr_sac_drawer_ph_support_technical":"e.g.: Technical Support","dr_sac_drawer_ph_parent_category":"0 if root","dr_sac_drawer_ph_high":"e.g.: High","dr_sac_drawer_ph_high_slug":"e.g.: high","dr_sac_drawer_ph_sla_gold":"e.g.: SLA Gold","dr_sac_drawer_ph_welcome":"e.g.: Welcome","dr_sac_drawer_ph_urgent":"e.g.: urgent","dr_sac_drawer_ph_incident":"e.g.: Incident","dr_sac_drawer_ph_incident_slug":"e.g.: incident","dr_sac_drawer_ph_critical":"e.g.: Critical","dr_sac_drawer_ph_critical_slug":"e.g.: critical","dr_sac_drawer_ph_user_uuid":"User UUID","dr_sac_drawer_ph_auto_triage":"e.g.: Auto Triage","dr_sac_drawer_ph_trigger_config":"{}","dr_sac_drawer_ph_steps":"[{\u0022action\u0022:\u0022assign_team\u0022,\u0022params\u0022:{\u0022team_id\u0022:1}}]","dr_sac_drawer_ph_thank_you":"e.g.: Thank You","dr_sac_drawer_ph_email_subject":"Your ticket has been resolved","dr_sac_drawer_day_sunday":"Sunday","dr_sac_drawer_day_monday":"Monday","dr_sac_drawer_day_tuesday":"Tuesday","dr_sac_drawer_day_wednesday":"Wednesday","dr_sac_drawer_day_thursday":"Thursday","dr_sac_drawer_day_friday":"Friday","dr_sac_drawer_day_saturday":"Saturday","dr_sac_drawer_type_text":"Text","dr_sac_drawer_type_long_text":"Long Text","dr_sac_drawer_type_number":"Number","dr_sac_drawer_type_decimal":"Decimal","dr_sac_drawer_type_currency":"Currency","dr_sac_drawer_type_date":"Date","dr_sac_drawer_type_datetime":"Date\/Time","dr_sac_drawer_type_time":"Time","dr_sac_drawer_type_yes_no":"Yes\/No","dr_sac_drawer_type_single_select":"Single Selection","dr_sac_drawer_type_multi_select":"Multiple Choice","dr_sac_drawer_type_email":"Email","dr_sac_drawer_type_phone":"Phone","dr_sac_drawer_type_url":"URL","dr_sac_drawer_type_cpf_cnpj":"CPF\/CNPJ","dr_sac_drawer_event_sla_response":"SLA - Response","dr_sac_drawer_event_sla_resolution":"SLA - Resolution","dr_sac_drawer_event_status_timeout":"Status - Timeout","dr_sac_drawer_event_customer_wait":"Customer Wait","dr_sac_drawer_event_agent_inactivity":"Agent Inactivity","dr_sac_drawer_dest_agent":"Agent","dr_sac_drawer_dest_team":"Team","dr_sac_drawer_dest_queue":"Queue","dr_sac_drawer_dest_department":"Department","dr_sac_drawer_trigger_ticket_created":"Ticket Created","dr_sac_drawer_trigger_status_changed":"Status Changed","dr_sac_drawer_trigger_scheduled":"Scheduled","dr_sac_drawer_trigger_webhook":"Webhook","dr_sac_drawer_template_type_public":"Public","dr_sac_drawer_template_type_internal":"Internal","dr_sac_drawer_template_type_email":"Email","dr_sac_drawer_js_test_completed":"Test completed","all_registered_subjects":"all registered subjects","js_90d_average":"90d Average","js_access_restricted":"403 - Access Restricted to Administrators","js_action":"Action","js_actions":"Actions","js_active":"Active","js_actor_id":"actor_id","js_add_competency":"Add Competency","js_admin":"admin","js_admin_exemplo_com":"admin@exemplo.com","js_admin_logger_view":"admin.logger.view","js_admissiondrawertitle":"admissionDrawerTitle","js_alerta":"alerta","js_alerts_updated_successfully":"Alerts updated successfully.","js_all_tables":"All tables","js_ambiente":"Ambiente","js_an_unexpected_error_occurred":"An unexpected error occurred","js_api_offline_block_local":"API offline — block saved locally only","js_are_you_sure_you_want_to_clear_old_logs_":"Are you sure you want to clear old logs? This action cannot be undone.","js_are_you_sure_you_want_to_delete":"Are you sure you want to delete ","js_are_you_sure_you_want_to_delete_this_his":"Are you sure you want to delete this history record?","js_are_you_sure_you_want_to_delete_this_rec":"Are you sure you want to delete this record?","js_are_you_sure_you_want_to_reset_all_setti":"Are you sure you want to reset all settings to default values?","js_are_you_sure_you_want_to_reverse_this_de":"Are you sure you want to reverse this depreciation run?","js_area":"Area","js_area_stacked":"Area (Stacked)","js_area_timeline":"Area Timeline","js_asset":"Asset","js_asset_name":"Asset Name","js_audit":"Audit","js_auth":"auth","js_automation_created":"Automation rule created!","js_backoff_s":"Backoff (s)","js_bar":"Bar","js_bar_grouped":"Bar (Grouped)","js_blocked_successfully":"blocked successfully!","js_book_value":"Book Value","js_browser_not_supported":"Browser not supported","js_brute_force_detected":"brute_force_detected","js_bubble":"Bubble","js_camera_in_use":"Camera in use","js_camera_requires_https_or_localhost":"Camera requires HTTPS or localhost","js_camera_unavailable":"Camera unavailable","js_canal":"Canal","js_category":"Category","js_checked":"Checked","js_clear_all_execution_history":"Clear all execution history?","js_clique_para_remover":"Clique para remover","js_close_service":"Close Service","js_code":"Code","js_collection":"Collection","js_column":"Column","js_combo_bar_line":"Combo (Bar + Line)","js_company":"Company","js_competency_created":"Competency created!","js_completed":"Completed!","js_condition":"Condition","js_configure_a_delivery_provider":"Configure a delivery provider","js_confirm_block_ip":"Are you sure you want to permanently block IP {ip}?","js_confirm_deal_as_won":"Confirm deal as WON?","js_confirmation":"Confirmation","js_connect_a_camera_to_this_computer_and_tr":"Connect a camera to this computer and try again.","js_connecting_camera":"Connecting camera…","js_connection_error":"Connection error","js_contactdrawertitle":"contactDrawerTitle","js_convert_this_lead_to_won":"Convert this lead to won?","js_convert_this_session_to_a_ticket_the_cha":"Convert this session to a ticket? The chat will be closed.","js_convert_to_ticket":"Convert to Ticket","js_converting_lead":"Error converting lead","js_cpf_email_phone":"cpf, email, phone","js_create":"Create","js_create_a_new_notification":"Create a new notification","js_create_a_notification_automation_rule":"Create a notification automation rule","js_create_a_notification_template":"Create a notification template","js_create_evaluation":"Create Evaluation","js_create_profile":"Create Profile","js_create_rubric":"Create Rubric","js_create_simulation":"Create Simulation","js_creating":"Creating...","js_cron_expression":"Cron Expression","js_csv":".CSV","js_ctrl_k":"Ctrl+K","js_current_value":"Current Value","js_custom":"Custom…","js_data_scheduled":"Data Scheduled","js_days":"Days","js_dealdrawertitle":"dealDrawerTitle","js_define_grading_rubric_and_scoring":"Define grading rubric and scoring","js_delete":"Delete \\\\\\\\\u0022","js_delete_logs":"Delete Logs","js_delete_profile":"Delete Profile: ","js_delete_rubric":"Delete Rubric: ","js_delete_simulation":"Delete Simulation: ","js_delete_this_asset":"Delete this asset?","js_delete_this_automation":"Delete this automation?","js_delete_this_automation_rule":"Delete this automation rule?","js_delete_this_benefit":"Delete this benefit?","js_delete_this_campaign":"Delete this campaign?","js_delete_this_contact":"Delete this contact?","js_delete_this_deal":"Delete this deal?","js_delete_this_inventory_item":"Delete this inventory item?","js_delete_this_lead":"Delete this lead?","js_delete_this_maintenance":"Delete this maintenance?","js_delete_this_notification":"Delete this notification?","js_delete_this_order":"Delete this order?","js_delete_this_product":"Delete this product?","js_delete_this_provider":"Delete this provider?","js_delete_this_publication":"Delete this publication?","js_delete_this_record":"Delete this record?","js_delete_this_request":"Delete this request?","js_delete_this_rule":"Delete this rule?","js_delete_this_stage":"Delete this stage?","js_delete_this_supplier":"Delete this supplier?","js_delete_this_template":"Delete this template?","js_delete_this_transport_route":"Delete this transport route?","js_delete_this_view":"Delete this view?","js_delete_this_warehouse":"Delete this warehouse?","js_deleting":"Error deleting","js_detailed_data_for_this_execution_is_no_l":"Detailed data for this execution is no longer available.","js_dias_da_semana":"Dias da Semana","js_disposal_date":"Disposal Date","js_donut":"Donut","js_download":"Download ","js_drag_cards_between_columns_to_change_sta":"Drag cards between columns to change status","js_dt_info":"Showing _START_ to _END_ of _TOTAL_ entries","js_duration_min":"Duration (min)","js_e_mail":"E-mail","js_edit":"Edit: ","js_edit_asset":"Edit Asset","js_edit_automation":"Edit Automation","js_edit_competency":"Edit Competency","js_edit_disposal":"Edit Disposal","js_edit_document":"Edit Document","js_edit_evaluation":"Edit Evaluation","js_edit_inventory":"Edit Inventory","js_edit_maintenance":"Edit Maintenance","js_edit_meeting":"Edit Meeting","js_edit_notification":"Edit Notification","js_edit_policy":"Edit Policy","js_edit_profile":"Edit Profile","js_edit_provider":"Edit Provider","js_edit_rubric":"Edit Rubric","js_edit_rule":"Edit Rule","js_edit_simulation":"Edit Simulation","js_edit_template":"Edit Template","js_edit_transfer":"Edit Transfer","js_editing":"Editing: ","js_email_phone":"Email \/ Phone","js_employee":"Employee","js_employee_and_date_are_mandatory":"Employee and date are mandatory","js_end":"End","js_end_date":"End Date","js_end_the_meeting":"End the meeting?","js_error":"Error: ","js_error_1":"Error","js_error_creating_task":"Error creating task","js_error_loading":"Error loading","js_error_prefix":"Error: ","js_esocialdrawertitle":"esocialDrawerTitle","js_especial":"Especial","js_est_cost":"Est. Cost","js_evaluation_created":"Evaluation created!","js_event_ips":"event.ips","js_event_severity_high":"event.severity === \\\\\\\\\u0022high\\\\\\\\\u0022","js_evento":"Evento","js_exporting":"Error exporting ","js_expression":"Expression","js_failed_to_load":"Failed to load","js_false_label":"False Label","js_field":"Field","js_fields":"Fields","js_fill_in_the_asset_details":"Fill in the asset details","js_finalizing":"Finalizing...","js_flow_saved_successfully":"Flow saved successfully","js_fluxo":"Fluxo","js_fonte":"Fonte","js_forecast":"Forecast","js_formato":"Formato","js_from_location":"From (Location)","js_funnel":"Funnel","js_gatilho":"Gatilho","js_gauge":"Gauge","js_generate_report":"Generate Report ","js_generating":"Generating ","js_generating_file":"Generating file...","js_generating_file_1":"Generating file ","js_generating_file_2":"Generating file ","js_geo_map":"Geo Map","js_gpcareerdrawertitle":"gpCareerDrawerTitle","js_gpclimatedrawertitle":"gpClimateDrawerTitle","js_gpmetricsdrawertitle":"gpMetricsDrawerTitle","js_gptalentdrawertitle":"gpTalentDrawerTitle","js_grouped_by":"Grouped by ","js_heatmap":"Heatmap","js_hidden_columns":"hidden","js_in_progress":"In Progress","js_insured_value":"Insured Value","js_insurer":"Insurer","js_inventory_date":"Inventory Date","js_ip_address":"ip_address","js_ip_address_email":"ip_address, email","js_ips_blocked_successfully":"IP(s) blocked successfully!","js_items_selected":"items selected","js_json":".JSON","js_keyframes_sbtoastin_from_opacity_0_trans":"@keyframes sbToastIn { from { opacity:0; transform:translateX(40px) scale(0.95); } to { opacity:1; transform:translateX(0) scale(1); } }","js_last":"Last: ","js_last_30_days":"Last 30 days","js_last_7_days":"Last 7 days","js_last_month":"Last month","js_last_run":"Last run: ","js_last_year":"Last year","js_lead":"Lead","js_lead_successfully_converted_to_deal":"Lead successfully converted to deal!","js_leaddrawertitle":"leadDrawerTitle","js_level":"Level","js_line":"Line","js_line_multi":"Line (Multi)","js_loading":"Loading...","js_loading_ticket":"Error loading ticket","js_local":"Local","js_location":"Location","js_login_blocked":"login_blocked","js_login_bloqueado_actor_id_ip_tenant":"Login bloqueado: {actor_id} - {ip} - {tenant}","js_login_failed":"login_failed","js_mascarar":"Mascarar","js_max_attempts":"Max Attempts","js_max_iterations":"Max Iterations","js_max_value":"Max Value","js_message":"Message","js_method":"Method","js_min_severity":"Min Severity","js_min_value":"Min Value","js_name":"Name","js_name_is_mandatory":"Name is mandatory","js_name_is_required":"Name is required","js_network_error":"Network error","js_network_error_occurred":"Network error occurred","js_network_error_saving_data":"Network error saving data","js_new_asset":"New Asset","js_new_automation_rule":"New Automation Rule","js_new_campaign":"New Campaign","js_new_disposal":"New Disposal","js_new_document":"New Document","js_new_inventory":"New Inventory","js_new_maintenance":"New Maintenance","js_new_meeting":"New Meeting","js_new_notification":"New Notification","js_new_policy":"New Policy","js_new_provider":"New Provider","js_new_template":"New Template","js_new_transfer":"New Transfer","js_no_camera_found":"No camera found","js_no_records_found":"No records found.","js_no_results_to_copy":"No results to copy.","js_no_results_to_copy_run_tests_first":"No results to copy. Run tests first.","js_no_sla":"No SLA","js_no_teste":"Error no teste","js_nome":"Nome","js_not_found":"Not found","js_notificar":"Notificar","js_notifications":"notifications","js_novo_gr_fico":"Novo Gráfico","js_occurrences":"Occurrences","js_of":"of","js_operator":"Operator","js_page":"Page ","js_para":"Para","js_participant_added":"Participant added!","js_payrolldrawertitle":"payrollDrawerTitle","js_pdf":".PDF","js_permanently_delete_this_record":"Permanently delete this record?","js_permission":"Permission","js_permission_needed":"Permission needed","js_permissions":"Permissions: ","js_pie":"Pie","js_please_fill_all_required_fields":"Please fill all required fields","js_policy":"Policy #","js_position":"Position","js_priority":"Priority","js_prob":"Prob.","js_proceeds":"Proceeds","js_processing":"Processing...","js_processing_records":"Processing records...","js_pronto":"Pronto","js_quantidade_de_ramos":"Quantidade de Ramos","js_question_created":"Question created!","js_queue":"Queue","js_r":"R$ ","js_radar":"Radar","js_reason":"Reason","js_records":"records","js_remove_this_account":"Remove this account?","js_remove_this_column_os_cards_voltam_para_":"Remove this column? Os cards voltam para \\\\\\\\\u0022Open\\\\\\\\\u0022.","js_remove_this_link":"Remove this link?","js_requester":"Requester","js_requesting_leave":"Error requesting leave","js_resolve_este_alerta":"Resolve este alerta?","js_responsible":"Responsible","js_retention_days":"Retention (days)","js_return_event_severity_high":"return event.severity === \\\\\\\\\u0022high\\\\\\\\\u0022","js_revoke_this_token":"Revoke this token?","js_rhcompensationdrawertitle":"rhCompensationDrawerTitle","js_rhperformancedrawertitle":"rhPerformanceDrawerTitle","js_rhrecruitmentdrawertitle":"rhRecruitmentDrawerTitle","js_rhtrainingdrawertitle":"rhTrainingDrawerTitle","js_role":"Role","js_run":"Run: ","js_run_tests_before_exporting":"Run tests before exporting.","js_running":"Running...","js_salvando":"Salvando...","js_salvo":"Salvo ✓","js_sankey":"Sankey","js_saving":"Error saving","js_saving_contact":"Error saving contact","js_saving_deal":"Error saving deal","js_saving_lead":"Error saving lead","js_saving_product":"Error saving product","js_saving_record":"Error saving record","js_saving_stage":"Error saving stage","js_scatter":"Scatter","js_schedule_a_new_meeting":"Schedule a new meeting","js_score":"Score","js_secops":"SecOps","js_security_incident":"Security incident","js_seg_sex":"seg-sex","js_segundos":"Segundos","js_select":"Select...","js_select_employee_and_benefit":"Select employee and benefit","js_select_the_reference_month":"Select the reference month","js_session_expired":"Your session expired or you need to log in to access.","js_set_up_a_new_exam_simulation":"Set up a new exam simulation","js_set_up_an_exam_profile_type":"Set up an exam profile type","js_severity":"Severity","js_showing":"Showing ","js_source":"Source","js_sql":".SQL","js_stacked_area":"Stacked Area","js_stacked_bar":"Stacked Bar","js_stage":"Stage","js_start":"Start","js_start_date":"Start Date","js_starting":"Starting...","js_status":"Status","js_strategy":"Strategy","js_sunburst":"Sunburst","js_supervisor_exemplo_com":"supervisor@exemplo.com","js_swimlane":"Swimlane","js_sync_failed":"Sync Failed","js_tag":"Tag","js_target":"Target","js_task_code_not_found":"Task code not found","js_task_created":"Task created successfully","js_task_updated":"Task updated successfully","js_template":"Template","js_tenant_id":"Tenant ID","js_terminationdrawertitle":"terminationDrawerTitle","js_testando":"Testando...","js_the_camera_is_being_used_by_another_app_":"The camera is being used by another app. Close other apps and retry.","js_the_stage_is_active_camera_may_take_a_mo":"The stage is active. Camera may take a moment to connect.","js_this_month":"This month","js_this_week":"This week","js_this_will_permanently_remove_the_profile":"This will permanently remove the profile \\\\\\\\\u0022","js_this_will_remove_the_rubric":"This will remove the rubric \\\\\\\\\u0022","js_this_will_soft_delete_the_simulation":"This will soft-delete the simulation \\\\\\\\\u0022","js_this_year":"This year","js_ticket":"Ticket","js_ticket_1":"Ticket ","js_ticket_2":"Ticket ","js_timeline":"Timeline","js_timeout_min":"Timeout (min)","js_tipo":"Tipo","js_title":"Title","js_title_is_required":"Title is required","js_to_location":"To (Location)","js_today":"Today","js_topic_created":"Topic created!","js_total":"Total: ","js_total_items":"Total Items","js_transfer_date":"Transfer Date","js_treemap":"Treemap","js_true_label":"True Label","js_try_again":"Try Again","js_txt":".TXT","js_type":"Type","js_unknown":"Unknown","js_unknown_error":"Unknown error","js_update":"Update ","js_update_automation_rule":"Update automation rule","js_update_meeting_details":"Update meeting details","js_update_the_asset_details":"Update the asset details","js_updated":"Updated: ","js_updating_status":"Error updating status","js_url_do_webhook":"URL do Webhook","js_use_chrome_firefox_or_edge_to_enable_str":"Use Chrome, Firefox, or Edge to enable streaming.","js_uuid_ou":"uuid ou *","js_validating_data":"Validating data...","js_valor":"Valor","js_value":"Value","js_warning":"Warning","js_waterfall":"Waterfall","js_window_s":"Window (s)","js_word_cloud":"Word Cloud","js_xlsx":".XLSX","js_xml":".XML","js_yes":"Yes","js_yesterday":"Yesterday","js_you_have_unsaved_changes_discard":"You have unsaved changes. Discard?","lgpd_type_accidental_disclosure":"Accidental Disclosure","lgpd_type_breach":"Leak","lgpd_type_data_loss":"Data Loss","lgpd_type_other":"Other","lgpd_type_ransomware":"Ransomware","lgpd_type_unauthorized_access":"Unauthorized Access","notif_read":"Read","notif_received_at":"Received at","notif_status":"Status","notif_unread":"Unread","status_active":"Active","status_cancelled":"Canceled","status_graduated":"Graduated","status_locked":"Locked","status_transferred":"Transferred","subjects_in_offer":"subjects in offer","without_data":"Without data","js_searching":"Searching...","js_error_loading_notifications":"Error loading notifications","js_no_notifications_found":"No notifications found","js_invalid_json_target_audience":"Invalid JSON in target audience","js_title_required":"Title is required","js_notification_updated":"Notification updated","js_notification_created":"Notification created","js_save_failed":"Save failed","js_send":"Send","js_notification_details":"Notification Details","js_attempt":"Attempt","js_provider":"Provider","js_date":"Date","js_no_delivery_logs":"No delivery logs yet","js_channel":"Channel","js_queued":"Queued","js_sent":"Sent","js_delivered":"Delivered","js_read":"Read","js_failed":"Failed","js_delivery_logs":"Delivery Logs","js_notification_not_found":"Notification not found","js_error_loading_notification":"Error loading notification","js_notification_deleted":"Notification deleted","js_delete_failed":"Delete failed","js_no_notification_selected":"No notification selected","js_notification_requeued":"Notification requeued","js_resend_failed":"Resend failed","js_error_loading_templates":"Error loading templates","js_no_templates_found":"No templates found","js_inactive":"Inactive","js_invalid_json_variables":"Invalid JSON in variables","js_name_code_body_required":"Name, code and body are required","js_template_updated":"Template updated","js_template_created":"Template created","js_template_not_found":"Template not found","js_error_loading_template":"Error loading template","js_template_deleted":"Template deleted","js_error_loading_rules":"Error loading rules","js_no_rules_found":"No rules found","js_invalid_json_conditions":"Invalid JSON in conditions","js_invalid_json_actions":"Invalid JSON in actions","js_name_event_required":"Name and event are required","js_rule_updated":"Rule updated","js_rule_created":"Rule created","js_rule_not_found":"Rule not found","js_rule_deleted":"Rule deleted","js_rule_toggled":"Rule toggled","js_toggle_failed":"Toggle failed","js_error_loading_providers":"Error loading providers","js_no_providers_found":"No providers found","js_unlimited":"Unlimited","js_healthy":"Healthy","js_degraded":"Degraded","js_name_code_channel_required":"Name, code and channel are required","js_provider_updated":"Provider updated","js_provider_created":"Provider created","js_provider_not_found":"Provider not found","js_provider_deleted":"Provider deleted","auth_error_invalid_credentials":"Invalid credentials","auth_error_rate_limit":"Access temporarily blocked due to too many attempts. Please wait :minutes minutes before trying again.","auth_error_ip_restricted":"Your IP has been temporarily restricted. Please try again later.","auth_error_session_expired":"Session expired. Please sign in again.","auth_error_google_not_configured":"Google login has not been configured yet. Use email and password or select another portal.","auth_error_microsoft_not_configured":"Microsoft login has not been configured yet. Use email and password or select another portal.","auth_error_user_locked":"User locked. Try again in {0} minutes","auth_error_invalid_or_expired_code":"Invalid or expired code","auth_error_failed_email_mfa":"Failed to dispatch email MFA code","auth_error_invalid_or_expired_token":"Invalid or expired token","auth_error_user_not_found":"User not found","auth_error_two_step_required":"Two-step verification required","auth_error_invalid_mfa_code":"Invalid MFA code","auth_error_password_requirements":"Password does not meet minimum requirements","auth_error_invalid_user_or_email":"Invalid user or email","auth_error_failed_send_verification":"Failed to send verification email","auth_error_verification_email_sent":"Verification email sent","auth_error_invalid_verification_token":"Invalid verification token","auth_error_invalid_or_expired_link":"Invalid or expired verification link","invalid_code":"Invalid code","verify":"Verify","please_wait":"Please wait...","mfa_required":"Additional verification required","login_successful":"Login successful!","session_expired_reload":"Session expired. Reloading page...","fill_login_field":"Please fill in the login field","enter_valid_email":"Please enter a valid email","cpf_must_11_digits":"CPF must have 11 digits","fill_password":"Please fill in the password","password_min_6_chars":"Password must have at least 6 characters","enter_mfa_code":"Please enter the MFA code","verifying":"Verifying...","mfa_verified":"MFA verified successfully!","invalid_mfa_code":"Invalid MFA code","log_in":"Log in","toast_title_success":"Success","toast_title_error":"Error","toast_title_warning":"Warning","toast_title_info":"Info","dr_addr_add":"Add","dr_addr_add_title":"Add Address","dr_addr_cancel":"Cancel","dr_addr_city":"City","dr_addr_close":"Close","dr_addr_complement":"Complement","dr_addr_country":"Country","dr_addr_label":"Label","dr_addr_map_close":"Close","dr_addr_map_loading":"Loading...","dr_addr_map_loading_map":"Loading map...","dr_addr_map_location":"Location","dr_addr_map_open_route":"Open Route","dr_addr_neighborhood":"Neighborhood","dr_addr_number":"No.","dr_addr_postal_code":"Postal Code","dr_addr_primary":"Primary address","dr_addr_state":"State","dr_addr_street":"Street","dr_addr_subtitle":"Manage your registered addresses","dr_addr_title":"Addresses","dr_addr_type":"Type","dr_addr_type_billing":"Billing","dr_addr_type_commercial":"Commercial","dr_addr_type_other":"Other","dr_addr_type_residential":"Residential","dr_confirm_cancel":"Cancel","dr_confirm_close":"Close","dr_confirm_confirm":"Confirm","dr_confirm_delete_ask":"Are you sure?","dr_confirm_delete_audit":"(required for audit trail)","dr_confirm_delete_confirm":"Confirm Deletion","dr_confirm_delete_desc":"You are about to remove the record below. This action is recorded via audit log.","dr_confirm_delete_placeholder":"e.g., Duplicate record, discontinuation...","dr_confirm_delete_reason":"Deletion Reason","dr_confirm_delete_title":"Confirm Deletion","dr_confirm_delete_undo":"This action cannot be undone","dr_confirm_message":"You are about to execute the action below.","dr_confirm_question":"Are you sure?","dr_confirm_subtitle":"Please confirm this action","dr_confirm_title":"Confirm Action","dr_email_add":"Add","dr_email_add_title":"Add Email","dr_email_cancel":"Cancel","dr_email_close":"Close","dr_email_field":"Email *","dr_email_label":"Label","dr_email_primary":"Primary email","dr_email_subtitle":"Manage your email addresses","dr_email_title":"Emails","dr_email_type":"Type","dr_email_type_other":"Other","dr_email_type_personal":"Personal","dr_email_type_work":"Work","dr_emergency_cancel":"Cancel","dr_emergency_close":"Close","dr_emergency_name":"Contact Name","dr_emergency_phone":"Telefone","dr_emergency_relation":"Relationship","dr_emergency_save":"Save","dr_emergency_subtitle":"Edit emergency contact","dr_emergency_title":"Emergency Contact","dr_family_add":"Add","dr_family_add_title":"Add Family Member","dr_family_birth_date":"Date of Birth","dr_family_cancel":"Cancel","dr_family_child":"Child","dr_family_close":"Close","dr_family_cpf":"CPF","dr_family_email":"Email","dr_family_father":"Father","dr_family_full_name":"Full Name *","dr_family_mother":"Mother","dr_family_other":"Other","dr_family_phone":"Phone","dr_family_relationship":"Relationship *","dr_family_select":"Select...","dr_family_spouse":"Spouse","dr_family_subtitle":"Manage spouse, children and parents","dr_family_title":"Family Members","dr_phone_add":"Add","dr_phone_add_title":"Add Phone","dr_phone_cancel":"Cancel","dr_phone_carrier":"Carrier:","dr_phone_close":"Close","dr_phone_country_ar":"🇦🇷 +54 (Argentina)","dr_phone_country_bo":"🇧🇴 +591 (Bolivia)","dr_phone_country_br":"🇧🇷 +55 (Brazil)","dr_phone_country_cl":"🇨🇱 +56 (Chile)","dr_phone_country_cn":"🇨🇳 +86 (China)","dr_phone_country_co":"🇨🇴 +57 (Colombia)","dr_phone_country_code":"Country Code","dr_phone_country_de":"🇩🇪 +49 (Germany)","dr_phone_country_ec":"🇪🇨 +593 (Ecuador)","dr_phone_country_es":"🇪🇸 +34 (Spain)","dr_phone_country_fr":"🇫🇷 +33 (France)","dr_phone_country_it":"🇮🇹 +39 (Italy)","dr_phone_country_jp":"🇯🇵 +81 (Japan)","dr_phone_country_pe":"🇵🇪 +51 (Peru)","dr_phone_country_pt":"🇵🇹 +351 (Portugal)","dr_phone_country_py":"🇵🇾 +595 (Paraguay)","dr_phone_country_uk":"🇬🇧 +44 (United Kingdom)","dr_phone_country_us":"🇺🇸 +1 (USA\/Canada)","dr_phone_country_uy":"🇺🇾 +598 (Uruguay)","dr_phone_country_ve":"🇻🇪 +58 (Venezuela)","dr_phone_field":"Phone *","dr_phone_label":"Label (e.g., Home, Office)","dr_phone_label_hint":"Optional label to identify the number (e.g., \\\\\u0022Home\\\\\u0022 for residential, \\\\\u0022Office\\\\\u0022 for business).","dr_phone_primary":"Primary phone","dr_phone_subtitle":"Manage your phone numbers","dr_phone_title":"Phones","dr_phone_type":"Type","dr_phone_type_emergency":"Emergency","dr_phone_type_other":"Other","dr_phone_type_personal":"Personal","dr_phone_type_work":"Work","dr_profile_2nd_call":"2nd Call","dr_profile_2nd_invoice_copy":"2nd Invoice Copy","dr_profile_academic":"academic","dr_profile_academic_1":"Academic","dr_profile_academic_10":"Academic","dr_profile_academic_11":"Academic","dr_profile_academic_12":"Academic","dr_profile_academic_2":"Academic","dr_profile_academic_3":"Academic","dr_profile_academic_4":"Academic","dr_profile_academic_5":"Academic","dr_profile_academic_6":"Academic","dr_profile_academic_7":"Academic","dr_profile_academic_8":"Academic","dr_profile_academic_9":"Academic","dr_profile_academic_details":"Academic Details","dr_profile_academic_status":"Academic Status","dr_profile_account":"Account","dr_profile_address":"Address","dr_profile_addresses":"Addresses","dr_profile_admission":"Admission","dr_profile_admission_1":"Admission","dr_profile_agency":"Agency","dr_profile_alerts":"Alerts","dr_profile_alerts_1":"Alerts","dr_profile_all_clear":"All clear","dr_profile_appearance":"Appearance","dr_profile_assunto":"Assunto","dr_profile_bank":"Bank","dr_profile_birth":"Birth","dr_profile_bras_lia_gmt_3":"Brasília (GMT-3)","dr_profile_cancel":"Cancel","dr_profile_cancel_1":"Cancel","dr_profile_cancellation":"Cancellation","dr_profile_cbo":"CBO","dr_profile_certificate":"Certificate","dr_profile_change_password":"Change Password","dr_profile_city":"City","dr_profile_city_1":"City","dr_profile_complement":"Complement","dr_profile_complement_1":"Complement","dr_profile_complete":"% complete","dr_profile_complete_profile":"Complete profile","dr_profile_confirm_new_password":"Confirm New Password","dr_profile_consents":"Consents","dr_profile_consents_1":"consents","dr_profile_consents_10":"Consents","dr_profile_consents_11":"Consents","dr_profile_consents_2":"Consents","dr_profile_consents_3":"Consents","dr_profile_consents_4":"Consents","dr_profile_consents_5":"Consents","dr_profile_consents_6":"Consents","dr_profile_consents_7":"Consents","dr_profile_consents_8":"Consents","dr_profile_consents_9":"Consents","dr_profile_consents_privacy":"Consents \u0026 Privacy","dr_profile_contract":"Contract","dr_profile_cost_center":"Cost Center","dr_profile_country":"Country","dr_profile_country_1":"Country","dr_profile_course":"Course","dr_profile_course_1":"Course","dr_profile_course_credit":"Course Credit","dr_profile_course_information":"Course information","dr_profile_cpf":"CPF","dr_profile_ctps":"CTPS","dr_profile_current_password":"Current Password","dr_profile_current_password_1":"Current password","dr_profile_date":"Date","dr_profile_day":"Day","dr_profile_day_1":"Day","dr_profile_declaration":"Declaration","dr_profile_default":"Default","dr_profile_delete":"Delete","dr_profile_describe_in_detail":"Describe in detail...","dr_profile_describe_in_detail_1":"Describe in detail...","dr_profile_description":"Description","dr_profile_description_type":"Description \/ Type","dr_profile_device":"Device","dr_profile_discount":"Discount","dr_profile_documentos":"Documentos","dr_profile_documents":"Documents","dr_profile_documents_1":"Documents","dr_profile_documents_10":"Documents","dr_profile_documents_11":"Documents","dr_profile_documents_2":"documents","dr_profile_documents_3":"Documents","dr_profile_documents_4":"Documents","dr_profile_documents_5":"Documents","dr_profile_documents_6":"Documents","dr_profile_documents_7":"Documents","dr_profile_documents_8":"Documents","dr_profile_documents_9":"Documents","dr_profile_due_day":"Due Day","dr_profile_due_day_1":"Due Day","dr_profile_e_mails":"E-mails","dr_profile_edit":"Edit","dr_profile_edit_identity":"Edit Identity","dr_profile_emergency_contact":"Emergency Contact","dr_profile_emergency_contact_1":"Emergency Contact","dr_profile_employee":"Employee","dr_profile_employee_1":"Employee","dr_profile_employee_10":"Employee","dr_profile_employee_11":"Employee","dr_profile_employee_12":"Employee","dr_profile_employee_2":"Employee","dr_profile_employee_3":"Employee","dr_profile_employee_4":"employee","dr_profile_employee_5":"Employee","dr_profile_employee_6":"Employee","dr_profile_employee_7":"Employee","dr_profile_employee_8":"Employee","dr_profile_employee_9":"Employee","dr_profile_enable_multi_factor_authentication_":"Enable multi-factor authentication for your persona ().","dr_profile_english":"English","dr_profile_enrollment":"Enrollment","dr_profile_enrollment_1":"Enrollment","dr_profile_enrollment_lock":"Enrollment Lock","dr_profile_espa_ol":"Español","dr_profile_expected_end":"Expected End","dr_profile_family":"Family","dr_profile_financial":"Financial","dr_profile_financial_1":"Financial","dr_profile_financial_10":"Financial","dr_profile_financial_11":"Financial","dr_profile_financial_12":"Financial","dr_profile_financial_2":"Financial","dr_profile_financial_3":"Financial","dr_profile_financial_4":"Financial","dr_profile_financial_5":"financial","dr_profile_financial_6":"Financial","dr_profile_financial_7":"Financial","dr_profile_financial_8":"Financial","dr_profile_financial_9":"Financial","dr_profile_financial_details":"Financial Details","dr_profile_financial_renegotiation":"Financial Renegotiation","dr_profile_financial_status":"Financial Status","dr_profile_financial_summary":"Financial Summary","dr_profile_gender":"Gender","dr_profile_general_preferences":"General Preferences","dr_profile_gpa_ira":"GPA \/ IRA","dr_profile_gpa_ira_1":"GPA \/ IRA","dr_profile_grade_review":"Grade Review","dr_profile_high":"High","dr_profile_how_you_prefer_to_be_called":"How you prefer to be called","dr_profile_how_you_prefer_to_be_called_1":"How you prefer to be called","dr_profile_identity":"Identity","dr_profile_identity_1":"Identity","dr_profile_identity_10":"Identity","dr_profile_identity_11":"Identity","dr_profile_identity_2":"Identity","dr_profile_identity_3":"Identity","dr_profile_identity_4":"Identity","dr_profile_identity_5":"identity","dr_profile_identity_6":"Identity","dr_profile_identity_7":"Identity","dr_profile_identity_8":"Identity","dr_profile_identity_9":"Identity","dr_profile_identity_documents":"Identity \u0026 Documents","dr_profile_installment":"Installment","dr_profile_installment_1":"Installment","dr_profile_institution":"Institution","dr_profile_institutional_ties":"Institutional Ties","dr_profile_interface":"Interface","dr_profile_job_title":"Job Title","dr_profile_language":"Language","dr_profile_last_login":"Last Login","dr_profile_latest_documents":"Latest documents","dr_profile_lgpd_consents":"LGPD Consents","dr_profile_local":"Local","dr_profile_login":"Login","dr_profile_low":"Low","dr_profile_manage":"Manage","dr_profile_manaus_gmt_4":"Manaus (GMT-4)","dr_profile_marital_status":"Marital Status","dr_profile_memberships":"Memberships","dr_profile_memberships_1":"Memberships","dr_profile_memberships_10":"Memberships","dr_profile_memberships_11":"Memberships","dr_profile_memberships_2":"Memberships","dr_profile_memberships_3":"Memberships","dr_profile_memberships_4":"Memberships","dr_profile_memberships_5":"Memberships","dr_profile_memberships_6":"memberships","dr_profile_memberships_7":"Memberships","dr_profile_memberships_8":"Memberships","dr_profile_memberships_9":"Memberships","dr_profile_mfa":"MFA","dr_profile_mfa_required":"MFA Required","dr_profile_modality":"Modality","dr_profile_multi_factor_authentication_mfa":"Multi-Factor Authentication (MFA)","dr_profile_n":"Nº","dr_profile_n_1":"Nº","dr_profile_name":"Name","dr_profile_name_1":"Name","dr_profile_name_2":"Name","dr_profile_name_3":"Name","dr_profile_nationality":"Nationality","dr_profile_neighborhood":"Neighborhood","dr_profile_neighborhood_1":"Neighborhood","dr_profile_nenhum_documento_encontrado":"Nenhum documento encontrado.","dr_profile_new_password":"New Password","dr_profile_new_password_1":"New password","dr_profile_new_password_confirmation":"New password confirmation","dr_profile_new_request":"New Request","dr_profile_next_due_date":"Next Due Date","dr_profile_no_academic_data":"No academic data.","dr_profile_no_academic_data_available":"No academic data available.","dr_profile_no_active_membership_found":"No active membership found","dr_profile_no_address_registered":"No address registered.","dr_profile_no_consents_registered":"No consents registered.","dr_profile_no_documents":"No documents.","dr_profile_no_emails_registered":"No emails registered.","dr_profile_no_emergency_contact_registered":"No emergency contact registered.","dr_profile_no_employment_data_available":"No employment data available.","dr_profile_no_events_registered_on_the_timelin":"No events registered on the timeline.","dr_profile_no_family_registered":"No family registered.","dr_profile_no_financial_data":"No financial data.","dr_profile_no_financial_data_available":"No financial data available.","dr_profile_no_pending_alerts":"No pending alerts.","dr_profile_no_pending_alerts_or_actions":"No pending alerts or actions","dr_profile_no_phone_registered":"No phone registered.","dr_profile_no_requests_found":"No requests found.","dr_profile_no_summary_data_available":"No summary data available","dr_profile_no_ties_found":"No ties found.","dr_profile_nome_social":"Nome Social","dr_profile_normal":"Normal","dr_profile_noronha_gmt_2":"Noronha (GMT-2)","dr_profile_notifications":"Notifications","dr_profile_open_requests":"Open Requests","dr_profile_other":"Other","dr_profile_overview":"Overview","dr_profile_overview_1":"Overview","dr_profile_overview_10":"Overview","dr_profile_overview_2":"Overview","dr_profile_overview_3":"Overview","dr_profile_overview_4":"Overview","dr_profile_overview_5":"Overview","dr_profile_overview_6":"Overview","dr_profile_overview_7":"Overview","dr_profile_overview_8":"Overview","dr_profile_overview_9":"Overview","dr_profile_password":"Password","dr_profile_pending":"pending","dr_profile_pending_documents":"Pending Documents","dr_profile_pending_fields":"Pending fields:","dr_profile_period":"Period","dr_profile_period_shift":"Period \/ Shift","dr_profile_person_with_disability":"Person with Disability","dr_profile_persona":"Persona","dr_profile_personal_information_preferences_an":"Personal information, preferences, and account management","dr_profile_phone":"Phone","dr_profile_phone_1":"Phone","dr_profile_phone_2":"Phone","dr_profile_phone_3":"Phone","dr_profile_phones":"Phones","dr_profile_pis_nis":"PIS\/NIS","dr_profile_pix_key":"PIX Key","dr_profile_plan":"Plan","dr_profile_plan_1":"Plan","dr_profile_plan_and_values":"Plan and values","dr_profile_portugu_s_brasil":"Português (Brasil)","dr_profile_preferences":"Preferences","dr_profile_preferences_1":"Preferences","dr_profile_preferences_10":"Preferences","dr_profile_preferences_11":"Preferences","dr_profile_preferences_12":"Preferences","dr_profile_preferences_2":"Preferences","dr_profile_preferences_3":"Preferences","dr_profile_preferences_4":"Preferences","dr_profile_preferences_5":"Preferences","dr_profile_preferences_6":"Preferences","dr_profile_preferences_7":"Preferences","dr_profile_preferences_8":"preferences","dr_profile_preferences_9":"Preferences","dr_profile_preferred_contact":"Preferred Contact","dr_profile_prioridade":"Prioridade","dr_profile_priority":"Priority","dr_profile_profile":"Profile","dr_profile_profile_1":"Profile","dr_profile_profile_10":"Profile","dr_profile_profile_11":"Profile","dr_profile_profile_2":"Profile","dr_profile_profile_3":"Profile","dr_profile_profile_4":"Profile","dr_profile_profile_5":"Profile","dr_profile_profile_6":"Profile","dr_profile_profile_7":"Profile","dr_profile_profile_8":"Profile","dr_profile_profile_9":"Profile","dr_profile_profile_completeness":"Profile Completeness","dr_profile_profile_completeness_1":"Profile Completeness","dr_profile_profile_sections":"Profile sections","dr_profile_profile_updated_successfully":"Profile updated successfully.","dr_profile_progress":"Progress","dr_profile_progress_1":"Progress","dr_profile_protocolo":"Protocolo","dr_profile_quick_access":"Quick Access","dr_profile_recent_documents":"Recent Documents","dr_profile_recent_events_from_all_modules":"Recent events from all modules","dr_profile_registration_progress":"Registration progress","dr_profile_relation":"Relation","dr_profile_relationship":"Relationship","dr_profile_relationship_1":"Relationship","dr_profile_req_priority":"Req priority","dr_profile_req_type":"Req type","dr_profile_requests":"Requests","dr_profile_requests_1":"Requests","dr_profile_requests_10":"Requests","dr_profile_requests_11":"Requests","dr_profile_requests_12":"Requests","dr_profile_requests_2":"Requests","dr_profile_requests_3":"Requests","dr_profile_requests_4":"Requests","dr_profile_requests_5":"Requests","dr_profile_requests_6":"Requests","dr_profile_requests_7":"Requests","dr_profile_requests_8":"requests","dr_profile_requests_9":"Requests","dr_profile_required":"Required","dr_profile_salary":"Salary","dr_profile_schedule":"Schedule","dr_profile_security":"Security","dr_profile_security_1":"Security","dr_profile_security_10":"security","dr_profile_security_11":"Security","dr_profile_security_12":"Security","dr_profile_security_2":"Security","dr_profile_security_3":"Security","dr_profile_security_4":"Security","dr_profile_security_5":"Security","dr_profile_security_6":"Security","dr_profile_security_7":"Security","dr_profile_security_8":"Security","dr_profile_security_9":"Security","dr_profile_select":"Select...","dr_profile_sso":"SSO","dr_profile_status":"Status","dr_profile_status_1":"Status","dr_profile_status_2":"Status","dr_profile_status_3":"Status","dr_profile_status_4":"Status","dr_profile_status_5":"Status","dr_profile_street":"Street","dr_profile_street_1":"Street","dr_profile_subject":"Subject","dr_profile_summary":"Summary","dr_profile_summary_1":"Summary","dr_profile_technical_support":"Technical Support","dr_profile_theme":"Theme","dr_profile_timeline":"Timeline","dr_profile_timeline_1":"Timeline","dr_profile_timeline_10":"Timeline","dr_profile_timeline_11":"timeline","dr_profile_timeline_12":"Timeline","dr_profile_timeline_2":"Timeline","dr_profile_timeline_3":"Timeline","dr_profile_timeline_4":"Timeline","dr_profile_timeline_5":"Timeline","dr_profile_timeline_6":"Timeline","dr_profile_timeline_7":"Timeline","dr_profile_timeline_8":"Timeline","dr_profile_timeline_9":"Timeline","dr_profile_timezone":"Timezone","dr_profile_transcript":"Transcript","dr_profile_type":"Type","dr_profile_type_1":"Type","dr_profile_type_2":"Type","dr_profile_type_3":"Type","dr_profile_unit":"Unit","dr_profile_urgent":"Urgent","dr_profile_validade":"Validade","dr_profile_version":"Version","dr_profile_workload":"Workload","dr_profile_zip_code":"ZIP Code","dr_profile_zip_code_1":"ZIP Code","confirm_signout":"Confirm Sign Out","confirm_signout_question":"Are you sure you want to sign out?","signout_devices":"Your session will be securely terminated on all connected devices.","yes_signout":"Yes, sign out"};
+window.__ = function(key, fallback) {
+  if (window.__translations && window.__translations[key] !== undefined) {
+    return window.__translations[key];
+  }
+  if (window.__translationsEn && window.__translationsEn[key] !== undefined) {
+    return window.__translationsEn[key];
+  }
+  return fallback !== undefined ? fallback : key;
+};
+</script>
+
+    <script src="assets/js/ttsc.events.js"></script>
+    <script src="assets/js/auth.v2.js"></script>
+    <style>
+/* Supabase cookie consent — works in both light and dark modes */
+#cookieConsentBanner .cookie-banner-inner {
+  background: var(--bg, #fcfcfc);
+  border-top: 1px solid var(--border, #e5e5e5);
+  box-shadow: 0 -4px 24px rgba(0,0,0,0.06);
+}
+.dark #cookieConsentBanner .cookie-banner-inner {
+  background: var(--sb-surface, #1c1c1c);
+  border-top-color: var(--sb-border, #2e2e2e);
+  box-shadow: 0 -4px 24px rgba(0,0,0,0.4);
+}
+
+#cookieConsentBanner .cookie-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  background: rgba(62,207,142,0.12);
+  color: #3ecf8e;
+}
+
+#cookiePreferencesModal .cookie-pref-card {
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--border, #e5e5e5);
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15);
+}
+.dark #cookiePreferencesModal .cookie-pref-card {
+  background: var(--sb-surface, #1c1c1c);
+  border-color: var(--sb-border, #2e2e2e);
+}
+
+#cookiePreferencesModal .cookie-pref-header {
+  border-bottom: 1px solid var(--border-soft, #ebebeb);
+}
+.dark #cookiePreferencesModal .cookie-pref-header {
+  border-bottom-color: var(--sb-border-subtle, #242424);
+}
+
+#cookiePreferencesModal .cookie-pref-footer {
+  border-top: 1px solid var(--border-soft, #ebebeb);
+}
+.dark #cookiePreferencesModal .cookie-pref-footer {
+  border-top-color: var(--sb-border-subtle, #242424);
+}
+
+/* Supabase button — green accent in both modes */
+.cookie-ttsc-btn-primary {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 0.375rem; height: 36px; padding: 0 20px;
+  font-size: 0.8125rem; font-weight: 600; line-height: 1;
+  font-family: "Inter", system-ui, sans-serif;
+  border-radius: 8px; border: 1px solid transparent;
+  cursor: pointer; white-space: nowrap;
+  transition: all 0.15s ease;
+  background: #3ecf8e; color: #0f0f0f;
+}
+.cookie-ttsc-btn-primary:hover { opacity: 0.85; }
+
+.cookie-ttsc-btn-outline {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 0.375rem; height: 36px; padding: 0 16px;
+  font-size: 0.8125rem; font-weight: 500; line-height: 1;
+  font-family: "Inter", system-ui, sans-serif;
+  border-radius: 8px; border: 1px solid var(--border, #e2e8f0);
+  cursor: pointer; white-space: nowrap;
+  transition: all 0.15s ease;
+  background: transparent; color: var(--fg-2, #4d4d4d);
+}
+.cookie-ttsc-btn-outline:hover {
+  border-color: var(--border-strong, #cbd5e1);
+  background: var(--surface-2, #f8fafc);
+  color: var(--fg, #1c1c1c);
+}
+.dark .cookie-ttsc-btn-outline {
+  border-color: var(--sb-border, #2e2e2e);
+  color: var(--sb-text-secondary, #b4b4b4);
+  background: transparent;
+}
+.dark .cookie-ttsc-btn-outline:hover {
+  border-color: var(--sb-border-prominent, #363636);
+  background: rgba(255,255,255,0.04);
+  color: var(--sb-text, #fafafa);
+}
+
+.cookie-btn-soft {
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 0.375rem; height: 36px; padding: 0 16px;
+  font-size: 0.8125rem; font-weight: 500; line-height: 1;
+  font-family: "Inter", system-ui, sans-serif;
+  border-radius: 8px; border: 1px solid transparent;
+  cursor: pointer; white-space: nowrap;
+  transition: all 0.15s ease;
+  background: rgba(0,0,0,0.04); color: #64748b;
+}
+.cookie-btn-soft:hover {
+  background: rgba(0,0,0,0.08);
+  color: #1e293b;
+}
+.dark .cookie-btn-soft {
+  background: rgba(255,255,255,0.04);
+  color: var(--sb-text-secondary, #b4b4b4);
+}
+.dark .cookie-btn-soft:hover {
+  background: rgba(255,255,255,0.08);
+  color: var(--sb-text, #fafafa);
+}
+
+/* Category row */
+.cookie-cat-row {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 14px; border-radius: 12px;
+  border: 1px solid var(--border-soft, #ebebeb);
+  transition: background 0.15s ease;
+}
+.cookie-cat-row:hover {
+  background: rgba(0,0,0,0.02);
+}
+.dark .cookie-cat-row {
+  border-color: var(--sb-border-subtle, #242424);
+}
+.dark .cookie-cat-row:hover {
+  background: rgba(255,255,255,0.02);
+}
+
+/* Checkbox — always uses accent green */
+.cookie-cat-row input[type="checkbox"] {
+  accent-color: #3ecf8e;
+  width: 16px; height: 16px; border-radius: 4px;
+  cursor: pointer; margin-top: 2px;
+}
+.cookie-cat-row input[type="checkbox"]:disabled {
+  cursor: not-allowed; opacity: 0.7;
+}
+
+/* Badge "Sempre ativo" */
+.cookie-badge-essential {
+  display: inline-flex; align-items: center;
+  padding: 2px 8px; border-radius: 9999px;
+  font-size: 0.625rem; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.3px; line-height: 1; white-space: nowrap;
+  background: rgba(62,207,142,0.12);
+  color: #059669;
+  flex-shrink: 0; margin-top: 1px;
+}
+.dark .cookie-badge-essential {
+  background: rgba(62,207,142,0.15);
+  color: #3ecf8e;
+}
+
+/* Scrollbar for preferences list */
+.cookie-scroll::-webkit-scrollbar { width: 4px; }
+.cookie-scroll::-webkit-scrollbar-track { background: transparent; }
+.cookie-scroll::-webkit-scrollbar-thumb { background: var(--meta, #b4b4b4); border-radius: 10px; }
+.dark .cookie-scroll::-webkit-scrollbar-thumb { background: var(--sb-border, #2e2e2e); }
+
+/* Close button */
+.cookie-close-ttsc-btn {
+  width: 32px; height: 32px; border-radius: 8px;
+  border: none; background: transparent;
+  color: var(--muted, #6b6b6b);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s ease;
+}
+.cookie-close-ttsc-btn:hover {
+  background: rgba(0,0,0,0.04); color: var(--fg, #1c1c1c);
+}
+.dark .cookie-close-ttsc-btn { color: var(--sb-text-muted, #898989); }
+.dark .cookie-close-ttsc-btn:hover {
+  background: rgba(255,255,255,0.06);
+  color: var(--sb-text, #fafafa);
+}
+
+/* Layout utilities used by this partial, scoped to its two roots. The partial is
+   included by layouts without Tailwind (web/layouts/portal.php, auth/layouts/main.php):
+   without these rules .hidden did not hide and .fixed did not position, so the banner
+   and the preferences modal rendered open at the end of every page. Values mirror Tailwind. */
+#cookieConsentBanner.hidden, #cookiePreferencesModal.hidden { display: none !important; }
+:is(#cookieConsentBanner,#cookiePreferencesModal).fixed, :is(#cookieConsentBanner,#cookiePreferencesModal) .fixed { position: fixed; }
+:is(#cookieConsentBanner,#cookiePreferencesModal).inset-0, :is(#cookieConsentBanner,#cookiePreferencesModal) .inset-0 { inset: 0; }
+:is(#cookieConsentBanner,#cookiePreferencesModal).bottom-0 { bottom: 0; }
+:is(#cookieConsentBanner,#cookiePreferencesModal).left-0 { left: 0; }
+:is(#cookieConsentBanner,#cookiePreferencesModal).right-0 { right: 0; }
+#cookieConsentBanner.z-\[9999\] { z-index: 9999; }
+#cookiePreferencesModal.z-\[9998\] { z-index: 9998; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .flex { display: flex; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .flex-1 { flex: 1 1 0%; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .flex-col { flex-direction: column; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .items-center { align-items: center; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .items-start { align-items: flex-start; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .justify-between { justify-content: space-between; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .justify-center { justify-content: center; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .shrink-0 { flex-shrink: 0; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .min-w-0 { min-width: 0; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .w-full { width: 100%; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .gap-2 { gap: .5rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .gap-3 { gap: .75rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .space-y-2 > :not(:last-child) { margin-bottom: .5rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .max-w-5xl { max-width: 64rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .max-w-xl { max-width: 36rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .max-h-\[85vh\] { max-height: 85vh; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .mx-auto { margin-left: auto; margin-right: auto; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .ml-3 { margin-left: .75rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .mt-1 { margin-top: .25rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .p-4 { padding: 1rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .px-5 { padding-left: 1.25rem; padding-right: 1.25rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .py-3 { padding-top: .75rem; padding-bottom: .75rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .overflow-hidden { overflow: hidden; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .overflow-y-auto { overflow-y: auto; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .border-b { border-bottom-width: 1px; border-bottom-style: solid; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .text-xs { font-size: .75rem; line-height: 1rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .text-sm { font-size: .875rem; line-height: 1.25rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .text-base { font-size: 1rem; line-height: 1.5rem; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) .font-semibold { font-weight: 600; }
+:is(#cookieConsentBanner,#cookiePreferencesModal) p, :is(#cookieConsentBanner,#cookiePreferencesModal) h3 { margin: 0; }
+@media (max-width: 640px) {
+  #cookieConsentBanner .flex.items-start { flex-wrap: wrap; }
+  #cookieConsentBanner .ml-3 { margin-left: 0; width: 100%; justify-content: flex-end; }
+}
+</style>
+
+<div id="cookieConsentBanner"
+     class="fixed bottom-0 left-0 right-0 z-[9999] hidden"
+     role="alert"
+     aria-live="polite"
+     data-config-url="#/privacy/consent-config"
+     data-decisions-url="#/privacy/consent-decisions">
+    <div class="cookie-banner-inner">
+        <div class="max-w-5xl mx-auto px-5 py-4">
+            <div class="flex items-start gap-3">
+                <div class="cookie-icon">
+                    <i class="fa-light fa-shield-halved text-sm"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <h3 class="text-sm font-semibold" style="color:var(--fg,#1c1c1c);margin:0" id="consentBannerTitle">Privacidade em Primeiro Lugar</h3>
+                    <p class="text-xs mt-1" style="color:var(--muted,#6b6b6b);line-height:1.5;margin:0" id="consentBannerText">
+                        Utilizamos cookies e tecnologias semelhantes para melhorar sua experiência, personalizar conteúdo e analisar nosso tráfego.                    </p>
+                </div>
+                <div class="flex items-center gap-2 shrink-0 ml-3">
+                    <button type="button" data-consent-action="reject" class="cookie-ttsc-btn-outline" id="consentRejectAll">Rejeitar</button>
+                    <button type="button" data-consent-action="customize" class="cookie-btn-soft" id="consentCustomize">Personalizar</button>
+                    <button type="button" data-consent-action="accept-all" class="cookie-ttsc-btn-primary" id="consentAcceptAll">Aceitar Todos</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="cookiePreferencesModal" class="fixed inset-0 z-[9998] hidden" role="dialog" aria-modal="true" aria-labelledby="cookiePrefTitle">
+    <div class="fixed inset-0" style="background:rgba(0,0,0,0.5);backdrop-filter:blur(4px)" data-consent-action="close-preferences"></div>
+    <div class="fixed inset-0 flex items-center justify-center p-4">
+        <div class="cookie-pref-card w-full max-w-xl max-h-[85vh] flex flex-col overflow-hidden">
+            <div class="cookie-pref-header flex items-center justify-between px-5 py-4 shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="cookie-icon" style="width:32px;height:32px;border-radius:8px">
+                        <i class="fa-light fa-sliders text-xs"></i>
+                    </div>
+                    <h3 id="cookiePrefTitle" class="text-base font-semibold" style="color:var(--fg,#1c1c1c);margin:0">Preferências de Cookies</h3>
+                </div>
+                <button type="button" data-consent-action="close-preferences" class="cookie-close-ttsc-btn" aria-label="Fechar">
+                    <i class="fa-light fa-xmark"></i>
+                </button>
+            </div>
+            <div class="px-5 py-3 border-b shrink-0" style="border-color:var(--border-soft,#ebebeb)">
+                <p class="text-xs" style="color:var(--muted,#6b6b6b);line-height:1.5;margin:0">
+                    Personalize suas preferências de cookies. Categorias <strong style="color:var(--fg,#1c1c1c);font-weight:500">essenciais</strong> estão sempre ativos para o funcionamento do sistema.                </p>
+            </div>
+            <div class="flex-1 overflow-y-auto cookie-scroll px-5 py-4 space-y-2" id="cookiePreferencesList">
+            </div>
+            <div class="cookie-pref-footer flex items-center justify-between gap-3 px-5 py-4 shrink-0">
+                <button type="button" data-consent-action="reject" class="cookie-ttsc-btn-outline">Rejeitar não essenciais</button>
+                <div class="flex items-center gap-2">
+                    <button type="button" data-consent-action="save-preferences" class="cookie-btn-soft">Salvar preferências</button>
+                    <button type="button" data-consent-action="accept-all" class="cookie-ttsc-btn-primary">Aceitar todos</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <script src="assets/js/consent-cookie.js"></script>
+    </body>
+</html>
+

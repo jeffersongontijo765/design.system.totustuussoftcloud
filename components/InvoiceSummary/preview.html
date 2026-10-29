@@ -1,0 +1,71 @@
+<!-- @dsCard group="Componentes" height=420 subtitle="InvoiceSummary · invoice summary com estados, ações e acessibilidade (padrões de referência adaptados) " -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>InvoiceSummary</title>
+<style>
+  html,body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font-family:Inter,system-ui,sans-serif;font-size:13px;-webkit-font-smoothing:antialiased}
+  .demo{padding:16px;display:grid;gap:14px;max-width:1100px}
+  .card{background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-surface);padding:16px}
+  .card-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+  .card-t{margin:0;font-size:14px;font-weight:600;color:var(--ttsc-text)}
+  .card-s{margin:2px 0 0;font-size:11px;color:var(--ttsc-text-muted)}
+  .pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:var(--ttsc-radius-pill);border:1px solid var(--ttsc-border);color:var(--ttsc-text-2);white-space:nowrap;background:var(--ttsc-surface)}
+  .pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+  .pill-ok{color:var(--ttsc-success);border-color:color-mix(in srgb,var(--ttsc-success) 40%,transparent)}
+  .pill-warn{color:var(--ttsc-warning-text);border-color:color-mix(in srgb,var(--ttsc-warning) 45%,transparent)}
+  .pill-bad{color:var(--ttsc-danger-text);border-color:color-mix(in srgb,var(--ttsc-danger) 40%,transparent)}
+  .pill-info{color:var(--ttsc-info-text);border-color:color-mix(in srgb,var(--ttsc-info) 40%,transparent)}
+  .av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text);flex-shrink:0}
+  .ib{width:30px;height:30px;border-radius:8px;border:1px solid var(--ttsc-border);background:var(--ttsc-surface);display:grid;place-items:center;color:var(--ttsc-text-2);cursor:pointer}
+  .ib:hover{background:var(--ttsc-canvas-2)}
+  .ib-ok:hover{color:var(--ttsc-success)} .ib-no:hover{color:var(--ttsc-danger-text)}
+  .muted{color:var(--ttsc-text-muted)} .tnum{font-variant-numeric:tabular-nums}
+  :focus-visible{outline:2px solid var(--ttsc-accent);outline-offset:2px}
+
+  .iv{display:grid;gap:12px;padding:16px;border-radius:var(--ttsc-radius-surface);border:1px solid var(--ttsc-border);background:var(--ttsc-surface)}
+  .iv-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}
+  .iv-num{font-size:12px;color:var(--ttsc-text-muted);font-variant-numeric:tabular-nums}
+  .iv-title{margin:2px 0 0;font-size:15px;font-weight:600;color:var(--ttsc-text)}
+  .iv-table{width:100%;border-collapse:collapse;font-size:12px}
+  .iv-table th{text-align:left;font-weight:600;color:var(--ttsc-text-muted);padding:6px 0;border-bottom:1px solid var(--ttsc-border)}
+  .iv-table td{padding:8px 0;border-bottom:1px solid var(--ttsc-border-soft);color:var(--ttsc-text-2)}
+  .iv-table td.num,.iv-table th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .iv-totals{display:grid;gap:4px;justify-self:end;min-width:240px;font-size:12px;color:var(--ttsc-text-2)}
+  .iv-totals div{display:flex;justify-content:space-between;gap:16px}
+  .iv-totals .grand{font-size:15px;font-weight:700;color:var(--ttsc-text);border-top:1px solid var(--ttsc-border);padding-top:6px;margin-top:4px}
+  .iv-acts{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+  .iv-btn{font:inherit;font-size:12px;font-weight:600;padding:7px 12px;border-radius:var(--ttsc-radius-control);border:1px solid var(--ttsc-border);background:var(--ttsc-surface);color:var(--ttsc-text);cursor:pointer}
+  .iv-btn.primary{background:var(--ttsc-accent);color:var(--ttsc-accent-on);border-color:var(--ttsc-accent)}
+</style>
+</head>
+<body>
+<main class="demo">
+
+  <section class="iv" aria-labelledby="iv-t">
+    <div class="iv-head">
+      <div><div class="iv-num">Fatura nº 2026-11-0412</div><h2 id="iv-t" class="iv-title">Mensalidade de novembro · Ana Souza</h2></div>
+      <span class="pill pill-warn">Vence em 5 dias</span>
+    </div>
+    <table class="iv-table">
+      <caption class="sr-only" style="position:absolute;left:-9999px">Itens da fatura</caption>
+      <thead><tr><th scope="col">Item</th><th scope="col" class="num">Valor</th></tr></thead>
+      <tbody>
+        <tr><td>Mensalidade · 2º ano B</td><td class="num">R$ 890,00</td></tr>
+        <tr><td>Material didático (parcela 2 de 3)</td><td class="num">R$ 120,00</td></tr>
+        <tr><td>Desconto de pontualidade</td><td class="num">− R$ 45,00</td></tr>
+      </tbody>
+    </table>
+    <div class="iv-totals">
+      <div><span>Subtotal</span><span>R$ 1.010,00</span></div>
+      <div><span>Desconto</span><span>− R$ 45,00</span></div>
+      <div class="grand"><span>Total a pagar</span><span>R$ 965,00</span></div>
+    </div>
+    <div class="iv-acts">
+      <button class="iv-btn" type="button">Baixar PDF</button>
+      <button class="iv-btn primary" type="button">Pagar com PIX</button>
+    </div>
+  </section>
+
+</main>
+</body>
+</html>

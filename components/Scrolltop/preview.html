@@ -1,0 +1,89 @@
+<!-- @dsCard group="Geral" height=305 subtitle="Implementação TTSC · aparece após N px (offset), rolagem suave, z --ttsc-z-floating, janela ou contêiner" -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><title>Scrolltop</title>
+<style>
+  .ttsc-scrolltop {
+    position: fixed; right: var(--ttsc-space-6); bottom: var(--ttsc-space-6); z-index: var(--ttsc-z-floating);
+    width: 40px; height: 40px; border-radius: var(--ttsc-radius-pill);
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--ttsc-surface); color: var(--ttsc-text); border: 1px solid var(--ttsc-border); box-shadow: var(--ttsc-shadow-md);
+    cursor: pointer; opacity: 0; transform: translateY(8px); pointer-events: none; transition: opacity .2s ease, transform .2s ease, background .15s ease;
+  }
+  .ttsc-scrolltop.is-visible { opacity: 1; transform: none; pointer-events: auto; }
+  .ttsc-scrolltop:hover { background: var(--ttsc-canvas-2); }
+  .ttsc-scrolltop:focus-visible { outline: 2px solid var(--ttsc-accent); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { .ttsc-scrolltop { transition: none; } }
+  /* Demo: contêiner rolável faz o papel da janela */
+  .st-frame { position: relative; height: 240px; border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); overflow: hidden; background: var(--ttsc-canvas); }
+  .st-scroll { height: 100%; overflow-y: auto; padding: 12px 72px 12px 16px; }
+  .st-frame .ttsc-scrolltop { position: absolute; right: 16px; bottom: 16px; }
+  .st-row { padding: 8px 0; border-bottom: 1px solid var(--ttsc-border-soft); color: var(--ttsc-text-2); font-size: 12px; display: flex; justify-content: space-between; }
+  .st-row b { color: var(--ttsc-text); font-weight: 600; }
+  .st-pos { font-size: 12px; color: var(--ttsc-text-muted); }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="ds-row" style="justify-content:space-between">
+    <span class="ds-label">Diário de classe · 9º ano B (role a lista)</span>
+    <span class="st-pos" id="st-pos" aria-hidden="true"></span>
+  </div>
+  <div class="st-frame">
+    <div class="st-scroll" id="st-scroll" tabindex="0" aria-label="Lista de alunos"></div>
+    <button type="button" class="ttsc-scrolltop" data-ttsc-scrolltop="#st-scroll" data-ttsc-scrolltop-offset="120" aria-label="Voltar ao topo">
+      <i class="fa-light fa-arrow-up"></i>
+    </button>
+  </div>
+</div>
+<script>
+  /* assets/js/core/ttsc.scrolltop.js — implementação TTSC */
+  (function (w) {
+    function Scrolltop(btn, options) {
+      this.btn = btn;
+      var sel = btn.getAttribute('data-ttsc-scrolltop');
+      this.target = sel && sel !== 'true' ? document.querySelector(sel) : w;
+      this.options = Object.assign({ offset: parseInt(btn.getAttribute('data-ttsc-scrolltop-offset') || '200', 10) }, options || {});
+      this._onScroll = this.update.bind(this);
+      this._ticking = false;
+      var self = this;
+      this.target.addEventListener('scroll', function () {
+        if (self._ticking) return; self._ticking = true;
+        w.requestAnimationFrame(function () { self._ticking = false; self.update(); });
+      }, { passive: true });
+      btn.addEventListener('click', function () { self.go(); });
+      this.update();
+    }
+    Scrolltop.prototype.position = function () { return this.target === w ? w.scrollY : this.target.scrollTop; };
+    Scrolltop.prototype.update = function () {
+      var show = this.position() > this.options.offset;
+      if (show !== this.btn.classList.contains('is-visible')) {
+        this.btn.classList.toggle('is-visible', show);
+        this.btn.setAttribute('aria-hidden', String(!show));
+        this.btn.tabIndex = show ? 0 : -1;
+        this.btn.dispatchEvent(new CustomEvent(show ? 'ttsc:scrolltop:show' : 'ttsc:scrolltop:hide', { bubbles: true }));
+      }
+    };
+    Scrolltop.prototype.go = function () {
+      var reduce = w.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      this.target.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+      var focusEl = this.target === w ? document.querySelector('main h1, [data-ttsc-scrolltop-focus]') : this.target;
+      if (focusEl) { if (!focusEl.hasAttribute('tabindex')) focusEl.setAttribute('tabindex', '-1'); focusEl.focus({ preventScroll: true }); }
+    };
+    Scrolltop.init = function (root) {
+      (root || document).querySelectorAll('[data-ttsc-scrolltop]').forEach(function (b) { if (!b._ttscScrolltop) b._ttscScrolltop = new Scrolltop(b); });
+    };
+    w.TTSC = w.TTSC || {}; w.TTSC.Scrolltop = Scrolltop;
+  })(window);
+
+  var nomes = ['Alice Moura','Ana Beatriz Souza','Bruno Carvalho','Caio Fernandes','Camila Rocha','Diego Martins','Eduarda Lima','Felipe Araújo','Gabriela Nunes','Heitor Ribeiro','Isabela Castro','João Pedro Alves','Larissa Mendes','Lívia Correia','Matheus Barbosa','Natália Freitas','Otávio Pires','Paula Teixeira','Rafael Gomes','Sofia Cardoso','Thiago Moreira','Valentina Duarte','Yuri Batista'];
+  var box = document.getElementById('st-scroll');
+  box.innerHTML = nomes.map(function (n, i) { return '<div class="st-row"><b>' + String(i + 1).padStart(2, '0') + ' · ' + n + '</b><span>' + (88 + (i * 7) % 12) + '% de frequência</span></div>'; }).join('');
+  box.addEventListener('scroll', function () { document.getElementById('st-pos').textContent = 'scrollTop: ' + Math.round(box.scrollTop) + ' px (aparece após 120 px)'; });
+  TTSC.init();
+  TTSC.Scrolltop.init();
+  box.scrollTop = 260; box.dispatchEvent(new Event('scroll')); // começa rolado para mostrar o botão
+</script>
+</body>
+</html>

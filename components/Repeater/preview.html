@@ -1,0 +1,81 @@
+<!-- @dsCard group="Formulários" height=220 subtitle="data-ttsc-repeater · target, wrapper, limit=4, remover, reindexação de names" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Repeater</title>
+<style>
+  .ttsc-repeater-row { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1.2fr) minmax(0, 1.3fr) auto; gap: var(--ttsc-space-2); align-items: center; margin: 0; padding: var(--ttsc-space-2); border: 1px solid var(--ttsc-border-soft); border-radius: var(--ttsc-radius-control); background: var(--ttsc-surface); min-width: 0; }
+  .ttsc-repeater-row:focus-within { border-color: var(--ttsc-border-strong); }
+  .ttsc-repeater-row.is-new { animation: pv-in .2s ease-out; }
+  @keyframes pv-in { from { opacity: 0; transform: translateY(-4px); } }
+  .pv-sr { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .ttsc-form-label { color: var(--ttsc-text); }
+  .pv-count { white-space: nowrap; font-size: 12px; color: var(--ttsc-text-muted); }
+  .pv-names { font-family: ui-monospace, monospace; font-size: 11px; color: var(--ttsc-text-muted); }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="flex items-center justify-between">
+    <span class="ttsc-form-label">Responsáveis e contatos</span>
+    <span class="pv-count" id="pv-count" aria-live="polite"></span>
+  </div>
+  <div id="pv-list" class="flex flex-col gap-2">
+    <fieldset class="ttsc-repeater-row" id="pv-row">
+      <legend class="pv-sr">Responsável 1</legend>
+      <input class="ttsc-input" name="family[0][full_name]" aria-label="Nome" value="Mariana Costa Lima" placeholder="Nome completo">
+      <select class="ttsc-select" name="family[0][relationship]" aria-label="Parentesco">
+        <option value="mother" selected>Mãe</option><option value="father">Pai</option><option value="guardian">Responsável legal</option><option value="grandparent">Avô/Avó</option><option value="other">Outro</option>
+      </select>
+      <input class="ttsc-input" name="family[0][phone]" aria-label="Telefone" inputmode="tel" value="(11) 98877-1020" placeholder="(11) 90000-0000">
+      <button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon" data-ttsc-repeater-delete aria-label="Remover responsável 1"><i class="fa-light fa-trash"></i></button>
+    </fieldset>
+    <fieldset class="ttsc-repeater-row">
+      <legend class="pv-sr">Responsável 2</legend>
+      <input class="ttsc-input" name="family[1][full_name]" aria-label="Nome" value="Roberto Lima" placeholder="Nome completo">
+      <select class="ttsc-select" name="family[1][relationship]" aria-label="Parentesco">
+        <option value="mother">Mãe</option><option value="father" selected>Pai</option><option value="guardian">Responsável legal</option><option value="grandparent">Avô/Avó</option><option value="other">Outro</option>
+      </select>
+      <input class="ttsc-input" name="family[1][phone]" aria-label="Telefone" inputmode="tel" value="(11) 97766-3344" placeholder="(11) 90000-0000">
+      <button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon" data-ttsc-repeater-delete aria-label="Remover responsável 2"><i class="fa-light fa-trash"></i></button>
+    </fieldset>
+  </div>
+  <div class="ds-row justify-between">
+    <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-sm" id="pv-add"
+            data-ttsc-repeater="true" data-ttsc-repeater-target="#pv-row" data-ttsc-repeater-wrapper="#pv-list" data-ttsc-repeater-limit="4">
+      <i class="fa-light fa-plus"></i> Adicionar responsável
+    </button>
+    <span class="pv-names" id="pv-names"></span>
+  </div>
+</div>
+<script>
+  TTSC.init();
+  var trigger = document.getElementById('pv-add'), list = document.getElementById('pv-list');
+  var count = document.getElementById('pv-count'), names = document.getElementById('pv-names');
+  var limit = Number(trigger.dataset.ttscRepeaterLimit) || 0;
+  function reindex() {
+    Array.prototype.forEach.call(list.children, function (row, i) {
+      if (i > 0) row.removeAttribute('id');
+      row.querySelector('legend').textContent = 'Responsável ' + (i + 1);
+      row.querySelector('[data-ttsc-repeater-delete]').setAttribute('aria-label', 'Remover responsável ' + (i + 1));
+      row.querySelectorAll('[name]').forEach(function (f) { f.name = f.name.replace(/^family\[\d+\]/, 'family[' + i + ']'); });
+    });
+    count.textContent = list.children.length + ' de ' + limit + ' responsáveis';
+    names.textContent = 'POST: family[0..' + (list.children.length - 1) + '][full_name|relationship|phone]';
+  }
+  trigger.addEventListener('add', function (e) {
+    var row = e.detail.payload.element;
+    row.querySelectorAll('input').forEach(function (i) { i.value = ''; });
+    row.querySelectorAll('select').forEach(function (s) { s.selectedIndex = 0; });
+    row.classList.add('is-new');
+    reindex();
+    row.querySelector('input').focus();
+  });
+  list.addEventListener('click', function (e) {
+    if (!e.target.closest('[data-ttsc-repeater-delete]')) return;
+    if (!list.querySelector('#pv-row') && list.firstElementChild) list.firstElementChild.id = 'pv-row';
+    reindex(); trigger.focus();
+  });
+  reindex();
+</script>
+</body>
+</html>

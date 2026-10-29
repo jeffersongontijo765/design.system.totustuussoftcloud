@@ -1,0 +1,119 @@
+<!-- @dsCard group="Formulários" height=240 subtitle="data-ttsc-image-input · imagem salva, vazio com iniciais, nova (changed), logo quadrado, remover/restaurar, hidden avatar_remove" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>ImageInput</title>
+<style>
+  .ttsc-image-input-placeholder { background-color: var(--ttsc-canvas-2); display: flex; align-items: center; justify-content: center; }
+  .ttsc-image-input-placeholder:focus-visible { outline: 2px solid var(--ttsc-accent); outline-offset: 2px; }
+  .ttsc-image-input-preview { position: absolute; inset: 0; background-position: center; }
+  .ttsc-image-input-initials { font-weight: 600; font-size: 20px; color: var(--ttsc-text-2); }
+  .ttsc-image-input:not(.empty) .ttsc-image-input-initials { visibility: hidden; }
+  .ttsc-image-input-change { position: absolute; inset-inline: 0; bottom: 0; height: 22px; display: flex; align-items: center; justify-content: center; background: var(--ttsc-scrim); color: var(--ttsc-surface); font-size: 11px; opacity: 0; transition: opacity .15s; z-index: 1; }
+  :is([data-theme="dark"]) .ttsc-image-input-change { color: var(--ttsc-text); }
+  .ttsc-image-input:hover .ttsc-image-input-change, .ttsc-image-input-placeholder:focus-visible .ttsc-image-input-change, .ii-show .ttsc-image-input-change { opacity: 1; }
+  .ttsc-image-input.changed .ttsc-image-input-placeholder { box-shadow: 0 0 0 2px var(--ttsc-surface), 0 0 0 4px var(--ttsc-accent); }
+  .ttsc-image-input-remove.hidden { display: none; }
+  .ttsc-image-input-remove:focus-visible { outline: 2px solid var(--ttsc-accent); outline-offset: 1px; }
+  .ttsc-image-input.is-square .ttsc-image-input-placeholder, .ttsc-image-input.is-square .ttsc-image-input-preview { border-radius: var(--ttsc-radius-control); background-size: contain; background-repeat: no-repeat; }
+  .ii-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+  .ii-cell { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; padding: 14px 8px; border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); background: var(--ttsc-surface); }
+  .ii-cap { font-size: 12px; color: var(--ttsc-text); font-weight: 500; }
+  .ii-meta { font-size: 11px; color: var(--ttsc-text-muted); font-family: ui-monospace, monospace; }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="ii-grid">
+    <div class="ii-cell">
+      <div class="ttsc-image-input" data-ttsc-image-input="true" id="ii-saved">
+        <input type="file" name="avatar" accept=".png,.jpg,.jpeg,.webp"><input type="hidden" name="avatar_remove">
+        <button type="button" class="ttsc-image-input-remove" data-ttsc-image-input-remove aria-label="Remover foto"><i class="fa-light fa-xmark"></i></button>
+        <div class="ttsc-image-input-placeholder" data-ttsc-image-input-placeholder role="button" tabindex="0" aria-label="Alterar foto de Ana Beatriz Souza">
+          <span class="ttsc-image-input-initials" aria-hidden="true">AB</span>
+          <div class="ttsc-image-input-preview" data-ttsc-image-input-preview data-demo="photo" data-initials="AB"></div>
+          <span class="ttsc-image-input-change" data-ttsc-image-input-change aria-hidden="true"><i class="fa-light fa-camera"></i></span>
+        </div>
+      </div>
+      <span class="ii-cap">Imagem salva</span><span class="ii-meta" data-hidden-of="ii-saved"></span>
+    </div>
+    <div class="ii-cell">
+      <div class="ttsc-image-input ii-show" data-ttsc-image-input="true" id="ii-empty">
+        <input type="file" name="avatar" accept=".png,.jpg,.jpeg,.webp"><input type="hidden" name="avatar_remove">
+        <button type="button" class="ttsc-image-input-remove" data-ttsc-image-input-remove aria-label="Remover foto"><i class="fa-light fa-xmark"></i></button>
+        <div class="ttsc-image-input-placeholder" data-ttsc-image-input-placeholder role="button" tabindex="0" aria-label="Adicionar foto de Bruno Carvalho Lima">
+          <span class="ttsc-image-input-initials" aria-hidden="true">BC</span>
+          <div class="ttsc-image-input-preview" data-ttsc-image-input-preview></div>
+          <span class="ttsc-image-input-change" data-ttsc-image-input-change aria-hidden="true"><i class="fa-light fa-camera"></i></span>
+        </div>
+      </div>
+      <span class="ii-cap">Vazio (iniciais)</span><span class="ii-meta" data-hidden-of="ii-empty"></span>
+    </div>
+    <div class="ii-cell">
+      <div class="ttsc-image-input" data-ttsc-image-input="true" id="ii-new">
+        <input type="file" name="avatar" accept=".png,.jpg,.jpeg,.webp"><input type="hidden" name="avatar_remove">
+        <button type="button" class="ttsc-image-input-remove" data-ttsc-image-input-remove aria-label="Desfazer nova foto"><i class="fa-light fa-xmark"></i></button>
+        <div class="ttsc-image-input-placeholder" data-ttsc-image-input-placeholder role="button" tabindex="0" aria-label="Alterar foto de Camila Ferreira Rocha">
+          <span class="ttsc-image-input-initials" aria-hidden="true">CF</span>
+          <div class="ttsc-image-input-preview" data-ttsc-image-input-preview></div>
+          <span class="ttsc-image-input-change" data-ttsc-image-input-change aria-hidden="true"><i class="fa-light fa-camera"></i></span>
+        </div>
+      </div>
+      <span class="ii-cap">Nova escolhida (changed)</span><span class="ii-meta" data-hidden-of="ii-new"></span>
+    </div>
+    <div class="ii-cell">
+      <div class="ttsc-image-input is-square" data-ttsc-image-input="true" id="ii-logo">
+        <input type="file" name="logo" accept=".png,.svg"><input type="hidden" name="logo_remove">
+        <button type="button" class="ttsc-image-input-remove" data-ttsc-image-input-remove aria-label="Remover logotipo"><i class="fa-light fa-xmark"></i></button>
+        <div class="ttsc-image-input-placeholder" data-ttsc-image-input-placeholder role="button" tabindex="0" aria-label="Alterar logotipo da unidade Campus Centro">
+          <i class="fa-light fa-building-columns ttsc-image-input-initials" aria-hidden="true"></i>
+          <div class="ttsc-image-input-preview" data-ttsc-image-input-preview data-demo="logo"></div>
+          <span class="ttsc-image-input-change" data-ttsc-image-input-change aria-hidden="true"><i class="fa-light fa-camera"></i></span>
+        </div>
+      </div>
+      <span class="ii-cap">Logo da unidade</span><span class="ii-meta" data-hidden-of="ii-logo"></span>
+    </div>
+  </div>
+  <div class="ds-note" id="ii-log" aria-live="polite">Clique no × para remover/restaurar; clique na imagem para escolher outra.</div>
+</div>
+<script>
+  // Imagens de demonstração geradas com as cores dos tokens do tema atual (sem imagens externas)
+  function tok(n) { return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); }
+  function draw(kind, initials) {
+    var c = document.createElement('canvas'); c.width = c.height = 160; var g = c.getContext('2d');
+    if (kind === 'logo') {
+      g.fillStyle = tok('--ttsc-surface'); g.fillRect(0, 0, 160, 160);
+      g.fillStyle = tok('--ttsc-accent'); g.beginPath(); g.moveTo(80, 28); g.lineTo(132, 60); g.lineTo(28, 60); g.closePath(); g.fill();
+      g.fillRect(40, 68, 14, 46); g.fillRect(73, 68, 14, 46); g.fillRect(106, 68, 14, 46); g.fillRect(30, 120, 100, 12);
+    } else {
+      var grd = g.createLinearGradient(0, 0, 160, 160); grd.addColorStop(0, tok('--ttsc-primary-300')); grd.addColorStop(1, tok('--ttsc-primary-700'));
+      g.fillStyle = grd; g.fillRect(0, 0, 160, 160);
+      g.fillStyle = tok('--ttsc-primary-950'); g.beginPath(); g.arc(80, 64, 30, 0, Math.PI * 2); g.fill(); g.beginPath(); g.arc(80, 156, 56, Math.PI, 0); g.fill();
+    }
+    return c.toDataURL('image/png');
+  }
+  document.querySelectorAll('[data-demo]').forEach(function (p) { p.style.backgroundImage = 'url(' + draw(p.dataset.demo) + ')'; });
+  TTSC.init();
+  var log = document.getElementById('ii-log');
+  function meta() { document.querySelectorAll('[data-hidden-of]').forEach(function (m) { var r = document.getElementById(m.dataset.hiddenOf), h = r.querySelector('input[type=hidden]'); m.textContent = h.name + '="' + h.value + '"' + (r.classList.contains('changed') ? ' · arquivo novo' : ''); }); }
+  document.querySelectorAll('[data-ttsc-image-input]').forEach(function (root) {
+    var inst = ttscImageInput.getOrCreateInstance(root), file = root.querySelector('input[type=file]');
+    root.addEventListener('change', function (e) {
+      var p = e.detail && e.detail.payload; if (!p) return;
+      var f = file.files[0];
+      if (!f || !/^image\//.test(f.type) || f.size > 2097152) { p.cancel = true; file.value = ''; log.textContent = 'change cancelado: use PNG, JPG ou WEBP de até 2 MB.'; }
+    });
+    root.addEventListener('changed', function () { log.textContent = 'changed → nova imagem em prévia; salve para gravar users.avatar.'; meta(); });
+    root.addEventListener('remove', function (e) { if (e.detail && e.detail.payload) return; log.textContent = 'remove → hidden ' + root.querySelector('input[type=hidden]').value + (root.classList.contains('empty') ? ' (sem imagem)' : ' (imagem restaurada)'); meta(); });
+    root.querySelector('[data-ttsc-image-input-placeholder]').addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); file.click(); } });
+  });
+  // Estado "changed" de demonstração: simula a escolha de um arquivo
+  (function () {
+    var root = document.getElementById('ii-new'), file = root.querySelector('input[type=file]');
+    var bin = atob(draw('photo').split(',')[1]), arr = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+    var dt = new DataTransfer(); dt.items.add(new File([arr], 'camila.png', { type: 'image/png' })); file.files = dt.files;
+    file.dispatchEvent(new Event('change'));
+  })();
+  meta();
+</script>
+</body>
+</html>

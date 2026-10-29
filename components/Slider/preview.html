@@ -1,0 +1,63 @@
+<!-- @dsCard group="Formulários" height=210 subtitle="data-ttsc-range-slider + input range · output, preenchimento --ttsc-range-fill, passo, desabilitado" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Slider</title>
+<style>
+  .ttsc-range-fill::-webkit-slider-runnable-track { background: linear-gradient(to right, var(--ttsc-accent) 0 calc(var(--ttsc-range-fill, 0) * 100%), var(--ttsc-border-strong) calc(var(--ttsc-range-fill, 0) * 100%) 100%); }
+  .ttsc-range-fill::-moz-range-progress { background: var(--ttsc-accent); height: .5rem; border-radius: .188rem; }
+  .range:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 3px var(--ttsc-accent-soft); }
+  .range:disabled { opacity: .6; }
+  .ttsc-form-label { color: var(--ttsc-text); }
+  .ttsc-form-description { color: var(--ttsc-text-muted); }
+  .pv-out { white-space: nowrap; font-size: 13px; font-weight: 600; color: var(--ttsc-text); font-variant-numeric: tabular-nums; }
+  .pv-scale { font-size: 11px; color: var(--ttsc-text-muted); }
+  .pv-cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ttsc-space-5) var(--ttsc-space-6); }
+  .pv-live { font-size: 12px; color: var(--ttsc-text-2); }
+</style>
+</head>
+<body>
+<div class="ds-pad pv-cols">
+  <div class="ttsc-form-item" id="pv-att" data-ttsc-range-slider="true" data-ttsc-range-slider-output="#pv-att-out">
+    <div class="flex items-center justify-between">
+      <label class="ttsc-form-label" for="pv-att-in">Frequência mínima para aprovação</label>
+      <span class="pv-out"><span id="pv-att-out" aria-hidden="true">75</span>%</span>
+    </div>
+    <input type="range" class="range ttsc-range-fill" id="pv-att-in" min="50" max="100" step="5" value="75" aria-valuetext="75%">
+    <div class="flex justify-between pv-scale" aria-hidden="true"><span>50%</span><span>100%</span></div>
+    <p class="ttsc-form-description">LDB: mínimo legal de 75% da carga horária.</p>
+  </div>
+  <div class="ttsc-form-item" data-ttsc-range-slider="true" data-ttsc-range-slider-output="#pv-tol-out">
+    <div class="flex items-center justify-between">
+      <label class="ttsc-form-label" for="pv-tol">Tolerância de atraso</label>
+      <span class="pv-out"><span id="pv-tol-out">10</span> min</span>
+    </div>
+    <input type="range" class="range ttsc-range-fill" id="pv-tol" min="0" max="30" step="1" value="10">
+    <div class="flex justify-between pv-scale" aria-hidden="true"><span>0</span><span>30 min</span></div>
+  </div>
+  <div class="ttsc-form-item" data-ttsc-range-slider="true" data-ttsc-range-slider-output="#pv-w-out">
+    <div class="flex items-center justify-between">
+      <label class="ttsc-form-label" for="pv-w">Peso da prova bimestral</label>
+      <span class="pv-out"><span id="pv-w-out">40</span>%</span>
+    </div>
+    <input type="range" class="range" id="pv-w" min="0" max="100" step="10" value="40">
+    <div class="ds-note">Sem extensão de preenchimento (estilo puro do runtime).</div>
+  </div>
+  <div class="ttsc-form-item" data-ttsc-range-slider="true">
+    <label class="ttsc-form-label" for="pv-d">Desconto máximo (bloqueado pela política)</label>
+    <input type="range" class="range ttsc-range-fill" id="pv-d" min="0" max="50" value="20" disabled>
+    <div class="pv-live" id="pv-live" aria-live="polite">Evento change: —</div>
+  </div>
+</div>
+<script>
+  TTSC.init();
+  var att = document.getElementById('pv-att');
+  att.addEventListener('ttsc.range-slider.input', function (e) {
+    document.getElementById('pv-att-in').setAttribute('aria-valuetext', e.detail.payload.value + '%');
+  });
+  document.addEventListener('ttsc.range-slider.change', function (e) {
+    var p = e.detail.payload;
+    document.getElementById('pv-live').textContent = 'Evento change: value=' + p.value + ' (min ' + p.min + ', max ' + p.max + ', step ' + p.step + ')';
+  });
+</script>
+</body>
+</html>

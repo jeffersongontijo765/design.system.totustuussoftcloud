@@ -1,0 +1,27 @@
+<!-- @dsCard group="Arquétipos de página" height=751 width=1280 page subtitle="Settings · grupos em abas, Descartar / Salvar alterações" -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>PageSettings</title>
+<style>html, body { margin: 0; } #main-viewport { padding: 14px 16px 24px; } </style>
+</head>
+<body>
+<main id="main-viewport" class="bg-slate-50">
+  <div id="model-page" class="space-y-3.5" aria-live="polite"></div>
+</main>
+<div id="backdrop-overlay" class="fixed inset-0 bg-slate-900/40 backdrop-blur-[2px] z-40 transition-opacity hidden" onclick="window.closeAllDrawers && window.closeAllDrawers()"></div>
+<script>
+  TTSCModelKit.syncTheme();
+  var ROUTE = '/academico/configuracoes';
+  fetch('../../models/academico.json').then(function (r) { return r.json(); }).then(function (sheet) {
+    TTSCModelKit.render(
+      { portal: { label: 'Administração' }, module: { label: 'Acadêmico' }, page: { label: 'Configurações Acadêmicas', route: ROUTE } },
+      sheet.pages[ROUTE], {}
+    );
+    
+    setTimeout(function () {  }, 300);
+  });
+</script>
+</body>
+</html>

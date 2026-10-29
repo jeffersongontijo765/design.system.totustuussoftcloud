@@ -1,0 +1,116 @@
+<!-- @dsCard group="Geral" height=500 subtitle="Banner LGPD · aceitar todos, rejeitar não essenciais, personalizar (categorias) · chave ttsc_cookie_consent" -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><title>Cookie Alert</title>
+<style>
+  .ca-stage { position: relative; height: 200px; border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); background: var(--ttsc-canvas); overflow: hidden; }
+  .ca-page { padding: 14px; color: var(--ttsc-text-muted); font-size: 12px; }
+  .ttsc-cookie-banner { position: absolute; left: 0; right: 0; bottom: 0; z-index: var(--ttsc-z-toast); background: var(--ttsc-surface); border-top: 1px solid var(--ttsc-border); box-shadow: var(--ttsc-shadow-lg); padding: 14px 16px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .ttsc-cookie-banner.hidden { display: none; }
+  .ttsc-cookie-icon { width: 36px; height: 36px; border-radius: var(--ttsc-radius-control); display: flex; align-items: center; justify-content: center; flex: none; background: var(--ttsc-accent-soft); color: var(--ttsc-accent-text); font-size: 16px; }
+  .ttsc-cookie-text { flex: 1 1 280px; min-width: 0; }
+  .ttsc-cookie-text h3 { margin: 0; font-size: 13px; font-weight: 600; color: var(--ttsc-text); }
+  .ttsc-cookie-text p { margin: 2px 0 0; font-size: 12px; line-height: 1.5; color: var(--ttsc-text-muted); }
+  .ttsc-cookie-text a { color: var(--ttsc-accent-text); }
+  .ttsc-cookie-prefs { border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); background: var(--ttsc-surface); box-shadow: var(--ttsc-shadow-sm); }
+  .ttsc-cookie-prefs header, .ttsc-cookie-prefs footer { padding: 10px 14px; display: flex; align-items: center; gap: 8px; }
+  .ttsc-cookie-prefs header { border-bottom: 1px solid var(--ttsc-border-soft); font-weight: 600; color: var(--ttsc-text); }
+  .ttsc-cookie-prefs footer { border-top: 1px solid var(--ttsc-border-soft); justify-content: flex-end; }
+  .cookie-cat-list { padding: 10px 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .cookie-cat-row { display: flex; align-items: flex-start; gap: 10px; padding: 10px; border: 1px solid var(--ttsc-border-soft); border-radius: var(--ttsc-radius-control); }
+  .cookie-cat-row label { font-size: 13px; font-weight: 500; color: var(--ttsc-text); }
+  .cookie-cat-row p { margin: 2px 0 0; font-size: 11px; line-height: 1.45; color: var(--ttsc-text-muted); }
+  .ca-state { font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--ttsc-text-2); }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="ca-stage">
+    <div class="ca-page">Portal do aluno · Início</div>
+    <div id="cookieConsentBanner" class="ttsc-cookie-banner hidden" role="region" aria-labelledby="consentBannerTitle"
+         data-config-url="/privacy/consent-config" data-decisions-url="/privacy/consent-decisions">
+      <div class="ttsc-cookie-icon" aria-hidden="true"><i class="fa-light fa-cookie-bite"></i></div>
+      <div class="ttsc-cookie-text">
+        <h3 id="consentBannerTitle">Sua privacidade em primeiro lugar</h3>
+        <p id="consentBannerText">Usamos cookies essenciais para o login e, com sua permissão, cookies de preferências e análise para melhorar o portal. <a href="#">Política de cookies</a></p>
+      </div>
+      <div class="ds-row">
+        <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-sm" data-consent-action="reject" id="consentRejectAll">Rejeitar não essenciais</button>
+        <button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-sm" data-consent-action="customize" id="consentCustomize">Personalizar</button>
+        <button type="button" class="ttsc-btn ttsc-btn-primary ttsc-btn-sm" data-consent-action="accept-all" id="consentAcceptAll">Aceitar todos</button>
+      </div>
+    </div>
+  </div>
+
+  <section class="ttsc-cookie-prefs" id="cookiePreferencesModal" aria-labelledby="cookiePrefTitle">
+    <header><i class="fa-light fa-sliders"></i> <span id="cookiePrefTitle">Preferências de cookies</span></header>
+    <div class="cookie-cat-list" id="cookiePreferencesList"></div>
+    <footer>
+      <span class="ca-state" id="ca-state" style="margin-right:auto"></span>
+      <button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-sm" id="ca-reset"><i class="fa-light fa-rotate-left"></i> Reexibir banner</button>
+      <button type="button" class="ttsc-btn ttsc-btn-primary ttsc-btn-sm" data-consent-action="save-preferences">Salvar preferências</button>
+    </footer>
+  </section>
+</div>
+<script>
+  /* Mesma lógica de assets/js/consent-cookie.js (chaves, cookie, ações), com categorias inline no lugar do fetch */
+  (function () {
+    var STORAGE_KEY = 'ttsc_cookie_consent', STORAGE_DATA_KEY = 'ttsc_cookie_consent_data';
+    var cookieCategories = [
+      { id: 'essential', name: 'Essenciais', description: 'Login, sessão, segurança (CSRF) e o próprio registro de consentimento.', is_essential: 1 },
+      { id: 'preferences', name: 'Preferências', description: 'Idioma, menu recolhido e densidade das tabelas.', is_essential: 0 },
+      { id: 'analytics', name: 'Análise', description: 'Métricas anônimas de uso das telas do portal.', is_essential: 0 },
+      { id: 'marketing', name: 'Marketing', description: 'Campanhas de captação e processo seletivo.', is_essential: 0 }
+    ];
+    function isEss(c) { return c.is_essential === true || c.is_essential === 1 || c.is_essential === '1'; }
+    function getCookie(n) { var m = document.cookie.match(new RegExp('(^|;\\s*)' + n + '=([^;]+)')); return m ? decodeURIComponent(m[2]) : null; }
+    function syncClientCookie(v) {
+      var exp = new Date(Date.now() + 365 * 864e5).toUTCString();
+      document.cookie = 'cookie_consent=' + encodeURIComponent(v) + '; path=/; expires=' + exp + '; SameSite=Lax' + (location.protocol === 'https:' ? '; Secure' : '');
+    }
+    function store(k, v) { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} }
+    function read(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+    function getStoredConsent() { return read(STORAGE_KEY) || getCookie('cookie_consent'); }
+    function render() {
+      var saved = {}; try { (JSON.parse(read(STORAGE_DATA_KEY)) || { categories: [] }).categories.forEach(function (c) { saved[c.id] = c.granted; }); } catch (e) {}
+      document.getElementById('cookiePreferencesList').innerHTML = cookieCategories.map(function (c) {
+        var on = isEss(c) || (saved[c.id] !== undefined ? saved[c.id] : true);
+        return '<div class="cookie-cat-row"><input type="checkbox" class="ttsc-checkbox consent-category-checkbox" id="cat-' + c.id + '" data-category-id="' + c.id + '"' + (on ? ' checked' : '') + (isEss(c) ? ' disabled' : '') + '>' +
+          '<div style="flex:1;min-width:0"><label for="cat-' + c.id + '">' + c.name + '</label><p>' + c.description + '</p></div>' +
+          (isEss(c) ? '<span class="ttsc-badge ttsc-badge-sm ttsc-badge-outline">Sempre ativo</span>' : '') + '</div>';
+      }).join('');
+      document.getElementById('ca-state').textContent = STORAGE_KEY + ' = ' + (getStoredConsent() || 'null');
+    }
+    function persist(decision, categories) {
+      store(STORAGE_KEY, decision);
+      store(STORAGE_DATA_KEY, JSON.stringify({ decision: decision, categories: categories, timestamp: Date.now() }));
+      syncClientCookie(decision);
+      document.getElementById('cookieConsentBanner').classList.add('hidden');
+      window.dispatchEvent(new CustomEvent('cookie_consent_saved', { detail: { decision: decision, categories: categories } }));
+      // produção: fetch(data-decisions-url, { method:'POST', body: JSON.stringify({ decision, categories, banner_version_id }) })
+      render();
+    }
+    document.addEventListener('click', function (e) {
+      var t = e.target.closest('[data-consent-action]'); if (!t) return;
+      var a = t.getAttribute('data-consent-action');
+      if (a === 'accept-all') persist('accepted_all', cookieCategories.map(function (c) { return { id: c.id, granted: true }; }));
+      if (a === 'reject') persist('rejected_non_essential', cookieCategories.map(function (c) { return { id: c.id, granted: isEss(c) }; }));
+      if (a === 'customize') document.querySelector('#cookiePreferencesList input:not([disabled])').focus();
+      if (a === 'save-preferences') persist('customized', cookieCategories.map(function (c) {
+        var cb = document.querySelector('[data-category-id="' + c.id + '"]'); return { id: c.id, granted: isEss(c) || cb.checked };
+      }));
+    });
+    window.resetCookieConsent = function () {
+      store(STORAGE_KEY, null); store(STORAGE_DATA_KEY, null);
+      document.cookie = 'cookie_consent=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax';
+      document.getElementById('cookieConsentBanner').classList.remove('hidden'); render();
+    };
+    document.getElementById('ca-reset').addEventListener('click', window.resetCookieConsent);
+    // Preview: começa sem consentimento para o banner ficar visível
+    window.resetCookieConsent();
+  })();
+  TTSC.init();
+</script>
+</body>
+</html>

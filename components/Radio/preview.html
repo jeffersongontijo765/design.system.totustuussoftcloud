@@ -1,0 +1,68 @@
+<!-- @dsCard group="Formulários" height=240 subtitle="ttsc-radio · grupo inline, sm/padrão/lg, desabilitado, inválido, cartões selecionáveis" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Radio</title>
+<style>
+  fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+  .ttsc-form-label, .pv-opt { color: var(--ttsc-text); }
+  .ttsc-form-message { color: var(--ttsc-danger-text); }
+  .ttsc-radio-card { display: flex; align-items: flex-start; gap: var(--ttsc-space-3); padding: var(--ttsc-space-3) var(--ttsc-space-4); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-control); background: var(--ttsc-surface); cursor: pointer; transition: border-color .15s, background-color .15s; }
+  .ttsc-radio-card:hover { border-color: var(--ttsc-border-strong); }
+  .ttsc-radio-card:has(:checked) { border-color: var(--ttsc-accent-border); background: var(--ttsc-accent-soft); }
+  .ttsc-radio-card:has(:focus-visible) { outline: 2px solid var(--ttsc-accent); outline-offset: 2px; }
+  .ttsc-radio-card:has(:disabled) { opacity: .5; cursor: not-allowed; }
+  .ttsc-radio-card strong { display: block; font-weight: 500; color: var(--ttsc-text); }
+  .ttsc-radio-card small { display: block; font-size: 12px; color: var(--ttsc-text-muted); }
+  /* Correção: grupo sem nenhuma opção marcada casa :indeterminate e o runtime pinta todos de verde */
+  .ttsc-radio:indeterminate:not(:checked) { background-color: var(--ttsc-surface); border-color: var(--ttsc-border-strong); }
+  .ttsc-radio[aria-invalid=true]:indeterminate:not(:checked) { border-color: var(--ttsc-danger); }
+  .pv-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--ttsc-space-3); }
+</style>
+</head>
+<body>
+<form class="ds-pad ds-stack" id="pv-form">
+  <fieldset class="ttsc-form-item">
+    <legend class="ttsc-form-label">Turno *</legend>
+    <div class="flex flex-wrap gap-4 mt-2">
+      <label class="ttsc-form-control-inline pv-opt"><input type="radio" class="ttsc-radio" name="shift" value="morning"> <span class="text-sm">Manhã</span></label>
+      <label class="ttsc-form-control-inline pv-opt"><input type="radio" class="ttsc-radio" name="shift" value="afternoon" checked> <span class="text-sm">Tarde</span></label>
+      <label class="ttsc-form-control-inline pv-opt"><input type="radio" class="ttsc-radio" name="shift" value="evening"> <span class="text-sm">Noite</span></label>
+      <label class="ttsc-form-control-inline pv-opt"><input type="radio" class="ttsc-radio" name="shift" value="online" disabled> <span class="ttsc-label text-sm">Online (sem vagas)</span></label>
+    </div>
+  </fieldset>
+  <div class="ds-row gap-10">
+    <div class="ds-row">
+      <span class="ds-label">Tamanhos</span>
+      <input type="radio" class="ttsc-radio ttsc-radio-sm" name="sz" checked aria-label="Pequeno">
+      <input type="radio" class="ttsc-radio" name="sz2" checked aria-label="Padrão">
+      <input type="radio" class="ttsc-radio ttsc-radio-lg" name="sz3" checked aria-label="Grande">
+    </div>
+    <fieldset class="ttsc-form-item">
+      <div class="ds-row">
+        <span class="ds-label">Inválido</span>
+        <label class="ttsc-form-control-inline pv-opt"><input type="radio" class="ttsc-radio" name="type" value="regular" aria-invalid="true"> <span class="text-sm">Regular</span></label>
+        <label class="ttsc-form-control-inline pv-opt"><input type="radio" class="ttsc-radio" name="type" value="transfer" aria-invalid="true"> <span class="text-sm">Transferência</span></label>
+        <span class="ttsc-form-message" style="margin-top:0">Selecione o tipo de matrícula.</span>
+      </div>
+    </fieldset>
+  </div>
+  <fieldset class="ttsc-form-item">
+    <legend class="ttsc-form-label">Modalidade *</legend>
+    <div class="pv-cards mt-2">
+      <label class="ttsc-radio-card"><input type="radio" class="ttsc-radio" name="modality" value="in_person" checked><span><strong>Presencial</strong><small>Aulas na Unidade Centro</small></span></label>
+      <label class="ttsc-radio-card"><input type="radio" class="ttsc-radio" name="modality" value="hybrid"><span><strong>Híbrido</strong><small>Presencial + online</small></span></label>
+      <label class="ttsc-radio-card"><input type="radio" class="ttsc-radio" name="modality" value="distance"><span><strong>EaD</strong><small>100% online, polo regional</small></span></label>
+    </div>
+  </fieldset>
+  <div class="ds-note" id="pv-out">turno=afternoon · modalidade=in_person</div>
+</form>
+<script>
+  TTSC.init();
+  var f = document.getElementById('pv-form');
+  f.addEventListener('change', function (e) {
+    if (e.target.name === 'type') f.querySelectorAll('[name="type"]').forEach(function (r) { r.removeAttribute('aria-invalid'); });
+    document.getElementById('pv-out').textContent = 'turno=' + f.elements.shift.value + ' · modalidade=' + f.elements.modality.value;
+  });
+</script>
+</body>
+</html>

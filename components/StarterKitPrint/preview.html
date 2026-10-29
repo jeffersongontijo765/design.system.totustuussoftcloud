@@ -1,0 +1,47 @@
+<!-- @dsCard group="Starter Kits" height=660 subtitle="modelos de impressão: relatório institucional, declaração oficial com validação e página do app com @media print" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>StarterKitPrint</title>
+<style>
+  html, body { height: 100%; }
+  body { margin: 0; display: flex; flex-direction: column; overflow: hidden; background: var(--ttsc-canvas, #f8fafc); font-family: Inter, system-ui, sans-serif; }
+  .sk-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 8px 12px; border-bottom: 1px solid var(--ttsc-border, #e2e8f0); background: var(--ttsc-surface, #fff); color: var(--ttsc-text-2, #475569); font-size: 12px; }
+  .sk-bar button { font: inherit; padding: 4px 10px; border-radius: var(--ttsc-radius-sm, 8px); border: 1px solid var(--ttsc-border, #e2e8f0); background: transparent; color: inherit; cursor: pointer; }
+  .sk-bar button[aria-pressed="true"] { background: var(--ttsc-accent-soft, #ecfdf5); color: var(--ttsc-accent-text, #047857); border-color: var(--ttsc-accent-border, #a7f3d0); font-weight: 600; }
+  .sk-bar button:focus-visible { outline: 2px solid var(--ttsc-accent, #3ecf8e); outline-offset: 1px; }
+  .sk-sep { width: 1px; height: 18px; background: var(--ttsc-border, #e2e8f0); margin: 0 4px; }
+  .sk-note { margin-left: auto; color: var(--ttsc-text-muted, #64748b); }
+  .sk-stage { position: relative; flex: 1 1 auto; min-height: 0; overflow: hidden; background: var(--ttsc-canvas-2, #f1f5f9); }
+  .sk-stage iframe { position: absolute; top: 0; left: 0; border: 0; transform-origin: 0 0; background: var(--ttsc-canvas, #f8fafc); box-shadow: 0 0 0 1px var(--ttsc-border, #e2e8f0); }
+</style>
+</head>
+<body>
+<div class="sk-bar">
+  <span role="group" aria-label="Variante" style="display:contents"><button type="button" data-src="kit.html" aria-pressed="true">Relatório (A4 paisagem)</button><button type="button" data-src="kit-declaracao.html" aria-pressed="false">Declaração oficial (A4 retrato)</button><button type="button" data-src="kit-app.html" aria-pressed="false">Página do app impressa</button></span><span class="sk-sep" aria-hidden="true"></span>
+  <span role="group" aria-label="Largura da tela" style="display:contents"><button type="button" data-w="1440" aria-pressed="true">Tela 1440</button><button type="button" data-w="1024" aria-pressed="false">Tela 1024</button></span>
+  <span class="sk-note" id="sk-note" aria-live="polite"></span>
+</div>
+<div class="sk-stage" id="sk-stage"><iframe id="sk-frame" src="kit.html" title="StarterKitPrint" width="1440" height="900"></iframe></div>
+<script>
+(function () {
+  var stage = document.getElementById('sk-stage'), f = document.getElementById('sk-frame'), note = document.getElementById('sk-note');
+  var widths = [1440, 1024], notes = {"1440": "folha A4 (297 mm paisagem ou 210 mm retrato)", "1024": "a folha encolhe com max-width 100%"}, vnotes = {"kit.html": "relatório institucional: filtros, indicadores, tabela e assinaturas", "kit-declaracao.html": "documento com timbre, número e código de validação", "kit-app.html": "@media print do app"}, w = widths[0], v = "kit.html";
+  function fit() {
+    var s = Math.min(stage.clientWidth / w, 1), h = Math.ceil(stage.clientHeight / s);
+    f.style.width = w + 'px'; f.style.height = h + 'px'; f.style.transform = 'scale(' + s + ')';
+    f.style.left = Math.max(0, (stage.clientWidth - w * s) / 2) + 'px';
+    note.textContent = (vnotes[v] ? vnotes[v] + ' \u00b7 ' : '') + (notes[w] || '');
+  }
+  function press(sel, el) { document.querySelectorAll(sel).forEach(function (x) { x.setAttribute('aria-pressed', x === el ? 'true' : 'false'); }); }
+  document.querySelectorAll('[data-w]').forEach(function (b) {
+    b.addEventListener('click', function () { w = +b.dataset.w; press('[data-w]', b); fit(); });
+  });
+  document.querySelectorAll('[data-src]').forEach(function (b) {
+    b.addEventListener('click', function () { v = b.dataset.src; f.src = v; press('[data-src]', b); fit(); });
+  });
+  window.addEventListener('resize', fit); fit();
+  try { new ResizeObserver(fit).observe(stage); } catch (e) {}
+})();
+</script>
+</body>
+</html>

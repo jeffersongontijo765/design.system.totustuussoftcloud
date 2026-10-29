@@ -1,0 +1,105 @@
+<!-- @dsCard group="Geral" height=235 subtitle="Implementação TTSC · bloqueio de card (block/release), mensagem, página inteira" -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><title>BlockUI</title>
+<style>
+  .ttsc-blockui-target { position: relative; }
+  .ttsc-blockui {
+    position: absolute; inset: 0; z-index: 5; display: flex; align-items: center; justify-content: center;
+    background: color-mix(in srgb, var(--ttsc-surface) 72%, transparent); border-radius: inherit;
+    opacity: 0; transition: opacity .15s ease; cursor: wait;
+  }
+  .ttsc-blockui.is-visible { opacity: 1; }
+  .ttsc-blockui-page { position: fixed; z-index: var(--ttsc-z-modal); background: var(--ttsc-scrim); border-radius: 0; }
+  .ttsc-blockui-box {
+    display: inline-flex; align-items: center; gap: 10px; padding: 10px 14px;
+    background: var(--ttsc-surface); color: var(--ttsc-text); font-size: 13px; font-weight: 500;
+    border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-control); box-shadow: var(--ttsc-shadow-md);
+  }
+  .ttsc-blockui-spinner {
+    width: 16px; height: 16px; border-radius: 50%;
+    border: 2px solid var(--ttsc-border); border-top-color: var(--ttsc-accent);
+    animation: ttsc-blockui-spin .7s linear infinite;
+  }
+  @keyframes ttsc-blockui-spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .ttsc-blockui-spinner { animation-duration: 2s; } }
+  .bu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .bu-kpi { font-size: 22px; font-weight: 600; color: var(--ttsc-text); }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="bu-grid">
+    <div class="ttsc-card" id="card-static">
+      <div class="ttsc-card-header"><h3 class="ttsc-card-title">Frequência da turma</h3></div>
+      <div class="ttsc-card-content ds-stack">
+        <div class="bu-kpi">92,4%</div>
+        <div class="ds-note">9º ano B · Fevereiro/2026 · 31 alunos</div>
+      </div>
+    </div>
+    <div class="ttsc-card" id="card-live">
+      <div class="ttsc-card-header"><h3 class="ttsc-card-title">Mensalidades em aberto</h3></div>
+      <div class="ttsc-card-content ds-stack">
+        <div class="bu-kpi" id="kpi-open">R$ 48.320,00</div>
+        <div class="ds-note">57 títulos vencidos · atualizado agora</div>
+      </div>
+    </div>
+  </div>
+  <div class="ds-row">
+    <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-sm" id="btn-card"><i class="fa-light fa-arrows-rotate"></i> Atualizar card</button>
+    <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-sm" id="btn-page"><i class="fa-light fa-lock"></i> Bloquear página (1,5 s)</button>
+    <span class="ds-note">O card da esquerda fica bloqueado para mostrar o estado.</span>
+  </div>
+</div>
+<script>
+  /* assets/js/core/ttsc.blockui.js — implementação TTSC */
+  (function (w) {
+    function BlockUI(target, options) {
+      this.target = target === 'page' || !target ? null : (typeof target === 'string' ? document.querySelector(target) : target);
+      this.options = Object.assign({ message: 'Carregando…', zIndex: null }, options || {});
+      this.overlay = null;
+    }
+    BlockUI.prototype.block = function (message) {
+      if (this.overlay) { this.setMessage(message || this.options.message); return this; }
+      var host = this.target || document.body;
+      var o = document.createElement('div');
+      o.className = 'ttsc-blockui' + (this.target ? '' : ' ttsc-blockui-page');
+      o.setAttribute('role', 'status'); o.setAttribute('aria-live', 'polite');
+      o.innerHTML = '<div class="ttsc-blockui-box"><span class="ttsc-blockui-spinner" aria-hidden="true"></span><span class="ttsc-blockui-msg"></span></div>';
+      o.querySelector('.ttsc-blockui-msg').textContent = message || this.options.message;
+      if (this.options.zIndex) o.style.zIndex = this.options.zIndex;
+      if (this.target) { this.target.classList.add('ttsc-blockui-target'); this.target.setAttribute('aria-busy', 'true'); }
+      host.appendChild(o);
+      requestAnimationFrame(function () { o.classList.add('is-visible'); });
+      this.overlay = o;
+      host.dispatchEvent(new CustomEvent('ttsc:blockui:blocked', { bubbles: true }));
+      return this;
+    };
+    BlockUI.prototype.setMessage = function (m) { if (this.overlay) this.overlay.querySelector('.ttsc-blockui-msg').textContent = m; return this; };
+    BlockUI.prototype.release = function () {
+      if (!this.overlay) return this;
+      var o = this.overlay, host = this.target || document.body; this.overlay = null;
+      o.classList.remove('is-visible');
+      setTimeout(function () { o.remove(); }, 150);
+      if (this.target) this.target.removeAttribute('aria-busy');
+      host.dispatchEvent(new CustomEvent('ttsc:blockui:released', { bubbles: true }));
+      return this;
+    };
+    BlockUI.prototype.isBlocked = function () { return !!this.overlay; };
+    w.TTSC = w.TTSC || {}; w.TTSC.BlockUI = BlockUI;
+  })(window);
+
+  TTSC.init();
+  new TTSC.BlockUI('#card-static', { message: 'Calculando frequência…' }).block();
+
+  var live = new TTSC.BlockUI('#card-live', { message: 'Atualizando títulos…' });
+  document.getElementById('btn-card').addEventListener('click', function () {
+    live.block();
+    setTimeout(function () { document.getElementById('kpi-open').textContent = 'R$ 46.910,00'; live.release(); }, 1200);
+  });
+  var page = new TTSC.BlockUI('page', { message: 'Processando rematrícula em lote…' });
+  document.getElementById('btn-page').addEventListener('click', function () { page.block(); setTimeout(function () { page.release(); }, 1500); });
+</script>
+</body>
+</html>

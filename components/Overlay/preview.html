@@ -1,0 +1,99 @@
+<!-- @dsCard group="Base" height=355 subtitle="ttsc-overlay · ações no hover/foco (repouso e ativo) · ttsc-overlay-loading sobre bloco" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Overlay</title>
+<style>
+  .ttsc-overlay { position: relative; display: block; overflow: hidden; border-radius: var(--ttsc-radius-sm); }
+  .ttsc-overlay-layer { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 8px;
+    background: var(--ttsc-scrim); opacity: 0; transition: opacity .2s ease; }
+  .ttsc-overlay:hover .ttsc-overlay-layer, .ttsc-overlay:focus-within .ttsc-overlay-layer, .ttsc-overlay.is-active .ttsc-overlay-layer { opacity: 1; }
+  .ttsc-overlay-wrapper { transition: transform .3s ease; }
+  .ttsc-overlay:hover .ttsc-overlay-wrapper, .ttsc-overlay.is-active .ttsc-overlay-wrapper { transform: scale(1.03); }
+  .ttsc-overlay-layer .ttsc-btn { background: var(--ttsc-surface); color: var(--ttsc-text); border-color: var(--ttsc-border); }
+  .ttsc-overlay-loading { position: relative; }
+  .ttsc-overlay-loading > .ttsc-overlay-block { position: absolute; inset: 0; z-index: 2; display: none; align-items: center; justify-content: center; gap: 10px;
+    background: color-mix(in oklab, var(--ttsc-surface) 75%, transparent); backdrop-filter: blur(1px); border-radius: inherit; color: var(--ttsc-text-2); font-weight: 500; }
+  .ttsc-overlay-loading.is-loading > .ttsc-overlay-block { display: flex; }
+  .ttsc-overlay-loading.is-loading > :not(.ttsc-overlay-block) { pointer-events: none; user-select: none; }
+  .ttsc-spinner { display: inline-block; width: 18px; height: 18px; border-radius: var(--ttsc-radius-pill); border: 2px solid var(--ttsc-border-strong); border-top-color: var(--ttsc-accent); animation: ttsc-spin .7s linear infinite; }
+  @keyframes ttsc-spin { to { transform: rotate(360deg); } }
+  .ov-cols { display: grid; grid-template-columns: 1fr 1fr 1.6fr; gap: 14px; }
+  .ov-card { border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-control); background: var(--ttsc-surface); padding: 8px; display: flex; flex-direction: column; gap: 8px; }
+  .ov-cover { display: block; width: 100%; height: 120px; }
+  .ov-name { font-weight: 600; color: var(--ttsc-text); padding: 0 4px; }
+  .ov-meta { font-size: 12px; color: var(--ttsc-text-muted); padding: 0 4px 4px; }
+  .ov-table { width: 100%; border-collapse: collapse; }
+  .ov-table th, .ov-table td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--ttsc-border-soft); color: var(--ttsc-text-2); }
+  .ov-table th { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--ttsc-text-muted); font-weight: 500; }
+  .ov-block { border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-control); background: var(--ttsc-surface); }
+  .ov-block-head { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-bottom: 1px solid var(--ttsc-border); font-weight: 600; color: var(--ttsc-text); }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="ov-cols">
+    <div>
+      <div class="ds-label" style="margin-bottom:6px">Repouso (passe o mouse)</div>
+      <div class="ov-card">
+        <div class="ttsc-overlay" tabindex="-1">
+          <div class="ttsc-overlay-wrapper">
+            <svg class="ov-cover" viewBox="0 0 240 120" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <rect width="240" height="120" fill="var(--ttsc-primary-800)"/><circle cx="200" cy="20" r="60" fill="var(--ttsc-primary-600)" opacity=".5"/>
+              <text x="16" y="96" fill="#fff" font-size="22" font-weight="600" font-family="Inter">ENF</text></svg>
+          </div>
+          <div class="ttsc-overlay-layer">
+            <a href="#" class="ttsc-btn ttsc-btn-sm ttsc-btn-outline"><i class="fa-light fa-eye"></i> Ver</a>
+            <button type="button" class="ttsc-btn ttsc-btn-sm ttsc-btn-outline ttsc-btn-icon" aria-label="Editar curso"><i class="fa-light fa-pen"></i></button>
+          </div>
+        </div>
+        <div class="ov-name">Enfermagem</div>
+        <div class="ov-meta">Técnico · 4 turmas · 128 alunos</div>
+      </div>
+    </div>
+    <div>
+      <div class="ds-label" style="margin-bottom:6px">Ativo (.is-active)</div>
+      <div class="ov-card">
+        <div class="ttsc-overlay is-active">
+          <div class="ttsc-overlay-wrapper">
+            <svg class="ov-cover" viewBox="0 0 240 120" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+              <rect width="240" height="120" fill="var(--ttsc-info)"/><circle cx="40" cy="110" r="70" fill="var(--ttsc-info-text)" opacity=".35"/>
+              <text x="16" y="96" fill="#fff" font-size="22" font-weight="600" font-family="Inter">ADM</text></svg>
+          </div>
+          <div class="ttsc-overlay-layer">
+            <a href="#" class="ttsc-btn ttsc-btn-sm ttsc-btn-outline"><i class="fa-light fa-eye"></i> Ver</a>
+            <button type="button" class="ttsc-btn ttsc-btn-sm ttsc-btn-outline ttsc-btn-icon" aria-label="Editar curso"><i class="fa-light fa-pen"></i></button>
+          </div>
+        </div>
+        <div class="ov-name">Administração</div>
+        <div class="ov-meta">Bacharelado · 6 turmas · 214 alunos</div>
+      </div>
+    </div>
+    <div>
+      <div class="ds-label" style="margin-bottom:6px">Carregando sobre bloco</div>
+      <div class="ov-block ttsc-overlay-loading is-loading" id="block-enrollments" aria-busy="true">
+        <div class="ov-block-head">Matrículas recentes
+          <button type="button" class="ttsc-btn ttsc-btn-sm ttsc-btn-outline" id="btn-reload"><i class="fa-light fa-arrows-rotate"></i> Atualizar</button></div>
+        <table class="ov-table">
+          <thead><tr><th>Código</th><th>Aluno</th><th>Curso</th></tr></thead>
+          <tbody>
+            <tr><td>MAT-2026-0412</td><td>Ana Beatriz Rocha</td><td>Enfermagem</td></tr>
+            <tr><td>MAT-2026-0411</td><td>João Pedro Lima</td><td>Administração</td></tr>
+            <tr><td>MAT-2026-0410</td><td>Larissa Mendes</td><td>Pedagogia</td></tr>
+          </tbody>
+        </table>
+        <div class="ttsc-overlay-block" role="status"><span class="ttsc-spinner"></span> Carregando matrículas…</div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  (function () {
+    var block = document.getElementById('block-enrollments');
+    function unblock() { block.classList.remove('is-loading'); block.removeAttribute('aria-busy'); }
+    function blockIt() { block.classList.add('is-loading'); block.setAttribute('aria-busy', 'true'); setTimeout(unblock, 1500); }
+    setTimeout(unblock, 2500);
+    block.addEventListener('click', function (e) { if (e.target.closest('#btn-reload')) blockIt(); });
+  })();
+</script>
+</body>
+</html>

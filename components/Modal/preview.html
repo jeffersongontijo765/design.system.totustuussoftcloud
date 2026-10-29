@@ -1,0 +1,78 @@
+<!-- @dsCard group="Componentes" height=420 subtitle="ttsc-modal · center, backdrop static, header/body/footer, confirmação de exclusão (aberto)" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Modal</title>
+<style>
+  .ttsc-modal-backdrop { background-color: var(--ttsc-scrim); }
+  .ttsc-modal-sm { width: 100%; max-width: 440px; }
+  .ttsc-modal-content { box-shadow: var(--ttsc-shadow-popover); border-radius: var(--ttsc-radius-control); }
+  .ttsc-modal-title { font-size: 15px; color: var(--ttsc-text); margin: 0; }
+  .ttsc-modal-body { display: flex; flex-direction: column; gap: var(--ttsc-space-2); color: var(--ttsc-text-2); font-size: 13px; line-height: 1.6; }
+  .ttsc-modal-body p { margin: 0 0 4px; }
+  .ttsc-modal-body strong, .md-label b { color: var(--ttsc-text); font-weight: 600; }
+  .ttsc-modal-footer { justify-content: flex-end; background: var(--ttsc-canvas); border-radius: 0 0 var(--ttsc-radius-control) var(--ttsc-radius-control); }
+  .ttsc-modal-close { color: var(--ttsc-text-muted); background: none; border: 0; }
+  .ttsc-modal-icon { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: var(--ttsc-radius-pill); flex: 0 0 auto; }
+  .ttsc-modal-icon-danger { background: color-mix(in oklab, var(--ttsc-danger) 10%, var(--ttsc-surface)); color: var(--ttsc-danger-text); }
+  .md-title { display: flex; align-items: center; gap: 12px; }
+  .md-label { font-size: 12px; color: var(--ttsc-text-2); }
+  .md-stage { position: relative; height: 340px; border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); overflow: hidden; background: var(--ttsc-canvas); display: flex; align-items: center; justify-content: center; }
+  .md-stage::before { content: ""; position: absolute; inset: 0; background: var(--ttsc-scrim); }
+  .md-stage .ttsc-modal-content { position: relative; }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="ds-row" style="justify-content:space-between">
+    <div class="ds-label">Confirmação de exclusão — aberto (estático)</div>
+    <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-sm" data-ttsc-modal-toggle="#modal-excluir"><i class="fa-light fa-trash"></i> Excluir matrícula (abre o modal real)</button>
+  </div>
+  <div class="md-stage" role="dialog" aria-labelledby="st-title" aria-describedby="st-desc">
+    <div class="ttsc-modal-content ttsc-modal-sm">
+      <div class="ttsc-modal-header">
+        <div class="md-title"><span class="ttsc-modal-icon ttsc-modal-icon-danger"><i class="fa-light fa-triangle-exclamation"></i></span>
+          <h3 class="ttsc-modal-title" id="st-title">Excluir a matrícula MAT-2026-0381?</h3></div>
+        <button type="button" class="ttsc-modal-close" data-ttsc-modal-dismiss="true" aria-label="Fechar"><i class="fa-light fa-xmark"></i></button>
+      </div>
+      <form class="ttsc-modal-body" onsubmit="return false">
+        <p id="st-desc">Ana Beatriz Souza sai das listagens e do diário da turma 3º A. <strong>148 registros de frequência e 2 boletins</strong> ficam preservados no histórico.</p>
+        <label class="md-label" for="st-code">Digite <b>MAT-2026-0381</b> para confirmar</label>
+        <input class="ttsc-input md-confirm" id="st-code" autocomplete="off" >
+      </form>
+      <div class="ttsc-modal-footer">
+        <button type="button" class="ttsc-btn ttsc-btn-ghost" data-ttsc-modal-dismiss="true">Cancelar</button>
+        <button type="button" class="ttsc-btn ttsc-btn-destructive md-submit" disabled><i class="fa-light fa-trash"></i> Excluir matrícula</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ttsc-modal ttsc-modal-center" id="modal-excluir" data-ttsc-modal="true" data-ttsc-modal-backdrop-static="true" data-ttsc-modal-zindex="1060" aria-labelledby="md-title" aria-describedby="md-desc">
+  <div class="ttsc-modal-content ttsc-modal-sm">
+      <div class="ttsc-modal-header">
+        <div class="md-title"><span class="ttsc-modal-icon ttsc-modal-icon-danger"><i class="fa-light fa-triangle-exclamation"></i></span>
+          <h3 class="ttsc-modal-title" id="md-title">Excluir a matrícula MAT-2026-0381?</h3></div>
+        <button type="button" class="ttsc-modal-close" data-ttsc-modal-dismiss="true" aria-label="Fechar"><i class="fa-light fa-xmark"></i></button>
+      </div>
+      <form class="ttsc-modal-body" onsubmit="return false">
+        <p id="md-desc">Ana Beatriz Souza sai das listagens e do diário da turma 3º A. <strong>148 registros de frequência e 2 boletins</strong> ficam preservados no histórico.</p>
+        <label class="md-label" for="md-code">Digite <b>MAT-2026-0381</b> para confirmar</label>
+        <input class="ttsc-input md-confirm" id="md-code" autocomplete="off" data-ttsc-modal-input-focus>
+      </form>
+      <div class="ttsc-modal-footer">
+        <button type="button" class="ttsc-btn ttsc-btn-ghost" data-ttsc-modal-dismiss="true">Cancelar</button>
+        <button type="button" class="ttsc-btn ttsc-btn-destructive md-submit" disabled><i class="fa-light fa-trash"></i> Excluir matrícula</button>
+      </div>
+    </div>
+</div>
+<script>
+  TTSC.init();
+  document.querySelectorAll('.ttsc-modal-content').forEach(function (b) {
+    var i = b.querySelector('.md-confirm'), s = b.querySelector('.md-submit');
+    i.addEventListener('input', function () { s.disabled = i.value.trim().toUpperCase() !== 'MAT-2026-0381'; });
+  });
+  var m = document.getElementById('modal-excluir');
+  m.addEventListener('shown', function () { m.setAttribute('role', 'alertdialog'); });
+</script>
+</body>
+</html>

@@ -1,0 +1,611 @@
+<!-- @dsCard group="Componentes do painel" height=600 width=1280 subtitle="Organograma — hierarquia, connector lines, recolher/expandir, busca e ficha rápida" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>OrgChart</title>
+<style>
+  :root{--org-gap:26px;--org-ceo:190px;--org-dir:220px}
+  html,body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font-family:Inter,system-ui,sans-serif;font-size:13px;-webkit-font-smoothing:antialiased}
+  .demo{padding:16px;display:grid;gap:14px;max-width:1240px}
+  .card{background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-surface);padding:16px;min-width:0}
+  .card-h{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+  .card-t{margin:0;font-size:14px;font-weight:600;color:var(--ttsc-text)}
+  .card-s{margin:2px 0 0;font-size:11px;color:var(--ttsc-text-muted)}
+  .updated{font-size:10.5px;color:var(--ttsc-text-muted);white-space:nowrap;padding-top:2px}
+
+  .org-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+  .search{display:flex;align-items:center;gap:6px;flex:1 1 220px;max-width:320px;min-width:180px;height:32px;padding:0 10px;border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-control);background:var(--ttsc-surface);color:var(--ttsc-text-muted)}
+  .search input{flex:1;min-width:0;border:0;background:transparent;color:var(--ttsc-text);font:400 12px Inter,system-ui,sans-serif;outline:0}
+  .search input::placeholder{color:var(--ttsc-text-muted)}
+  .search input::-webkit-search-cancel-button,.search input::-webkit-search-decoration{-webkit-appearance:none;appearance:none}
+  .search:focus-within{border-color:var(--ttsc-accent);box-shadow:0 0 0 3px var(--ttsc-accent-soft)}
+  .search input:focus-visible{outline:none}
+  .q-clear{display:grid;place-items:center;border:0;background:transparent;color:var(--ttsc-text-muted);cursor:pointer;padding:2px;border-radius:var(--ttsc-radius-xs)}
+  .q-clear:hover{color:var(--ttsc-text)}
+  .q-clear[hidden]{display:none}
+  .tool-btns{display:flex;gap:6px;flex-wrap:wrap}
+  .tbtn{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 10px;border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-control);background:var(--ttsc-surface);color:var(--ttsc-text-2);font:600 11px/1 Inter,system-ui,sans-serif;cursor:pointer;transition:border-color .15s,color .15s}
+  .tbtn:hover{border-color:var(--ttsc-border-strong);color:var(--ttsc-text)}
+  .tbtn i{font-size:11px}
+  .org-count{margin-left:auto;font-size:11px;color:var(--ttsc-text-muted);font-variant-numeric:tabular-nums}
+  .org-empty{margin:0 0 10px;font-size:11.5px;color:var(--ttsc-warning-text)}
+  .sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+  .org-body{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:20px;align-items:start}
+  .org-chart{position:relative;min-width:0}
+  .org-chart [hidden]{display:none!important}
+  .org-chart.org--compact .reports{gap:2px}
+  .org-chart.org--compact .node-rep{padding:4px 8px}
+  .org-chart.org--compact .rep-sub{display:none}
+
+  /* organograma horizontal (desktop) */
+  .org-h{display:grid;grid-template-columns:var(--org-ceo) minmax(0,1fr);gap:var(--org-gap);align-items:center}
+  .org-branches{display:grid;gap:10px;min-width:0}
+  .branch{display:grid;grid-template-columns:var(--org-dir) minmax(0,1fr);gap:var(--org-gap);align-items:center;min-width:0}
+  .reports{display:grid;gap:4px;min-width:0}
+  .org-lines{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:visible}
+  .org-lines path{fill:none;stroke:var(--ttsc-border-strong);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+  .org-chart.is-searching .org-lines{opacity:.4}
+
+  .node-card{position:relative;z-index:1;display:flex;min-width:0;background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-control);box-shadow:var(--ttsc-shadow-xs);transition:border-color .15s,background .15s}
+  .node-card:hover{border-color:var(--ttsc-border-strong)}
+  .node-card.is-selected{border-color:var(--ttsc-accent-border);background:var(--ttsc-accent-soft)}
+  .node-card.is-hit{border-color:var(--ttsc-accent);box-shadow:0 0 0 2px var(--ttsc-accent-soft)}
+  .node-card.is-dim{opacity:.4}
+  .node{display:flex;align-items:center;gap:8px;flex:1;min-width:0;border:0;background:transparent;color:inherit;font:inherit;text-align:left;padding:8px 10px;border-radius:var(--ttsc-radius-control);cursor:pointer}
+  .node-ceo{padding:11px 36px 11px 12px;gap:10px}
+  .node-dir{padding-right:34px}
+  .av{flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text);font-size:10.5px;font-weight:700;letter-spacing:.02em}
+  .av-lg{width:38px;height:38px;font-size:12px}
+  .av-sm{width:26px;height:26px;font-size:9.5px}
+  .n-main{display:flex;flex-direction:column;gap:1px;min-width:0;flex:1}
+  .n-name{font-size:12px;font-weight:600;line-height:16px;color:var(--ttsc-text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .n-role{font-size:10.5px;line-height:14px;color:var(--ttsc-text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .n-foot{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:2px}
+  .dept{display:inline-flex;align-items:center;font-size:8.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--ttsc-info-text);background:color-mix(in srgb,var(--ttsc-info) 12%,transparent);border:1px solid color-mix(in srgb,var(--ttsc-info) 28%,transparent);border-radius:var(--ttsc-radius-pill);padding:0 5px;line-height:14px;white-space:nowrap}
+  .hc{display:inline-flex;align-items:center;gap:3px;font-size:9.5px;color:var(--ttsc-text-muted);white-space:nowrap}
+  .hc i{font-size:9px}
+  .st{display:inline-flex;align-items:center;gap:4px;font-size:9.5px;font-weight:600;white-space:nowrap}
+  .st::before{content:"";width:5px;height:5px;border-radius:50%;background:currentColor;flex:none}
+  .st-on{color:var(--ttsc-success)}
+  .st-away{color:var(--ttsc-warning-text)}
+  .st-off{color:var(--ttsc-text-muted)}
+
+  .node-rep{padding:6px 9px;gap:8px}
+  .rep-top{display:flex;align-items:center;gap:6px;justify-content:space-between}
+  .rep-top .n-name{font-size:11.5px;line-height:15px}
+  .rep-sub{font-size:9.5px;line-height:13px;color:var(--ttsc-text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+  .chev{position:absolute;right:5px;top:50%;transform:translateY(-50%);width:22px;height:22px;display:grid;place-items:center;border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-xs);background:var(--ttsc-surface);color:var(--ttsc-text-muted);cursor:pointer;z-index:2}
+  .chev:hover{border-color:var(--ttsc-border-strong);color:var(--ttsc-text)}
+  .chev i{font-size:9px}
+  .chev-ceo{right:6px}
+
+  /* ficha rápida */
+  .ficha{min-width:0;border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-control);background:var(--ttsc-canvas-2);padding:12px}
+  .f-top{display:flex;align-items:center;gap:9px;min-width:0}
+  .f-id{min-width:0;flex:1}
+  .f-id h3{margin:0;font-size:13px;font-weight:600;color:var(--ttsc-text);line-height:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .f-id p{margin:1px 0 0;font-size:10.5px;color:var(--ttsc-text-muted);line-height:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .f-tags{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:9px 0 0}
+  .f-team{font-size:10px;color:var(--ttsc-text-muted)}
+  .f-list{margin:10px 0 0;padding:9px 0 0;border-top:1px solid var(--ttsc-border-soft);display:grid;gap:7px}
+  .f-list div{display:grid;grid-template-columns:88px minmax(0,1fr);gap:8px;align-items:baseline}
+  .f-list dt{font-size:9.5px;font-weight:600;letter-spacing:.03em;text-transform:uppercase;color:var(--ttsc-text-muted)}
+  .f-list dd{margin:0;font-size:11.5px;color:var(--ttsc-text);overflow-wrap:anywhere}
+  .f-note{margin:9px 0 0;font-size:10px;color:var(--ttsc-text-muted);line-height:14px}
+
+  /* árvore vertical indentada (mobile) */
+  .org-tree{display:none;list-style:none;margin:0;padding:0}
+  .org-tree ul{list-style:none;margin:0;padding:8px 0 0 20px;position:relative}
+  .org-tree ul::before{content:"";position:absolute;left:7px;top:0;bottom:16px;border-left:1.5px solid var(--ttsc-border-strong)}
+  .org-tree li{position:relative}
+  .org-tree ul > li{padding-top:8px}
+  .org-tree ul > li::before{content:"";position:absolute;left:-13px;top:30px;width:13px;border-top:1.5px solid var(--ttsc-border-strong)}
+  .org-tree ul > li:last-child::after{content:"";position:absolute;left:-14px;top:31px;bottom:0;width:2px;background:var(--ttsc-surface)}
+  .t-row{display:flex;align-items:stretch;min-width:0}
+  .t-row .node-card{flex:1}
+
+  :focus-visible{outline:2px solid var(--ttsc-accent);outline-offset:2px}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+  @media (max-width:1099px){
+    .org-body{grid-template-columns:minmax(0,1fr)}
+    .ficha{max-width:420px}
+  }
+  @media (max-width:899px){
+    .org-h{display:none}
+    .org-tree{display:block}
+    .org-chart .org-lines{display:none}
+    .org-tools{gap:6px}
+    .org-count{margin-left:0;order:3;flex-basis:100%}
+    .search{max-width:none;flex:1 1 100%}
+    .ficha{max-width:none}
+    .node-rep{padding:8px 10px}
+    .node{min-height:44px}
+  }
+</style>
+</head>
+<body>
+<main class="demo">
+
+  <section class="card" aria-labelledby="org-title">
+    <div class="card-h">
+      <div>
+        <h2 id="org-title" class="card-t">Estrutura organizacional</h2>
+        <p class="card-s">Diretoria Geral · 4 diretorias · 14 pessoas</p>
+      </div>
+      <span class="updated">Posições atualizadas em 26/10/2026</span>
+    </div>
+
+    <div class="org-tools">
+      <div class="search">
+        <i class="fa-light fa-magnifying-glass" aria-hidden="true"></i>
+        <input id="org-q" type="search" placeholder="Buscar por nome, cargo ou departamento..." aria-label="Buscar pessoa no organograma">
+        <button class="q-clear" type="button" id="org-clear" aria-label="Limpar busca" hidden><i class="fa-light fa-xmark" aria-hidden="true"></i></button>
+      </div>
+      <div class="tool-btns">
+        <button class="tbtn" type="button" id="org-expand"><i class="fa-light fa-angles-down" aria-hidden="true"></i> Expandir tudo</button>
+        <button class="tbtn" type="button" id="org-collapse"><i class="fa-light fa-angles-up" aria-hidden="true"></i> Recolher tudo</button>
+      </div>
+      <span class="org-count" id="org-count" aria-live="polite">14 de 14 pessoas visíveis</span>
+    </div>
+
+    <p class="org-empty" id="org-empty" hidden>Nenhuma pessoa corresponde à busca. Tente outro nome, cargo ou departamento.</p>
+
+    <div class="org-body">
+      <div class="org-chart" id="org-chart"></div>
+      <aside class="ficha" id="org-ficha" aria-live="polite" aria-label="Ficha rápida da pessoa selecionada"></aside>
+    </div>
+
+    <p class="sr-only" aria-live="polite" id="org-live"></p>
+  </section>
+
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  var TODAY = '2026-10-26';
+
+  var PEOPLE = [
+    { id: 'marina', name: 'Marina Duarte', role: 'CEO', dept: 'Diretoria Geral', manager: null, status: 'online',
+      since: '2018-02-05', unit: 'Campus Centro', email: 'marina.duarte@totustuus.com.br',
+      reports: ['rafael', 'camila', 'bruno', 'elisa'] },
+
+    { id: 'rafael', name: 'Rafael Lima', role: 'Diretoria de Tecnologia', dept: 'Tecnologia', manager: 'marina', status: 'online',
+      since: '2019-03-04', unit: 'Campus Centro', email: 'rafael.lima@totustuus.com.br',
+      reports: ['lucas', 'tatiane', 'igor'] },
+    { id: 'lucas', name: 'Lucas Campos', role: 'Coordenador de Qualidade', dept: 'Tecnologia', manager: 'rafael', status: 'online',
+      since: '2022-01-10', unit: 'Campus Centro', email: 'lucas.campos@totustuus.com.br', reports: [] },
+    { id: 'tatiane', name: 'Tatiane Faria', role: 'Analista de Dados', dept: 'Tecnologia', manager: 'rafael', status: 'online',
+      since: '2023-05-02', unit: 'Campus Centro', email: 'tatiane.faria@totustuus.com.br', reports: [] },
+    { id: 'igor', name: 'Igor Menezes', role: 'Desenvolvedor Sênior', dept: 'Tecnologia', manager: 'rafael', status: 'away',
+      since: '2021-08-16', unit: 'Campus Norte', email: 'igor.menezes@totustuus.com.br', reports: [] },
+
+    { id: 'camila', name: 'Camila Nogueira', role: 'Diretoria Comercial', dept: 'Comercial', manager: 'marina', status: 'online',
+      since: '2020-07-13', unit: 'Campus Norte', email: 'camila.nogueira@totustuus.com.br',
+      reports: ['ana', 'pedro'] },
+    { id: 'ana', name: 'Ana Souza', role: 'Gerente de Expansão', dept: 'Comercial', manager: 'camila', status: 'online',
+      since: '2021-02-22', unit: 'Campus Norte', email: 'ana.souza@totustuus.com.br', reports: [] },
+    { id: 'pedro', name: 'Pedro Alves', role: 'Executivo de Contas', dept: 'Comercial', manager: 'camila', status: 'offline',
+      since: '2024-04-01', unit: 'Unidade Sul', email: 'pedro.alves@totustuus.com.br', reports: [] },
+
+    { id: 'bruno', name: 'Bruno Tavares', role: 'Diretoria Financeira', dept: 'Financeiro', manager: 'marina', status: 'away',
+      since: '2019-11-11', unit: 'Campus Centro', email: 'bruno.tavares@totustuus.com.br',
+      reports: ['helena', 'sofia'] },
+    { id: 'helena', name: 'Helena Prado', role: 'Gerente de Controladoria', dept: 'Financeiro', manager: 'bruno', status: 'online',
+      since: '2021-09-06', unit: 'Campus Centro', email: 'helena.prado@totustuus.com.br', reports: [] },
+    { id: 'sofia', name: 'Sofia Andrade', role: 'Analista de Cobrança', dept: 'Financeiro', manager: 'bruno', status: 'away',
+      since: '2023-02-13', unit: 'Campus Norte', email: 'sofia.andrade@totustuus.com.br', reports: [] },
+
+    { id: 'elisa', name: 'Elisa Martins', role: 'Diretoria de Pessoas', dept: 'Pessoas', manager: 'marina', status: 'online',
+      since: '2020-01-20', unit: 'Campus Centro', email: 'elisa.martins@totustuus.com.br',
+      reports: ['joao', 'clara'] },
+    { id: 'joao', name: 'João Batista', role: 'Coordenador de RH', dept: 'Pessoas', manager: 'elisa', status: 'online',
+      since: '2022-06-01', unit: 'Campus Centro', email: 'joao.batista@totustuus.com.br', reports: [] },
+    { id: 'clara', name: 'Clara Ribeiro', role: 'Analista de Cultura', dept: 'Pessoas', manager: 'elisa', status: 'offline',
+      since: '2024-08-19', unit: 'Unidade Sul', email: 'clara.ribeiro@totustuus.com.br', reports: [] }
+  ];
+
+  var ST = {
+    online: { label: 'Online', cls: 'st-on' },
+    away: { label: 'Ausente', cls: 'st-away' },
+    offline: { label: 'Offline', cls: 'st-off' }
+  };
+
+  var state = { people: PEOPLE, root: null, selected: 'rafael', collapsed: {}, query: '' };
+  var mounted = [];
+
+  function byId(id) {
+    for (var i = 0; i < state.people.length; i++) if (state.people[i].id === id) return state.people[i];
+    return null;
+  }
+  function children(p) {
+    return (p.reports || []).map(byId).filter(Boolean);
+  }
+  function totalUnder(p) {
+    return children(p).reduce(function (n, c) { return n + 1 + totalUnder(c); }, 0);
+  }
+  function initials(name) {
+    var parts = name.trim().split(/\s+/);
+    return (parts[0][0] + (parts.length > 1 ? parts[parts.length - 1][0] : '')).toUpperCase();
+  }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function norm(s) {
+    return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  }
+  function tenure(iso) {
+    var a = new Date(iso + 'T00:00:00Z'), b = new Date(TODAY + 'T00:00:00Z');
+    var m = (b.getUTCFullYear() - a.getUTCFullYear()) * 12 + (b.getUTCMonth() - a.getUTCMonth());
+    if (b.getUTCDate() < a.getUTCDate()) m--;
+    var y = Math.floor(m / 12), mo = m % 12;
+    var out = y ? y + (y === 1 ? ' ano' : ' anos') : '';
+    if (mo) out += (out ? ' e ' : '') + mo + (mo === 1 ? ' mês' : ' meses');
+    return out || 'menos de 1 mês';
+  }
+  function isCollapsed(id) { return !!state.collapsed[id]; }
+  function statusHTML(p) {
+    var s = ST[p.status] || ST.offline;
+    return '<span class="st ' + s.cls + '">' + s.label + '</span>';
+  }
+
+  /* ------- nós ------- */
+  function nodeHTML(p, kind, controlsOverride) {
+    var kids = children(p), direct = kids.length, total = totalUnder(p);
+    var name = esc(p.name), role = esc(p.role), dept = esc(p.dept);
+    var label = name + ', ' + role + ', ' + dept + ', ' + ST[p.status].label +
+      (direct ? ', ' + direct + (direct === 1 ? ' pessoa na equipe' : ' pessoas na equipe') : '');
+
+    if (kind === 'rep') {
+      return '<div class="node-card" data-node="' + p.id + '">' +
+        '<button type="button" class="node node-rep" data-id="' + p.id + '" aria-pressed="' + (state.selected === p.id) + '" aria-label="' + label + '">' +
+          '<span class="av av-sm" aria-hidden="true">' + initials(p.name) + '</span>' +
+          '<span class="n-main">' +
+            '<span class="rep-top"><span class="n-name">' + name + '</span>' + statusHTML(p) + '</span>' +
+            '<span class="rep-sub">' + role + ' · ' + dept + '</span>' +
+          '</span>' +
+        '</button>' +
+      '</div>';
+    }
+
+    var ceo = kind === 'ceo';
+    var open = !isCollapsed(p.id);
+    var controls = controlsOverride || (ceo ? 'org-branches' : 'team-' + p.id);
+    var chev = '<button type="button" class="chev' + (ceo ? ' chev-ceo' : '') + '" data-toggle="' + p.id + '" ' +
+      'aria-expanded="' + open + '" aria-controls="' + controls + '" ' +
+      'aria-label="' + (open ? 'Recolher' : 'Expandir') + (ceo ? ' organograma' : ' equipe de ' + name) + '">' +
+      '<i class="fa-light ' + (open ? 'fa-minus' : 'fa-plus') + '" aria-hidden="true"></i></button>';
+
+    return '<div class="node-card' + (ceo ? ' node-ceo-card' : '') + '" data-node="' + p.id + '">' +
+      '<button type="button" class="node ' + (ceo ? 'node-ceo' : 'node-dir') + '" data-id="' + p.id + '" ' +
+        'aria-pressed="' + (state.selected === p.id) + '" aria-label="' + label + '">' +
+        '<span class="av' + (ceo ? '' : '') + '" aria-hidden="true">' + initials(p.name) + '</span>' +
+        '<span class="n-main">' +
+          '<span class="n-name">' + name + '</span>' +
+          '<span class="n-role">' + role + '</span>' +
+          '<span class="n-foot"><span class="dept">' + dept + '</span>' +
+            '<span class="hc"><i class="fa-light fa-user-group" aria-hidden="true"></i>' + (ceo ? total + 1 : direct) + '</span>' +
+            statusHTML(p) +
+          '</span>' +
+        '</span>' +
+      '</button>' + chev +
+    '</div>';
+  }
+
+  /* ------- layout horizontal (desktop) ------- */
+  function flowHTML() {
+    var root = byId('marina');
+    var kids = children(root);
+    var branches = kids.map(function (d) {
+      var reps = children(d);
+      var open = !isCollapsed(root.id) && !isCollapsed(d.id);
+      return '<div class="branch" data-branch="' + d.id + '">' +
+        '<div class="dir-node">' + nodeHTML(d, 'dir') + '</div>' +
+        '<div class="reports" id="team-' + d.id + '"' + (open ? '' : ' hidden') + '>' +
+          reps.map(function (r) { return nodeHTML(r, 'rep'); }).join('') +
+        '</div>' +
+      '</div>';
+    }).join('');
+    return '<div class="org-h">' +
+      '<div class="ceo-node">' + nodeHTML(root, 'ceo') + '</div>' +
+      '<div class="org-branches" id="org-branches"' + (isCollapsed(root.id) ? ' hidden' : '') + '>' + branches + '</div>' +
+    '</div>' +
+    '<svg class="org-lines" aria-hidden="true"></svg>';
+  }
+
+  /* ------- árvore vertical indentada (mobile) ------- */
+  function treeHTML() {
+    function branch(p, depth, controlsOverride) {
+      var kids = children(p);
+      var kind = depth === 0 ? 'ceo' : (kids.length ? 'dir' : 'rep');
+      var hasToggle = kids.length > 0;
+      var open = !isCollapsed(p.id);
+      var card = '<div class="t-row">' + nodeHTML(p, kind, controlsOverride) + '</div>';
+      if (!hasToggle) return card;
+      var sub = open
+        ? '<ul id="team-' + p.id + '" role="group">' + kids.map(function (k) { return '<li>' + branch(k, depth + 1) + '</li>'; }).join('') + '</ul>'
+        : '';
+      return card + sub;
+    }
+    return '<ul class="org-tree"><li>' + branch(byId('marina'), 0, 'team-marina') + '</li></ul>';
+  }
+
+  function isMobile() { return window.matchMedia('(max-width: 899px)').matches; }
+
+  function renderChart() {
+    var chart = state.root.querySelector('#org-chart');
+    if (!chart) return;
+    chart.innerHTML = isMobile()
+      ? treeHTML()
+      : flowHTML();
+    applySearch();
+    drawLines();
+  }
+
+  /* ------- conectores em px ------- */
+  function elbow(x1, y1, x2, y2, mid) {
+    var r = 6;
+    var dir = y2 > y1 ? 1 : -1;
+    if (Math.abs(y2 - y1) < r * 2 || mid <= x1 + 2) {
+      return 'M' + x1 + ' ' + y1 + ' H' + mid + ' V' + y2 + ' H' + x2;
+    }
+    return 'M' + x1 + ' ' + y1 + ' H' + (mid - r) +
+      ' Q' + mid + ' ' + y1 + ' ' + mid + ' ' + (y1 + dir * r) +
+      ' V' + (y2 - dir * r) +
+      ' Q' + mid + ' ' + y2 + ' ' + (mid + r) + ' ' + y2 +
+      ' H' + x2;
+  }
+
+  function drawLines() {
+    if (isMobile()) return;
+    var chart = state.root.querySelector('#org-chart');
+    var svg = chart.querySelector('.org-lines');
+    if (!svg) return;
+    var base = chart.getBoundingClientRect();
+    svg.setAttribute('width', base.width);
+    svg.setAttribute('height', base.height);
+    svg.setAttribute('viewBox', '0 0 ' + base.width + ' ' + base.height);
+
+    var paths = [];
+    var ceoCard = chart.querySelector('[data-node="marina"]');
+    if (!ceoCard) { svg.innerHTML = ''; return; }
+    var cr = ceoCard.getBoundingClientRect();
+
+    chart.querySelectorAll('.branch').forEach(function (b) {
+      var dirCard = b.querySelector('.dir-node [data-node]');
+      var reps = b.querySelector('.reports');
+      if (!dirCard) return;
+      var dr = dirCard.getBoundingClientRect();
+      var px = cr.right - base.left + 13;
+      var cx = cr.top - base.top + cr.height / 2;
+      var dx = dr.left - base.left;
+      var dy = dr.top - base.top + dr.height / 2;
+      paths.push(elbow(px - 13, cx, dx, dy, px));
+
+      if (!reps || reps.hidden) return;
+      var px2 = dr.right - base.left + 13;
+      reps.querySelectorAll('.node-card').forEach(function (rc) {
+        var rr = rc.getBoundingClientRect();
+        paths.push(elbow(px2 - 13, dy, rr.left - base.left, rr.top - base.top + rr.height / 2, px2));
+      });
+    });
+
+    svg.innerHTML = paths.map(function (d) { return '<path d="' + d + '"></path>'; }).join('');
+  }
+
+  /* ------- ficha ------- */
+  function renderFicha() {
+    var p = byId(state.selected);
+    var box = state.root.querySelector('#org-ficha');
+    if (!p) { box.innerHTML = ''; return; }
+    var kids = children(p), total = totalUnder(p);
+    var manager = p.manager ? byId(p.manager) : null;
+    var team = kids.length
+      ? '<span class="f-team">' + kids.length + (kids.length === 1 ? ' pessoa direta' : ' pessoas diretas') +
+        (total ? ' · ' + total + ' no total' : '') + '</span>'
+      : '<span class="f-team">Sem equipe direta</span>';
+    box.innerHTML =
+      '<div class="f-top">' +
+        '<span class="av av-lg" aria-hidden="true">' + initials(p.name) + '</span>' +
+        '<div class="f-id"><h3>' + esc(p.name) + '</h3><p>' + esc(p.role) + '</p></div>' +
+        statusHTML(p) +
+      '</div>' +
+      '<div class="f-tags"><span class="dept">' + esc(p.dept) + '</span>' + team + '</div>' +
+      '<dl class="f-list">' +
+        '<div><dt>E-mail</dt><dd>' + esc(p.email) + '</dd></div>' +
+        '<div><dt>Unidade</dt><dd>' + esc(p.unit) + '</dd></div>' +
+        '<div><dt>Tempo de casa</dt><dd>' + tenure(p.since) + '</dd></div>' +
+        '<div><dt>Gestor</dt><dd>' + (manager ? esc(manager.name) : 'Conselho diretivo') + '</dd></div>' +
+        '<div><dt>Headcount</dt><dd>' + (kids.length ? kids.length + (kids.length === 1 ? ' direto' : ' diretos') + ' · ' + (total + 1) + ' com a liderança' : 'Individual') + '</dd></div>' +
+      '</dl>' +
+      '<p class="f-note">Ficha ilustrativa, sem dados pessoais sensíveis.</p>';
+  }
+
+  /* ------- busca ------- */
+  function visibleCount() {
+    var root = byId('marina');
+    var n = 1;
+    if (isCollapsed(root.id)) return n;
+    children(root).forEach(function (d) {
+      n++;
+      if (!isCollapsed(d.id)) n += children(d).length;
+    });
+    return n;
+  }
+
+  function applySearch() {
+    var chart = state.root.querySelector('#org-chart');
+    var q = norm(state.query.trim());
+    var hits = 0;
+    chart.querySelectorAll('.node-card').forEach(function (card) {
+      var p = byId(card.dataset.node);
+      if (!p) return;
+      var match = !q || norm(p.name + ' ' + p.role + ' ' + p.dept).indexOf(q) !== -1;
+      card.classList.toggle('is-hit', !!q && match);
+      card.classList.toggle('is-dim', !!q && !match);
+      if (q && match) hits++;
+    });
+    chart.classList.toggle('is-searching', !!q);
+
+    var total = state.people.length;
+    var txt = visibleCount() + ' de ' + total + ' pessoas visíveis';
+    if (q) txt += ' · ' + hits + (hits === 1 ? ' correspondência' : ' correspondências');
+    state.root.querySelector('#org-count').textContent = txt;
+    state.root.querySelector('#org-empty').hidden = !q || hits > 0;
+    var clearBtn = state.root.querySelector('#org-clear');
+    if (clearBtn) clearBtn.hidden = !q;
+    chart.querySelectorAll('.node').forEach(function (btn) {
+      btn.setAttribute('aria-pressed', String(btn.dataset.id === state.selected));
+    });
+    chart.querySelectorAll('.node-card').forEach(function (card) {
+      card.classList.toggle('is-selected', card.dataset.node === state.selected);
+    });
+  }
+
+  function select(id) {
+    var p = byId(id);
+    if (!p) return;
+    state.selected = id;
+    applySearch();
+    renderFicha();
+    state.root.querySelector('#org-live').textContent = 'Ficha de ' + p.name + ' aberta. ' + p.role + ', ' + p.dept + '.';
+    state.root.dispatchEvent(new CustomEvent('ttsc:orgchart:select', {
+      bubbles: true,
+      detail: { id: p.id, name: p.name, role: p.role, dept: p.dept, status: p.status, manager: p.manager }
+    }));
+  }
+
+  function expandAll() {
+    state.collapsed = {};
+    state.query = '';
+    var q = state.root.querySelector('#org-q');
+    if (q) q.value = '';
+    renderChart();
+    renderFicha();
+    state.root.querySelector('#org-live').textContent = 'Todas as equipes expandidas. ' + visibleCount() + ' de ' + state.people.length + ' pessoas visíveis.';
+  }
+
+  function collapseAll() {
+    var root = byId('marina');
+    state.collapsed = {};
+    children(root).forEach(function (d) { state.collapsed[d.id] = true; });
+    renderChart();
+    renderFicha();
+    state.root.querySelector('#org-live').textContent = 'Diretorias recolhidas. ' + visibleCount() + ' de ' + state.people.length + ' pessoas visíveis.';
+  }
+
+  function toggle(id) {
+    var p = byId(id);
+    if (!p) return;
+    state.collapsed[id] = !state.collapsed[id];
+    renderChart();
+    renderFicha();
+    var chev = state.root.querySelector('.chev[data-toggle="' + id + '"]');
+    if (chev) chev.focus();
+    state.root.querySelector('#org-live').textContent =
+      (p.id === 'marina' ? 'Organograma' : 'Equipe de ' + p.name) + (state.collapsed[id] ? ' recolhido' : ' expandido') +
+      '. ' + visibleCount() + ' de ' + state.people.length + ' pessoas visíveis.';
+  }
+
+  function bind() {
+    var root = state.root;
+
+    root.querySelector('#org-chart').addEventListener('click', function (e) {
+      var chev = e.target.closest('.chev');
+      if (chev) { toggle(chev.dataset.toggle); return; }
+      var node = e.target.closest('.node');
+      if (node) select(node.dataset.id);
+    });
+
+    root.querySelector('#org-expand').addEventListener('click', expandAll);
+    root.querySelector('#org-collapse').addEventListener('click', collapseAll);
+
+    var q = root.querySelector('#org-q');
+    q.addEventListener('input', function () {
+      state.query = q.value;
+      /* busca revela o que estava recolhido, para o resultado não ficar escondido */
+      if (state.query.trim() && Object.keys(state.collapsed).some(function (k) { return state.collapsed[k]; })) {
+        state.collapsed = {};
+        renderChart();
+        renderFicha();
+        state.root.querySelector('#org-q').focus();
+      }
+      applySearch();
+    });
+
+    root.querySelector('#org-clear').addEventListener('click', function () {
+      state.query = '';
+      q.value = '';
+      applySearch();
+      q.focus();
+    });
+
+    if (window.matchMedia) {
+      var mq = window.matchMedia('(max-width: 899px)');
+      var onChange = function () { renderChart(); };
+      if (mq.addEventListener) mq.addEventListener('change', onChange);
+      else if (mq.addListener) mq.addListener(onChange);
+    }
+
+    if (window.ResizeObserver) {
+      new ResizeObserver(function () { drawLines(); }).observe(root.querySelector('#org-chart'));
+    }
+    window.addEventListener('resize', drawLines);
+  }
+
+  function render(el, data) {
+    var root = el;
+    if (!root) return api;
+    state.root = root;
+    if (data && data.length) state.people = data;
+    renderChart();
+    renderFicha();
+    if (mounted.indexOf(root) === -1) { mounted.push(root); bind(); }
+    return api;
+  }
+
+  function search(term) {
+    state.query = term || '';
+    var q = state.root.querySelector('#org-q');
+    if (q) q.value = state.query;
+    state.collapsed = {};
+    renderChart();
+    renderFicha();
+    applySearch();
+  }
+
+  function destroy() {
+    mounted.splice(0).forEach(function (root) {
+      root.querySelector('#org-chart').innerHTML = '';
+      root.querySelector('#org-ficha').innerHTML = '';
+    });
+    state.root = null;
+  }
+
+  var api = {
+    render: render,
+    expandAll: expandAll,
+    collapseAll: collapseAll,
+    search: search,
+    select: select,
+    destroy: destroy,
+    getState: function () { return { selected: state.selected, collapsed: Object.keys(state.collapsed) }; }
+  };
+  window.TTSCOrgChart = api;
+  window.TTSC = window.TTSC || {};
+  window.TTSC.OrgChart = api;
+
+  function boot() {
+    render(document.querySelector('.card'), PEOPLE);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+  else boot();
+})();
+</script>
+</body>
+</html>

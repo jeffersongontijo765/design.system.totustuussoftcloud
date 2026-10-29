@@ -1,0 +1,89 @@
+<!-- @dsCard group="Formulários" height=305 subtitle="ttsc-checkbox · sm/padrão/lg, mono, indeterminado, desabilitado, aria-invalid, lista com selecionar todas" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Checkbox</title>
+<style>
+  .ttsc-checkbox:checked:not(.ttsc-checkbox-mono) { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='none' stroke='%230f0f0f' stroke-linecap='round' stroke-linejoin='round' stroke-width='2.2' d='M5 10.5l3.2 3.2L15 7'/%3E%3C/svg%3E"); }
+  .ttsc-checkbox:indeterminate:not(.ttsc-checkbox-mono) { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='none' stroke='%230f0f0f' stroke-linecap='round' stroke-width='2.2' d='M6 10h8'/%3E%3C/svg%3E"); }
+  :is([data-theme="dark"], .dark) .ttsc-checkbox-mono:checked {   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='none' stroke='%231c1c1c' stroke-linecap='round' stroke-linejoin='round' stroke-width='2.2' d='M5 10.5l3.2 3.2L15 7'/%3E%3C/svg%3E"); }
+  .ttsc-check-list { border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); background: var(--ttsc-surface); padding: 8px 14px; margin: 0; min-width: 0; }
+  .ttsc-check-list ul { list-style: none; margin: 0; padding: 0; }
+  .ttsc-check-list li { padding: 7px 0; border-top: 1px solid var(--ttsc-border-soft); }
+  .ttsc-check-list .head { padding: 6px 0 8px; }
+  .ttsc-check-count { margin-inline-start: auto; font-size: 12px; color: var(--ttsc-text-muted); }
+  .ttsc-label { font-size: 13px; color: var(--ttsc-text); }
+  .ck-muted { margin-inline-start: auto; font-size: 12px; color: var(--ttsc-text-muted); }
+  .ttsc-form-message { color: var(--ttsc-danger-text); }
+  .ck-grid { display: grid; grid-template-columns: 300px 1fr; gap: 20px; align-items: start; }
+</style>
+</head>
+<body>
+<div class="ds-pad ck-grid">
+  <div class="ds-stack">
+    <div class="ds-label">Tamanhos e variantes</div>
+    <div class="ds-row" style="gap:16px">
+      <input type="checkbox" class="ttsc-checkbox ttsc-checkbox-sm" checked aria-label="Pequeno">
+      <input type="checkbox" class="ttsc-checkbox" checked aria-label="Padrão">
+      <input type="checkbox" class="ttsc-checkbox ttsc-checkbox-lg" checked aria-label="Grande">
+      <input type="checkbox" class="ttsc-checkbox ttsc-checkbox-mono" checked aria-label="Mono">
+      <input type="checkbox" class="ttsc-checkbox" id="ck-ind" aria-label="Indeterminado">
+      <input type="checkbox" class="ttsc-checkbox" aria-label="Vazio">
+    </div>
+    <div class="ds-label">Estados</div>
+    <div class="ttsc-form-control-inline"><input type="checkbox" class="ttsc-checkbox" id="ck-dis" disabled checked><label class="ttsc-label" for="ck-dis">Histórico conferido (bloqueado)</label></div>
+    <div class="ttsc-form-control-inline"><input type="checkbox" class="ttsc-checkbox" id="ck-dis2" disabled><label class="ttsc-label" for="ck-dis2">Isenção de taxa (sem permissão)</label></div>
+    <div class="ttsc-form-item" style="gap:6px">
+      <div class="ttsc-form-control-inline"><input type="checkbox" class="ttsc-checkbox" id="accept" required aria-invalid="true" aria-describedby="accept-err"><label class="ttsc-label" for="accept">Li e aceito o contrato educacional</label></div>
+      <div class="ttsc-form-message" id="accept-err" role="alert">É preciso aceitar o contrato.</div>
+    </div>
+  </div>
+  <fieldset class="ttsc-check-list">
+    <legend class="ds-label" style="padding:0 4px">Matrículas da turma ADM-2026-1N</legend>
+    <div class="ttsc-form-control-inline head">
+      <input type="checkbox" class="ttsc-checkbox" id="check-all" data-ttsc-check-all="#enr-list" aria-describedby="check-count">
+      <label class="ttsc-form-label" for="check-all" style="width:auto">Selecionar todas</label>
+      <span class="ttsc-check-count" id="check-count" data-ttsc-check-count aria-live="polite"></span>
+    </div>
+    <ul id="enr-list">
+      <li class="ttsc-form-control-inline"><input type="checkbox" class="ttsc-checkbox ttsc-checkbox-sm" id="e1" value="u1" data-ttsc-check-item checked><label class="ttsc-label" for="e1">MAT-2026-000101 · Ana Beatriz Souza</label><span class="ck-muted">Ativa</span></li>
+      <li class="ttsc-form-control-inline"><input type="checkbox" class="ttsc-checkbox ttsc-checkbox-sm" id="e2" value="u2" data-ttsc-check-item checked><label class="ttsc-label" for="e2">MAT-2026-000102 · Bruno Carvalho Lima</label><span class="ck-muted">Ativa</span></li>
+      <li class="ttsc-form-control-inline"><input type="checkbox" class="ttsc-checkbox ttsc-checkbox-sm" id="e3" value="u3" data-ttsc-check-item><label class="ttsc-label" for="e3">MAT-2026-000103 · Camila Ferreira Rocha</label><span class="ck-muted">Ativa</span></li>
+      <li class="ttsc-form-control-inline"><input type="checkbox" class="ttsc-checkbox ttsc-checkbox-sm" id="e4" value="u4" data-ttsc-check-item disabled><label class="ttsc-label" for="e4">MAT-2026-000104 · Diego Martins Alves</label><span class="ck-muted">Trancada</span></li>
+      <li class="ttsc-form-control-inline"><input type="checkbox" class="ttsc-checkbox ttsc-checkbox-sm" id="e5" value="u5" data-ttsc-check-item><label class="ttsc-label" for="e5">MAT-2026-000105 · Eduarda Nunes Pereira</label><span class="ck-muted">Ativa</span></li>
+    </ul>
+    <div class="ds-row" style="padding:8px 0 4px;border-top:1px solid var(--ttsc-border-soft)">
+      <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-sm" id="btn-lock"><i class="fa-light fa-lock"></i> Trancar selecionadas</button>
+      <span class="ds-note" id="ck-log" aria-live="polite"></span>
+    </div>
+  </fieldset>
+</div>
+<script>
+  TTSC.init();
+  document.getElementById('ck-ind').indeterminate = true;
+  document.getElementById('accept').addEventListener('change', function () { this.setAttribute('aria-invalid', this.checked ? 'false' : 'true'); });
+  document.querySelectorAll('[data-ttsc-check-all]').forEach(function (master) {
+    var list = document.querySelector(master.dataset.ttscCheckAll), counter = master.closest('fieldset').querySelector('[data-ttsc-check-count]'), last = null;
+    function items() { return Array.prototype.slice.call(list.querySelectorAll('[data-ttsc-check-item]:not(:disabled)')); }
+    function sync() {
+      var all = items(), on = all.filter(function (i) { return i.checked; });
+      master.checked = all.length > 0 && on.length === all.length; master.indeterminate = on.length > 0 && on.length < all.length;
+      counter.textContent = on.length + ' de ' + all.length + ' selecionadas';
+      list.dispatchEvent(new CustomEvent('ttsc.check.change', { bubbles: true, detail: { checked: on.map(function (i) { return i.value; }), total: all.length } }));
+    }
+    master.addEventListener('change', function () { items().forEach(function (i) { i.checked = master.checked; }); sync(); });
+    list.addEventListener('change', function (e) { if (e.target.matches('[data-ttsc-check-item]')) sync(); });
+    list.addEventListener('click', function (e) {
+      var box = e.target.closest('[data-ttsc-check-item]'); if (!box) return;
+      if (e.shiftKey && last) { var all = items(), a = all.indexOf(last), b = all.indexOf(box), lo = Math.min(a, b), hi = Math.max(a, b); all.slice(lo, hi + 1).forEach(function (i) { i.checked = box.checked; }); sync(); }
+      last = box;
+    });
+    list.addEventListener('ttsc.check.change', function (e) { document.getElementById('btn-lock').disabled = !e.detail.checked.length; });
+    sync();
+  });
+  document.getElementById('btn-lock').addEventListener('click', function () {
+    var n = document.querySelectorAll('#enr-list [data-ttsc-check-item]:checked').length;
+    document.getElementById('ck-log').textContent = 'UPDATE … status = \'locked\' → ' + n + ' matrícula(s) (simulação)';
+  });
+</script>
+</body>
+</html>

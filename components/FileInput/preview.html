@@ -1,0 +1,95 @@
+<!-- @dsCard group="Formulários" height=320 subtitle="ttsc-input type=file · documentos exigidos com status, múltiplos arquivos com lista, tamanho, remover, erro de tipo/limite" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>FileInput</title>
+<style>
+  .ttsc-input[type="file"] { padding-inline-start: 0; cursor: pointer; color: var(--ttsc-text-2); }
+  .ttsc-input::file-selector-button { height: 100%; margin-inline-end: 12px; padding-inline: 12px; background: var(--ttsc-canvas-2); color: var(--ttsc-text); font-weight: 500; cursor: pointer; }
+  .ttsc-input:hover::file-selector-button { background: var(--ttsc-surface-2); }
+  .ttsc-input[type="file"]:focus-visible { outline: 2px solid var(--ttsc-accent); outline-offset: 2px; }
+  .ttsc-file-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+  .ttsc-file-item { display: flex; align-items: center; gap: 8px; padding: 4px 4px 4px 10px; font-size: 12px; background: var(--ttsc-surface); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-sm); color: var(--ttsc-text); }
+  .ttsc-file-item i { color: var(--ttsc-text-muted); }
+  .ttsc-file-item .size { margin-inline-start: auto; color: var(--ttsc-text-muted); font-variant-numeric: tabular-nums; }
+  .ttsc-file-item.is-invalid { border-color: var(--ttsc-danger); color: var(--ttsc-danger-text); }
+  .ttsc-file-item.is-invalid .size, .ttsc-file-item.is-invalid i { color: var(--ttsc-danger-text); }
+  .ttsc-form-message { color: var(--ttsc-danger-text); }
+  .ttsc-form-description { color: var(--ttsc-text-muted); }
+  .ttsc-doc-status { display: inline-flex; padding: 1px 8px; border-radius: var(--ttsc-radius-pill); font-size: 11px; font-weight: 500; }
+  .ttsc-doc-status[data-status="pending"] { color: var(--ttsc-text-muted); background: var(--ttsc-canvas-2); }
+  .ttsc-doc-status[data-status="submitted"] { color: var(--ttsc-info-text); background: color-mix(in srgb, var(--ttsc-info) 12%, transparent); }
+  .ttsc-doc-status[data-status="approved"] { color: var(--ttsc-accent-text); background: var(--ttsc-accent-soft); }
+  .ttsc-doc-status[data-status="rejected"], .ttsc-doc-status[data-status="expired"] { color: var(--ttsc-danger-text); background: color-mix(in srgb, var(--ttsc-danger) 12%, transparent); }
+  .ttsc-doc-list { list-style: none; margin: 0; padding: 0 14px; border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); background: var(--ttsc-surface); }
+  .ttsc-doc-row { display: grid; grid-template-columns: 210px 1fr; gap: 12px; align-items: center; padding: 9px 0; border-top: 1px solid var(--ttsc-border-soft); min-height: 34px; }
+  .ttsc-doc-row:first-child { border-top: 0; }
+  .ttsc-doc-info { display: flex; flex-direction: column; gap: 4px; align-items: flex-start; }
+  .fi-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+  .fi-link { color: var(--ttsc-accent-text); font-size: 12px; }
+  .fi-reason { font-size: 12px; color: var(--ttsc-danger-text); }
+</style>
+</head>
+<body>
+<div class="ds-pad fi-grid">
+  <div class="ds-stack" style="gap:8px">
+    <div class="ds-label">Documentos da solicitação SOL-2026-0412 · Ana Beatriz Souza</div>
+    <ul class="ttsc-doc-list">
+      <li class="ttsc-doc-row"><div class="ttsc-doc-info"><span class="ttsc-form-label">RG e CPF</span><span class="ttsc-doc-status" data-status="approved">Aprovado</span></div><a class="ttsc-link fi-link" href="#"><i class="fa-light fa-eye"></i> Ver arquivo</a></li>
+      <li class="ttsc-doc-row"><div class="ttsc-doc-info"><span class="ttsc-form-label">Comprovante de residência</span><span class="ttsc-doc-status" data-status="submitted">Em conferência</span></div><a class="ttsc-link fi-link" href="#"><i class="fa-light fa-eye"></i> Ver arquivo</a></li>
+      <li class="ttsc-doc-row"><div class="ttsc-doc-info"><label class="ttsc-form-label" for="doc-hist">Histórico do ensino médio</label><span class="ttsc-doc-status" data-status="rejected">Recusado</span></div><div class="ds-stack" style="gap:4px"><input type="file" class="ttsc-input ttsc-input-sm" id="doc-hist" accept=".pdf,image/jpeg,image/png" data-ttsc-file-input data-ttsc-file-max="5242880" aria-describedby="doc-hint hist-reason"><span class="fi-reason" id="hist-reason">Ilegível — envie nova digitalização.</span></div></li>
+      <li class="ttsc-doc-row"><div class="ttsc-doc-info"><label class="ttsc-form-label" for="doc-photo">Foto 3×4</label><span class="ttsc-doc-status" data-status="pending">Pendente</span></div><input type="file" class="ttsc-input ttsc-input-sm" id="doc-photo" accept="image/jpeg,image/png" data-ttsc-file-input data-ttsc-file-max="2097152" aria-describedby="doc-hint"></li>
+    </ul>
+    <p class="ttsc-form-description" id="doc-hint" style="margin:0">PDF, JPG ou PNG, até 5 MB por arquivo.</p>
+  </div>
+  <div class="ttsc-form-item">
+    <label class="ttsc-form-label" for="attachments">Anexos do plano de ensino</label>
+    <input type="file" class="ttsc-input" id="attachments" name="attachments[]" multiple accept=".pdf,.docx" data-ttsc-file-input data-ttsc-file-max="10485760" data-ttsc-file-max-files="5" data-ttsc-file-list="#attachments-list" aria-describedby="att-hint att-error">
+    <div class="ttsc-form-description" id="att-hint">Até 5 arquivos PDF ou DOCX, 10 MB cada.</div>
+    <div class="ttsc-form-message" id="att-error" role="alert"></div>
+    <ul class="ttsc-file-list" id="attachments-list" aria-live="polite"></ul>
+  </div>
+</div>
+<script>
+  TTSC.init();
+  var ICONS = { pdf: 'fa-file-pdf', docx: 'fa-file-word', xlsx: 'fa-file-excel', jpg: 'fa-file-image', png: 'fa-file-image' };
+  function kb(n) { return n >= 1048576 ? (n / 1048576).toFixed(1).replace('.', ',') + ' MB' : Math.ceil(n / 1024) + ' KB'; }
+  function TTSCFileInput(input) {
+    var self = this; input.ttscFile = this; this.input = input;
+    this.max = +input.dataset.ttscFileMax || Infinity; this.maxFiles = +input.dataset.ttscFileMaxFiles || Infinity;
+    this.list = input.dataset.ttscFileList ? document.querySelector(input.dataset.ttscFileList) : null;
+    this.message = input.closest('.ttsc-form-item') && input.closest('.ttsc-form-item').querySelector('.ttsc-form-message');
+    input.addEventListener('change', function () { self.render(); });
+    if (this.list) this.list.addEventListener('click', function (e) { var b = e.target.closest('[data-ttsc-file-remove]'); if (b) self.remove(+b.dataset.ttscFileRemove); });
+  }
+  TTSCFileInput.prototype.files = function () { return Array.prototype.slice.call(this.input.files); };
+  TTSCFileInput.prototype.accepts = function (f) { var rules = this.input.accept.split(',').map(function (s) { return s.trim().toLowerCase(); }).filter(Boolean), n = f.name.toLowerCase(), t = f.type.toLowerCase(); return !rules.length || rules.some(function (r) { return r[0] === '.' ? n.slice(-r.length) === r : r.slice(-2) === '/*' ? t.indexOf(r.slice(0, -1)) === 0 : t === r; }); };
+  TTSCFileInput.prototype.problems = function () { var s = this; return this.files().map(function (f, i) { if (!s.accepts(f)) return { file: f, reason: 'Tipo não permitido' }; if (f.size > s.max) return { file: f, reason: 'Maior que ' + kb(s.max) }; if (i >= s.maxFiles) return { file: f, reason: 'Limite de ' + s.maxFiles + ' arquivos' }; return null; }); };
+  TTSCFileInput.prototype.validate = function () { var bad = this.problems().filter(Boolean); this.input.setAttribute('aria-invalid', bad.length ? 'true' : 'false'); if (this.message) this.message.textContent = bad.length ? bad[0].file.name + ': ' + bad[0].reason + '.' : ''; return !bad.length; };
+  TTSCFileInput.prototype.remove = function (idx) { var dt = new DataTransfer(); this.files().forEach(function (f, i) { if (i !== idx) dt.items.add(f); }); this.input.files = dt.files; this.render(); this.input.focus(); };
+  TTSCFileInput.prototype.render = function () {
+    var probs = this.problems(); this.validate();
+    if (this.list) {
+      var ul = this.list; ul.innerHTML = '';
+      this.files().forEach(function (f, i) {
+        var ext = f.name.split('.').pop().toLowerCase(), bad = probs[i], li = document.createElement('li');
+        li.className = 'ttsc-file-item' + (bad ? ' is-invalid' : '');
+        li.innerHTML = '<i class="fa-light ' + (ICONS[ext] || 'fa-file') + '" aria-hidden="true"></i><span class="name"></span><span class="size">' + (bad ? bad.reason : kb(f.size)) + '</span><button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon ttsc-btn-sm" data-ttsc-file-remove="' + i + '"><i class="fa-light fa-xmark"></i></button>';
+        li.querySelector('.name').textContent = f.name; li.querySelector('button').setAttribute('aria-label', 'Remover ' + f.name);
+        ul.appendChild(li);
+      });
+    }
+    this.input.dispatchEvent(new CustomEvent('ttsc.file.change', { bubbles: true, detail: { files: this.files(), invalid: probs.filter(Boolean) } }));
+  };
+  document.querySelectorAll('[data-ttsc-file-input]').forEach(function (i) { new TTSCFileInput(i); });
+  // Estado inicial de demonstração: arquivos simulados no campo múltiplo
+  (function () {
+    var dt = new DataTransfer();
+    dt.items.add(new File([new Uint8Array(186000)], 'plano-de-ensino-gestao-financeira.pdf', { type: 'application/pdf' }));
+    dt.items.add(new File([new Uint8Array(42000)], 'cronograma-2026-1.docx', { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }));
+    dt.items.add(new File([new Uint8Array(9000)], 'notas-turma.xlsx', { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }));
+    var input = document.getElementById('attachments'); input.files = dt.files; input.ttscFile.render();
+  })();
+  document.querySelectorAll('a[href="#"]').forEach(function (a) { a.addEventListener('click', function (e) { e.preventDefault(); }); });
+</script>
+</body>
+</html>

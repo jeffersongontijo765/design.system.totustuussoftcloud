@@ -1,0 +1,169 @@
+<!-- @dsCard group="Arquétipos de página" height=850 width=1280 page subtitle="Calendar · cabeçalho do chassi + FullCalendar 6.1.20 (mês/semana/lista) com a tabela events por tipo e drawer do evento" -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>PageCalendar</title>
+<style>
+  html, body { margin: 0; }
+  #main-viewport { padding: 14px 16px 24px; }
+  /* Tema do FullCalendar ligado aos tokens (mesmo mapeamento do componente FullCalendar) */
+  .ttsc-fc {
+    --fc-border-color: var(--ttsc-border-soft);
+    --fc-page-bg-color: var(--ttsc-surface);
+    --fc-neutral-bg-color: var(--ttsc-canvas);
+    --fc-neutral-text-color: var(--ttsc-text-muted);
+    --fc-today-bg-color: var(--ttsc-accent-soft);
+    --fc-now-indicator-color: var(--ttsc-danger);
+    --fc-list-event-hover-bg-color: var(--ttsc-canvas-2);
+    --fc-highlight-color: var(--ttsc-accent-soft);
+    --fc-event-text-color: var(--ttsc-text);
+    --fc-small-font-size: 11px;
+    --fc-button-text-color: var(--ttsc-text);
+    --fc-button-bg-color: var(--ttsc-surface);
+    --fc-button-border-color: var(--ttsc-border);
+    --fc-button-hover-bg-color: var(--ttsc-canvas-2);
+    --fc-button-hover-border-color: var(--ttsc-border-strong);
+    --fc-button-active-bg-color: var(--ttsc-accent-soft);
+    --fc-button-active-border-color: var(--ttsc-accent-border);
+    background: var(--ttsc-surface); color: var(--ttsc-text); font-size: 12px;
+    border: 1px solid var(--ttsc-border); border-radius: 16px; padding: 14px;
+  }
+  .ttsc-fc .fc .fc-toolbar-title { font-size: 15px; font-weight: 600; color: var(--ttsc-text); }
+  .ttsc-fc .fc .fc-toolbar-title::first-letter { text-transform: uppercase; }
+  .ttsc-fc .fc .fc-button { font-size: 12px; padding: 4px 10px; border-radius: var(--ttsc-radius-control); box-shadow: none !important; }
+  .ttsc-fc .fc .fc-button-primary:not(:disabled).fc-button-active { color: var(--ttsc-accent-text); }
+  .ttsc-fc .fc .fc-button-primary:disabled { color: var(--ttsc-text-muted); opacity: .7; }
+  .ttsc-fc .fc .fc-col-header-cell-cushion { color: var(--ttsc-text-muted); font-weight: 600; text-transform: uppercase; font-size: 11px; text-decoration: none; }
+  .ttsc-fc .fc .fc-daygrid-day-number { color: var(--ttsc-text-2); text-decoration: none; }
+  .ttsc-fc .fc .fc-day-today .fc-daygrid-day-number { color: var(--ttsc-accent-text); font-weight: 700; }
+  .ttsc-fc .fc .fc-daygrid-more-link, .ttsc-fc .fc .fc-list-day-text, .ttsc-fc .fc .fc-list-day-side-text { color: var(--ttsc-text-2); text-decoration: none; }
+  @layer base { .ttsc-fc .fc-event.ev-type:not(.fc-list-event) { background-color: var(--ev-soft) !important; color: var(--ttsc-text) !important; padding: 1px 4px !important; } }
+  .ttsc-fc .fc-event.ev-type:not(.fc-list-event) { border: 0; border-left: 3px solid var(--ev); border-radius: var(--ttsc-radius-xs); cursor: pointer; }
+  .ttsc-fc .fc-event.ev-type .fc-event-title, .ttsc-fc .fc-event.ev-type .fc-event-time { color: var(--ttsc-text); }
+  .ttsc-fc .fc-daygrid-dot-event .fc-daygrid-event-dot { border-color: var(--ev); }
+  .ttsc-fc .fc-list-event.ev-type .fc-list-event-dot { border-color: var(--ev) !important; background-color: var(--ev) !important; }
+  .ev-academic { --ev: var(--ttsc-info); --ev-soft: color-mix(in srgb, var(--ttsc-info) 16%, transparent); }
+  .ev-holiday { --ev: var(--ttsc-danger); --ev-soft: color-mix(in srgb, var(--ttsc-danger) 14%, transparent); }
+  .ev-ceremony { --ev: var(--ttsc-accent); --ev-soft: var(--ttsc-accent-soft); }
+  .ev-administrative { --ev: var(--ttsc-warning); --ev-soft: color-mix(in srgb, var(--ttsc-warning) 16%, transparent); }
+  .ev-cultural { --ev: var(--ttsc-meta); --ev-soft: color-mix(in srgb, var(--ttsc-meta) 22%, transparent); }
+  /* O CSS do app pinta th/td/a de tabelas no escuro com !important (.dark table th, .dark a…) e o runtime
+     ttscui pinta .fc-col-header-cell/.fc-button-active em @layer components: devolvemos aos tokens. */
+  .ttsc-fc .fc .fc-col-header-cell,
+  html.dark .ttsc-fc .fc table thead th.fc-col-header-cell { background-color: var(--ttsc-canvas) !important; }
+  html .ttsc-fc .fc a.fc-col-header-cell-cushion { color: var(--ttsc-text-muted) !important; }
+  html .ttsc-fc .fc a.fc-daygrid-day-number { color: var(--ttsc-text-2) !important; }
+  html .ttsc-fc .fc .fc-day-today a.fc-daygrid-day-number { color: var(--ttsc-accent-text) !important; }
+  html .ttsc-fc .fc a.fc-daygrid-more-link, html .ttsc-fc .fc a.fc-list-day-text, html .ttsc-fc .fc a.fc-list-day-side-text { color: var(--ttsc-text-2) !important; }
+  html.dark .ttsc-fc .fc table td.fc-day-today { background-color: var(--fc-today-bg-color) !important; }
+  @layer base {
+    .ttsc-fc .fc .fc-button-primary:not(:disabled).fc-button-active { color: var(--ttsc-accent-text) !important; background-color: var(--ttsc-accent-soft) !important; }
+    .ttsc-fc .fc .fc-button-primary { color: var(--ttsc-text) !important; }
+  }
+  .fc-legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--ttsc-text-2); margin-bottom: 10px; }
+  .fc-legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; background: var(--ev); vertical-align: -1px; }
+</style>
+</head>
+<body>
+<main id="main-viewport" class="bg-slate-50">
+  <div id="model-page" class="space-y-3.5">
+    <div id="cal-header"></div>
+    <div id="cal-banner"></div>
+    <div class="ttsc-fc">
+      <div class="fc-legend" aria-label="Tipos de evento">
+        <span class="ev-academic">Acadêmico</span><span class="ev-administrative">Administrativo</span>
+        <span class="ev-cultural">Cultural</span><span class="ev-ceremony">Cerimônia</span><span class="ev-holiday">Feriado / recesso</span>
+      </div>
+      <div id="academic-calendar"></div>
+    </div>
+  </div>
+</main>
+<div id="backdrop-overlay" class="fixed inset-0 bg-slate-900/40 backdrop-blur-[2px] z-40 transition-opacity hidden" onclick="window.closeAllDrawers && window.closeAllDrawers()"></div>
+<div id="drawer-event" class="drawer-panel fixed top-0 right-0 h-full w-[480px] max-w-full bg-white z-50 flex flex-col overflow-hidden hidden" aria-hidden="true">
+  <div class="p-4 border-b border-slate-100 flex items-center justify-between bg-white shrink-0">
+    <div class="flex items-center space-x-3 min-w-0 flex-1 mr-2">
+      <div class="w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center shrink-0"><i class="fa-light fa-calendar-day text-sm"></i></div>
+      <div class="min-w-0 flex-1"><h3 id="ev-title" class="font-bold text-sm text-slate-900 truncate">Evento</h3><p id="ev-when" class="text-[11px] text-slate-500"></p></div>
+    </div>
+    <button type="button" onclick="closeAllDrawers()" aria-label="Fechar" class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 flex items-center justify-center transition shrink-0 cursor-pointer"><i class="fa-light fa-xmark text-sm"></i></button>
+  </div>
+  <div class="flex-1 overflow-y-auto p-5 space-y-4 text-xs bg-slate-50/40">
+    <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs" id="ev-fields"></div>
+  </div>
+  <div class="p-4 border-t border-slate-200 bg-white flex items-center justify-end gap-2.5 shrink-0">
+    <button type="button" onclick="closeAllDrawers()" class="px-3.5 py-2 border border-slate-200 hover:bg-slate-50 rounded-xl text-xs font-semibold text-slate-600 transition cursor-pointer">Fechar</button>
+  </div>
+</div>
+<script>
+  TTSCModelKit.syncTheme();
+  var crumbs = { portal: { label: 'Portal da Instituição' }, module: { label: 'Administração Acadêmica' }, page: { label: 'Calendário Escolar', route: '/academic/calendar' } };
+  document.getElementById('cal-header').outerHTML = TTSCModelKit.blocks.header(crumbs, { title: 'Calendário Escolar', icon: 'fa-calendar-days' });
+  document.getElementById('cal-banner').outerHTML = TTSCModelKit.blocks.banner({ icon: 'fa-calendar-days', title: 'Ano letivo 2026', desc: 'Eventos da tabela events: provas, conselhos, reuniões, feriados e cerimônias de todas as unidades.', pill: '10 eventos em outubro' }, true);
+
+  /* Linhas no formato da tabela events (type, start_date, end_date, start_time, end_time, location, target_audience, status) */
+  var ROWS = [
+    { uuid: 'e1', title: 'Conselho de classe — 3º bimestre', type: 'administrative', start_date: '2026-10-05', start_time: '14:00', end_time: '17:00', location: 'Sala dos professores', target_audience: 'teachers', status: 'confirmed' },
+    { uuid: 'e2', title: 'Prazo de rematrícula online', type: 'academic', start_date: '2026-10-09', location: 'Portal do aluno', target_audience: 'guardians', status: 'scheduled' },
+    { uuid: 'e3', title: 'Dia do Professor (recesso)', type: 'holiday', start_date: '2026-10-15', target_audience: 'all', status: 'confirmed' },
+    { uuid: 'e4', title: 'Semana de provas — 4º bimestre', type: 'academic', start_date: '2026-10-19', end_date: '2026-10-23', location: 'Unidade Centro', target_audience: 'students', status: 'scheduled' },
+    { uuid: 'e5', title: 'Reunião de pais — 9º ano', type: 'administrative', start_date: '2026-10-21', start_time: '19:00', end_time: '20:30', location: 'Auditório', target_audience: 'guardians', status: 'confirmed' },
+    { uuid: 'e6', title: 'Entrega de notas', type: 'academic', start_date: '2026-10-26', start_time: '08:00', target_audience: 'teachers', status: 'scheduled' },
+    { uuid: 'e7', title: 'Mostra cultural', type: 'cultural', start_date: '2026-10-28', start_time: '09:00', end_time: '12:00', location: 'Quadra coberta', target_audience: 'all', status: 'scheduled' },
+    { uuid: 'e8', title: 'Formatura Técnico em Informática', type: 'ceremony', start_date: '2026-10-30', start_time: '19:30', end_time: '22:00', location: 'Teatro municipal', target_audience: 'all', status: 'confirmed' },
+    { uuid: 'e9', title: 'Finados (feriado)', type: 'holiday', start_date: '2026-11-02', target_audience: 'all', status: 'confirmed' },
+    { uuid: 'e10', title: 'Simulado ENEM — 3ª série', type: 'academic', start_date: '2026-10-24', start_time: '08:00', end_time: '12:30', location: 'Unidade Centro', target_audience: 'students', status: 'postponed' }
+  ];
+  var TYPES = { academic: 'Acadêmico', administrative: 'Administrativo', cultural: 'Cultural', ceremony: 'Cerimônia', holiday: 'Feriado / recesso' };
+  var AUD = { all: 'Toda a comunidade', students: 'Alunos', teachers: 'Professores', guardians: 'Responsáveis' };
+  var STATUS = { scheduled: 'Agendado', confirmed: 'Confirmado', postponed: 'Adiado', cancelled: 'Cancelado', completed: 'Realizado' };
+
+  function addDay(d) { var x = new Date(d + 'T00:00:00Z'); x.setUTCDate(x.getUTCDate() + 1); return x.toISOString().slice(0, 10); }
+  function toEvent(r) {
+    var allDay = !r.start_time;
+    return {
+      id: r.uuid, title: r.title, allDay: allDay,
+      start: allDay ? r.start_date : r.start_date + 'T' + r.start_time,
+      end: allDay ? (r.end_date ? addDay(r.end_date) : undefined) : (r.end_time ? (r.end_date || r.start_date) + 'T' + r.end_time : undefined),
+      classNames: ['ev-type', 'ev-' + r.type], extendedProps: r
+    };
+  }
+  function row(label, value) {
+    return '<div class="flex justify-between items-center gap-2 py-1.5 border-b border-slate-100"><span class="text-slate-500 shrink-0">' + label + ':</span><strong class="text-slate-800 text-right">' + value + '</strong></div>';
+  }
+
+  var fc = document.createElement('script');
+  fc.src = '../../vendor/fullcalendar/index.global.min.js';
+  fc.onload = function () {
+    var calendar = new FullCalendar.Calendar(document.getElementById('academic-calendar'), {
+      locale: 'pt-br',
+      buttonText: { today: 'Hoje', month: 'Mês', week: 'Semana', day: 'Dia', list: 'Lista', prev: 'Anterior', next: 'Próximo' },
+      allDayText: 'Dia todo', noEventsText: 'Nenhum evento no período',
+      moreLinkText: function (n) { return '+ ' + n + ' eventos'; },
+      firstDay: 0, initialView: 'dayGridMonth', initialDate: '2026-10-01', now: '2026-10-21T10:00:00',
+      headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek,listMonth' },
+      height: 'auto', dayMaxEvents: 2, nowIndicator: true, navLinks: true,
+      eventTimeFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
+      slotLabelFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
+      slotMinTime: '07:00:00', slotMaxTime: '23:00:00',
+      events: ROWS.map(toEvent),
+      eventDidMount: function (info) {
+        info.el.setAttribute('title', info.event.title);
+        info.el.setAttribute('tabindex', '0');
+        info.el.addEventListener('keydown', function (e) { if (e.key === 'Enter') info.el.click(); });
+      },
+      eventClick: function (info) {
+        info.jsEvent.preventDefault();
+        var r = info.event.extendedProps;
+        document.getElementById('ev-title').textContent = info.event.title;
+        document.getElementById('ev-when').textContent = info.event.start.toLocaleDateString('pt-BR', { dateStyle: 'full' }) + (r.start_time ? ' · ' + r.start_time + (r.end_time ? '–' + r.end_time : '') : ' · Dia todo');
+        document.getElementById('ev-fields').innerHTML = row('Tipo', TYPES[r.type] || r.type) + row('Local', r.location || '—') + row('Público', AUD[r.target_audience] || r.target_audience) + row('Status', STATUS[r.status] || r.status);
+        window.openDrawer('drawer-event');
+      }
+    });
+    calendar.render();
+  };
+  document.head.appendChild(fc);
+</script>
+</body>
+</html>

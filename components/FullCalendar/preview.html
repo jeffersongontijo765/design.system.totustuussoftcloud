@@ -1,0 +1,105 @@
+<!-- @dsCard group="Geral" height=690 subtitle="FullCalendar 6.1.20 · mês/semana/lista, locale pt-br inline, eventos por tipo (cores via tokens), tema --fc-*" -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><title>FullCalendar</title>
+<style>
+  .ttsc-fc {
+    --fc-border-color: var(--ttsc-border-soft);
+    --fc-page-bg-color: var(--ttsc-surface);
+    --fc-neutral-bg-color: var(--ttsc-canvas);
+    --fc-neutral-text-color: var(--ttsc-text-muted);
+    --fc-today-bg-color: var(--ttsc-accent-soft);
+    --fc-now-indicator-color: var(--ttsc-danger);
+    --fc-list-event-hover-bg-color: var(--ttsc-canvas-2);
+    --fc-highlight-color: var(--ttsc-accent-soft);
+    --fc-event-bg-color: var(--ttsc-info);
+    --fc-event-border-color: var(--ttsc-info);
+    --fc-event-text-color: var(--ttsc-text);
+    --fc-small-font-size: 11px;
+    --fc-button-text-color: var(--ttsc-text);
+    --fc-button-bg-color: var(--ttsc-surface);
+    --fc-button-border-color: var(--ttsc-border);
+    --fc-button-hover-bg-color: var(--ttsc-canvas-2);
+    --fc-button-hover-border-color: var(--ttsc-border-strong);
+    --fc-button-active-bg-color: var(--ttsc-accent-soft);
+    --fc-button-active-border-color: var(--ttsc-accent-border);
+    background: var(--ttsc-surface); color: var(--ttsc-text); font-size: 12px;
+    border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); padding: 12px;
+  }
+  .ttsc-fc .fc .fc-toolbar-title { font-size: 15px; font-weight: 600; color: var(--ttsc-text); }
+  .ttsc-fc .fc .fc-toolbar-title::first-letter { text-transform: uppercase; }
+  .ttsc-fc .fc .fc-button { font-size: 12px; padding: 4px 10px; border-radius: var(--ttsc-radius-control); box-shadow: none !important; }
+  .ttsc-fc .fc .fc-button-primary:not(:disabled).fc-button-active { color: var(--ttsc-accent-text); }
+  .ttsc-fc .fc .fc-button-primary:disabled { color: var(--ttsc-text-muted); opacity: .7; }
+  .ttsc-fc .fc .fc-col-header-cell-cushion { color: var(--ttsc-text-muted); font-weight: 600; text-transform: uppercase; font-size: 11px; text-decoration: none; }
+  .ttsc-fc .fc .fc-daygrid-day-number { color: var(--ttsc-text-2); text-decoration: none; }
+  .ttsc-fc .fc .fc-day-today .fc-daygrid-day-number { color: var(--ttsc-accent-text); font-weight: 700; }
+  .ttsc-fc .fc .fc-daygrid-more-link, .ttsc-fc .fc .fc-list-day-text, .ttsc-fc .fc .fc-list-day-side-text { color: var(--ttsc-text-2); text-decoration: none; }
+  /* Tipos de evento: fundo suave + barra lateral (legível nos dois temas) */
+  /* o runtime força .fc-event { background-color: var(--primary) !important } — sobrescrevemos por tipo */
+  /* !important em camada: só vence a regra de @layer components se estiver numa camada ANTERIOR (base) */
+  @layer base { .ttsc-fc .fc-event.ev-type:not(.fc-list-event) { background-color: var(--ev-soft) !important; color: var(--ttsc-text) !important; padding: 1px 4px !important; } }
+  .ttsc-fc .fc-event.ev-type:not(.fc-list-event) { border: 0; border-left: 3px solid var(--ev); border-radius: var(--ttsc-radius-xs); }
+  .ttsc-fc .fc-event.ev-type .fc-event-title, .ttsc-fc .fc-event.ev-type .fc-event-time { color: var(--ttsc-text); }
+  .ttsc-fc .fc-daygrid-dot-event .fc-daygrid-event-dot { border-color: var(--ev); }
+  .ev-academic { --ev: var(--ttsc-info); --ev-soft: color-mix(in srgb, var(--ttsc-info) 16%, transparent); }
+  .ev-holiday { --ev: var(--ttsc-danger); --ev-soft: color-mix(in srgb, var(--ttsc-danger) 14%, transparent); }
+  .ev-ceremony { --ev: var(--ttsc-accent); --ev-soft: var(--ttsc-accent-soft); }
+  .ev-administrative { --ev: var(--ttsc-warning); --ev-soft: color-mix(in srgb, var(--ttsc-warning) 16%, transparent); }
+  .ev-cultural { --ev: var(--ttsc-meta); --ev-soft: color-mix(in srgb, var(--ttsc-meta) 22%, transparent); }
+  .ttsc-fc .fc-list-event.ev-type .fc-list-event-dot { border-color: var(--ev) !important; background-color: var(--ev) !important; }
+  .fc-legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--ttsc-text-2); }
+  .fc-legend span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; background: var(--ev); vertical-align: -1px; }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="fc-legend">
+    <span class="ev-academic">Acadêmico</span><span class="ev-administrative">Administrativo</span>
+    <span class="ev-cultural">Cultural</span><span class="ev-ceremony">Cerimônia</span><span class="ev-holiday">Feriado / recesso</span>
+  </div>
+  <div class="ttsc-fc"><div id="calendar"></div></div>
+</div>
+<script>
+  /* vendor/fullcalendar/index.global.min.js = fullcalendar@6.1.20 original (npm). A cópia em assets/vendors do repo
+     foi corrompida pelo replace kt→ttsc e não carrega — ver README. */
+  var fc = document.createElement('script');
+  fc.src = '../../vendor/fullcalendar/index.global.min.js';
+  fc.onload = initCalendar;
+  document.head.appendChild(fc);
+
+
+  function initCalendar() {
+  var events = [
+    { id: 'e1', title: 'Conselho de classe — 3º bimestre', start: '2026-10-05T14:00:00', end: '2026-10-05T17:00:00', type: 'administrative' },
+    { id: 'e2', title: 'Dia do Professor (recesso)', start: '2026-10-15', type: 'holiday' },
+    { id: 'e3', title: 'Semana de provas — 4º bimestre', start: '2026-10-19', end: '2026-10-24', type: 'academic' },
+    { id: 'e4', title: 'Reunião de pais — 9º ano', start: '2026-10-21T19:00:00', end: '2026-10-21T20:30:00', type: 'administrative' },
+    { id: 'e5', title: 'Mostra cultural', start: '2026-10-28T09:00:00', end: '2026-10-28T12:00:00', type: 'cultural' },
+    { id: 'e6', title: 'Formatura Técnico em Informática', start: '2026-10-30T19:30:00', end: '2026-10-30T22:00:00', type: 'ceremony' },
+    { id: 'e7', title: 'Prazo de rematrícula', start: '2026-10-09', type: 'academic' },
+    { id: 'e8', title: 'Finados (feriado)', start: '2026-11-02', type: 'holiday' },
+    { id: 'e9', title: 'Entrega de notas', start: '2026-10-26T08:00:00', type: 'academic' }
+  ].map(function (e) { e.classNames = ['ev-type', 'ev-' + e.type]; return e; });
+
+  var calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+    locale: 'pt-br',
+    buttonText: { today: 'Hoje', month: 'Mês', week: 'Semana', day: 'Dia', list: 'Lista', prev: 'Anterior', next: 'Próximo' },
+    allDayText: 'Dia todo', moreLinkText: function (n) { return '+ ' + n + ' eventos'; }, noEventsText: 'Nenhum evento no período',
+    weekText: 'Sm', firstDay: 0,
+    initialView: 'dayGridMonth', initialDate: '2026-10-01', now: '2026-10-21T10:00:00',
+    headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek,listMonth' },
+    height: 'auto', dayMaxEvents: 2, nowIndicator: true, navLinks: true,
+    eventTimeFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
+    slotLabelFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
+    slotMinTime: '07:00:00', slotMaxTime: '23:00:00',
+    events: events,
+    eventDidMount: function (info) { info.el.setAttribute('title', info.event.title); }
+  });
+  calendar.render();
+  }
+  TTSC.init();
+</script>
+</body>
+</html>

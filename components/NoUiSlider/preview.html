@@ -1,0 +1,91 @@
+<!-- @dsCard group="Formulários · Plugins" height=330 subtitle="noUiSlider 15.8.1 · faixa (connect), tooltips, pips, formato R$ pt-BR, valor único, desabilitado" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>NoUiSlider</title>
+<link rel="stylesheet" href="../../vendor/nouislider/nouislider.min.css">
+<script src="../../vendor/nouislider/nouislider.min.js"></script>
+<style>
+  .ttsc-range { padding: 36px 28px 6px; }
+  .ttsc-range.no-tip { padding-top: 16px; }
+  .ttsc-range.has-pips { padding-bottom: 40px; }
+  .ttsc-range .noUi-value-horizontal { transform: translate(-50%, 12px); }
+  .ttsc-range .noUi-target { background: var(--ttsc-surface-2); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-pill); box-shadow: none; }
+  .ttsc-range .noUi-horizontal { height: 6px; }
+  .ttsc-range .noUi-connects { border-radius: var(--ttsc-radius-pill); }
+  .ttsc-range .noUi-connect { background: var(--ttsc-accent); }
+  .ttsc-range .noUi-horizontal .noUi-handle { width: 18px; height: 18px; right: -9px; top: -7px; border-radius: 50%; border: 2px solid var(--ttsc-accent); background: var(--ttsc-surface); box-shadow: var(--ttsc-shadow-sm); cursor: grab; }
+  .ttsc-range .noUi-handle::before, .ttsc-range .noUi-handle::after { display: none; }
+  .ttsc-range .noUi-handle:focus-visible { outline: 2px solid var(--ttsc-accent); outline-offset: 2px; }
+  .ttsc-range .noUi-active { box-shadow: 0 0 0 4px var(--ttsc-accent-soft); cursor: grabbing; }
+  .ttsc-range .noUi-tooltip { bottom: 140%; padding: 2px 8px; font-size: 12px; font-weight: 500; font-variant-numeric: tabular-nums; color: var(--ttsc-surface); background: var(--ttsc-text); border: 0; border-radius: var(--ttsc-radius-sm); }
+  .ttsc-range .noUi-pips { color: var(--ttsc-text-muted); font-size: 11px; }
+  .ttsc-range .noUi-marker { background: var(--ttsc-border-strong); }
+  .ttsc-range .noUi-marker-large { background: var(--ttsc-meta); }
+  .ttsc-range [disabled] .noUi-connect, .ttsc-range [disabled].noUi-target { opacity: .5; }
+  .ttsc-range [disabled] .noUi-handle { cursor: not-allowed; }
+  .nu-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+  .nu-head label { font-size: 13px; font-weight: 500; color: var(--ttsc-text); }
+  .nu-val { font-variant-numeric: tabular-nums; color: var(--ttsc-text-2); font-size: 13px; }
+  .nu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 32px; }
+  @media (max-width: 640px) { .nu-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack" style="gap:18px">
+  <div class="ds-label">Filtro de cursos e turmas</div>
+  <div>
+    <div class="nu-head"><label id="lbl-fee">Faixa de mensalidade</label><span class="nu-val" id="val-fee" aria-live="polite"></span></div>
+    <div class="ttsc-range has-pips"><div id="sl-fee"></div></div>
+  </div>
+  <div class="nu-grid">
+    <div>
+      <div class="nu-head"><label id="lbl-age">Idade do aluno</label><span class="nu-val" id="val-age"></span></div>
+      <div class="ttsc-range"><div id="sl-age"></div></div>
+    </div>
+    <div>
+      <div class="nu-head"><label id="lbl-att">Frequência mínima para aprovação</label><span class="nu-val" id="val-att"></span></div>
+      <div class="ttsc-range"><div id="sl-att"></div></div>
+    </div>
+  </div>
+  <div>
+    <div class="nu-head"><label id="lbl-off">Desconto de pontualidade (bloqueado pelo contrato)</label><span class="nu-val">10%</span></div>
+    <div class="ttsc-range no-tip"><div id="sl-off"></div></div>
+  </div>
+</div>
+<script>
+TTSC.init();
+var brl = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
+var fmtBRL = { to: function (v) { return brl.format(v); }, from: function (s) { return Number(String(s).replace(/[^\d,]/g, '').replace(',', '.')); } };
+var fmtInt = function (suffix) { return { to: function (v) { return Math.round(v) + suffix; }, from: function (s) { return parseFloat(s); } }; };
+
+var fee = document.getElementById('sl-fee');
+noUiSlider.create(fee, {
+  start: [800, 2200], connect: true, step: 50, margin: 100,
+  range: { min: 0, max: 4000 },
+  tooltips: [fmtBRL, fmtBRL], format: fmtBRL,
+  pips: { mode: 'values', values: [0, 1000, 2000, 3000, 4000], density: 5, format: fmtBRL },
+  handleAttributes: [{ 'aria-label': 'Mensalidade mínima' }, { 'aria-label': 'Mensalidade máxima' }]
+});
+fee.noUiSlider.on('update', function (values) { document.getElementById('val-fee').textContent = values[0] + ' a ' + values[1]; });
+
+var age = document.getElementById('sl-age');
+noUiSlider.create(age, {
+  start: [6, 14], connect: true, step: 1, range: { min: 3, max: 18 },
+  tooltips: true, format: fmtInt(' anos'),
+  handleAttributes: [{ 'aria-label': 'Idade mínima' }, { 'aria-label': 'Idade máxima' }]
+});
+age.noUiSlider.on('update', function (v) { document.getElementById('val-age').textContent = v.join(' – '); });
+
+var att = document.getElementById('sl-att');
+noUiSlider.create(att, {
+  start: 75, connect: 'lower', step: 5, range: { min: 50, max: 100 },
+  tooltips: true, format: fmtInt('%'), handleAttributes: [{ 'aria-label': 'Frequência mínima' }]
+});
+att.noUiSlider.on('update', function (v) { document.getElementById('val-att').textContent = v[0]; });
+
+var off = document.getElementById('sl-off');
+noUiSlider.create(off, { start: 10, connect: 'lower', range: { min: 0, max: 30 }, handleAttributes: [{ 'aria-label': 'Desconto' }] });
+off.noUiSlider.disable();
+</script>
+</body>
+</html>

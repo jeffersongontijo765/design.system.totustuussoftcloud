@@ -1,0 +1,71 @@
+<!-- @dsCard group="Componentes" height=330 subtitle="MetaProgressCard · Cartão de meta · valor, barra com marcador na meta e diferença " -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>MetaProgressCard</title>
+<style>
+  html,body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font-family:Inter,system-ui,sans-serif;font-size:13px;-webkit-font-smoothing:antialiased}
+  .demo{padding:16px;display:grid;gap:14px;max-width:1100px}
+  .card{background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-surface);padding:16px}
+  .card-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+  .card-t{margin:0;font-size:14px;font-weight:600;color:var(--ttsc-text)}
+  .card-s{margin:2px 0 0;font-size:11px;color:var(--ttsc-text-muted)}
+  .pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:var(--ttsc-radius-pill);border:1px solid var(--ttsc-border);color:var(--ttsc-text-2);white-space:nowrap;background:var(--ttsc-surface)}
+  .pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+  .pill-ok{color:var(--ttsc-success);border-color:color-mix(in srgb,var(--ttsc-success) 40%,transparent)}
+  .pill-warn{color:var(--ttsc-warning-text);border-color:color-mix(in srgb,var(--ttsc-warning) 45%,transparent)}
+  .pill-bad{color:var(--ttsc-danger-text);border-color:color-mix(in srgb,var(--ttsc-danger) 40%,transparent)}
+  .pill-info{color:var(--ttsc-info-text);border-color:color-mix(in srgb,var(--ttsc-info) 40%,transparent)}
+  .av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text);flex-shrink:0}
+  .ib{width:30px;height:30px;border-radius:8px;border:1px solid var(--ttsc-border);background:var(--ttsc-surface);display:grid;place-items:center;color:var(--ttsc-text-2);cursor:pointer}
+  .ib:hover{background:var(--ttsc-canvas-2)}
+  .ib-ok:hover{color:var(--ttsc-success)} .ib-no:hover{color:var(--ttsc-danger-text)}
+  .muted{color:var(--ttsc-text-muted)} .tnum{font-variant-numeric:tabular-nums}
+  :focus-visible{outline:2px solid var(--ttsc-accent);outline-offset:2px}
+
+  .mp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+  .mp{display:grid;gap:12px;padding:18px;border-radius:var(--ttsc-radius-surface);border:1px solid var(--ttsc-border);background:var(--ttsc-surface);margin:0;min-width:0;box-shadow:var(--ttsc-shadow-sm, 0 1px 2px rgba(0,0,0,.04))}
+  .mp-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .mp-label{font-size:12px;font-weight:500;color:var(--ttsc-text-2);margin:0}
+  .mp-ic{width:28px;height:28px;border-radius:999px;display:grid;place-items:center;background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text);font-size:12px;flex-shrink:0}
+  .mp-value{font-size:30px;font-weight:700;letter-spacing:-.01em;color:var(--ttsc-text);font-variant-numeric:tabular-nums;line-height:1}
+  .mp-track{position:relative;height:8px;border-radius:999px;background:var(--ttsc-surface-2)}
+  .mp-track i{position:absolute;left:0;top:0;bottom:0;width:calc(var(--p) * 1%);border-radius:999px;background:var(--ttsc-accent)}
+  .mp.is-below .mp-track i{background:var(--ttsc-warning)}
+  .mp-track b{position:absolute;top:-5px;bottom:-5px;left:calc(var(--t) * 1%);width:3px;margin-left:-1.5px;border-radius:2px;background:var(--ttsc-surface);box-shadow:0 0 0 1px var(--ttsc-text-2)}
+  .mp-foot{font-size:11px;color:var(--ttsc-text-muted);display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center}
+  .mp-delta{font-weight:600;color:var(--ttsc-accent-text);white-space:nowrap}
+  .mp-delta.down{color:var(--ttsc-danger-text)}
+  .mp.is-below .mp-foot{color:var(--ttsc-warning-text)}
+  .mp.is-below .mp-foot .mp-delta{color:var(--ttsc-warning-text)}
+</style>
+</head>
+<body>
+<main class="demo">
+
+  <section aria-labelledby="mp-t">
+    <h2 id="mp-t" class="card-t" style="margin:0 0 10px">Metas do período 2026/2</h2>
+    <div class="mp-grid">
+      <article class="mp" aria-labelledby="mp-1">
+        <div class="mp-head"><p class="mp-label" id="mp-1">Frequência geral</p><span class="mp-ic" aria-hidden="true"><i class="fa-light fa-arrow-trend-up"></i></span></div>
+        <div class="mp-value">96,1%</div>
+        <div class="mp-track" role="img" aria-label="96,1% de 100%, meta de 95%" style="--p:96.1;--t:95"><i></i><b></b></div>
+        <div class="mp-foot"><span>Meta 95% · 1,1 pt acima</span><span class="mp-delta">+1,4 pt vs mês</span></div>
+      </article>
+      <article class="mp is-below" aria-labelledby="mp-2">
+        <div class="mp-head"><p class="mp-label" id="mp-2">Aprovação no 1º ano</p><span class="mp-ic" aria-hidden="true"><i class="fa-light fa-graduation-cap"></i></span></div>
+        <div class="mp-value">78,4%</div>
+        <div class="mp-track" role="img" aria-label="78,4% de 100%, meta de 85%" style="--p:78.4;--t:85"><i></i><b></b></div>
+        <div class="mp-foot"><span>Meta 85% · faltam 6,6 pt</span><span class="mp-delta">+0,8 pt vs mês</span></div>
+      </article>
+      <article class="mp" aria-labelledby="mp-3">
+        <div class="mp-head"><p class="mp-label" id="mp-3">Adimplência</p><span class="mp-ic" aria-hidden="true"><i class="fa-light fa-receipt"></i></span></div>
+        <div class="mp-value">91,2%</div>
+        <div class="mp-track" role="img" aria-label="91,2% de 100%, meta de 90%" style="--p:91.2;--t:90"><i></i><b></b></div>
+        <div class="mp-foot"><span>Meta 90% · 1,2 pt acima</span><span class="mp-delta down">−0,9 pt vs mês</span></div>
+      </article>
+    </div>
+  </section>
+
+</main>
+</body>
+</html>

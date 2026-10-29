@@ -1,0 +1,100 @@
+<!-- @dsCard group="Componentes" height=450 subtitle="ttscCarousel · perView 1 com autoplay/loop/snap/paginação/contador, perView 3 com setas e arraste" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Carousel</title>
+<style>
+  .ttsc-carousel { --ttsc-carousel-per-view: 1; --ttsc-carousel-gap: var(--ttsc-space-3); display: flex; flex-direction: column; gap: var(--ttsc-space-3); }
+  .ttsc-carousel-viewport { display: flex; gap: var(--ttsc-carousel-gap); overflow-x: auto; overscroll-behavior-x: contain; scroll-behavior: smooth; }
+  .ttsc-carousel[data-ttsc-carousel-snap="true"] .ttsc-carousel-viewport { scroll-snap-type: x mandatory; }
+  .ttsc-carousel:not([data-ttsc-carousel-show-scrollbar]) .ttsc-carousel-viewport { scrollbar-width: none; }
+  .ttsc-carousel:not([data-ttsc-carousel-show-scrollbar]) .ttsc-carousel-viewport::-webkit-scrollbar { display: none; }
+  .ttsc-carousel[data-ttsc-carousel-draggable="true"] .ttsc-carousel-viewport { cursor: grab; user-select: none; }
+  .ttsc-carousel-item { flex: 0 0 calc((100% - (var(--ttsc-carousel-per-view) - 1) * var(--ttsc-carousel-gap)) / var(--ttsc-carousel-per-view)); scroll-snap-align: start; background: var(--ttsc-surface); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); padding: var(--ttsc-space-5); color: var(--ttsc-text-2); box-sizing: border-box; }
+  .ttsc-carousel-item h3 { font-size: 15px; font-weight: 600; color: var(--ttsc-text); margin: var(--ttsc-space-2) 0 var(--ttsc-space-1); }
+  .ttsc-carousel-item p { margin: 0 0 var(--ttsc-space-3); }
+  .ttsc-carousel-controls { display: flex; align-items: center; gap: var(--ttsc-space-2); }
+  .ttsc-carousel-pagination { display: flex; gap: 6px; margin-inline: auto; }
+  .ttsc-carousel-pagination button { width: 8px; height: 8px; border-radius: var(--ttsc-radius-pill); background: var(--ttsc-meta); border: 0; padding: 0; cursor: pointer; transition: width .2s; }
+  .ttsc-carousel-pagination button[data-ttsc-carousel-pagination-active] { width: 20px; background: var(--ttsc-accent); }
+  .ttsc-carousel-count { font-size: 12px; color: var(--ttsc-text-muted); font-variant-numeric: tabular-nums; }
+  .cr-banner { display: flex; gap: 16px; align-items: flex-start; }
+  .cr-icon { flex: 0 0 auto; width: 44px; height: 44px; border-radius: var(--ttsc-radius-control); display: inline-flex; align-items: center; justify-content: center; background: var(--ttsc-accent-soft); color: var(--ttsc-accent-text); font-size: 18px; }
+  .cr-meta { font-size: 12px; color: var(--ttsc-text-muted); }
+  .cr-price { font-size: 14px; font-weight: 600; color: var(--ttsc-text); }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="ds-label">perView 1 · autoplay 6s · loop · snap · paginação + contador</div>
+  <div class="ttsc-carousel" id="mural" data-ttsc-carousel="true" data-ttsc-carousel-autoplay="true" data-ttsc-carousel-autoplay-interval="6000" data-ttsc-carousel-infinite-loop="true" data-ttsc-carousel-snap="true" role="region" aria-roledescription="carrossel" aria-label="Comunicados da secretaria">
+    <div class="ttsc-carousel-viewport" data-ttsc-carousel-viewport="true" tabindex="0">
+      <article class="ttsc-carousel-item" data-ttsc-carousel-item="true" role="group" aria-roledescription="slide" aria-label="1 de 4">
+        <div class="cr-banner"><span class="cr-icon"><i class="fa-light fa-calendar-star"></i></span><div>
+          <span class="ttsc-badge ttsc-badge-sm ttsc-badge-stroke">Evento</span>
+          <h3>Feira de Profissões 2026 — inscrições abertas</h3>
+          <p>Dia 14/11, das 9h às 17h, no ginásio da unidade Centro. Alunos do 3º ano têm entrada livre.</p>
+          <a class="ttsc-link ttsc-link-sm" href="#">Ler comunicado <i class="fa-light fa-arrow-right"></i></a></div></div>
+      </article>
+      <article class="ttsc-carousel-item" data-ttsc-carousel-item="true" role="group" aria-roledescription="slide" aria-label="2 de 4">
+        <div class="cr-banner"><span class="cr-icon"><i class="fa-light fa-file-signature"></i></span><div>
+          <span class="ttsc-badge ttsc-badge-sm ttsc-badge-stroke">Notícia</span>
+          <h3>Rematrícula 2027.1 de 02/12 a 20/12</h3>
+          <p>Assine o contrato pelo portal e garanta 5% de desconto na primeira mensalidade.</p>
+          <a class="ttsc-link ttsc-link-sm" href="#">Ler comunicado <i class="fa-light fa-arrow-right"></i></a></div></div>
+      </article>
+      <article class="ttsc-carousel-item" data-ttsc-carousel-item="true" role="group" aria-roledescription="slide" aria-label="3 de 4">
+        <div class="cr-banner"><span class="cr-icon"><i class="fa-light fa-book-open"></i></span><div>
+          <span class="ttsc-badge ttsc-badge-sm ttsc-badge-stroke">Notícia</span>
+          <h3>Biblioteca com horário estendido na semana de provas</h3>
+          <p>De 24 a 28/11 a biblioteca funciona das 7h às 22h.</p>
+          <a class="ttsc-link ttsc-link-sm" href="#">Ler comunicado <i class="fa-light fa-arrow-right"></i></a></div></div>
+      </article>
+      <article class="ttsc-carousel-item" data-ttsc-carousel-item="true" role="group" aria-roledescription="slide" aria-label="4 de 4">
+        <div class="cr-banner"><span class="cr-icon"><i class="fa-light fa-heart-pulse"></i></span><div>
+          <span class="ttsc-badge ttsc-badge-sm ttsc-badge-stroke">Evento</span>
+          <h3>Campanha de vacinação na unidade</h3>
+          <p>Traga a caderneta de vacinação na próxima quarta-feira.</p>
+          <a class="ttsc-link ttsc-link-sm" href="#">Ler comunicado <i class="fa-light fa-arrow-right"></i></a></div></div>
+      </article>
+    </div>
+    <div class="ttsc-carousel-controls">
+      <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-icon ttsc-btn-sm" data-ttsc-carousel-prev="true" aria-label="Comunicado anterior"><i class="fa-light fa-chevron-left"></i></button>
+      <div class="ttsc-carousel-pagination" data-ttsc-carousel-pagination="true">
+        <button type="button" data-ttsc-carousel-pagination-item="true" aria-label="Ir para o comunicado 1"></button>
+        <button type="button" data-ttsc-carousel-pagination-item="true" aria-label="Ir para o comunicado 2"></button>
+        <button type="button" data-ttsc-carousel-pagination-item="true" aria-label="Ir para o comunicado 3"></button>
+        <button type="button" data-ttsc-carousel-pagination-item="true" aria-label="Ir para o comunicado 4"></button>
+      </div>
+      <span class="ttsc-carousel-count"><span data-ttsc-carousel-current="true">1</span> / <span data-ttsc-carousel-total="true">4</span></span>
+      <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-icon ttsc-btn-sm" data-ttsc-carousel-next="true" aria-label="Próximo comunicado"><i class="fa-light fa-chevron-right"></i></button>
+    </div>
+  </div>
+
+  <div class="ds-row" style="justify-content:space-between">
+    <div class="ds-label">perView 3 · draggable · cursos em oferta</div>
+    <span class="ds-note" id="cr-log">ttsc.carousel.change: —</span>
+  </div>
+  <div class="ttsc-carousel" id="cursos" style="--ttsc-carousel-per-view: 3" data-ttsc-carousel="true" data-ttsc-carousel-per-view="3" data-ttsc-carousel-draggable="true" role="region" aria-roledescription="carrossel" aria-label="Cursos em oferta">
+    <div class="ttsc-carousel-viewport" data-ttsc-carousel-viewport="true" tabindex="0">
+      <div class="ttsc-carousel-item" data-ttsc-carousel-item="true"><span class="cr-meta">Graduação · Presencial · 8 semestres</span><h3>Pedagogia</h3><span class="cr-price">R$ 689,00/mês</span></div>
+      <div class="ttsc-carousel-item" data-ttsc-carousel-item="true"><span class="cr-meta">Graduação · EAD · 8 semestres</span><h3>Administração</h3><span class="cr-price">R$ 349,00/mês</span></div>
+      <div class="ttsc-carousel-item" data-ttsc-carousel-item="true"><span class="cr-meta">Técnico · Noite · 4 semestres</span><h3>Técnico em Enfermagem</h3><span class="cr-price">R$ 420,00/mês</span></div>
+      <div class="ttsc-carousel-item" data-ttsc-carousel-item="true"><span class="cr-meta">Pós · Híbrido · 18 meses</span><h3>Gestão Escolar</h3><span class="cr-price">R$ 512,00/mês</span></div>
+      <div class="ttsc-carousel-item" data-ttsc-carousel-item="true"><span class="cr-meta">Livre · Sábados · 40 h</span><h3>Libras Básico</h3><span class="cr-price">R$ 290,00</span></div>
+    </div>
+    <div class="ttsc-carousel-controls">
+      <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-icon ttsc-btn-sm" data-ttsc-carousel-prev="true" aria-label="Curso anterior"><i class="fa-light fa-chevron-left"></i></button>
+      <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-icon ttsc-btn-sm" data-ttsc-carousel-next="true" aria-label="Próximo curso"><i class="fa-light fa-chevron-right"></i></button>
+      <span class="ttsc-carousel-count" style="margin-inline-start:auto"><span data-ttsc-carousel-current="true">1</span> / <span data-ttsc-carousel-total="true">5</span></span>
+    </div>
+  </div>
+</div>
+<script>
+  TTSC.init();
+  document.getElementById('cursos').addEventListener('ttsc.carousel.change', function (e) {
+    var p = e.detail.payload;
+    document.getElementById('cr-log').textContent = 'ttsc.carousel.change: index ' + p.index + ' (antes ' + p.prevIndex + ')';
+  });
+</script>
+</body>
+</html>

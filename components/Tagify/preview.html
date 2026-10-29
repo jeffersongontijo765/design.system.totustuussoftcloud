@@ -1,0 +1,118 @@
+<!-- @dsCard group="Formulários · Plugins" height=340 subtitle="Tagify 4.17.9 · tags livres, whitelist (crm_tags) com cor, dropdown de sugestões, tag inválida, somente leitura" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Tagify</title>
+<link rel="stylesheet" href="../../vendor/tagify/tagify.css">
+<script src="../../vendor/tagify/tagify.min.js"></script>
+<style>
+  .tagify {
+    --tags-border-color: var(--ttsc-border);
+    --tags-hover-border-color: var(--ttsc-border-strong);
+    --tags-focus-border-color: var(--ttsc-accent);
+    --tags-disabled-bg: var(--ttsc-surface-2);
+    --tag-bg: var(--ttsc-surface-2);
+    --tag-hover: var(--ttsc-border);
+    --tag-text-color: var(--ttsc-text);
+    --tag-text-color--edit: var(--ttsc-text);
+    --tag-pad: .25em .6em;
+    --tag-border-radius: var(--ttsc-radius-pill);
+    --tag-invalid-color: var(--ttsc-danger);
+    --tag-invalid-bg: var(--ttsc-surface);
+    --tag-remove-bg: var(--ttsc-surface-2);
+    --tag-remove-btn-color: var(--ttsc-text-muted);
+    --tag-remove-btn-bg--hover: var(--ttsc-danger);
+    --input-color: var(--ttsc-text);
+    --placeholder-color: var(--ttsc-text-muted);
+    --placeholder-color-focus: var(--ttsc-text-muted);
+    --readonly-striped: 0;
+    min-height: 36px; padding: 2px 4px; font-size: 13px; background: var(--ttsc-surface); border-radius: var(--ttsc-radius-control); box-shadow: var(--ttsc-shadow-xs);
+  }
+  .tagify--focus { box-shadow: 0 0 0 3px var(--ttsc-accent-soft); }
+  .tagify__tag > div::before { box-shadow: 0 0 0 1.1em var(--tag-bg) inset; }
+  .tagify__tag[data-color] > div::before { box-shadow: 0 0 0 1.1em var(--tag-bg) inset; }
+  .tagify__tag .tt-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-inline-end: 6px; }
+  .tagify__tag > div { display: inline-flex; align-items: center; }
+  .tagify__tag.tagify--notAllowed div > span { opacity: 1 !important; }
+  .tagify__tag.tagify--notAllowed > div { outline: 1px dashed var(--ttsc-danger); outline-offset: -1px; border-radius: var(--ttsc-radius-pill); }
+  .tagify__tag.tagify--notAllowed > div::before { box-shadow: 0 0 0 1.1em var(--ttsc-surface) inset !important; }
+  .tagify__tag__removeBtn:hover { color: var(--ttsc-surface); }
+  .tagify--readonly { background: var(--ttsc-canvas-2); }
+  .tagify--readonly .tagify__tag > div { padding: .25em .6em; }
+  .tagify__tag.tagify--notAllowed .tagify__tag-text { color: var(--ttsc-danger-text); }
+  .tagify__dropdown {
+    --tagify-dd-bg-color: var(--ttsc-surface);
+    --tagify-dd-color-primary: var(--ttsc-accent-soft);
+    color: var(--ttsc-text); font-size: 13px;
+  }
+  .tagify__dropdown__wrapper { border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-sm); box-shadow: var(--ttsc-shadow-md); background: var(--ttsc-surface); }
+  .tagify__dropdown__item { display: flex; align-items: center; gap: 8px; border-radius: 6px; margin: 2px 4px; padding: 6px 8px; color: var(--ttsc-text); }
+  .tagify__dropdown__item--active { background: var(--ttsc-canvas-2); color: var(--ttsc-text); }
+  .tagify__dropdown__item small { margin-inline-start: auto; color: var(--ttsc-text-muted); font-size: 11px; }
+  .tg-field { display: flex; flex-direction: column; gap: 6px; }
+  .tg-field label { font-size: 13px; font-weight: 500; color: var(--ttsc-text); }
+  .tg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 20px; align-items: start; }
+  .tg-page { min-height: 330px; }
+  @media (max-width: 640px) { .tg-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack tg-page">
+  <div class="ds-label">Lead de matrícula · Carlos Eduardo Nunes</div>
+  <div class="tg-grid">
+    <div class="ds-stack">
+      <div class="tg-field">
+        <label for="tg-free">Interesses (livre)</label>
+        <input id="tg-free" name="interests" value="Robótica, Futsal, Inglês avançado" placeholder="Digite e pressione Enter">
+        <span class="ds-note">Separe por vírgula ou Enter. Máximo de 8.</span>
+      </div>
+      <div class="tg-field">
+        <label for="tg-ro">Origem (somente leitura)</label>
+        <input id="tg-ro" name="sources" value="Site, Indicação" readonly>
+      </div>
+    </div>
+    <div class="tg-field">
+      <label for="tg-crm">Etiquetas do CRM (whitelist)</label>
+      <input id="tg-crm" name="crm_tags" placeholder="Buscar etiqueta...">
+      <span class="ds-note">Somente etiquetas cadastradas em CRM › Etiquetas.</span>
+    </div>
+  </div>
+</div>
+<script>
+TTSC.init();
+new Tagify(document.getElementById('tg-free'), { maxTags: 8, delimiters: ',', dropdown: { enabled: false }, originalInputValueFormat: function (v) { return v.map(function (t) { return t.value; }).join(','); } });
+new Tagify(document.getElementById('tg-ro'));
+
+// Whitelist = crm_tags ativas (id = uuid, value = name, color, usage_count)
+var CRM_TAGS = [
+  { id: 't1', value: 'Bolsista', color: '#3ecf8e', usage: 42 },
+  { id: 't2', value: 'Transferência', color: '#3b82f6', usage: 31 },
+  { id: 't3', value: 'Visita agendada', color: '#eab308', usage: 18 },
+  { id: 't4', value: 'Irmão matriculado', color: '#00925a', usage: 12 },
+  { id: 't5', value: 'Inadimplência anterior', color: '#dc2626', usage: 4 },
+  { id: 't6', value: 'Integral', color: '#6ee7b7', usage: 9 }
+];
+var crm = new Tagify(document.getElementById('tg-crm'), {
+  whitelist: CRM_TAGS,
+  enforceWhitelist: true,
+  skipInvalid: false,
+  keepInvalidTags: true,
+  dropdown: { enabled: 0, maxItems: 6, closeOnSelect: false, highlightFirst: true, searchKeys: ['value'] },
+  templates: {
+    tag: function (tagData) {
+      return '<tag title="' + tagData.value + '" contenteditable="false" spellcheck="false" tabIndex="-1" class="' + this.settings.classNames.tag + ' ' + (tagData.class || '') + '" ' + this.getAttributes(tagData) + '>' +
+        '<x title="Remover" class="' + this.settings.classNames.tagX + '" role="button" aria-label="Remover ' + tagData.value + '"></x>' +
+        '<div><span class="tt-dot" style="background:' + (tagData.color || 'var(--ttsc-meta)') + '"></span><span class="' + this.settings.classNames.tagText + '">' + tagData.value + '</span></div></tag>';
+    },
+    dropdownItem: function (item) {
+      return '<div ' + this.getAttributes(item) + ' class="' + this.settings.classNames.dropdownItem + '" tabindex="0" role="option">' +
+        '<span class="tt-dot" style="background:' + item.color + ';width:8px;height:8px;border-radius:50%;display:inline-block"></span>' + item.value + '<small>' + item.usage + ' leads</small></div>';
+    }
+  }
+});
+crm.addTags([CRM_TAGS[0], CRM_TAGS[2]]);
+crm.addTags(['Promoção 2027']);   // fora da whitelist → marcada como inválida (keepInvalidTags: true)
+// Abre as sugestões no load para o preview ficar legível sem clique
+setTimeout(function () { crm.dropdown.show(''); }, 50);
+</script>
+</body>
+</html>

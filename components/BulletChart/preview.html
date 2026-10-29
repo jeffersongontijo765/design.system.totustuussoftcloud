@@ -1,0 +1,243 @@
+<!-- @dsCard group="Gráficos" height=745 width=1280 subtitle="Bullet chart — realizado vs. meta com faixas qualitativas: horizontal, vertical, board por unidade e mini para rodapé de KPI" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>BulletChart</title>
+<style>
+  html,body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font-family:Inter,system-ui,sans-serif;font-size:13px;-webkit-font-smoothing:antialiased}
+  :focus-visible{outline:2px solid var(--ttsc-accent);outline-offset:2px}
+  .demo{padding:16px;display:grid;gap:14px;max-width:1240px;margin:0 auto}
+  .card{background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-surface);box-shadow:var(--ttsc-shadow-sm);min-width:0;padding:16px}
+  .card:hover{border-color:var(--ttsc-border-strong)}
+  .card-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+  .card-t{margin:0;font-size:14px;font-weight:600;color:var(--ttsc-text)}
+  .card-s{margin:2px 0 0;font-size:11px;color:var(--ttsc-text-muted)}
+  .muted{color:var(--ttsc-text-muted)} .tnum{font-variant-numeric:tabular-nums}
+  .grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:14px}
+  .span8{grid-column:span 8} .span4{grid-column:span 4} .span12{grid-column:span 12} .span6{grid-column:span 6} .span3{grid-column:span 3}
+
+  /* legenda */
+  .legend{display:flex;gap:14px;flex-wrap:wrap;align-items:center;font-size:11px;color:var(--ttsc-text-2)}
+  .legend li{display:inline-flex;align-items:center;gap:6px;list-style:none}
+  .lg-measure,.lg-target,.lg-band{display:inline-block;flex:0 0 auto}
+  .lg-measure{width:18px;height:8px;border-radius:2px;background:var(--ttsc-accent)}
+  .lg-target{width:2px;height:14px;background:var(--ttsc-text);border-radius:1px}
+  .lg-band{width:18px;height:14px;border-radius:3px;background:linear-gradient(to right,
+    var(--ttsc-surface-2) 0 33.3%,
+    color-mix(in srgb,var(--ttsc-accent) 10%,var(--ttsc-surface)) 33.3% 66.6%,
+    color-mix(in srgb,var(--ttsc-accent) 22%,var(--ttsc-surface)) 66.6% 100%)}
+
+  /* bullet horizontal */
+  .bullets{list-style:none;margin:0;padding:0;display:grid;gap:16px}
+  .bullets li{display:grid;grid-template-columns:minmax(88px,150px) minmax(0,1fr) 168px;gap:12px;align-items:center}
+  .b-label{font-size:12px;font-weight:500;color:var(--ttsc-text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .b-track{position:relative;height:26px;border-radius:4px;overflow:hidden;display:flex}
+  .b-band{height:100%}
+  .b-band.b1{background:var(--ttsc-surface-2)}
+  .b-band.b2{background:color-mix(in srgb,var(--ttsc-accent) 10%,var(--ttsc-surface))}
+  .b-band.b3{background:color-mix(in srgb,var(--ttsc-accent) 22%,var(--ttsc-surface))}
+  .b-measure{position:absolute;top:4px;bottom:4px;left:0;border-radius:3px;background:var(--ttsc-accent);min-width:3px}
+  .b-target{position:absolute;top:0;bottom:0;width:2px;background:var(--ttsc-text);border-radius:1px}
+  .b-value{display:flex;flex-direction:column;gap:2px;font-variant-numeric:tabular-nums;text-align:right}
+  .b-value b{font-size:13px;font-weight:700;color:var(--ttsc-text)}
+  .b-value small{font-size:11px;color:var(--ttsc-text-muted)}
+  .st{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:1px 7px;border-radius:var(--ttsc-radius-pill)}
+  .st::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+  .st-ok{color:var(--ttsc-accent-text)} .st-warn{color:var(--ttsc-warning-text)} .st-bad{color:var(--ttsc-danger-text)}
+
+  /* bullet vertical */
+  .vwrap{display:flex;gap:18px;align-items:flex-end;justify-content:space-around;min-width:0}
+  .vcol{flex:1;max-width:120px;display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0}
+  .vcol svg{width:100%;height:150px;display:block}
+  .vcol .v-cap{font-size:11px;font-weight:600;color:var(--ttsc-text-2);text-align:center}
+  .vcol .v-val{font-size:12px;font-weight:700;color:var(--ttsc-text);font-variant-numeric:tabular-nums}
+  .vcol .v-note{font-size:10px;color:var(--ttsc-text-muted);text-align:center}
+
+  /* mini bullets (rodapé de KPI) */
+  .mini{display:flex;flex-direction:column;gap:4px}
+  .mini .m-row{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:var(--ttsc-text-2)}
+  .mini .m-row b{font-variant-numeric:tabular-nums;color:var(--ttsc-text)}
+  .mini .m-track{position:relative;height:10px;border-radius:3px;overflow:hidden;display:flex}
+  .mini .m-target{position:absolute;top:0;bottom:0;width:2px;background:var(--ttsc-text);border-radius:1px}
+
+  @media (max-width:900px){
+    .span8,.span4{grid-column:span 12}
+    .bullets li{grid-template-columns:minmax(80px,110px) minmax(0,1fr) 128px}
+  }
+  @media (max-width:640px){
+    .span6,.span3{grid-column:span 12}
+    .bullets li{grid-template-columns:1fr 118px;grid-template-rows:auto auto}
+    .b-label{grid-column:1 / -1}
+    .b-track{grid-row:2}
+    .b-value{grid-row:2;text-align:right}
+    .vwrap{flex-wrap:wrap;gap:10px}
+    .vcol{max-width:44%}
+  }
+</style>
+</head>
+<body>
+<main class="demo" aria-labelledby="bc-title">
+  <h1 id="bc-title" style="margin:0;font-size:16px;font-weight:700">BulletChart</h1>
+
+  <div class="grid">
+
+    <!-- Horizontal -->
+    <section class="card span8" aria-labelledby="bc-h-t">
+      <div class="card-h">
+        <div><h2 id="bc-h-t" class="card-t">Arrecadação vs. meta por unidade</h2>
+        <p class="card-s">Novembro de 2026 · escala 0–100% da meta · faixas: abaixo de 60%, 60–79%, 80% ou mais</p></div>
+        <ul class="legend">
+          <li><span class="lg-measure" aria-hidden="true"></span> Realizado</li>
+          <li><span class="lg-target" aria-hidden="true"></span> Meta</li>
+          <li><span class="lg-band" aria-hidden="true"></span> Faixas</li>
+        </ul>
+      </div>
+      <ol class="bullets" id="bc-h" data-bullets='[
+        {"label":"Centro","value":82,"target":85,"val":"R$ 142,4 mil","note":"82% da meta · faltam R$ 31 mil"},
+        {"label":"Unidade Sul","value":104,"target":85,"val":"R$ 189,2 mil","note":"104% da meta · acima"},
+        {"label":"Unidade Norte","value":74,"target":80,"val":"R$ 96,8 mil","note":"74% da meta · abaixo"},
+        {"label":"EAD","value":58,"target":75,"val":"R$ 44,1 mil","note":"58% da meta · recuperação prevista"}
+      ]'></ol>
+    </section>
+
+    <!-- Board compacto -->
+    <section class="card span4" aria-labelledby="bc-b-t">
+      <div class="card-h">
+        <div><h2 id="bc-b-t" class="card-t">Metas do semestre</h2>
+        <p class="card-s">Painel compacto · status por meta</p></div>
+      </div>
+      <ol class="bullets" id="bc-board" data-bullets='[
+        {"label":"Matrículas","value":88,"target":90,"val":"88%","note":"1.762 de 2.000"},
+        {"label":"Frequência","value":96,"target":95,"val":"96,1%","note":"meta batida"},
+        {"label":"NPS responsáveis","value":71,"target":75,"val":"71","note":"abaixo por 4 pontos"},
+        {"label":"Retenção","value":83,"target":80,"val":"83%","note":"meta batida"}
+      ]'></ol>
+    </section>
+
+    <!-- Vertical -->
+    <section class="card span6" aria-labelledby="bc-v-t">
+      <div class="card-h">
+        <div><h2 id="bc-v-t" class="card-t">Ocupação por turno</h2>
+        <p class="card-s">% da capacidade · meta por turno · faixas 50/70/90</p></div>
+      </div>
+      <div class="vwrap">
+        <div class="vcol" role="img" aria-label="Manhã: 88% de ocupação, meta 85, faixa boa.">
+          <span class="v-val">88%</span>
+          <svg viewBox="0 0 40 100" preserveAspectRatio="none" aria-hidden="true">
+            <rect x="0" y="0" width="40" height="100" rx="4" fill="var(--ttsc-surface-2)"/>
+            <rect x="0" y="0" width="40" height="70" rx="4" fill="color-mix(in srgb, var(--ttsc-accent) 10%, var(--ttsc-surface))"/>
+            <rect x="0" y="0" width="40" height="50" rx="4" fill="color-mix(in srgb, var(--ttsc-accent) 22%, var(--ttsc-surface))"/>
+            <rect x="6" y="12" width="28" height="88" rx="3" fill="var(--ttsc-accent)"/>
+            <rect x="0" y="15" width="40" height="2" fill="var(--ttsc-text)"/>
+          </svg>
+          <span class="v-cap">Manhã</span><span class="v-note">meta 85 · ok</span>
+        </div>
+        <div class="vcol" role="img" aria-label="Tarde: 76% de ocupação, meta 80, na faixa intermediária.">
+          <span class="v-val">76%</span>
+          <svg viewBox="0 0 40 100" preserveAspectRatio="none" aria-hidden="true">
+            <rect x="0" y="0" width="40" height="100" rx="4" fill="var(--ttsc-surface-2)"/>
+            <rect x="0" y="0" width="40" height="70" rx="4" fill="color-mix(in srgb, var(--ttsc-accent) 10%, var(--ttsc-surface))"/>
+            <rect x="0" y="0" width="40" height="50" rx="4" fill="color-mix(in srgb, var(--ttsc-accent) 22%, var(--ttsc-surface))"/>
+            <rect x="6" y="24" width="28" height="76" rx="3" fill="var(--ttsc-accent)"/>
+            <rect x="0" y="20" width="40" height="2" fill="var(--ttsc-text)"/>
+          </svg>
+          <span class="v-cap">Tarde</span><span class="v-note">meta 80 · atenção</span>
+        </div>
+        <div class="vcol" role="img" aria-label="Noite: 58% de ocupação, meta 70, faixa inferior.">
+          <span class="v-val">58%</span>
+          <svg viewBox="0 0 40 100" preserveAspectRatio="none" aria-hidden="true">
+            <rect x="0" y="0" width="40" height="100" rx="4" fill="var(--ttsc-surface-2)"/>
+            <rect x="0" y="0" width="40" height="70" rx="4" fill="color-mix(in srgb, var(--ttsc-accent) 10%, var(--ttsc-surface))"/>
+            <rect x="0" y="0" width="40" height="50" rx="4" fill="color-mix(in srgb, var(--ttsc-accent) 22%, var(--ttsc-surface))"/>
+            <rect x="6" y="42" width="28" height="58" rx="3" fill="var(--ttsc-accent)"/>
+            <rect x="0" y="30" width="40" height="2" fill="var(--ttsc-text)"/>
+          </svg>
+          <span class="v-cap">Noite</span><span class="v-note">meta 70 · abaixo</span>
+        </div>
+        <div class="vcol" role="img" aria-label="Integral: 94% de ocupação, meta 90, faixa boa.">
+          <span class="v-val">94%</span>
+          <svg viewBox="0 0 40 100" preserveAspectRatio="none" aria-hidden="true">
+            <rect x="0" y="0" width="40" height="100" rx="4" fill="var(--ttsc-surface-2)"/>
+            <rect x="0" y="0" width="40" height="70" rx="4" fill="color-mix(in srgb, var(--ttsc-accent) 10%, var(--ttsc-surface))"/>
+            <rect x="0" y="0" width="40" height="50" rx="4" fill="color-mix(in srgb, var(--ttsc-accent) 22%, var(--ttsc-surface))"/>
+            <rect x="6" y="6" width="28" height="94" rx="3" fill="var(--ttsc-accent)"/>
+            <rect x="0" y="10" width="40" height="2" fill="var(--ttsc-text)"/>
+          </svg>
+          <span class="v-cap">Integral</span><span class="v-note">meta 90 · ok</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mini bullets -->
+    <section class="card span6" aria-labelledby="bc-m-t">
+      <div class="card-h">
+        <div><h2 id="bc-m-t" class="card-t">Mini bullets — rodapé de KPI</h2>
+        <p class="card-s">A mesma leitura em 10 px, para fechar um card de indicador</p></div>
+      </div>
+      <div class="grid" style="grid-template-columns:repeat(3,minmax(0,1fr));gap:12px">
+        <div class="mini" role="img" aria-label="Receita: 78% da meta 85, faixa intermediária.">
+          <div class="m-row"><span>Receita</span><b>78%</b></div>
+          <div class="m-track"><span class="b-band b1" style="width:60%"></span><span class="b-band b2" style="width:20%"></span><span class="b-band b3" style="width:20%"></span><span class="b-measure" style="width:78%"></span><span class="m-target" style="left:85%"></span></div>
+          <div class="m-row"><span class="muted">meta 85</span><span class="muted">R$ 1,64 mi</span></div>
+        </div>
+        <div class="mini" role="img" aria-label="Novas matrículas: 92% da meta 90, faixa boa.">
+          <div class="m-row"><span>Matrículas</span><b>92%</b></div>
+          <div class="m-track"><span class="b-band b1" style="width:60%"></span><span class="b-band b2" style="width:20%"></span><span class="b-band b3" style="width:20%"></span><span class="b-measure" style="width:92%"></span><span class="m-target" style="left:90%"></span></div>
+          <div class="m-row"><span class="muted">meta 90</span><span class="muted">414 alunos</span></div>
+        </div>
+        <div class="mini" role="img" aria-label="Inadimplência: 64% do limite tolerado 50, acima da faixa boa.">
+          <div class="m-row"><span>Inadimplência</span><b>6,4%</b></div>
+          <div class="m-track"><span class="b-band b1" style="width:60%"></span><span class="b-band b2" style="width:20%"></span><span class="b-band b3" style="width:20%"></span><span class="b-measure" style="width:64%;background:var(--ttsc-danger)"></span><span class="m-target" style="left:50%"></span></div>
+          <div class="m-row"><span class="muted">teto 5%</span><span class="muted">+1,2 p.p. vs. mês</span></div>
+        </div>
+      </div>
+      <p class="card-s" style="margin:12px 0 0">Inadimplência usa escala invertida (menor é melhor): a barra passa do teto e ganha estado de risco pelo texto, não só pela cor.</p>
+    </section>
+
+  </div>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  // TTSCBulletChart — bullet horizontal a partir de data-bullets (JSON):
+  // [{label, value, target, val, note}] com value/target em % da escala 0–120.
+  function TTSCBulletChart(el) {
+    this.el = el;
+    this.data = [];
+    try { this.data = JSON.parse(el.getAttribute('data-bullets') || '[]'); } catch (e) { this.data = []; }
+    this.render();
+  }
+  TTSCBulletChart.prototype.render = function () {
+    var self = this;
+    this.el.innerHTML = '';
+    this.data.forEach(function (d) {
+      var li = document.createElement('li');
+      var pctOfTarget = d.target ? Math.round(100 * d.value / d.target) : d.value;
+      var state = pctOfTarget >= 100 ? 'st-ok' : (pctOfTarget >= 80 ? 'st-warn' : 'st-bad');
+      var stateTxt = pctOfTarget >= 100 ? 'Na meta' : (pctOfTarget >= 80 ? 'Perto da meta' : 'Abaixo da meta');
+      li.innerHTML =
+        '<span class="b-label">' + self.esc(d.label) + '</span>' +
+        '<div class="b-track" role="img" aria-label="' + self.esc(d.label) + ': ' + stateTxt.toLowerCase() + ' — ' + self.esc(d.note) + '.">' +
+          '<span class="b-band b1" style="width:60%"></span>' +
+          '<span class="b-band b2" style="width:20%"></span>' +
+          '<span class="b-band b3" style="width:20%"></span>' +
+          '<span class="b-measure" style="width:' + Math.min(d.value, 120) + '%"></span>' +
+          '<span class="b-target" style="left:' + Math.min(d.target, 120) + '%"></span>' +
+        '</div>' +
+        '<span class="b-value"><b>' + self.esc(d.val) + ' <span class="' + state + '">' + stateTxt + '</span></b><small>' + self.esc(d.note) + '</small></span>';
+      self.el.appendChild(li);
+    });
+  };
+  TTSCBulletChart.prototype.update = function (data) { this.data = data; this.render(); };
+  TTSCBulletChart.prototype.esc = function (s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+    return '&#' + c.charCodeAt(0) + ';';
+    });
+  };
+  window.TTSCBulletChart = { init: function (el) { return new TTSCBulletChart(el); } };
+  document.querySelectorAll('[data-bullets]').forEach(function (el) { window.TTSCBulletChart.init(el); });
+})();
+</script>
+</body>
+</html>

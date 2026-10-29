@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+<meta charset="utf-8"><script>
+/* Starter Kit: segue o tema do preview (frame pai) e grava as chaves reais de tema de cada layout:
+   app/web/erros = html.dark + data-theme + localStorage 'ttsc-theme'; auth = 'od-theme'; portal de suporte = 'portal_theme'. */
+(function () {
+  function apply() {
+    var p = null; try { p = parent.document.documentElement.getAttribute('data-theme'); } catch (e) {}
+    var t = p === 'dark' ? 'dark' : 'light', h = document.documentElement;
+    h.setAttribute('data-theme', t); h.classList.toggle('dark', t === 'dark'); h.classList.toggle('light', t !== 'dark');
+    try { ['ttsc-theme', 'od-theme', 'theme', 'portal_theme'].forEach(function (k) { localStorage.setItem(k, t); }); } catch (e) {}
+  }
+  apply();
+  try { if (parent !== window) new MutationObserver(apply).observe(parent.document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class'] }); } catch (e) {}
+})();
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 — Página Não Encontrada — TotusTuus SoftCloud</title>
+
+    <script>
+        (function() {
+            try {
+                var html = document.documentElement;
+                var saved = localStorage.getItem('ttsc-theme');
+                var theme;
+                if (saved === 'light' || saved === 'dark') {
+                    theme = saved;
+                } else {
+                    theme = window.matchMedia && window.matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light';
+                }
+                html.setAttribute('data-theme', theme);
+            } catch(e) {}
+        })();
+    </script>
+
+    <link rel="stylesheet" href="assets/fa.css">
+
+    <style>
+        :root {
+            --sb-page: #fcfcfc;
+            --sb-surface: #ffffff;
+            --sb-surface-raised: #f8f9fa;
+            --sb-text: #1c1c1c;
+            --sb-text-secondary: #4d4d4d;
+            --sb-text-muted: #6b6b6b;
+            --sb-green: #10b981;
+            --sb-green-link: #00c573;
+            --sb-border: #e5e7eb;
+            --sb-border-subtle: #ebebeb;
+            --sb-warning: #f59e0b;
+            --sb-warning-soft: rgba(245, 158, 11, 0.1);
+            --sb-radius: 8px;
+            --sb-radius-lg: 12px;
+            --sb-radius-2xl: 24px;
+            --sb-radius-pill: 9999px;
+        }
+        [data-theme="dark"] {
+            --sb-page: #171717;
+            --sb-surface: #1c1c1c;
+            --sb-surface-raised: #242424;
+            --sb-text: #fafafa;
+            --sb-text-secondary: #b4b4b4;
+            --sb-text-muted: #898989;
+            --sb-green: #3ecf8e;
+            --sb-green-link: #00c573;
+            --sb-border: #2e2e2e;
+            --sb-border-subtle: #242424;
+            --sb-warning: #f59e0b;
+            --sb-warning-soft: rgba(245, 158, 11, 0.12);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+        body {
+            min-height: 100vh;
+            background: var(--sb-page);
+            color: var(--sb-text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            transition: background 0.3s ease, color 0.3s ease;
+            -webkit-font-smoothing: antialiased;
+        }
+        .container {
+            max-width: 520px;
+            width: 100%;
+            text-align: center;
+            animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 8px 20px; border-radius: var(--sb-radius-pill);
+            font-size: 14px; font-weight: 700; letter-spacing: 0.05em;
+            text-transform: uppercase; margin-bottom: 32px;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: var(--sb-warning); background: var(--sb-warning-soft);
+        }
+        .badge .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--sb-warning); display: inline-block; }
+        .icon-box {
+            width: 88px; height: 88px; border-radius: var(--sb-radius-2xl);
+            background: var(--sb-warning-soft); color: var(--sb-warning);
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 28px; font-size: 36px; position: relative;
+        }
+        .icon-box .glow {
+            position: absolute; inset: -12px; border-radius: inherit;
+            opacity: 0.12; filter: blur(20px); background: var(--sb-warning);
+        }
+        h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 12px; }
+        .desc {
+            font-size: 15px; line-height: 1.7; color: var(--sb-text-secondary);
+            margin-bottom: 36px; max-width: 400px; margin-left: auto; margin-right: auto;
+        }
+        .actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 28px; border-radius: var(--sb-radius);
+            font-size: 14px; font-weight: 500; text-decoration: none;
+            transition: all 0.2s ease; cursor: pointer; font-family: inherit;
+        }
+        .btn-primary {
+            background: var(--sb-green); color: #fff; border: none;
+        }
+        [data-theme="dark"] .btn-primary { color: #0f0f0f; }
+        .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
+        .btn-secondary {
+            background: var(--sb-surface); color: var(--sb-text);
+            border: 1px solid var(--sb-border);
+        }
+        .btn-secondary:hover { border-color: #d1d5db; background: var(--sb-surface-raised); }
+        [data-theme="dark"] .btn-secondary:hover { border-color: var(--sb-border-prominent, #363636); }
+        .footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--sb-border-subtle); }
+        .footer p { font-size: 12px; color: var(--sb-text-muted); }
+        .theme-btn {
+            position: fixed; top: 20px; right: 20px; z-index: 100;
+            width: 40px; height: 40px; border-radius: var(--sb-radius);
+            border: 1px solid var(--sb-border); background: var(--sb-surface);
+            color: var(--sb-text-secondary); cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; transition: all 0.2s ease;
+        }
+        .theme-btn:hover { border-color: #d1d5db; color: var(--sb-text); }
+        @media (max-width: 480px) {
+            h1 { font-size: 22px; }
+            .desc { font-size: 14px; }
+            .icon-box { width: 72px; height: 72px; font-size: 28px; }
+            .actions { flex-direction: column; }
+            .btn { justify-content: center; width: 100%; }
+        }
+        @media (prefers-reduced-motion: reduce) { .container { animation: none; } }
+    </style>
+</head>
+<body>
+    <button class="theme-btn" id="themeToggle" aria-label="Alternar tema">
+        <i class="fa-light fa-moon" id="themeIcon"></i>
+    </button>
+
+    <div class="container">
+        <div class="badge">
+            <span class="dot"></span>
+            <span>Status 404</span>
+        </div>
+
+        <div class="icon-box">
+            <div class="glow"></div>
+            <i class="fa-light fa-map-signs fa-flip-horizontal"></i>
+        </div>
+
+        <h1>Página Não Encontrada</h1>
+        <p class="desc">A página que você procurava não existe ou foi movida. Tente verificar a URL ou navegar a partir da página inicial.</p>
+
+        <div class="actions">
+            <button class="btn btn-secondary" onclick="window.history.back()">
+                <i class="fa-light fa-arrow-left"></i> <span>Voltar</span>
+            </button>
+            <a href="/" class="btn btn-primary">
+                <i class="fa-light fa-house"></i> <span>Início</span>
+            </a>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2026 TotusTuus SoftCloud. Todos os direitos reservados.</p>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            var html = document.documentElement;
+            var btn = document.getElementById('themeToggle');
+            var icon = document.getElementById('themeIcon');
+            function getTheme() { return html.getAttribute('data-theme') || 'light'; }
+            function updateIcon(t) {
+                icon.className = t === 'dark' ? 'fa-light fa-sun' : 'fa-light fa-moon';
+            }
+            if (btn) {
+                btn.addEventListener('click', function() {
+                    var cur = getTheme();
+                    var next = cur === 'dark' ? 'light' : 'dark';
+                    html.setAttribute('data-theme', next);
+                    localStorage.setItem('ttsc-theme', next);
+                    updateIcon(next);
+                });
+            }
+            updateIcon(getTheme());
+        })();
+    </script>
+</body>
+</html>

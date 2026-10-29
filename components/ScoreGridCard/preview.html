@@ -1,0 +1,111 @@
+<!-- @dsCard group="Componentes" height=460 subtitle="ScoreGridCard · Índice com grade · nota da escola e métricas com contexto e alerta " -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>ScoreGridCard</title>
+<style>
+  html,body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font-family:Inter,system-ui,sans-serif;font-size:13px;-webkit-font-smoothing:antialiased}
+  .demo{padding:16px;display:grid;gap:14px;max-width:1100px}
+  .card{background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-surface);padding:16px}
+  .card-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+  .card-t{margin:0;font-size:14px;font-weight:600;color:var(--ttsc-text)}
+  .card-s{margin:2px 0 0;font-size:11px;color:var(--ttsc-text-muted)}
+  .pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:var(--ttsc-radius-pill);border:1px solid var(--ttsc-border);color:var(--ttsc-text-2);white-space:nowrap;background:var(--ttsc-surface)}
+  .pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+  .pill-ok{color:var(--ttsc-success);border-color:color-mix(in srgb,var(--ttsc-success) 40%,transparent)}
+  .pill-warn{color:var(--ttsc-warning-text);border-color:color-mix(in srgb,var(--ttsc-warning) 45%,transparent)}
+  .pill-bad{color:var(--ttsc-danger-text);border-color:color-mix(in srgb,var(--ttsc-danger) 40%,transparent)}
+  .pill-info{color:var(--ttsc-info-text);border-color:color-mix(in srgb,var(--ttsc-info) 40%,transparent)}
+  .av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text);flex-shrink:0}
+  .ib{width:30px;height:30px;border-radius:8px;border:1px solid var(--ttsc-border);background:var(--ttsc-surface);display:grid;place-items:center;color:var(--ttsc-text-2);cursor:pointer}
+  .ib:hover{background:var(--ttsc-canvas-2)}
+  .ib-ok:hover{color:var(--ttsc-success)} .ib-no:hover{color:var(--ttsc-danger-text)}
+  .muted{color:var(--ttsc-text-muted)} .tnum{font-variant-numeric:tabular-nums}
+  :focus-visible{outline:2px solid var(--ttsc-accent);outline-offset:2px}
+
+  .sg{display:grid;grid-template-columns:minmax(210px,250px) minmax(0,1fr);border-radius:var(--ttsc-radius-surface);border:1px solid var(--ttsc-border);background:var(--ttsc-surface);overflow:hidden}
+  .sg-score{background:linear-gradient(165deg,color-mix(in srgb,var(--ttsc-accent) 26%,var(--ttsc-surface)),var(--ttsc-surface) 85%);color:var(--ttsc-text);padding:20px 18px;display:grid;gap:10px;align-content:start;justify-items:center;text-align:center;position:relative;border-right:1px solid var(--ttsc-border)}
+  .sg-badge{position:absolute;top:14px;right:14px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:var(--ttsc-radius-pill);background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text)}
+  .sg-ic{width:44px;height:44px;border-radius:999px;display:grid;place-items:center;background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text);margin-top:12px}
+  .sg-num{font-size:46px;font-weight:700;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--ttsc-text)}
+  .sg-num small{font-size:20px;font-weight:600;color:var(--ttsc-accent-text);margin-left:2px}
+  .sg-cap{margin:0;font-size:13px;font-weight:600;color:var(--ttsc-text)}
+  .sg-sub{margin:0;font-size:11px;line-height:1.5;color:var(--ttsc-text-muted)}
+  .sg-chips{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;width:100%;margin-top:6px}
+  .sg-chip{border-radius:var(--ttsc-radius-control);padding:7px 4px;background:var(--ttsc-surface);border:1px solid var(--ttsc-border-soft);font-size:10px;color:var(--ttsc-text-muted)}
+  .sg-chip b{display:block;font-size:15px;color:var(--ttsc-text);font-variant-numeric:tabular-nums}
+  .sg-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:16px;align-content:start}
+  .sg-tile{border-radius:var(--ttsc-radius-control);border:1px solid var(--ttsc-border-soft);background:var(--ttsc-surface);padding:14px;display:grid;gap:8px;min-width:0}
+  .sg-tile-head{display:flex;justify-content:space-between;align-items:center;gap:6px}
+  .sg-tile-label{font-size:11px;font-weight:500;color:var(--ttsc-text-muted);margin:0}
+  .sg-tile-ic{color:var(--ttsc-accent-text);font-size:12px}
+  .sg-tile-val{font-size:24px;font-weight:700;color:var(--ttsc-text);font-variant-numeric:tabular-nums;line-height:1.1}
+  .sg-bar{height:6px;border-radius:999px;background:var(--ttsc-surface-2);overflow:hidden}
+  .sg-bar i{display:block;height:100%;width:calc(var(--p) * 1%);background:var(--ttsc-accent);border-radius:999px}
+  .sg-tile.is-warn{border-color:color-mix(in srgb,var(--ttsc-warning) 45%,transparent)}
+  .sg-tile.is-warn .sg-bar i{background:var(--ttsc-warning)}
+  .sg-tile.is-warn .sg-tile-val,.sg-tile.is-warn .sg-tile-ic{color:var(--ttsc-warning-text)}
+  .sg-ctx{font-size:11px;line-height:1.4;color:var(--ttsc-text-2)}
+  .sg-ctx.warn{color:var(--ttsc-warning-text);font-weight:500} .sg-ctx.ok{color:var(--ttsc-accent-text)}
+  @media (max-width:900px){.sg{grid-template-columns:1fr}.sg-score{border-right:0;border-bottom:1px solid var(--ttsc-border)}.sg-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media (max-width:520px){.sg-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main class="demo">
+
+  <section class="sg" aria-label="Índice de desempenho da escola">
+    <div class="sg-score">
+      <span class="sg-badge">Excelente</span>
+      <span class="sg-ic" aria-hidden="true"><i class="fa-light fa-trophy"></i></span>
+      <div class="sg-num" aria-label="98 por cento"><span>98</span><small>%</small></div>
+      <p class="sg-cap">Índice de desempenho da escola</p>
+      <p class="sg-sub">Top 4% da rede do distrito · +2,3 pt no último período</p>
+      <div class="sg-chips" aria-label="Resumo">
+        <span class="sg-chip"><b>#3</b>Ranking</span>
+        <span class="sg-chip"><b>6</b>Anos seguidos</span>
+        <span class="sg-chip"><b>A+</b>Nota</span>
+      </div>
+    </div>
+    <div class="sg-grid">
+      <article class="sg-tile">
+        <div class="sg-tile-head"><p class="sg-tile-label">Frequência</p><i class="fa-light fa-arrow-trend-up sg-tile-ic" aria-hidden="true"></i></div>
+        <div class="sg-tile-val">96,1%</div>
+        <div class="sg-bar" role="img" aria-label="Frequência 96,1%" style="--p:96.1"><i></i></div>
+        <div class="sg-ctx ok">↑ 1,4 pt vs mês anterior</div>
+      </article>
+      <article class="sg-tile">
+        <div class="sg-tile-head"><p class="sg-tile-label">Desempenho docente</p><i class="fa-light fa-chart-line sg-tile-ic" aria-hidden="true"></i></div>
+        <div class="sg-tile-val">92,4%</div>
+        <div class="sg-bar" role="img" aria-label="Desempenho docente 92,4%" style="--p:92.4"><i></i></div>
+        <div class="sg-ctx ok">↑ 3,1 pt no trimestre</div>
+      </article>
+      <article class="sg-tile">
+        <div class="sg-tile-head"><p class="sg-tile-label">Aprovação</p><i class="fa-light fa-graduation-cap sg-tile-ic" aria-hidden="true"></i></div>
+        <div class="sg-tile-val">97,8%</div>
+        <div class="sg-bar" role="img" aria-label="Aprovação 97,8%" style="--p:97.8"><i></i></div>
+        <div class="sg-ctx ok">↑ 0,6 pt vs ano anterior</div>
+      </article>
+      <article class="sg-tile is-warn">
+        <div class="sg-tile-head"><p class="sg-tile-label">Adimplência</p><i class="fa-light fa-triangle-exclamation sg-tile-ic" aria-hidden="true"></i></div>
+        <div class="sg-tile-val">82,3%</div>
+        <div class="sg-bar" role="img" aria-label="Adimplência 82,3%" style="--p:82.3"><i></i></div>
+        <div class="sg-ctx warn">18 famílias em atraso · vence 15/ago</div>
+      </article>
+      <article class="sg-tile">
+        <div class="sg-tile-head"><p class="sg-tile-label">Segurança</p><i class="fa-light fa-shield-check sg-tile-ic" aria-hidden="true"></i></div>
+        <div class="sg-tile-val">99,2%</div>
+        <div class="sg-bar" role="img" aria-label="Segurança 99,2%" style="--p:99.2"><i></i></div>
+        <div class="sg-ctx ok">0 ocorrências no período</div>
+      </article>
+      <article class="sg-tile">
+        <div class="sg-tile-head"><p class="sg-tile-label">Engajamento dos responsáveis</p><i class="fa-light fa-user-group sg-tile-ic" aria-hidden="true"></i></div>
+        <div class="sg-tile-val">88,6%</div>
+        <div class="sg-bar" role="img" aria-label="Engajamento 88,6%" style="--p:88.6"><i></i></div>
+        <div class="sg-ctx">Acessos ao portal +12% no mês</div>
+      </article>
+    </div>
+  </section>
+
+</main>
+</body>
+</html>

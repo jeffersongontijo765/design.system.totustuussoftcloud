@@ -1,0 +1,65 @@
+<!-- @dsCard group="Geral" height=420 subtitle="smooth-scroll 16.1.3 · âncoras com offset do header 56px (data-scroll-header), updateURL, scrollStart/scrollStop, foco no destino" -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><title>SmoothScroll</title>
+<style>
+  body { margin: 0; }
+  .ss-header { position: sticky; top: 0; z-index: var(--ttsc-z-navigation); height: 56px; display: flex; align-items: center; gap: 4px; padding: 0 16px;
+    background: var(--ttsc-surface); border-bottom: 1px solid var(--ttsc-border); }
+  .ss-header strong { color: var(--ttsc-text); font-size: 13px; margin-right: auto; }
+  .ss-header a { color: var(--ttsc-text-2); text-decoration: none; font-size: 12px; padding: 6px 10px; border-radius: var(--ttsc-radius-control); }
+  .ss-header a:hover { background: var(--ttsc-canvas-2); color: var(--ttsc-text); }
+  .ss-header a.is-active { background: var(--ttsc-accent-soft); color: var(--ttsc-accent-text); }
+  .ss-header a:focus-visible { outline: 2px solid var(--ttsc-accent); outline-offset: 1px; }
+  .ss-main { padding: 0 16px 16px; }
+  .ss-section { padding: 16px 0 24px; border-bottom: 1px solid var(--ttsc-border-soft); min-height: 220px; }
+  .ss-section h2 { margin: 0 0 8px; font-size: 15px; color: var(--ttsc-text); outline: none; scroll-margin-top: 64px; }
+  .ss-section h2:focus-visible { outline: 2px solid var(--ttsc-accent); outline-offset: 2px; }
+  .ss-section p { margin: 0 0 8px; color: var(--ttsc-text-2); font-size: 13px; line-height: 1.6; max-width: 70ch; }
+  .ss-status { position: fixed; right: 12px; bottom: 12px; font-size: 11px; color: var(--ttsc-text-muted); background: var(--ttsc-surface); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-pill); padding: 4px 10px; }
+</style>
+</head>
+<body>
+<header class="ss-header" data-scroll-header>
+  <strong>Regimento escolar 2026</strong>
+  <nav aria-label="Seções do regimento" style="display:flex;gap:4px">
+    <a href="#matricula" data-ss-link>Matrícula</a>
+    <a href="#frequencia" data-ss-link>Frequência</a>
+    <a href="#avaliacao" data-ss-link>Avaliação</a>
+    <a href="#mensalidades" data-ss-link>Mensalidades</a>
+  </nav>
+</header>
+<main class="ss-main">
+  <section class="ss-section" id="matricula"><h2 tabindex="-1">1. Matrícula e rematrícula</h2>
+    <p>A rematrícula ocorre de 1º a 30 de novembro, mediante quitação das mensalidades do ano letivo e atualização cadastral do responsável financeiro.</p>
+    <p>Transferências recebidas após o início do 2º bimestre dependem de análise da coordenação pedagógica.</p></section>
+  <section class="ss-section" id="frequencia"><h2 tabindex="-1">2. Frequência</h2>
+    <p>É exigida frequência mínima de 75% do total de horas letivas. Atestados médicos devem ser entregues à secretaria em até 3 dias úteis.</p></section>
+  <section class="ss-section" id="avaliacao"><h2 tabindex="-1">3. Avaliação</h2>
+    <p>A média bimestral é composta por avaliações (60%), trabalhos (30%) e participação (10%). Média para aprovação: 6,0.</p></section>
+  <section class="ss-section" id="mensalidades"><h2 tabindex="-1">4. Mensalidades</h2>
+    <p>Vencimento todo dia 10. Após o vencimento incidem multa de 2% e juros de 1% ao mês, conforme contrato de prestação de serviços educacionais.</p></section>
+</main>
+<div class="ss-status" id="ss-status" aria-live="polite">Clique numa seção do menu</div>
+<script src="../../vendor/smooth-scroll/smooth-scroll.polyfills.min.js"></script>
+<script>
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var scroll = new SmoothScroll('a[data-ss-link]', {
+    header: '[data-scroll-header]',   // soma a altura do header (56px) ao offset
+    offset: 8, speed: reduce ? 0 : 450, speedAsDuration: true, easing: 'easeInOutCubic',
+    updateURL: true, popstate: true
+  });
+  var statusEl = document.getElementById('ss-status');
+  document.addEventListener('scrollStart', function (e) { statusEl.textContent = 'Rolando até ' + e.detail.anchor.id + '…'; });
+  document.addEventListener('scrollStop', function (e) {
+    var a = e.detail.anchor; statusEl.textContent = 'Seção: ' + a.querySelector('h2').textContent;
+    a.querySelector('h2').focus({ preventScroll: true });
+    document.querySelectorAll('[data-ss-link]').forEach(function (l) {
+      var on = l.getAttribute('href') === '#' + a.id; l.classList.toggle('is-active', on); on ? l.setAttribute('aria-current', 'location') : l.removeAttribute('aria-current');
+    });
+  });
+  TTSC.init();
+</script>
+</body>
+</html>

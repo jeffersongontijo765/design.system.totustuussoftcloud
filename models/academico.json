@@ -1,0 +1,2482 @@
+{
+ "module": "academico",
+ "pages": {
+  "/academico/matriculas": {
+   "title": "Matrículas",
+   "icon": "fa-user-graduate",
+   "currency": "BRL",
+   "entity": {
+    "singular": "Matrícula",
+    "plural": "Matrículas",
+    "icon": "fa-id-card",
+    "newLabel": "Nova matrícula"
+   },
+   "banner": {
+    "icon": "fa-user-graduate",
+    "title": "Matrículas 2026",
+    "desc": "Pré-matrículas, documentação pendente, análise e alunos matriculados por curso.",
+    "pill": "{count} matrículas",
+    "attention": {
+     "agg": "count",
+     "where": {
+      "status": "rejected"
+     }
+    }
+   },
+   "titleField": "student",
+   "codeField": "code",
+   "subField": "course",
+   "statusField": "status",
+   "stageField": "status",
+   "count": 48,
+   "fields": [
+    {
+     "key": "student",
+     "label": "Aluno",
+     "type": "person"
+    },
+    {
+     "key": "course",
+     "label": "Curso",
+     "type": "enum",
+     "values": [
+      {
+       "id": "EM",
+       "label": "Ensino Médio",
+       "tone": "blue",
+       "weight": 4
+      },
+      {
+       "id": "EF2",
+       "label": "Fundamental II",
+       "tone": "emerald",
+       "weight": 3
+      },
+      {
+       "id": "TEC-INF",
+       "label": "Técnico em Informática",
+       "tone": "purple",
+       "weight": 2
+      },
+      {
+       "id": "TEC-ENF",
+       "label": "Técnico em Enfermagem",
+       "tone": "amber",
+       "weight": 2
+      }
+     ]
+    },
+    {
+     "key": "code",
+     "label": "Matrícula",
+     "type": "code",
+     "prefix": "MAT"
+    },
+    {
+     "key": "status",
+     "label": "Status",
+     "type": "status"
+    },
+    {
+     "key": "shift",
+     "label": "Turno",
+     "type": "enum",
+     "values": [
+      {
+       "id": "morning",
+       "label": "Manhã",
+       "tone": "amber",
+       "weight": 4
+      },
+      {
+       "id": "afternoon",
+       "label": "Tarde",
+       "tone": "blue",
+       "weight": 3
+      },
+      {
+       "id": "night",
+       "label": "Noite",
+       "tone": "purple",
+       "weight": 2
+      }
+     ]
+    },
+    {
+     "key": "tuition",
+     "label": "Mensalidade",
+     "type": "money",
+     "min": 680,
+     "max": 2400
+    },
+    {
+     "key": "attendance",
+     "label": "Frequência",
+     "type": "pct",
+     "min": 62,
+     "max": 100
+    },
+    {
+     "key": "enrollment_date",
+     "label": "Data da matrícula",
+     "type": "date",
+     "from": -240,
+     "to": -1
+    },
+    {
+     "key": "guardian",
+     "label": "Responsável",
+     "type": "person",
+     "table": false
+    },
+    {
+     "key": "email",
+     "label": "E-mail",
+     "type": "email",
+     "table": false
+    },
+    {
+     "key": "scholarship",
+     "label": "Bolsista",
+     "type": "bool",
+     "p": 0.2,
+     "table": false
+    }
+   ],
+   "statuses": [
+    {
+     "id": "pre_enrollment",
+     "label": "Pré-matrícula",
+     "tone": "slate",
+     "weight": 2
+    },
+    {
+     "id": "documents",
+     "label": "Documentação",
+     "tone": "blue",
+     "weight": 2
+    },
+    {
+     "id": "review",
+     "label": "Em análise",
+     "tone": "amber",
+     "weight": 2
+    },
+    {
+     "id": "active",
+     "label": "Matriculado",
+     "tone": "emerald",
+     "weight": 6
+    },
+    {
+     "id": "rejected",
+     "label": "Indeferido",
+     "tone": "rose",
+     "weight": 1
+    }
+   ],
+   "stages": [
+    {
+     "id": "pre_enrollment",
+     "label": "Pré-matrícula",
+     "tone": "slate",
+     "weight": 2
+    },
+    {
+     "id": "documents",
+     "label": "Documentação",
+     "tone": "blue",
+     "weight": 2
+    },
+    {
+     "id": "review",
+     "label": "Em análise",
+     "tone": "amber",
+     "weight": 2
+    },
+    {
+     "id": "active",
+     "label": "Matriculado",
+     "tone": "emerald",
+     "weight": 6
+    },
+    {
+     "id": "rejected",
+     "label": "Indeferido",
+     "tone": "rose",
+     "weight": 1
+    }
+   ],
+   "kpis": [
+    {
+     "label": "Matrículas ativas",
+     "sub": "Ano letivo 2026",
+     "icon": "fa-user-graduate",
+     "tone": "emerald",
+     "value": {
+      "agg": "count",
+      "where": {
+       "status": "active"
+      }
+     },
+     "unitLabel": "Alunos",
+     "chips": [
+      {
+       "label": "Em análise",
+       "tone": "amber",
+       "value": {
+        "agg": "count",
+        "where": {
+         "status": "review"
+        }
+       }
+      },
+      {
+       "label": "Documentação",
+       "tone": "blue",
+       "value": {
+        "agg": "count",
+        "where": {
+         "status": "documents"
+        }
+       }
+      }
+     ],
+     "formula": "COUNT(enrollments WHERE status = 'active' AND deleted_at IS NULL)"
+    },
+    {
+     "label": "Receita mensal",
+     "sub": "Mensalidades ativas",
+     "icon": "fa-sack-dollar",
+     "tone": "blue",
+     "value": {
+      "agg": "sum",
+      "field": "tuition",
+      "where": {
+       "status": "active"
+      }
+     },
+     "unit": "money",
+     "pill": "Mensal",
+     "footer": [
+      {
+       "label": "Ticket médio",
+       "value": {
+        "agg": "avg",
+        "field": "tuition",
+        "where": {
+         "status": "active"
+        }
+       },
+       "unit": "money"
+      }
+     ],
+     "formula": "SUM(academic_billing_rules.monthly_tuition) das matrículas ativas"
+    },
+    {
+     "label": "Frequência média",
+     "sub": "Últimos 30 dias",
+     "icon": "fa-calendar-check",
+     "tone": "amber",
+     "value": {
+      "agg": "avg",
+      "field": "attendance"
+     },
+     "unit": "%",
+     "footer": [
+      {
+       "label": "Menor frequência",
+       "value": {
+        "agg": "min",
+        "field": "attendance"
+       },
+       "unit": "%"
+      }
+     ],
+     "formula": "AVG(presenças / aulas) em attendance"
+    },
+    {
+     "label": "Indeferidas",
+     "sub": "Exigem contato",
+     "icon": "fa-triangle-exclamation",
+     "tone": "rose",
+     "value": {
+      "agg": "count",
+      "where": {
+       "status": "rejected"
+      }
+     },
+     "unitLabel": "Solicitações",
+     "formula": "status = 'rejected'"
+    }
+   ],
+   "breakdown": {
+    "by": "course",
+    "title": "Matrículas por curso",
+    "desc": "Distribuição atual",
+    "icon": "fa-layer-group",
+    "attention": {
+     "where": {
+      "status": "rejected"
+     },
+     "badge": "status",
+     "title": "Indeferidas",
+     "desc": "Contatar o responsável",
+     "empty": "Nenhuma matrícula indeferida."
+    }
+   },
+   "cardFields": [
+    "tuition",
+    "attendance",
+    "enrollment_date"
+   ],
+   "cardLine": "shift",
+   "kanbanTitle": "Funil de matrícula",
+   "kanbanDesc": "Pré-matrícula → documentação → análise → matriculado",
+   "kanbanValue": "tuition",
+   "kanbanDate": "enrollment_date",
+   "drawer": {
+    "metrics": [
+     "tuition",
+     "attendance",
+     "enrollment_date",
+     "shift"
+    ],
+    "sections": [
+     {
+      "title": "Aluno e responsável",
+      "icon": "fa-user",
+      "fields": [
+       "student",
+       "guardian",
+       "email",
+       "scholarship"
+      ]
+     },
+     {
+      "title": "Matrícula",
+      "icon": "fa-id-card",
+      "fields": [
+       "course",
+       "shift",
+       "status"
+      ]
+     }
+    ]
+   },
+   "form": [
+    "student",
+    "guardian",
+    "email",
+    "course",
+    "shift",
+    "tuition",
+    "enrollment_date",
+    "scholarship"
+   ],
+   "analytics": [
+    {
+     "title": "Matrículas por curso",
+     "desc": "Situação atual",
+     "by": "course",
+     "type": "bar",
+     "measure": {
+      "agg": "count",
+      "unit": "count"
+     }
+    },
+    {
+     "title": "Matrículas por status",
+     "desc": "Funil",
+     "by": "status",
+     "type": "doughnut",
+     "measure": {
+      "agg": "count",
+      "unit": "count"
+     }
+    },
+    {
+     "title": "Novas matrículas por mês",
+     "desc": "Pela data da matrícula",
+     "by": "month",
+     "type": "line",
+     "measure": {
+      "agg": "count",
+      "unit": "count"
+     },
+     "date": "enrollment_date",
+     "wide": true
+    }
+   ],
+   "endpoints": {
+    "create": "POST /api/v1/domain/records/academic/enrollment/re-enrollment",
+    "edit": "PUT /api/v1/domain/records/academic/enrollment/re-enrollment/{id}",
+    "delete": "DELETE /api/v1/domain/records/academic/enrollment/re-enrollment/{id}",
+    "export": "GET /api/v1/domain/records/academic/enrollment/re-enrollment/export?format=csv",
+    "move": "POST /api/v1/domain/records/academic/enrollment/re-enrollment/status"
+   }
+  },
+  "/academico/matriculas/registros": {
+   "title": "Matrículas",
+   "icon": "fa-user-graduate",
+   "currency": "BRL",
+   "entity": {
+    "singular": "Matrícula",
+    "plural": "Matrículas",
+    "icon": "fa-id-card",
+    "newLabel": "Nova matrícula"
+   },
+   "banner": {
+    "icon": "fa-user-graduate",
+    "title": "Matrículas 2026",
+    "desc": "Pré-matrículas, documentação pendente, análise e alunos matriculados por curso.",
+    "pill": "{count} matrículas",
+    "attention": {
+     "agg": "count",
+     "where": {
+      "status": "rejected"
+     }
+    }
+   },
+   "titleField": "student",
+   "codeField": "code",
+   "subField": "course",
+   "statusField": "status",
+   "stageField": "status",
+   "count": 48,
+   "fields": [
+    {
+     "key": "student",
+     "label": "Aluno",
+     "type": "person"
+    },
+    {
+     "key": "course",
+     "label": "Curso",
+     "type": "enum",
+     "values": [
+      {
+       "id": "EM",
+       "label": "Ensino Médio",
+       "tone": "blue",
+       "weight": 4
+      },
+      {
+       "id": "EF2",
+       "label": "Fundamental II",
+       "tone": "emerald",
+       "weight": 3
+      },
+      {
+       "id": "TEC-INF",
+       "label": "Técnico em Informática",
+       "tone": "purple",
+       "weight": 2
+      },
+      {
+       "id": "TEC-ENF",
+       "label": "Técnico em Enfermagem",
+       "tone": "amber",
+       "weight": 2
+      }
+     ]
+    },
+    {
+     "key": "code",
+     "label": "Matrícula",
+     "type": "code",
+     "prefix": "MAT"
+    },
+    {
+     "key": "status",
+     "label": "Status",
+     "type": "status"
+    },
+    {
+     "key": "shift",
+     "label": "Turno",
+     "type": "enum",
+     "values": [
+      {
+       "id": "morning",
+       "label": "Manhã",
+       "tone": "amber",
+       "weight": 4
+      },
+      {
+       "id": "afternoon",
+       "label": "Tarde",
+       "tone": "blue",
+       "weight": 3
+      },
+      {
+       "id": "night",
+       "label": "Noite",
+       "tone": "purple",
+       "weight": 2
+      }
+     ]
+    },
+    {
+     "key": "tuition",
+     "label": "Mensalidade",
+     "type": "money",
+     "min": 680,
+     "max": 2400
+    },
+    {
+     "key": "attendance",
+     "label": "Frequência",
+     "type": "pct",
+     "min": 62,
+     "max": 100
+    },
+    {
+     "key": "enrollment_date",
+     "label": "Data da matrícula",
+     "type": "date",
+     "from": -240,
+     "to": -1
+    },
+    {
+     "key": "guardian",
+     "label": "Responsável",
+     "type": "person",
+     "table": false
+    },
+    {
+     "key": "email",
+     "label": "E-mail",
+     "type": "email",
+     "table": false
+    },
+    {
+     "key": "scholarship",
+     "label": "Bolsista",
+     "type": "bool",
+     "p": 0.2,
+     "table": false
+    }
+   ],
+   "statuses": [
+    {
+     "id": "pre_enrollment",
+     "label": "Pré-matrícula",
+     "tone": "slate",
+     "weight": 2
+    },
+    {
+     "id": "documents",
+     "label": "Documentação",
+     "tone": "blue",
+     "weight": 2
+    },
+    {
+     "id": "review",
+     "label": "Em análise",
+     "tone": "amber",
+     "weight": 2
+    },
+    {
+     "id": "active",
+     "label": "Matriculado",
+     "tone": "emerald",
+     "weight": 6
+    },
+    {
+     "id": "rejected",
+     "label": "Indeferido",
+     "tone": "rose",
+     "weight": 1
+    }
+   ],
+   "kpis": [
+    {
+     "label": "Matrículas ativas",
+     "sub": "Ano letivo 2026",
+     "icon": "fa-user-graduate",
+     "tone": "emerald",
+     "value": {
+      "agg": "count",
+      "where": {
+       "status": "active"
+      }
+     },
+     "unitLabel": "Alunos",
+     "chips": [
+      {
+       "label": "Em análise",
+       "tone": "amber",
+       "value": {
+        "agg": "count",
+        "where": {
+         "status": "review"
+        }
+       }
+      },
+      {
+       "label": "Documentação",
+       "tone": "blue",
+       "value": {
+        "agg": "count",
+        "where": {
+         "status": "documents"
+        }
+       }
+      }
+     ],
+     "formula": "COUNT(enrollments WHERE status = 'active' AND deleted_at IS NULL)"
+    },
+    {
+     "label": "Receita mensal",
+     "sub": "Mensalidades ativas",
+     "icon": "fa-sack-dollar",
+     "tone": "blue",
+     "value": {
+      "agg": "sum",
+      "field": "tuition",
+      "where": {
+       "status": "active"
+      }
+     },
+     "unit": "money",
+     "pill": "Mensal",
+     "footer": [
+      {
+       "label": "Ticket médio",
+       "value": {
+        "agg": "avg",
+        "field": "tuition",
+        "where": {
+         "status": "active"
+        }
+       },
+       "unit": "money"
+      }
+     ],
+     "formula": "SUM(academic_billing_rules.monthly_tuition) das matrículas ativas"
+    },
+    {
+     "label": "Frequência média",
+     "sub": "Últimos 30 dias",
+     "icon": "fa-calendar-check",
+     "tone": "amber",
+     "value": {
+      "agg": "avg",
+      "field": "attendance"
+     },
+     "unit": "%",
+     "footer": [
+      {
+       "label": "Menor frequência",
+       "value": {
+        "agg": "min",
+        "field": "attendance"
+       },
+       "unit": "%"
+      }
+     ],
+     "formula": "AVG(presenças / aulas) em attendance"
+    },
+    {
+     "label": "Indeferidas",
+     "sub": "Exigem contato",
+     "icon": "fa-triangle-exclamation",
+     "tone": "rose",
+     "value": {
+      "agg": "count",
+      "where": {
+       "status": "rejected"
+      }
+     },
+     "unitLabel": "Solicitações",
+     "formula": "status = 'rejected'"
+    }
+   ],
+   "breakdown": {
+    "by": "course",
+    "title": "Matrículas por curso",
+    "desc": "Distribuição atual",
+    "icon": "fa-layer-group",
+    "attention": {
+     "where": {
+      "status": "rejected"
+     },
+     "badge": "status",
+     "title": "Indeferidas",
+     "desc": "Contatar o responsável",
+     "empty": "Nenhuma matrícula indeferida."
+    }
+   },
+   "cardFields": [
+    "tuition",
+    "attendance",
+    "enrollment_date"
+   ],
+   "cardLine": "shift",
+   "kanbanTitle": "Funil de matrícula",
+   "kanbanDesc": "Pré-matrícula → documentação → análise → matriculado",
+   "kanbanValue": "tuition",
+   "kanbanDate": "enrollment_date",
+   "drawer": {
+    "metrics": [
+     "tuition",
+     "attendance",
+     "enrollment_date",
+     "shift"
+    ],
+    "sections": [
+     {
+      "title": "Aluno e responsável",
+      "icon": "fa-user",
+      "fields": [
+       "student",
+       "guardian",
+       "email",
+       "scholarship"
+      ]
+     },
+     {
+      "title": "Matrícula",
+      "icon": "fa-id-card",
+      "fields": [
+       "course",
+       "shift",
+       "status"
+      ]
+     }
+    ]
+   },
+   "form": [
+    "student",
+    "guardian",
+    "email",
+    "course",
+    "shift",
+    "tuition",
+    "enrollment_date",
+    "scholarship"
+   ],
+   "analytics": [
+    {
+     "title": "Matrículas por curso",
+     "desc": "Situação atual",
+     "by": "course",
+     "type": "bar",
+     "measure": {
+      "agg": "count",
+      "unit": "count"
+     }
+    },
+    {
+     "title": "Matrículas por status",
+     "desc": "Funil",
+     "by": "status",
+     "type": "doughnut",
+     "measure": {
+      "agg": "count",
+      "unit": "count"
+     }
+    },
+    {
+     "title": "Novas matrículas por mês",
+     "desc": "Pela data da matrícula",
+     "by": "month",
+     "type": "line",
+     "measure": {
+      "agg": "count",
+      "unit": "count"
+     },
+     "date": "enrollment_date",
+     "wide": true
+    }
+   ],
+   "endpoints": {
+    "create": "POST /api/v1/domain/records/academic/enrollment/re-enrollment",
+    "edit": "PUT /api/v1/domain/records/academic/enrollment/re-enrollment/{id}",
+    "delete": "DELETE /api/v1/domain/records/academic/enrollment/re-enrollment/{id}",
+    "export": "GET /api/v1/domain/records/academic/enrollment/re-enrollment/export?format=csv",
+    "move": "POST /api/v1/domain/records/academic/enrollment/re-enrollment/status"
+   },
+   "views": [
+    "kpi",
+    "table",
+    "cards",
+    "analytics"
+   ]
+  },
+  "/academico/matriculas/funil": {
+   "title": "Funil de Matrícula",
+   "icon": "fa-user-graduate",
+   "currency": "BRL",
+   "entity": {
+    "singular": "Matrícula",
+    "plural": "Matrículas",
+    "icon": "fa-id-card",
+    "newLabel": "Nova matrícula"
+   },
+   "banner": {
+    "icon": "fa-user-graduate",
+    "title": "Matrículas 2026",
+    "desc": "Pré-matrículas, documentação pendente, análise e alunos matriculados por curso.",
+    "pill": "{count} matrículas",
+    "attention": {
+     "agg": "count",
+     "where": {
+      "status": "rejected"
+     }
+    }
+   },
+   "titleField": "student",
+   "codeField": "code",
+   "subField": "course",
+   "statusField": "status",
+   "stageField": "status",
+   "count": 48,
+   "fields": [
+    {
+     "key": "student",
+     "label": "Aluno",
+     "type": "person"
+    },
+    {
+     "key": "course",
+     "label": "Curso",
+     "type": "enum",
+     "values": [
+      {
+       "id": "EM",
+       "label": "Ensino Médio",
+       "tone": "blue",
+       "weight": 4
+      },
+      {
+       "id": "EF2",
+       "label": "Fundamental II",
+       "tone": "emerald",
+       "weight": 3
+      },
+      {
+       "id": "TEC-INF",
+       "label": "Técnico em Informática",
+       "tone": "purple",
+       "weight": 2
+      },
+      {
+       "id": "TEC-ENF",
+       "label": "Técnico em Enfermagem",
+       "tone": "amber",
+       "weight": 2
+      }
+     ]
+    },
+    {
+     "key": "code",
+     "label": "Matrícula",
+     "type": "code",
+     "prefix": "MAT"
+    },
+    {
+     "key": "status",
+     "label": "Status",
+     "type": "status"
+    },
+    {
+     "key": "shift",
+     "label": "Turno",
+     "type": "enum",
+     "values": [
+      {
+       "id": "morning",
+       "label": "Manhã",
+       "tone": "amber",
+       "weight": 4
+      },
+      {
+       "id": "afternoon",
+       "label": "Tarde",
+       "tone": "blue",
+       "weight": 3
+      },
+      {
+       "id": "night",
+       "label": "Noite",
+       "tone": "purple",
+       "weight": 2
+      }
+     ]
+    },
+    {
+     "key": "tuition",
+     "label": "Mensalidade",
+     "type": "money",
+     "min": 680,
+     "max": 2400
+    },
+    {
+     "key": "attendance",
+     "label": "Frequência",
+     "type": "pct",
+     "min": 62,
+     "max": 100
+    },
+    {
+     "key": "enrollment_date",
+     "label": "Data da matrícula",
+     "type": "date",
+     "from": -240,
+     "to": -1
+    },
+    {
+     "key": "guardian",
+     "label": "Responsável",
+     "type": "person",
+     "table": false
+    },
+    {
+     "key": "email",
+     "label": "E-mail",
+     "type": "email",
+     "table": false
+    },
+    {
+     "key": "scholarship",
+     "label": "Bolsista",
+     "type": "bool",
+     "p": 0.2,
+     "table": false
+    }
+   ],
+   "statuses": [
+    {
+     "id": "pre_enrollment",
+     "label": "Pré-matrícula",
+     "tone": "slate",
+     "weight": 2
+    },
+    {
+     "id": "documents",
+     "label": "Documentação",
+     "tone": "blue",
+     "weight": 2
+    },
+    {
+     "id": "review",
+     "label": "Em análise",
+     "tone": "amber",
+     "weight": 2
+    },
+    {
+     "id": "active",
+     "label": "Matriculado",
+     "tone": "emerald",
+     "weight": 6
+    },
+    {
+     "id": "rejected",
+     "label": "Indeferido",
+     "tone": "rose",
+     "weight": 1
+    }
+   ],
+   "stages": [
+    {
+     "id": "pre_enrollment",
+     "label": "Pré-matrícula",
+     "tone": "slate",
+     "weight": 2
+    },
+    {
+     "id": "documents",
+     "label": "Documentação",
+     "tone": "blue",
+     "weight": 2
+    },
+    {
+     "id": "review",
+     "label": "Em análise",
+     "tone": "amber",
+     "weight": 2
+    },
+    {
+     "id": "active",
+     "label": "Matriculado",
+     "tone": "emerald",
+     "weight": 6
+    },
+    {
+     "id": "rejected",
+     "label": "Indeferido",
+     "tone": "rose",
+     "weight": 1
+    }
+   ],
+   "kpis": [
+    {
+     "label": "Matrículas ativas",
+     "sub": "Ano letivo 2026",
+     "icon": "fa-user-graduate",
+     "tone": "emerald",
+     "value": {
+      "agg": "count",
+      "where": {
+       "status": "active"
+      }
+     },
+     "unitLabel": "Alunos",
+     "chips": [
+      {
+       "label": "Em análise",
+       "tone": "amber",
+       "value": {
+        "agg": "count",
+        "where": {
+         "status": "review"
+        }
+       }
+      },
+      {
+       "label": "Documentação",
+       "tone": "blue",
+       "value": {
+        "agg": "count",
+        "where": {
+         "status": "documents"
+        }
+       }
+      }
+     ],
+     "formula": "COUNT(enrollments WHERE status = 'active' AND deleted_at IS NULL)"
+    },
+    {
+     "label": "Receita mensal",
+     "sub": "Mensalidades ativas",
+     "icon": "fa-sack-dollar",
+     "tone": "blue",
+     "value": {
+      "agg": "sum",
+      "field": "tuition",
+      "where": {
+       "status": "active"
+      }
+     },
+     "unit": "money",
+     "pill": "Mensal",
+     "footer": [
+      {
+       "label": "Ticket médio",
+       "value": {
+        "agg": "avg",
+        "field": "tuition",
+        "where": {
+         "status": "active"
+        }
+       },
+       "unit": "money"
+      }
+     ],
+     "formula": "SUM(academic_billing_rules.monthly_tuition) das matrículas ativas"
+    },
+    {
+     "label": "Frequência média",
+     "sub": "Últimos 30 dias",
+     "icon": "fa-calendar-check",
+     "tone": "amber",
+     "value": {
+      "agg": "avg",
+      "field": "attendance"
+     },
+     "unit": "%",
+     "footer": [
+      {
+       "label": "Menor frequência",
+       "value": {
+        "agg": "min",
+        "field": "attendance"
+       },
+       "unit": "%"
+      }
+     ],
+     "formula": "AVG(presenças / aulas) em attendance"
+    },
+    {
+     "label": "Indeferidas",
+     "sub": "Exigem contato",
+     "icon": "fa-triangle-exclamation",
+     "tone": "rose",
+     "value": {
+      "agg": "count",
+      "where": {
+       "status": "rejected"
+      }
+     },
+     "unitLabel": "Solicitações",
+     "formula": "status = 'rejected'"
+    }
+   ],
+   "breakdown": {
+    "by": "course",
+    "title": "Matrículas por curso",
+    "desc": "Distribuição atual",
+    "icon": "fa-layer-group",
+    "attention": {
+     "where": {
+      "status": "rejected"
+     },
+     "badge": "status",
+     "title": "Indeferidas",
+     "desc": "Contatar o responsável",
+     "empty": "Nenhuma matrícula indeferida."
+    }
+   },
+   "cardFields": [
+    "tuition",
+    "attendance",
+    "enrollment_date"
+   ],
+   "cardLine": "shift",
+   "kanbanTitle": "Funil de matrícula",
+   "kanbanDesc": "Pré-matrícula → documentação → análise → matriculado",
+   "kanbanValue": "tuition",
+   "kanbanDate": "enrollment_date",
+   "drawer": {
+    "metrics": [
+     "tuition",
+     "attendance",
+     "enrollment_date",
+     "shift"
+    ],
+    "sections": [
+     {
+      "title": "Aluno e responsável",
+      "icon": "fa-user",
+      "fields": [
+       "student",
+       "guardian",
+       "email",
+       "scholarship"
+      ]
+     },
+     {
+      "title": "Matrícula",
+      "icon": "fa-id-card",
+      "fields": [
+       "course",
+       "shift",
+       "status"
+      ]
+     }
+    ]
+   },
+   "form": [
+    "student",
+    "guardian",
+    "email",
+    "course",
+    "shift",
+    "tuition",
+    "enrollment_date",
+    "scholarship"
+   ],
+   "analytics": [
+    {
+     "title": "Matrículas por curso",
+     "desc": "Situação atual",
+     "by": "course",
+     "type": "bar",
+     "measure": {
+      "agg": "count",
+      "unit": "count"
+     }
+    },
+    {
+     "title": "Matrículas por status",
+     "desc": "Funil",
+     "by": "status",
+     "type": "doughnut",
+     "measure": {
+      "agg": "count",
+      "unit": "count"
+     }
+    },
+    {
+     "title": "Novas matrículas por mês",
+     "desc": "Pela data da matrícula",
+     "by": "month",
+     "type": "line",
+     "measure": {
+      "agg": "count",
+      "unit": "count"
+     },
+     "date": "enrollment_date",
+     "wide": true
+    }
+   ],
+   "endpoints": {
+    "create": "POST /api/v1/domain/records/academic/enrollment/re-enrollment",
+    "edit": "PUT /api/v1/domain/records/academic/enrollment/re-enrollment/{id}",
+    "delete": "DELETE /api/v1/domain/records/academic/enrollment/re-enrollment/{id}",
+    "export": "GET /api/v1/domain/records/academic/enrollment/re-enrollment/export?format=csv",
+    "move": "POST /api/v1/domain/records/academic/enrollment/re-enrollment/status"
+   },
+   "views": [
+    "kpi",
+    "table",
+    "cards",
+    "kanban",
+    "analytics"
+   ],
+   "defaultView": "kanban"
+  },
+  "/academico/frequencia/historico": {
+   "title": "Histórico de Frequência",
+   "icon": "fa-clock-rotate-left",
+   "create": false,
+   "entity": {
+    "singular": "Registro",
+    "plural": "Registros",
+    "icon": "fa-clipboard-check",
+    "newLabel": "Novo registro"
+   },
+   "banner": {
+    "icon": "fa-clock-rotate-left",
+    "title": "Diário de classe",
+    "desc": "Chamadas registradas por turma, somente leitura.",
+    "pill": "{count} registros"
+   },
+   "titleField": "student",
+   "codeField": "code",
+   "subField": "class",
+   "statusField": "status",
+   "count": 60,
+   "fields": [
+    {
+     "key": "student",
+     "label": "Aluno",
+     "type": "person"
+    },
+    {
+     "key": "class",
+     "label": "Turma",
+     "type": "enum",
+     "values": [
+      {
+       "id": "9A",
+       "label": "9º ano A",
+       "tone": "blue"
+      },
+      {
+       "id": "9B",
+       "label": "9º ano B",
+       "tone": "emerald"
+      },
+      {
+       "id": "1A",
+       "label": "1ª série A",
+       "tone": "purple"
+      }
+     ]
+    },
+    {
+     "key": "code",
+     "label": "Registro",
+     "type": "code",
+     "prefix": "FRQ"
+    },
+    {
+     "key": "status",
+     "label": "Presença",
+     "type": "status"
+    },
+    {
+     "key": "lesson_date",
+     "label": "Data da aula",
+     "type": "datetime",
+     "from": -30,
+     "to": 0
+    },
+    {
+     "key": "recorded_by",
+     "label": "Registrado por",
+     "type": "person"
+    }
+   ],
+   "statuses": [
+    {
+     "id": "present",
+     "label": "Presente",
+     "tone": "emerald",
+     "weight": 8
+    },
+    {
+     "id": "late",
+     "label": "Atraso",
+     "tone": "amber",
+     "weight": 1
+    },
+    {
+     "id": "absent",
+     "label": "Falta",
+     "tone": "rose",
+     "weight": 2
+    },
+    {
+     "id": "justified",
+     "label": "Justificada",
+     "tone": "blue",
+     "weight": 1
+    }
+   ],
+   "kpis": [
+    {
+     "label": "Presenças",
+     "sub": "Últimos 30 dias",
+     "icon": "fa-circle-check",
+     "tone": "emerald",
+     "value": {
+      "agg": "share",
+      "where": {
+       "status": [
+        "present",
+        "late"
+       ]
+      }
+     },
+     "unit": "%",
+     "formula": "(present + late) / total"
+    },
+    {
+     "label": "Faltas",
+     "sub": "Sem justificativa",
+     "icon": "fa-circle-xmark",
+     "tone": "rose",
+     "value": {
+      "agg": "count",
+      "where": {
+       "status": "absent"
+      }
+     },
+     "unitLabel": "Registros",
+     "formula": "status = 'absent'"
+    }
+   ],
+   "views": [
+    "kpi",
+    "table",
+    "analytics"
+   ],
+   "defaultView": "table",
+   "cardFields": [
+    "lesson_date"
+   ],
+   "drawer": {
+    "metrics": [
+     "lesson_date",
+     "recorded_by"
+    ],
+    "sections": [
+     {
+      "title": "Registro",
+      "icon": "fa-clipboard-check",
+      "fields": [
+       "student",
+       "class",
+       "status"
+      ]
+     }
+    ]
+   },
+   "analytics": [
+    {
+     "title": "Presença por turma",
+     "desc": "Registros",
+     "by": "class",
+     "type": "bar",
+     "measure": {
+      "agg": "count",
+      "unit": "count"
+     }
+    },
+    {
+     "title": "Registros por status",
+     "desc": "Últimos 30 dias",
+     "by": "status",
+     "type": "doughnut",
+     "measure": {
+      "agg": "count",
+      "unit": "count"
+     }
+    }
+   ],
+   "exports": [
+    "CSV",
+    "PDF"
+   ]
+  },
+  "/academico/relatorios/matriculas": {
+   "title": "Relatório de Matrículas",
+   "icon": "fa-user-graduate",
+   "currency": "BRL",
+   "entity": {
+    "singular": "Matrícula",
+    "plural": "Matrículas",
+    "icon": "fa-id-card",
+    "newLabel": "Nova matrícula"
+   },
+   "banner": {
+    "icon": "fa-user-graduate",
+    "title": "Matrículas 2026",
+    "desc": "Pré-matrículas, documentação pendente, análise e alunos matriculados por curso.",
+    "pill": "{count} matrículas",
+    "attention": {
+     "agg": "count",
+     "where": {
+      "status": "rejected"
+     }
+    }
+   },
+   "titleField": "student",
+   "codeField": "code",
+   "subField": "course",
+   "statusField": "status",
+   "stageField": "status",
+   "count": 48,
+   "fields": [
+    {
+     "key": "student",
+     "label": "Aluno",
+     "type": "person"
+    },
+    {
+     "key": "course",
+     "label": "Curso",
+     "type": "enum",
+     "values": [
+      {
+       "id": "EM",
+       "label": "Ensino Médio",
+       "tone": "blue",
+       "weight": 4
+      },
+      {
+       "id": "EF2",
+       "label": "Fundamental II",
+       "tone": "emerald",
+       "weight": 3
+      },
+      {
+       "id": "TEC-INF",
+       "label": "Técnico em Informática",
+       "tone": "purple",
+       "weight": 2
+      },
+      {
+       "id": "TEC-ENF",
+       "label": "Técnico em Enfermagem",
+       "tone": "amber",
+       "weight": 2
+      }
+     ]
+    },
+    {
+     "key": "code",
+     "label": "Matrícula",
+     "type": "code",
+     "prefix": "MAT"
+    },
+    {
+     "key": "status",
+     "label": "Status",
+     "type": "status"
+    },
+    {
+     "key": "shift",
+     "label": "Turno",
+     "type": "enum",
+     "values": [
+      {
+       "id": "morning",
+       "label": "Manhã",
+       "tone": "amber",
+       "weight": 4
+      },
+      {
+       "id": "afternoon",
+       "label": "Tarde",
+       "tone": "blue",
+       "weight": 3
+      },
+      {
+       "id": "night",
+       "label": "Noite",
+       "tone": "purple",
+       "weight": 2
+      }
+     ]
+    },
+    {
+     "key": "tuition",
+     "label": "Mensalidade",
+     "type": "money",
+     "min": 680,
+     "max": 2400
+    },
+    {
+     "key": "attendance",
+     "label": "Frequência",
+     "type": "pct",
+     "min": 62,
+     "max": 100
+    },
+    {
+     "key": "enrollment_date",
+     "label": "Data da matrícula",
+     "type": "date",
+     "from": -240,
+     "to": -1
+    },
+    {
+     "key": "guardian",
+     "label": "Responsável",
+     "type": "person",
+     "table": false
+    },
+    {
+     "key": "email",
+     "label": "E-mail",
+     "type": "email",
+     "table": false
+    },
+    {
+     "key": "scholarship",
+     "label": "Bolsista",
+     "type": "bool",
+     "p": 0.2,
+     "table": false
+    }
+   ],
+   "statuses": [
+    {
+     "id": "pre_enrollment",
+     "label": "Pré-matrícula",
+     "tone": "slate",
+     "weight": 2
+    },
+    {
+     "id": "documents",
+     "label": "Documentação",
+     "tone": "blue",
+     "weight": 2
+    },
+    {
+     "id": "review",
+     "label": "Em análise",
+     "tone": "amber",
+     "weight": 2
+    },
+    {
+     "id": "active",
+     "label": "Matriculado",
+     "tone": "emerald",
+     "weight": 6
+    },
+    {
+     "id": "rejected",
+     "label": "Indeferido",
+     "tone": "rose",
+     "weight": 1
+    }
+   ],
+   "kpis": [
+    {
+     "label": "Matrículas ativas",
+     "sub": "Ano letivo 2026",
+     "icon": "fa-user-graduate",
+     "tone": "emerald",
+     "value": {
+      "agg": "count",
+      "where": {
+       "status": "active"
+      }
+     },
+     "unitLabel": "Alunos",
+     "chips": [
+      {
+       "label": "Em análise",
+       "tone": "amber",
+       "value": {
+        "agg": "count",
+        "where": {
+         "status": "review"
+        }
+       }
+      },
+      {
+       "label": "Documentação",
+       "tone": "blue",
+       "value": {
+        "agg": "count",
+        "where": {
+         "status": "documents"
+        }
+       }
+      }
+     ],
+     "formula": "COUNT(enrollments WHERE status = 'active' AND deleted_at IS NULL)"
+    },
+    {
+     "label": "Receita mensal",
+     "sub": "Mensalidades ativas",
+     "icon": "fa-sack-dollar",
+     "tone": "blue",
+     "value": {
+      "agg": "sum",
+      "field": "tuition",
+      "where": {
+       "status": "active"
+      }
+     },
+     "unit": "money",
+     "pill": "Mensal",
+     "footer": [
+      {
+       "label": "Ticket médio",
+       "value": {
+        "agg": "avg",
+        "field": "tuition",
+        "where": {
+         "status": "active"
+        }
+       },
+       "unit": "money"
+      }
+     ],
+     "formula": "SUM(academic_billing_rules.monthly_tuition) das matrículas ativas"
+    },
+    {
+     "label": "Frequência média",
+     "sub": "Últimos 30 dias",
+     "icon": "fa-calendar-check",
+     "tone": "amber",
+     "value": {
+      "agg": "avg",
+      "field": "attendance"
+     },
+     "unit": "%",
+     "footer": [
+      {
+       "label": "Menor frequência",
+       "value": {
+        "agg": "min",
+        "field": "attendance"
+       },
+       "unit": "%"
+      }
+     ],
+     "formula": "AVG(presenças / aulas) em attendance"
+    },
+    {
+     "label": "Indeferidas",
+     "sub": "Exigem contato",
+     "icon": "fa-triangle-exclamation",
+     "tone": "rose",
+     "value": {
+      "agg": "count",
+      "where": {
+       "status": "rejected"
+      }
+     },
+     "unitLabel": "Solicitações",
+     "formula": "status = 'rejected'"
+    }
+   ],
+   "breakdown": {
+    "by": "course",
+    "title": "Matrículas por curso",
+    "desc": "Distribuição atual",
+    "icon": "fa-layer-group",
+    "attention": {
+     "where": {
+      "status": "rejected"
+     },
+     "badge": "status",
+     "title": "Indeferidas",
+     "desc": "Contatar o responsável",
+     "empty": "Nenhuma matrícula indeferida."
+    }
+   },
+   "cardFields": [
+    "tuition",
+    "attendance",
+    "enrollment_date"
+   ],
+   "cardLine": "shift",
+   "kanbanTitle": "Funil de matrícula",
+   "kanbanDesc": "Pré-matrícula → documentação → análise → matriculado",
+   "kanbanValue": "tuition",
+   "kanbanDate": "enrollment_date",
+   "drawer": {
+    "metrics": [
+     "tuition",
+     "attendance",
+     "enrollment_date",
+     "shift"
+    ],
+    "sections": [
+     {
+      "title": "Aluno e responsável",
+      "icon": "fa-user",
+      "fields": [
+       "student",
+       "guardian",
+       "email",
+       "scholarship"
+      ]
+     },
+     {
+      "title": "Matrícula",
+      "icon": "fa-id-card",
+      "fields": [
+       "course",
+       "shift",
+       "status"
+      ]
+     }
+    ]
+   },
+   "form": [
+    "student",
+    "guardian",
+    "email",
+    "course",
+    "shift",
+    "tuition",
+    "enrollment_date",
+    "scholarship"
+   ],
+   "analytics": [
+    {
+     "title": "Matrículas por curso",
+     "desc": "Situação atual",
+     "by": "course",
+     "type": "bar",
+     "measure": {
+      "agg": "count",
+      "unit": "count"
+     }
+    },
+    {
+     "title": "Matrículas por status",
+     "desc": "Funil",
+     "by": "status",
+     "type": "doughnut",
+     "measure": {
+      "agg": "count",
+      "unit": "count"
+     }
+    },
+    {
+     "title": "Novas matrículas por mês",
+     "desc": "Pela data da matrícula",
+     "by": "month",
+     "type": "line",
+     "measure": {
+      "agg": "count",
+      "unit": "count"
+     },
+     "date": "enrollment_date",
+     "wide": true
+    }
+   ],
+   "endpoints": {
+    "create": "POST /api/v1/domain/records/academic/enrollment/re-enrollment",
+    "edit": "PUT /api/v1/domain/records/academic/enrollment/re-enrollment/{id}",
+    "delete": "DELETE /api/v1/domain/records/academic/enrollment/re-enrollment/{id}",
+    "export": "GET /api/v1/domain/records/academic/enrollment/re-enrollment/export?format=csv",
+    "move": "POST /api/v1/domain/records/academic/enrollment/re-enrollment/status"
+   },
+   "views": [
+    "kpi",
+    "table",
+    "analytics"
+   ],
+   "defaultView": "analytics",
+   "create": false
+  },
+  "/academico": {
+   "title": "Painel Acadêmico",
+   "icon": "fa-gauge",
+   "currency": "BRL",
+   "entity": {
+    "singular": "Matrícula",
+    "plural": "Matrículas",
+    "icon": "fa-id-card",
+    "newLabel": "Nova matrícula"
+   },
+   "banner": {
+    "icon": "fa-user-graduate",
+    "title": "Matrículas 2026",
+    "desc": "Pré-matrículas, documentação pendente, análise e alunos matriculados por curso.",
+    "pill": "{count} matrículas",
+    "attention": {
+     "agg": "count",
+     "where": {
+      "status": "rejected"
+     }
+    }
+   },
+   "titleField": "student",
+   "codeField": "code",
+   "subField": "course",
+   "statusField": "status",
+   "stageField": "status",
+   "count": 48,
+   "fields": [
+    {
+     "key": "student",
+     "label": "Aluno",
+     "type": "person"
+    },
+    {
+     "key": "course",
+     "label": "Curso",
+     "type": "enum",
+     "values": [
+      {
+       "id": "EM",
+       "label": "Ensino Médio",
+       "tone": "blue",
+       "weight": 4
+      },
+      {
+       "id": "EF2",
+       "label": "Fundamental II",
+       "tone": "emerald",
+       "weight": 3
+      },
+      {
+       "id": "TEC-INF",
+       "label": "Técnico em Informática",
+       "tone": "purple",
+       "weight": 2
+      },
+      {
+       "id": "TEC-ENF",
+       "label": "Técnico em Enfermagem",
+       "tone": "amber",
+       "weight": 2
+      }
+     ]
+    },
+    {
+     "key": "code",
+     "label": "Matrícula",
+     "type": "code",
+     "prefix": "MAT"
+    },
+    {
+     "key": "status",
+     "label": "Status",
+     "type": "status"
+    },
+    {
+     "key": "shift",
+     "label": "Turno",
+     "type": "enum",
+     "values": [
+      {
+       "id": "morning",
+       "label": "Manhã",
+       "tone": "amber",
+       "weight": 4
+      },
+      {
+       "id": "afternoon",
+       "label": "Tarde",
+       "tone": "blue",
+       "weight": 3
+      },
+      {
+       "id": "night",
+       "label": "Noite",
+       "tone": "purple",
+       "weight": 2
+      }
+     ]
+    },
+    {
+     "key": "tuition",
+     "label": "Mensalidade",
+     "type": "money",
+     "min": 680,
+     "max": 2400
+    },
+    {
+     "key": "attendance",
+     "label": "Frequência",
+     "type": "pct",
+     "min": 62,
+     "max": 100
+    },
+    {
+     "key": "enrollment_date",
+     "label": "Data da matrícula",
+     "type": "date",
+     "from": -240,
+     "to": -1
+    },
+    {
+     "key": "guardian",
+     "label": "Responsável",
+     "type": "person",
+     "table": false
+    },
+    {
+     "key": "email",
+     "label": "E-mail",
+     "type": "email",
+     "table": false
+    },
+    {
+     "key": "scholarship",
+     "label": "Bolsista",
+     "type": "bool",
+     "p": 0.2,
+     "table": false
+    }
+   ],
+   "statuses": [
+    {
+     "id": "pre_enrollment",
+     "label": "Pré-matrícula",
+     "tone": "slate",
+     "weight": 2
+    },
+    {
+     "id": "documents",
+     "label": "Documentação",
+     "tone": "blue",
+     "weight": 2
+    },
+    {
+     "id": "review",
+     "label": "Em análise",
+     "tone": "amber",
+     "weight": 2
+    },
+    {
+     "id": "active",
+     "label": "Matriculado",
+     "tone": "emerald",
+     "weight": 6
+    },
+    {
+     "id": "rejected",
+     "label": "Indeferido",
+     "tone": "rose",
+     "weight": 1
+    }
+   ],
+   "kpis": [
+    {
+     "label": "Matrículas ativas",
+     "sub": "Ano letivo 2026",
+     "icon": "fa-user-graduate",
+     "tone": "emerald",
+     "value": {
+      "agg": "count",
+      "where": {
+       "status": "active"
+      }
+     },
+     "unitLabel": "Alunos",
+     "chips": [
+      {
+       "label": "Em análise",
+       "tone": "amber",
+       "value": {
+        "agg": "count",
+        "where": {
+         "status": "review"
+        }
+       }
+      },
+      {
+       "label": "Documentação",
+       "tone": "blue",
+       "value": {
+        "agg": "count",
+        "where": {
+         "status": "documents"
+        }
+       }
+      }
+     ],
+     "formula": "COUNT(enrollments WHERE status = 'active' AND deleted_at IS NULL)"
+    },
+    {
+     "label": "Receita mensal",
+     "sub": "Mensalidades ativas",
+     "icon": "fa-sack-dollar",
+     "tone": "blue",
+     "value": {
+      "agg": "sum",
+      "field": "tuition",
+      "where": {
+       "status": "active"
+      }
+     },
+     "unit": "money",
+     "pill": "Mensal",
+     "footer": [
+      {
+       "label": "Ticket médio",
+       "value": {
+        "agg": "avg",
+        "field": "tuition",
+        "where": {
+         "status": "active"
+        }
+       },
+       "unit": "money"
+      }
+     ],
+     "formula": "SUM(academic_billing_rules.monthly_tuition) das matrículas ativas"
+    },
+    {
+     "label": "Frequência média",
+     "sub": "Últimos 30 dias",
+     "icon": "fa-calendar-check",
+     "tone": "amber",
+     "value": {
+      "agg": "avg",
+      "field": "attendance"
+     },
+     "unit": "%",
+     "footer": [
+      {
+       "label": "Menor frequência",
+       "value": {
+        "agg": "min",
+        "field": "attendance"
+       },
+       "unit": "%"
+      }
+     ],
+     "formula": "AVG(presenças / aulas) em attendance"
+    },
+    {
+     "label": "Indeferidas",
+     "sub": "Exigem contato",
+     "icon": "fa-triangle-exclamation",
+     "tone": "rose",
+     "value": {
+      "agg": "count",
+      "where": {
+       "status": "rejected"
+      }
+     },
+     "unitLabel": "Solicitações",
+     "formula": "status = 'rejected'"
+    }
+   ],
+   "breakdown": {
+    "by": "course",
+    "title": "Matrículas por curso",
+    "desc": "Distribuição atual",
+    "icon": "fa-layer-group",
+    "attention": {
+     "where": {
+      "status": "rejected"
+     },
+     "badge": "status",
+     "title": "Indeferidas",
+     "desc": "Contatar o responsável",
+     "empty": "Nenhuma matrícula indeferida."
+    }
+   },
+   "cardFields": [
+    "tuition",
+    "attendance",
+    "enrollment_date"
+   ],
+   "cardLine": "shift",
+   "kanbanTitle": "Funil de matrícula",
+   "kanbanDesc": "Pré-matrícula → documentação → análise → matriculado",
+   "kanbanValue": "tuition",
+   "kanbanDate": "enrollment_date",
+   "drawer": {
+    "metrics": [
+     "tuition",
+     "attendance",
+     "enrollment_date",
+     "shift"
+    ],
+    "sections": [
+     {
+      "title": "Aluno e responsável",
+      "icon": "fa-user",
+      "fields": [
+       "student",
+       "guardian",
+       "email",
+       "scholarship"
+      ]
+     },
+     {
+      "title": "Matrícula",
+      "icon": "fa-id-card",
+      "fields": [
+       "course",
+       "shift",
+       "status"
+      ]
+     }
+    ]
+   },
+   "form": [
+    "student",
+    "guardian",
+    "email",
+    "course",
+    "shift",
+    "tuition",
+    "enrollment_date",
+    "scholarship"
+   ],
+   "analytics": [
+    {
+     "title": "Matrículas por curso",
+     "desc": "Situação atual",
+     "by": "course",
+     "type": "bar",
+     "measure": {
+      "agg": "count",
+      "unit": "count"
+     }
+    },
+    {
+     "title": "Matrículas por status",
+     "desc": "Funil",
+     "by": "status",
+     "type": "doughnut",
+     "measure": {
+      "agg": "count",
+      "unit": "count"
+     }
+    },
+    {
+     "title": "Novas matrículas por mês",
+     "desc": "Pela data da matrícula",
+     "by": "month",
+     "type": "line",
+     "measure": {
+      "agg": "count",
+      "unit": "count"
+     },
+     "date": "enrollment_date",
+     "wide": true
+    }
+   ],
+   "endpoints": {
+    "create": "POST /api/v1/domain/records/academic/enrollment/re-enrollment",
+    "edit": "PUT /api/v1/domain/records/academic/enrollment/re-enrollment/{id}",
+    "delete": "DELETE /api/v1/domain/records/academic/enrollment/re-enrollment/{id}",
+    "export": "GET /api/v1/domain/records/academic/enrollment/re-enrollment/export?format=csv",
+    "move": "POST /api/v1/domain/records/academic/enrollment/re-enrollment/status"
+   },
+   "views": [
+    "kpi",
+    "analytics"
+   ],
+   "create": false
+  },
+  "/academico/configuracoes": {
+   "layout": "settings",
+   "title": "Configurações Acadêmicas",
+   "icon": "fa-gear",
+   "banner": {
+    "icon": "fa-gear",
+    "title": "Regras do ano letivo",
+    "desc": "Parâmetros aplicados a matrículas, frequência e avaliação de todas as unidades."
+   },
+   "groups": [
+    {
+     "id": "enrollment",
+     "label": "Matrícula",
+     "icon": "fa-id-card",
+     "sections": [
+      {
+       "title": "Período de matrícula",
+       "desc": "academic_periods",
+       "icon": "fa-calendar",
+       "fields": [
+        {
+         "label": "Ano letivo",
+         "type": "select",
+         "options": [
+          "2026",
+          "2027"
+         ],
+         "value": "2026"
+        },
+        {
+         "label": "Abertura da rematrícula",
+         "value": "2026-11-03",
+         "mono": true
+        },
+        {
+         "label": "Exigir documentação completa",
+         "type": "toggle",
+         "value": true,
+         "hint": "Matrícula só passa para análise com todos os documentos"
+        }
+       ]
+      },
+      {
+       "title": "Financeiro",
+       "desc": "academic_billing_rules",
+       "icon": "fa-sack-dollar",
+       "fields": [
+        {
+         "label": "Dia de vencimento",
+         "type": "number",
+         "value": 10
+        },
+        {
+         "label": "Multa por atraso (%)",
+         "type": "number",
+         "value": 2
+        }
+       ]
+      }
+     ]
+    },
+    {
+     "id": "attendance",
+     "label": "Frequência",
+     "icon": "fa-calendar-check",
+     "sections": [
+      {
+       "title": "Limites",
+       "desc": "settings academic.*",
+       "icon": "fa-percent",
+       "fields": [
+        {
+         "label": "Frequência mínima (%)",
+         "type": "number",
+         "value": 75
+        },
+        {
+         "label": "Alertar responsável abaixo de",
+         "type": "number",
+         "value": 80,
+         "hint": "Notificação automática por e-mail"
+        }
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  "/academico/turmas": {
+   "title": "Turmas",
+   "icon": "fa-chalkboard-user",
+   "currency": "BRL",
+   "create": true,
+   "entity": {
+    "singular": "Turma",
+    "plural": "Turmas",
+    "icon": "fa-chalkboard-user",
+    "newLabel": "Nova turma"
+   },
+   "titleField": "name",
+   "codeField": "code",
+   "subField": "course",
+   "statusField": "status",
+   "count": 36,
+   "fields": [
+    {
+     "key": "name",
+     "label": "Turma",
+     "type": "title",
+     "samples": [
+      "1ª série A",
+      "1ª série B",
+      "2ª série A",
+      "2ª série B",
+      "3ª série A",
+      "9º ano A",
+      "9º ano B",
+      "8º ano A",
+      "INF-2026-1N",
+      "ENF-2026-1M",
+      "INF-2026-2T",
+      "ENF-2026-2N"
+     ]
+    },
+    {
+     "key": "course",
+     "label": "Curso",
+     "type": "enum",
+     "values": [
+      {
+       "id": "EM",
+       "label": "Ensino Médio",
+       "tone": "blue",
+       "weight": 4
+      },
+      {
+       "id": "EF2",
+       "label": "Fundamental II",
+       "tone": "emerald",
+       "weight": 3
+      },
+      {
+       "id": "TEC-INF",
+       "label": "Técnico em Informática",
+       "tone": "purple",
+       "weight": 2
+      },
+      {
+       "id": "TEC-ENF",
+       "label": "Técnico em Enfermagem",
+       "tone": "amber",
+       "weight": 2
+      }
+     ]
+    },
+    {
+     "key": "code",
+     "label": "Código",
+     "type": "code",
+     "prefix": "TUR"
+    },
+    {
+     "key": "status",
+     "label": "Status",
+     "type": "status"
+    },
+    {
+     "key": "shift",
+     "label": "Turno",
+     "type": "enum",
+     "values": [
+      {
+       "id": "morning",
+       "label": "Manhã",
+       "tone": "amber",
+       "weight": 4
+      },
+      {
+       "id": "afternoon",
+       "label": "Tarde",
+       "tone": "blue",
+       "weight": 3
+      },
+      {
+       "id": "night",
+       "label": "Noite",
+       "tone": "purple",
+       "weight": 2
+      }
+     ]
+    },
+    {
+     "key": "students",
+     "label": "Alunos",
+     "type": "int",
+     "min": 12,
+     "max": 40
+    },
+    {
+     "key": "occupancy",
+     "label": "Ocupação",
+     "type": "pct",
+     "min": 35,
+     "max": 100
+    },
+    {
+     "key": "start_date",
+     "label": "Início",
+     "type": "date",
+     "from": -200,
+     "to": 30
+    },
+    {
+     "key": "teacher",
+     "label": "Coordenador(a)",
+     "type": "person",
+     "table": false
+    }
+   ],
+   "statuses": [
+    {
+     "id": "planned",
+     "label": "Planejada",
+     "tone": "slate",
+     "weight": 2
+    },
+    {
+     "id": "open",
+     "label": "Matrículas abertas",
+     "tone": "blue",
+     "weight": 3
+    },
+    {
+     "id": "active",
+     "label": "Em andamento",
+     "tone": "emerald",
+     "weight": 6
+    },
+    {
+     "id": "closed",
+     "label": "Encerrada",
+     "tone": "rose",
+     "weight": 1
+    }
+   ],
+   "views": [
+    "table"
+   ],
+   "cardFields": [
+    "students",
+    "occupancy",
+    "start_date"
+   ],
+   "drawer": {
+    "metrics": [
+     "students",
+     "occupancy",
+     "start_date",
+     "shift"
+    ],
+    "sections": [
+     {
+      "title": "Turma",
+      "icon": "fa-chalkboard-user",
+      "fields": [
+       "name",
+       "course",
+       "teacher",
+       "status"
+      ]
+     }
+    ]
+   },
+   "form": [
+    "name",
+    "course",
+    "shift",
+    "teacher",
+    "start_date"
+   ],
+   "endpoints": {
+    "create": "POST /api/v1/domain/records/academic/classes",
+    "edit": "PUT /api/v1/domain/records/academic/classes/{id}",
+    "delete": "DELETE /api/v1/domain/records/academic/classes/{id}",
+    "export": "GET /api/v1/domain/records/academic/classes/export?format=csv"
+   }
+  }
+ }
+}

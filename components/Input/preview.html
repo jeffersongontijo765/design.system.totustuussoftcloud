@@ -1,0 +1,61 @@
+<!-- @dsCard group="Formulários" height=370 subtitle="ttsc-input · sm, padrão, lg, com ícone, desabilitado, readonly, inválido" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Input</title>
+<style>
+  .pv-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ttsc-space-4) var(--ttsc-space-5); }
+  .ttsc-input[readonly] { background-color: var(--ttsc-canvas-2); color: var(--ttsc-text-2); }
+  .ttsc-form-message { color: var(--ttsc-danger-text); }
+  .ttsc-form-label { color: var(--ttsc-text); }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="ds-label">Tamanhos</div>
+  <div class="ds-row">
+    <input class="ttsc-input ttsc-input-sm w-[180px]" placeholder="Pequeno (sm)" aria-label="Pequeno">
+    <input class="ttsc-input w-[180px]" placeholder="Padrão" aria-label="Padrão">
+    <input class="ttsc-input ttsc-input-lg w-[180px]" placeholder="Grande (lg)" aria-label="Grande">
+    <div class="ttsc-input ttsc-input-sm w-[220px]">
+      <i class="fa-light fa-magnifying-glass" aria-hidden="true"></i>
+      <input type="search" placeholder="Buscar aluno" aria-label="Buscar aluno">
+    </div>
+  </div>
+  <div class="ds-label">Formulário</div>
+  <form class="pv-grid" id="pv-form" novalidate>
+    <div class="ttsc-form-item">
+      <label class="ttsc-form-label" for="pv-name">Nome completo *</label>
+      <input class="ttsc-input" id="pv-name" required value="Ana Beatriz Souza">
+    </div>
+    <div class="ttsc-form-item">
+      <label class="ttsc-form-label" for="pv-email">E-mail</label>
+      <div class="ttsc-input">
+        <i class="fa-light fa-envelope" aria-hidden="true"></i>
+        <input id="pv-email" type="email" placeholder="aluno@escola.com.br">
+      </div>
+    </div>
+    <div class="ttsc-form-item">
+      <label class="ttsc-form-label" for="pv-cpf">CPF</label>
+      <input class="ttsc-input" id="pv-cpf" inputmode="numeric" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}" aria-invalid="true" aria-describedby="pv-cpf-msg" value="123.456.789">
+      <div class="ttsc-form-description">Formato 000.000.000-00.</div>
+      <div class="ttsc-form-message" id="pv-cpf-msg">CPF incompleto.</div>
+    </div>
+    <div class="ttsc-form-item">
+      <label class="ttsc-form-label" for="pv-code">Matrícula (gerada)</label>
+      <input class="ttsc-input" id="pv-code" readonly value="MAT-2026-00412">
+    </div>
+    <div class="ttsc-form-item">
+      <label class="ttsc-form-label" for="pv-unit">Unidade</label>
+      <input class="ttsc-input" id="pv-unit" disabled value="Unidade Centro">
+    </div>
+  </form>
+</div>
+<script>
+  TTSC.init();
+  var cpf = document.getElementById('pv-cpf');
+  cpf.addEventListener('input', function () {
+    cpf.setAttribute('aria-invalid', cpf.checkValidity() ? 'false' : 'true');
+  });
+</script>
+</body>
+</html>

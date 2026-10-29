@@ -1,0 +1,83 @@
+<!-- @dsCard group="Geral" height=505 subtitle="DataTables 2.3.7 · serverSide (ajax simulado), busca, ordenação, paginação, pt-BR, tema com tokens" -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><title>DataTables</title>
+<link rel="stylesheet" href="../../vendor/datatables/dataTables.dataTables.css">
+<style>
+  /* Tema DataTables -> tokens TTSC */
+  .ttsc-dt { --dt-row-hover: 0,0,0; --dt-row-stripe: 0,0,0; --dt-html-background: var(--ttsc-surface); color: var(--ttsc-text); font-size: 13px; }
+  [data-theme="dark"] .ttsc-dt { --dt-row-hover: 255,255,255; --dt-row-stripe: 255,255,255; }
+  .ttsc-dt .dt-container { color: var(--ttsc-text-2); }
+  .ttsc-dt table.dataTable > thead > tr > th { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--ttsc-text-muted); background: var(--ttsc-canvas); border-bottom: 1px solid var(--ttsc-border) !important; }
+  .ttsc-dt table.dataTable > tbody > tr > td { border-top: 1px solid var(--ttsc-border-soft) !important; color: var(--ttsc-text-2); padding: 8px 10px; }
+  .ttsc-dt table.dataTable > tbody > tr > td.dt-strong { color: var(--ttsc-text); font-weight: 600; }
+  .ttsc-dt .dt-search input, .ttsc-dt .dt-length select { background: var(--ttsc-surface); color: var(--ttsc-text); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-control); padding: 4px 8px; }
+  .ttsc-dt .dt-search input:focus { outline: 2px solid var(--ttsc-accent); outline-offset: 1px; }
+  .ttsc-dt .dt-info { color: var(--ttsc-text-muted); }
+  .ttsc-dt div.dt-container .dt-paging .dt-paging-button { color: var(--ttsc-text-2) !important; border: 1px solid transparent !important; border-radius: var(--ttsc-radius-sm) !important; background: transparent !important; }
+  .ttsc-dt div.dt-container .dt-paging .dt-paging-button:hover { background: var(--ttsc-canvas-2) !important; color: var(--ttsc-text) !important; }
+  .ttsc-dt div.dt-container .dt-paging .dt-paging-button.current { background: var(--ttsc-accent-soft) !important; border-color: var(--ttsc-accent-border) !important; color: var(--ttsc-accent-text) !important; }
+  .ttsc-dt div.dt-container .dt-paging .dt-paging-button.disabled { color: var(--ttsc-text-muted) !important; opacity: .6; }
+  .ttsc-dt div.dt-processing > div:last-child > div { background: var(--ttsc-accent); }
+  .ttsc-dt div.dt-processing { background: var(--ttsc-surface); color: var(--ttsc-text); border: 1px solid var(--ttsc-border); box-shadow: var(--ttsc-shadow-md); }
+  /* o CSS do vendor (carregado depois) usa ▲▼ em texto; o runtime usa chevrons SVG -> zera o content */
+  .ttsc-dt table.dataTable thead > tr > th span.dt-column-order:before,
+  .ttsc-dt table.dataTable thead > tr > th span.dt-column-order:after { content: "" !important; opacity: .45; }
+  .ttsc-dt table.dataTable thead > tr > th.dt-ordering-asc span.dt-column-order:before,
+  .ttsc-dt table.dataTable thead > tr > th.dt-ordering-desc span.dt-column-order:after { opacity: 1; }
+  .dt-card { background: var(--ttsc-surface); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); padding: 12px; }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="ds-label">Matrículas · processamento server-side</div>
+  <div class="dt-card ttsc-dt">
+    <table id="dt-enrollments" class="display" style="width:100%">
+      <thead><tr><th>Código</th><th>Aluno</th><th>Curso</th><th>Status</th><th>Data</th></tr></thead>
+    </table>
+  </div>
+  <div class="ds-note" id="dt-log">Última requisição: —</div>
+</div>
+<script src="../../vendor/jquery/jquery.min.js"></script>
+<script src="../../vendor/datatables/dataTables.min.js"></script>
+<script>
+  var LANG_PT_BR = {
+    processing: 'Carregando…', search: 'Buscar:', searchPlaceholder: 'Aluno, curso ou código',
+    lengthMenu: '_MENU_ por página', info: '_START_ a _END_ de _TOTAL_ matrículas',
+    infoEmpty: 'Nenhuma matrícula', infoFiltered: '(filtradas de _MAX_)', zeroRecords: 'Nenhuma matrícula encontrada',
+    emptyTable: 'Nenhuma matrícula cadastrada', paginate: { first: '«', previous: '‹', next: '›', last: '»' },
+    aria: { orderable: 'Ordenar por esta coluna', orderableReverse: 'Inverter ordenação' }
+  };
+  // Simula o endpoint /admin/academic/enrollments/datatable (mesmo contrato JSON do PHP)
+  var nomes = ['Ana Beatriz Souza','Bruno Carvalho','Camila Rocha','Diego Martins','Eduarda Lima','Felipe Araújo','Gabriela Nunes','Heitor Ribeiro','Isabela Castro','João Pedro Alves','Larissa Mendes','Matheus Barbosa','Natália Freitas','Otávio Pires','Paula Teixeira','Rafael Gomes','Sofia Cardoso','Thiago Moreira','Valentina Duarte','Yuri Batista','Alice Moura','Caio Fernandes','Lívia Correia'];
+  var cursos = ['Ensino Médio — 1º ano','Técnico em Informática','Ensino Fundamental II — 9º ano','Técnico em Enfermagem'];
+  var STATUS = [['active','Ativa','ttsc-badge-success'],['locked','Trancada','ttsc-badge-warning'],['transferred','Transferida','ttsc-badge-info'],['cancelled','Cancelada','ttsc-badge-destructive']];
+  var DB = nomes.map(function (n, i) {
+    var s = STATUS[[0, 0, 1, 0, 2, 0, 3][i % 7]];
+    return { code: 'MAT-2026-' + String(101 + i).padStart(4, '0'), student_name: n, course_name: cursos[i % 4], status: s[0], status_label: s[1], badge: s[2], enrollment_date: '2026-02-' + String(1 + (i * 3) % 27).padStart(2, '0') };
+  });
+  var COLS = ['code','student_name','course_name','status_label','enrollment_date'];
+  function fakeServer(req, callback) {
+    var q = (req.search.value || '').toLowerCase();
+    var rows = DB.filter(function (r) { return !q || (r.code + ' ' + r.student_name + ' ' + r.course_name).toLowerCase().indexOf(q) !== -1; });
+    var o = req.order[0]; if (o) { var k = COLS[o.column]; rows.sort(function (a, b) { return (a[k] > b[k] ? 1 : a[k] < b[k] ? -1 : 0) * (o.dir === 'desc' ? -1 : 1); }); }
+    document.getElementById('dt-log').textContent = 'Última requisição: draw=' + req.draw + ' start=' + req.start + ' length=' + req.length + ' search="' + q + '" order=' + (o ? COLS[o.column] + ' ' + o.dir : '—');
+    setTimeout(function () {
+      callback({ draw: req.draw, recordsTotal: DB.length, recordsFiltered: rows.length, data: rows.slice(req.start, req.start + req.length) });
+    }, 250);
+  }
+  new DataTable('#dt-enrollments', {
+    serverSide: true, processing: true, ajax: fakeServer, pageLength: 5, lengthMenu: [5, 10, 25],
+    order: [[1, 'asc']], language: LANG_PT_BR,
+    columns: [
+      { data: 'code', className: 'dt-strong' },
+      { data: 'student_name' },
+      { data: 'course_name' },
+      { data: 'status_label', render: function (d, t, r) { return '<span class="ttsc-badge ttsc-badge-sm ttsc-badge-outline ' + r.badge + '">' + d + '</span>'; } },
+      { data: 'enrollment_date', render: function (d) { return d.split('-').reverse().join('/'); } }
+    ]
+  });
+</script>
+</body>
+</html>

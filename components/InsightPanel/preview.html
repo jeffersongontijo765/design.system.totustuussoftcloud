@@ -1,0 +1,682 @@
+<!-- @dsCard group="Componentes do painel" height=616 width=1280 subtitle="Insights de IA com resumo executivo, recomendações priorizadas, confiança, fontes, aplicar, descartar e filtros" -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>InsightPanel</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box}
+  html,body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font-family:Inter,system-ui,sans-serif;font-size:13px;line-height:1.45;-webkit-font-smoothing:antialiased}
+  button{font:inherit;color:inherit;cursor:pointer}
+  [hidden]{display:none!important}
+  .demo{padding:16px;max-width:1280px;margin:0 auto}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  :focus-visible{outline:2px solid var(--ttsc-accent);outline-offset:2px}
+
+  .panel{position:relative;background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-surface);box-shadow:var(--ttsc-shadow-sm);padding:17px 20px 0;overflow:hidden}
+  .panel-h{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;position:relative}
+  .panel-id{display:flex;align-items:center;gap:10px;min-width:0}
+  .panel-mark{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:var(--ttsc-accent-soft);border:1px solid var(--ttsc-accent-border);color:var(--ttsc-accent-text);font-size:13px;flex-shrink:0}
+  .title-row{display:flex;align-items:center;flex-wrap:wrap;gap:8px;min-width:0}
+  .panel-title{margin:0;font-size:15px;font-weight:600;letter-spacing:-.01em}
+  .badge-ai{display:inline-flex;align-items:center;gap:4px;padding:1px 7px;border:1px solid var(--ttsc-accent-border);border-radius:var(--ttsc-radius-pill);background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text);font-size:9.5px;font-weight:700;letter-spacing:.02em;white-space:nowrap}
+  .badge-ai i{font-size:8.5px}
+  .panel-sub{display:flex;align-items:center;gap:5px;margin:2px 0 0;font-size:10px;color:var(--ttsc-text-muted)}
+  .panel-sub i{font-size:9px}
+
+  .why{position:relative;flex-shrink:0}
+  .why summary{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 10px;border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-sm);background:var(--ttsc-surface);color:var(--ttsc-text-2);font-size:10.5px;font-weight:600;list-style:none;cursor:pointer;transition:border-color .15s,background .15s,color .15s}
+  .why summary::-webkit-details-marker{display:none}
+  .why summary:hover{border-color:var(--ttsc-border-strong);background:var(--ttsc-canvas);color:var(--ttsc-text)}
+  .why summary i{font-size:9.5px;color:var(--ttsc-text-muted)}
+  .why summary .chev{font-size:8px;transition:transform .18s}
+  .why[open] summary{border-color:var(--ttsc-accent-border);background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text)}
+  .why[open] summary .chev{transform:rotate(180deg)}
+  .why-pop{position:absolute;right:0;top:calc(100% + 6px);z-index:60;width:330px;padding:11px 12px;border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-sm);background:var(--ttsc-surface);box-shadow:var(--ttsc-shadow-md)}
+  .why-h{margin:0 0 6px;font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ttsc-text-muted)}
+  .why-pop ul{margin:0;padding-left:14px;display:grid;gap:5px;font-size:10.5px;line-height:1.4;color:var(--ttsc-text-2)}
+  .why-pop li::marker{color:var(--ttsc-accent)}
+  .why-note{display:flex;gap:5px;margin:8px 0 0;padding-top:7px;border-top:1px solid var(--ttsc-border-soft);font-size:9.5px;line-height:1.4;color:var(--ttsc-text-muted)}
+  .why-note i{color:var(--ttsc-accent-text);margin-top:1px}
+
+  .exec{display:grid;grid-template-columns:29px minmax(0,1fr) auto;align-items:center;gap:11px;margin-top:12px;padding:11px 13px;border:1px solid var(--ttsc-accent-border);border-radius:var(--ttsc-radius-sm);background:linear-gradient(100deg,color-mix(in srgb,var(--ttsc-accent) 11%,var(--ttsc-surface)),color-mix(in srgb,var(--ttsc-accent) 3%,var(--ttsc-surface)) 58%,var(--ttsc-surface))}
+  .exec-ic{width:29px;height:29px;border-radius:50%;display:grid;place-items:center;background:var(--ttsc-accent-soft);border:1px solid var(--ttsc-accent-border);color:var(--ttsc-accent-text);font-size:12px}
+  .exec-label{margin:0;font-size:8.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--ttsc-accent-text)}
+  .exec-text{margin:1px 0 0;font-size:11.5px;line-height:1.45;color:var(--ttsc-text-2);max-width:790px}
+  .exec-text strong{color:var(--ttsc-text);font-weight:600}
+  .exec-kpi{display:grid;justify-items:end;gap:0;padding-left:14px;border-left:1px solid var(--ttsc-accent-border);text-align:right;flex-shrink:0}
+  .exec-kpi span{font-size:8.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ttsc-text-muted);white-space:nowrap}
+  .exec-kpi strong{display:flex;align-items:center;gap:4px;font-size:17px;font-weight:700;line-height:1.15;color:var(--ttsc-accent-text);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .exec-kpi strong i{font-size:11px}
+  .exec-kpi small{font-size:9px;color:var(--ttsc-text-muted);white-space:nowrap}
+
+  .filters{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:11px}
+  .chip{display:inline-flex;align-items:center;gap:5px;height:27px;padding:0 9px;border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-pill);background:var(--ttsc-surface);color:var(--ttsc-text-2);font-size:10.5px;font-weight:600;transition:border-color .15s,background .15s,color .15s}
+  .chip:hover{border-color:var(--ttsc-border-strong);background:var(--ttsc-canvas)}
+  .chip[aria-pressed="true"]{border-color:var(--ttsc-accent-border);background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text)}
+  .chip-n{min-width:15px;height:15px;padding:0 3px;border:1px solid var(--ttsc-border-soft);border-radius:var(--ttsc-radius-pill);background:var(--ttsc-surface);color:var(--ttsc-text-muted);font-size:9px;font-weight:700;display:inline-grid;place-items:center;font-variant-numeric:tabular-nums}
+  .chip[aria-pressed="true"] .chip-n{border-color:var(--ttsc-accent-border);color:var(--ttsc-accent-text)}
+
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin-top:11px}
+  .insight{position:relative;display:flex;flex-direction:column;gap:0;padding:12px 13px 10px;border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-sm);background:var(--ttsc-surface);min-width:0;transition:border-color .15s,opacity .17s,transform .17s}
+  .insight:hover{border-color:var(--ttsc-border-strong)}
+  .insight.is-dismissing{opacity:0;transform:scale(.985)}
+  .insight.is-applied{border-color:var(--ttsc-accent-border);box-shadow:inset 0 0 0 1px var(--ttsc-accent-border)}
+  .insight.has-more{z-index:25}
+  .ins-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .ins-type{display:inline-flex;align-items:center;gap:4px;padding:1px 6px;border:1px solid var(--ins-border,var(--ttsc-border));border-radius:var(--ttsc-radius-pill);background:var(--ins-soft,var(--ttsc-canvas-2));color:var(--ins-text,var(--ttsc-text-2));font-size:9px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;white-space:nowrap}
+  .ins-type i{font-size:8.5px}
+  .ins-tools{display:flex;align-items:center;gap:7px;flex-shrink:0}
+  .ins-src{display:inline-flex;align-items:center;gap:3px;font-size:9px;color:var(--ttsc-text-muted);white-space:nowrap}
+  .ins-src i{font-size:8.5px}
+  .dismiss{width:24px;height:24px;display:grid;place-items:center;border:0;border-radius:6px;background:transparent;color:var(--ttsc-text-muted);font-size:10px}
+  .dismiss:hover{background:var(--ttsc-surface-2);color:var(--ttsc-danger-text)}
+  .ins-title{margin:5px 0 0;font-size:12.5px;font-weight:600;line-height:1.3;color:var(--ttsc-text);letter-spacing:-.005em}
+  .ins-desc{margin:3px 0 0;font-size:10.5px;line-height:1.4;color:var(--ttsc-text-muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .ins-data{display:grid;grid-template-columns:minmax(0,1fr) 132px;align-items:end;gap:12px;margin-top:8px}
+  .ins-metric{display:grid;gap:0;min-width:0}
+  .ins-metric span{font-size:8.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ttsc-text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ins-metric b{font-size:13.5px;font-weight:700;color:var(--ttsc-text);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .conf{display:grid;gap:3px;min-width:0}
+  .conf-h{display:flex;align-items:baseline;justify-content:space-between;gap:6px;font-size:9px;color:var(--ttsc-text-muted)}
+  .conf-h b{font-size:9.5px;font-weight:700;color:var(--ttsc-text-2);font-variant-numeric:tabular-nums}
+  .meter{height:5px;border-radius:var(--ttsc-radius-pill);background:var(--ttsc-surface-2);overflow:hidden;border:1px solid var(--ttsc-border-soft)}
+  .meter span{display:block;height:100%;border-radius:var(--ttsc-radius-pill);background:var(--ins-tone,var(--ttsc-accent))}
+  .ins-foot{display:flex;align-items:center;justify-content:space-between;gap:9px;margin-top:8px;padding-top:8px;border-top:1px solid var(--ttsc-border-soft);min-width:0}
+  .ins-suggest{display:flex;align-items:center;gap:4px;min-width:0;font-size:9.5px;color:var(--ttsc-text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ins-suggest i{font-size:8.5px;color:var(--ins-text,var(--ttsc-text-muted));flex-shrink:0}
+  .ins-suggest b{font-weight:600;color:var(--ttsc-text-2);overflow:hidden;text-overflow:ellipsis}
+  .ins-actions{display:flex;align-items:center;gap:5px;flex-shrink:0}
+  .apply,.details{height:26px;padding:0 9px;border-radius:var(--ttsc-radius-sm);font-size:10px;font-weight:700;display:inline-flex;align-items:center;gap:4px;transition:background .15s,border-color .15s,color .15s}
+  .apply{border:1px solid var(--ttsc-accent-border);background:var(--ttsc-accent);color:var(--ttsc-accent-on)}
+  .apply:hover{background:var(--ttsc-accent-hover)}
+  .apply.is-done{border-color:var(--ttsc-accent-border);background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text);cursor:default}
+  .apply.is-done:hover{background:var(--ttsc-accent-soft)}
+  .apply i{font-size:9px}
+  .details{border:1px solid var(--ttsc-border);background:var(--ttsc-surface);color:var(--ttsc-text-2)}
+  .details:hover{border-color:var(--ttsc-border-strong);background:var(--ttsc-canvas);color:var(--ttsc-text)}
+
+  .more{position:absolute;left:10px;right:10px;bottom:44px;z-index:30;padding:9px 10px;border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-sm);background:var(--ttsc-surface);box-shadow:var(--ttsc-shadow-lg)}
+  .more-h{margin:0 0 5px;font-size:8.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ttsc-text-muted)}
+  .more ul{margin:0;padding-left:13px;display:grid;gap:3px;font-size:9.5px;line-height:1.4;color:var(--ttsc-text-2)}
+  .more li::marker{color:var(--ins-tone,var(--ttsc-accent))}
+  .more-link{display:flex;align-items:center;gap:4px;margin-top:7px;border:0;background:transparent;color:var(--ttsc-accent-text);font-size:9.5px;font-weight:700;padding:0}
+  .more-link i{font-size:8px}
+  .more-link:hover{text-decoration:underline;text-underline-offset:2px}
+
+  [data-type="risco"]{--ins-tone:var(--ttsc-danger);--ins-text:var(--ttsc-danger-text);--ins-border:color-mix(in srgb,var(--ttsc-danger) 30%,transparent);--ins-soft:color-mix(in srgb,var(--ttsc-danger) 10%,var(--ttsc-surface))}
+  [data-type="oportunidade"]{--ins-tone:var(--ttsc-accent);--ins-text:var(--ttsc-accent-text);--ins-border:var(--ttsc-accent-border);--ins-soft:var(--ttsc-accent-soft)}
+  [data-type="anomalia"]{--ins-tone:var(--ttsc-warning);--ins-text:var(--ttsc-warning-text);--ins-border:color-mix(in srgb,var(--ttsc-warning) 38%,transparent);--ins-soft:color-mix(in srgb,var(--ttsc-warning) 13%,var(--ttsc-surface))}
+  [data-type="previsao"]{--ins-tone:var(--ttsc-info);--ins-text:var(--ttsc-info-text);--ins-border:color-mix(in srgb,var(--ttsc-info) 32%,transparent);--ins-soft:color-mix(in srgb,var(--ttsc-info) 10%,var(--ttsc-surface))}
+
+  .empty{display:flex;flex-direction:column;align-items:center;gap:5px;margin-top:11px;padding:20px 14px;border:1px dashed var(--ttsc-border);border-radius:var(--ttsc-radius-sm);text-align:center;color:var(--ttsc-text-muted);font-size:11px}
+  .empty-ic{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--ttsc-canvas-2);color:var(--ttsc-text-muted);font-size:13px;margin-bottom:1px}
+  .empty strong{color:var(--ttsc-text-2);font-weight:600}
+  .empty-actions{display:flex;gap:12px;margin-top:2px}
+  .empty button{border:0;background:transparent;color:var(--ttsc-accent-text);font-size:10.5px;font-weight:700;padding:0}
+  .empty button:hover{text-decoration:underline;text-underline-offset:2px}
+
+  .panel-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:11px -20px 0;padding:9px 20px;border-top:1px solid var(--ttsc-border-soft);background:color-mix(in srgb,var(--ttsc-canvas) 55%,var(--ttsc-surface))}
+  .panel-foot p{display:flex;align-items:center;gap:5px;margin:0;font-size:9.5px;color:var(--ttsc-text-muted)}
+  .panel-foot p i{font-size:9px;color:var(--ttsc-accent-text)}
+  .foot-link{display:inline-flex;align-items:center;gap:4px;border:0;background:transparent;color:var(--ttsc-accent-text);font-size:10px;font-weight:700}
+  .foot-link i{font-size:8px}
+  .foot-link:hover{text-decoration:underline;text-underline-offset:2px}
+
+  @media (max-width:900px){
+    .exec{grid-template-columns:29px minmax(0,1fr)}
+    .exec-kpi{grid-column:2;grid-auto-flow:column;justify-content:start;align-items:baseline;justify-items:start;gap:6px;padding-left:0;border-left:0;text-align:left;margin-top:2px}
+    .exec-kpi span{font-size:8px}
+    .exec-kpi strong{font-size:15px}
+    .exec-kpi small{font-size:8.5px}
+  }
+  @media (max-width:720px){
+    .grid{grid-template-columns:1fr}
+    .panel{padding:14px 14px 0}
+    .panel-foot{margin-left:-14px;margin-right:-14px;padding-left:14px;padding-right:14px}
+    .panel-h{flex-wrap:wrap}
+    .why{width:100%}
+    .why summary{width:100%;justify-content:space-between}
+    .why-pop{left:0;right:auto;width:100%}
+  }
+  @media (max-width:480px){
+    .demo{padding:10px}
+    .panel-mark{width:28px;height:28px;font-size:12px}
+    .panel-title{font-size:14px}
+    .filters{gap:4px}
+    .chip{padding:0 8px}
+    .exec{grid-template-columns:1fr;gap:7px;padding:10px 11px}
+    .exec-ic{display:none}
+    .exec-kpi{grid-column:1;grid-auto-flow:row;gap:0}
+    .ins-data{grid-template-columns:minmax(0,1fr) 118px;gap:8px}
+    .ins-suggest{font-size:9px}
+    .apply,.details{height:27px;padding:0 8px;font-size:9.5px}
+    .panel-foot p{font-size:9px}
+  }
+  @media (max-width:390px){
+    .ins-foot{flex-wrap:wrap}
+    .ins-actions{width:100%;justify-content:flex-end}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  }
+</style>
+</head>
+<body>
+<main class="demo">
+  <section class="panel" id="insightPanel" aria-labelledby="insightTitle">
+    <header class="panel-h">
+      <div class="panel-id">
+        <span class="panel-mark" aria-hidden="true"><i class="fa-light fa-sparkles"></i></span>
+        <div style="min-width:0">
+          <div class="title-row">
+            <h2 class="panel-title" id="insightTitle">Insights da IA</h2>
+            <span class="badge-ai"><i class="fa-light fa-sparkles" aria-hidden="true"></i>IA · 12 sinais</span>
+          </div>
+          <p class="panel-sub"><i class="fa-light fa-clock" aria-hidden="true"></i>Atualizado há 4 min · análise do tenant</p>
+        </div>
+      </div>
+
+      <details class="why" id="whyDetails">
+        <summary><i class="fa-light fa-circle-question" aria-hidden="true"></i><span>Como a IA chegou aqui?</span><i class="fa-light fa-chevron-down chev" aria-hidden="true"></i></summary>
+        <div class="why-pop">
+          <p class="why-h">Fontes dos últimos 12 sinais</p>
+          <ul>
+            <li>Financeiro: mensalidades em atraso e renegociações dos últimos 12 meses.</li>
+            <li>Acadêmico: ocupação, lista de espera e evasão por turma.</li>
+            <li>Comercial: meta do trimestre e receita realizada até 24/10.</li>
+          </ul>
+          <p class="why-note"><i class="fa-light fa-shield-halved" aria-hidden="true"></i>Somente leitura. A IA não aplica nenhuma ação sem decisão humana.</p>
+        </div>
+      </details>
+    </header>
+
+    <div class="exec">
+      <span class="exec-ic" aria-hidden="true"><i class="fa-light fa-sparkles"></i></span>
+      <div style="min-width:0">
+        <p class="exec-label">Resumo executivo</p>
+        <p class="exec-text">A receita do trimestre tende a fechar <strong>6,4% acima da meta</strong>. O risco de inadimplência sobe em novembro e pede uma régua de cobrança nas próximas duas semanas.</p>
+      </div>
+      <div class="exec-kpi" aria-label="Receita projetada: 6,4% acima da meta do trimestre">
+        <span>Receita projetada</span>
+        <strong><i class="fa-light fa-arrow-trend-up" aria-hidden="true"></i>+6,4%</strong>
+        <small>vs. meta do trimestre</small>
+      </div>
+    </div>
+
+    <div class="filters" role="group" aria-label="Filtrar insights por tipo">
+      <button class="chip" type="button" data-filter="all" aria-pressed="true">Todos <span class="chip-n">4</span></button>
+      <button class="chip" type="button" data-filter="risco" aria-pressed="false">Risco <span class="chip-n">1</span></button>
+      <button class="chip" type="button" data-filter="oportunidade" aria-pressed="false">Oportunidade <span class="chip-n">1</span></button>
+      <button class="chip" type="button" data-filter="anomalia" aria-pressed="false">Anomalia <span class="chip-n">1</span></button>
+      <button class="chip" type="button" data-filter="previsao" aria-pressed="false">Previsão <span class="chip-n">1</span></button>
+    </div>
+
+    <div class="grid" id="insightGrid">
+      <article class="insight" data-id="ins-1" data-type="risco" data-confidence="87" data-title="Inadimplência pode subir 1,8 p.p. em novembro" aria-labelledby="ins-title-1">
+        <div class="ins-top">
+          <span class="ins-type"><i class="fa-light fa-triangle-exclamation" aria-hidden="true"></i>Risco</span>
+          <div class="ins-tools">
+            <span class="ins-src"><i class="fa-light fa-link" aria-hidden="true"></i>3 fontes</span>
+            <button class="dismiss" type="button" aria-label="Descartar insight: Inadimplência pode subir 1,8 p.p. em novembro"><i class="fa-light fa-xmark" aria-hidden="true"></i></button>
+          </div>
+        </div>
+        <h3 class="ins-title" id="ins-title-1">Inadimplência pode subir 1,8 p.p. em novembro</h3>
+        <p class="ins-desc">Atrasos acima de 15 dias cresceram 9% no ciclo de outubro.</p>
+        <div class="ins-data">
+          <div class="ins-metric"><span>Impacto estimado</span><b>R$ 42 mil</b></div>
+          <div class="conf">
+            <div class="conf-h"><span>Confiança</span><b>87%</b></div>
+            <div class="meter" role="progressbar" aria-label="Confiança: 87%" aria-valuemin="0" aria-valuemax="100" aria-valuenow="87"><span style="width:87%"></span></div>
+          </div>
+        </div>
+        <div class="ins-foot">
+          <p class="ins-suggest"><i class="fa-light fa-wand-magic-sparkles" aria-hidden="true"></i><span>Ação sugerida</span><b>Criar régua de cobrança</b></p>
+          <div class="ins-actions">
+            <button class="apply" type="button" aria-label="Aplicar sugestão: Criar régua de cobrança">Aplicar</button>
+            <button class="details" type="button" aria-label="Ver detalhes e evidências: Inadimplência pode subir 1,8 p.p. em novembro" aria-expanded="false" aria-controls="more-1">Detalhes</button>
+          </div>
+        </div>
+        <div class="more" id="more-1" hidden>
+          <p class="more-h">Evidências usadas</p>
+          <ul>
+            <li>1.240 mensalidades vencidas há mais de 15 dias.</li>
+            <li>Taxa de renegociação caiu de 38% para 29%.</li>
+          </ul>
+          <button class="more-link" type="button">Abrir ficha do insight <i class="fa-light fa-arrow-up-right-from-square" aria-hidden="true"></i></button>
+        </div>
+      </article>
+
+      <article class="insight" data-id="ins-2" data-type="oportunidade" data-confidence="94" data-title="Turmas de tecnologia com 92% de ocupação" aria-labelledby="ins-title-2">
+        <div class="ins-top">
+          <span class="ins-type"><i class="fa-light fa-arrow-trend-up" aria-hidden="true"></i>Oportunidade</span>
+          <div class="ins-tools">
+            <span class="ins-src"><i class="fa-light fa-link" aria-hidden="true"></i>4 fontes</span>
+            <button class="dismiss" type="button" aria-label="Descartar insight: Turmas de tecnologia com 92% de ocupação"><i class="fa-light fa-xmark" aria-hidden="true"></i></button>
+          </div>
+        </div>
+        <h3 class="ins-title" id="ins-title-2">Turmas de tecnologia com 92% de ocupação</h3>
+        <p class="ins-desc">Duas turmas superaram a meta de ocupação nas últimas seis semanas.</p>
+        <div class="ins-data">
+          <div class="ins-metric"><span>Ocupação atual</span><b>92%</b></div>
+          <div class="conf">
+            <div class="conf-h"><span>Confiança</span><b>94%</b></div>
+            <div class="meter" role="progressbar" aria-label="Confiança: 94%" aria-valuemin="0" aria-valuemax="100" aria-valuenow="94"><span style="width:94%"></span></div>
+          </div>
+        </div>
+        <div class="ins-foot">
+          <p class="ins-suggest"><i class="fa-light fa-wand-magic-sparkles" aria-hidden="true"></i><span>Ação sugerida</span><b>Abrir nova turma</b></p>
+          <div class="ins-actions">
+            <button class="apply" type="button" aria-label="Aplicar sugestão: Abrir nova turma">Aplicar</button>
+            <button class="details" type="button" aria-label="Ver detalhes e evidências: Turmas de tecnologia com 92% de ocupação" aria-expanded="false" aria-controls="more-2">Detalhes</button>
+          </div>
+        </div>
+        <div class="more" id="more-2" hidden>
+          <p class="more-h">Evidências usadas</p>
+          <ul>
+            <li>Lista de espera com 64 pessoas em duas turmas.</li>
+            <li>Ocupação média do curso: 81% no mesmo período.</li>
+          </ul>
+          <button class="more-link" type="button">Abrir ficha do insight <i class="fa-light fa-arrow-up-right-from-square" aria-hidden="true"></i></button>
+        </div>
+      </article>
+
+      <article class="insight" data-id="ins-3" data-type="anomalia" data-confidence="78" data-title="Queda de 12% nas matrículas do período noturno" aria-labelledby="ins-title-3">
+        <div class="ins-top">
+          <span class="ins-type"><i class="fa-light fa-bolt" aria-hidden="true"></i>Anomalia</span>
+          <div class="ins-tools">
+            <span class="ins-src"><i class="fa-light fa-link" aria-hidden="true"></i>5 fontes</span>
+            <button class="dismiss" type="button" aria-label="Descartar insight: Queda de 12% nas matrículas do período noturno"><i class="fa-light fa-xmark" aria-hidden="true"></i></button>
+          </div>
+        </div>
+        <h3 class="ins-title" id="ins-title-3">Queda de 12% nas matrículas do período noturno</h3>
+        <p class="ins-desc">Matrículas do noturno caíram 12% frente à média das últimas seis semanas.</p>
+        <div class="ins-data">
+          <div class="ins-metric"><span>Variação no período</span><b>−12%</b></div>
+          <div class="conf">
+            <div class="conf-h"><span>Confiança</span><b>78%</b></div>
+            <div class="meter" role="progressbar" aria-label="Confiança: 78%" aria-valuemin="0" aria-valuemax="100" aria-valuenow="78"><span style="width:78%"></span></div>
+          </div>
+        </div>
+        <div class="ins-foot">
+          <p class="ins-suggest"><i class="fa-light fa-wand-magic-sparkles" aria-hidden="true"></i><span>Ação sugerida</span><b>Revisar campanha</b></p>
+          <div class="ins-actions">
+            <button class="apply" type="button" aria-label="Aplicar sugestão: Revisar campanha">Aplicar</button>
+            <button class="details" type="button" aria-label="Ver detalhes e evidências: Queda de 12% nas matrículas do período noturno" aria-expanded="false" aria-controls="more-3">Detalhes</button>
+          </div>
+        </div>
+        <div class="more" id="more-3" hidden>
+          <p class="more-h">Evidências usadas</p>
+          <ul>
+            <li>Leads do noturno caíram 18% desde 15/09.</li>
+            <li>Conversão por atendimento caiu 3,2 p.p. no mesmo intervalo.</li>
+          </ul>
+          <button class="more-link" type="button">Abrir ficha do insight <i class="fa-light fa-arrow-up-right-from-square" aria-hidden="true"></i></button>
+        </div>
+      </article>
+
+      <article class="insight" data-id="ins-4" data-type="previsao" data-confidence="91" data-title="Receita deve fechar o trimestre 6,4% acima da meta" aria-labelledby="ins-title-4">
+        <div class="ins-top">
+          <span class="ins-type"><i class="fa-light fa-chart-line" aria-hidden="true"></i>Previsão</span>
+          <div class="ins-tools">
+            <span class="ins-src"><i class="fa-light fa-link" aria-hidden="true"></i>6 fontes</span>
+            <button class="dismiss" type="button" aria-label="Descartar insight: Receita deve fechar o trimestre 6,4% acima da meta"><i class="fa-light fa-xmark" aria-hidden="true"></i></button>
+          </div>
+        </div>
+        <h3 class="ins-title" id="ins-title-4">Receita deve fechar o trimestre 6,4% acima da meta</h3>
+        <p class="ins-desc">A receita realizada até 24/10 está 4,1% à frente do previsto.</p>
+        <div class="ins-data">
+          <div class="ins-metric"><span>Acima da meta</span><b>+6,4%</b></div>
+          <div class="conf">
+            <div class="conf-h"><span>Confiança</span><b>91%</b></div>
+            <div class="meter" role="progressbar" aria-label="Confiança: 91%" aria-valuemin="0" aria-valuemax="100" aria-valuenow="91"><span style="width:91%"></span></div>
+          </div>
+        </div>
+        <div class="ins-foot">
+          <p class="ins-suggest"><i class="fa-light fa-wand-magic-sparkles" aria-hidden="true"></i><span>Ação sugerida</span><b>Ver cenário</b></p>
+          <div class="ins-actions">
+            <button class="apply" type="button" aria-label="Aplicar sugestão: Ver cenário">Aplicar</button>
+            <button class="details" type="button" aria-label="Ver detalhes e evidências: Receita deve fechar o trimestre 6,4% acima da meta" aria-expanded="false" aria-controls="more-4">Detalhes</button>
+          </div>
+        </div>
+        <div class="more" id="more-4" hidden>
+          <p class="more-h">Evidências usadas</p>
+          <ul>
+            <li>Receita reconhecida 4,1% acima do previsto até 24/10.</li>
+            <li>Inadimplência projetada em 4,6% ainda pressiona o caixa.</li>
+          </ul>
+          <button class="more-link" type="button">Abrir ficha do insight <i class="fa-light fa-arrow-up-right-from-square" aria-hidden="true"></i></button>
+        </div>
+      </article>
+    </div>
+
+    <div class="empty" id="insightEmpty" hidden>
+      <span class="empty-ic" aria-hidden="true"><i class="fa-light fa-sparkles"></i></span>
+      <p style="margin:0"><strong>Nenhum insight com este filtro.</strong><br>Ajuste o filtro ou restaure os insights descartados.</p>
+      <div class="empty-actions">
+        <button type="button" data-empty="all">Ver todos</button>
+        <button type="button" data-empty="reset">Restaurar insights</button>
+      </div>
+    </div>
+
+    <footer class="panel-foot">
+      <p><i class="fa-light fa-shield-halved" aria-hidden="true"></i>Gerado a partir de 12 sinais · dados do tenant · LGPD</p>
+      <button class="foot-link" type="button" id="historyBtn">Ver histórico <i class="fa-light fa-chevron-right" aria-hidden="true"></i></button>
+    </footer>
+  </section>
+  <p id="insightLive" class="sr-only" aria-live="polite" aria-atomic="true"></p>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  var TYPES = {
+    risco: { label: 'Risco', icon: 'fa-triangle-exclamation' },
+    oportunidade: { label: 'Oportunidade', icon: 'fa-arrow-trend-up' },
+    anomalia: { label: 'Anomalia', icon: 'fa-bolt' },
+    previsao: { label: 'Previsão', icon: 'fa-chart-line' }
+  };
+
+  function esc(value) {
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  function init(root, options) {
+    if (!root) return null;
+    if (root.__ttscInsights) return root.__ttscInsights;
+
+    var grid = root.querySelector('#insightGrid');
+    var empty = root.querySelector('#insightEmpty');
+    var live = document.getElementById('insightLive');
+    var why = root.querySelector('#whyDetails');
+    var cleanup = [];
+    var timers = [];
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    function on(target, type, handler) {
+      target.addEventListener(type, handler);
+      cleanup.push(function () { target.removeEventListener(type, handler); });
+    }
+
+    function announce(text) {
+      if (!live) return;
+      live.textContent = '';
+      window.setTimeout(function () { live.textContent = text; }, 30);
+    }
+
+    function cards() {
+      return Array.prototype.slice.call(grid.querySelectorAll('.insight'));
+    }
+
+    function chips() {
+      return Array.prototype.slice.call(root.querySelectorAll('.chip'));
+    }
+
+    function metricValue(card) {
+      var el = card.querySelector('.ins-metric b');
+      return el ? el.textContent : '';
+    }
+
+    function suggestedAction(card) {
+      var el = card.querySelector('.ins-suggest b');
+      return el ? el.textContent : '';
+    }
+
+    function closeMore(card) {
+      var pop = card.querySelector('.more');
+      var btn = card.querySelector('.details');
+      if (pop) pop.hidden = true;
+      if (btn) btn.setAttribute('aria-expanded', 'false');
+      card.classList.remove('has-more');
+    }
+
+    function closeAllMore() {
+      cards().forEach(closeMore);
+    }
+
+    function updateChrome() {
+      var all = 0;
+      var byType = {};
+      var shown = 0;
+      var active = 'all';
+      var activeChip = root.querySelector('.chip[aria-pressed="true"]');
+      if (activeChip) active = activeChip.dataset.filter;
+
+      cards().forEach(function (card) {
+        var dismissed = card.dataset.dismissed === 'true';
+        if (!dismissed) {
+          all++;
+          byType[card.dataset.type] = (byType[card.dataset.type] || 0) + 1;
+        }
+        if (!dismissed && !card.hidden) shown++;
+      });
+
+      chips().forEach(function (chip) {
+        var count = chip.querySelector('.chip-n');
+        if (!count) return;
+        var filter = chip.dataset.filter;
+        count.textContent = String(filter === 'all' ? all : (byType[filter] || 0));
+      });
+
+      empty.hidden = shown !== 0;
+      return { all: all, shown: shown, active: active };
+    }
+
+    function applyFilter(filter) {
+      closeAllMore();
+      chips().forEach(function (chip) {
+        chip.setAttribute('aria-pressed', chip.dataset.filter === filter ? 'true' : 'false');
+      });
+      cards().forEach(function (card) {
+        var dismissed = card.dataset.dismissed === 'true';
+        card.hidden = dismissed || (filter !== 'all' && card.dataset.type !== filter);
+      });
+      var info = updateChrome();
+      if (info.all === 0) {
+        announce('Nenhum insight ativo. Restaure os descartados para rever a análise.');
+      } else {
+        announce('Mostrando ' + info.shown + ' de ' + info.all + ' insights.');
+      }
+      return info;
+    }
+
+    function applyCard(card) {
+      if (!card || card.classList.contains('is-applied')) return;
+      card.classList.add('is-applied');
+      var btn = card.querySelector('.apply');
+      if (btn) {
+        btn.classList.add('is-done');
+        btn.setAttribute('aria-disabled', 'true');
+        btn.setAttribute('aria-label', 'Aplicado: ' + (card.dataset.title || 'insight'));
+        btn.innerHTML = '<i class="fa-light fa-check" aria-hidden="true"></i><span>Aplicado</span>';
+      }
+      var title = card.dataset.title || 'insight';
+      announce('Insight aplicado: ' + title + '. A decisão foi registrada com o seu nome.');
+      root.dispatchEvent(new CustomEvent('ttsc:insight:apply', {
+        bubbles: true,
+        detail: { id: card.dataset.id || '', type: card.dataset.type, title: title, confidence: card.dataset.confidence || '' }
+      }));
+    }
+
+    function dismissCard(card) {
+      if (!card || card.dataset.dismissed === 'true') return;
+      closeMore(card);
+      card.dataset.dismissed = 'true';
+      var title = card.dataset.title || 'insight';
+      announce('Insight descartado: ' + title + '. A decisão fica no histórico.');
+      root.dispatchEvent(new CustomEvent('ttsc:insight:dismiss', {
+        bubbles: true,
+        detail: { id: card.dataset.id || '', type: card.dataset.type, title: title }
+      }));
+      updateChrome();
+      var finish = function () {
+        card.classList.remove('is-dismissing');
+        card.hidden = true;
+        updateChrome();
+      };
+      if (reduceMotion.matches) {
+        finish();
+      } else {
+        card.classList.add('is-dismissing');
+        var timer = window.setTimeout(finish, 170);
+        timers.push(timer);
+      }
+    }
+
+    function reset() {
+      timers.forEach(function (t) { window.clearTimeout(t); });
+      timers = [];
+      cards().forEach(function (card) {
+        card.dataset.dismissed = 'false';
+        card.hidden = false;
+        card.classList.remove('is-applied', 'is-dismissing');
+        closeMore(card);
+        var btn = card.querySelector('.apply');
+        if (btn) {
+          btn.classList.remove('is-done');
+          btn.removeAttribute('aria-disabled');
+          btn.setAttribute('aria-label', 'Aplicar sugestão: ' + (suggestedAction(card) || 'ação recomendada'));
+          btn.innerHTML = 'Aplicar';
+        }
+      });
+      applyFilter('all');
+      announce('Insights restaurados no estado inicial.');
+    }
+
+    function render(items) {
+      grid.innerHTML = items.map(function (item, index) {
+        var meta = TYPES[item.type] || TYPES.previsao;
+        var id = 'ins-title-' + (index + 1);
+        var moreId = 'ins-more-' + (index + 1);
+        var confidence = Math.max(0, Math.min(100, Number(item.confidence) || 0));
+        var evidence = (item.evidence || []).map(function (line) { return '<li>' + esc(line) + '</li>'; }).join('');
+        return '<article class="insight" data-type="' + esc(item.type) + '" data-id="' + esc(item.id) + '" data-title="' + esc(item.title) + '" data-confidence="' + confidence + '" aria-labelledby="' + id + '">' +
+          '<div class="ins-top"><span class="ins-type"><i class="fa-light ' + meta.icon + '" aria-hidden="true"></i>' + meta.label + '</span>' +
+          '<div class="ins-tools"><span class="ins-src"><i class="fa-light fa-link" aria-hidden="true"></i>' + (Number(item.sourceCount) || 0) + ' fontes</span>' +
+          '<button class="dismiss" type="button" aria-label="Descartar insight: ' + esc(item.title) + '"><i class="fa-light fa-xmark" aria-hidden="true"></i></button></div></div>' +
+          '<h3 class="ins-title" id="' + id + '">' + esc(item.title) + '</h3>' +
+          '<p class="ins-desc">' + esc(item.description) + '</p>' +
+          '<div class="ins-data"><div class="ins-metric"><span>' + esc(item.metricLabel) + '</span><b>' + esc(item.metric) + '</b></div>' +
+          '<div class="conf"><div class="conf-h"><span>Confiança</span><b>' + confidence + '%</b></div>' +
+          '<div class="meter" role="progressbar" aria-label="Confiança: ' + confidence + '%" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + confidence + '"><span style="width:' + confidence + '%"></span></div></div></div>' +
+          '<div class="ins-foot"><p class="ins-suggest"><i class="fa-light fa-wand-magic-sparkles" aria-hidden="true"></i><span>Ação sugerida</span><b>' + esc(item.suggestedAction) + '</b></p>' +
+          '<div class="ins-actions"><button class="apply" type="button" aria-label="Aplicar sugestão: ' + esc(item.suggestedAction) + '">Aplicar</button>' +
+          '<button class="details" type="button" aria-label="Ver detalhes e evidências: ' + esc(item.title) + '" aria-expanded="false" aria-controls="' + moreId + '">Detalhes</button></div></div>' +
+          '<div class="more" id="' + moreId + '" hidden><p class="more-h">Evidências usadas</p><ul>' + evidence + '</ul>' +
+          '<button class="more-link" type="button">Abrir ficha do insight <i class="fa-light fa-arrow-up-right-from-square" aria-hidden="true"></i></button></div>' +
+          '</article>';
+      }).join('');
+      updateChrome();
+    }
+
+    on(root, 'click', function (event) {
+      var chip = event.target.closest('.chip');
+      if (chip) {
+        applyFilter(chip.dataset.filter);
+        return;
+      }
+      var emptyBtn = event.target.closest('[data-empty]');
+      if (emptyBtn) {
+        if (emptyBtn.dataset.empty === 'reset') {
+          reset();
+        } else {
+          applyFilter('all');
+        }
+        return;
+      }
+      var card = event.target.closest('.insight');
+      if (!card) return;
+
+      if (event.target.closest('.dismiss')) {
+        dismissCard(card);
+        return;
+      }
+      if (event.target.closest('.apply')) {
+        applyCard(card);
+        return;
+      }
+      var details = event.target.closest('.details');
+      if (details) {
+        var isOpen = details.getAttribute('aria-expanded') === 'true';
+        closeAllMore();
+        if (!isOpen) {
+          details.setAttribute('aria-expanded', 'true');
+          card.classList.add('has-more');
+          var pop = card.querySelector('.more');
+          if (pop) pop.hidden = false;
+        }
+        return;
+      }
+      if (event.target.closest('.more-link')) {
+        closeMore(card);
+        announce('Abrindo a ficha do insight: ' + (card.dataset.title || '') + '.');
+      }
+    });
+
+    on(document, 'click', function (event) {
+      if (!event.target.closest('.insight')) closeAllMore();
+    });
+
+    on(document, 'keydown', function (event) {
+      if (event.key !== 'Escape') return;
+      var openMore = root.querySelector('.insight.has-more .details');
+      if (openMore) {
+        closeAllMore();
+        openMore.focus();
+        return;
+      }
+      if (why.open) {
+        why.open = false;
+        var summary = why.querySelector('summary');
+        if (summary) summary.focus();
+      }
+    });
+
+    on(root.querySelector('#historyBtn'), 'click', function () {
+      announce('Abrindo o histórico de insights na ficha do tenant.');
+    });
+
+    if (options && Array.isArray(options.items) && options.items.length) {
+      render(options.items);
+    } else {
+      updateChrome();
+    }
+
+    var api = {
+      apply: function (id) {
+        var card = cards().filter(function (c) { return (c.dataset.id || c.querySelector('.ins-title').id) === id; })[0];
+        applyCard(card);
+        return api;
+      },
+      dismiss: function (id) {
+        var card = cards().filter(function (c) { return (c.dataset.id || c.querySelector('.ins-title').id) === id; })[0];
+        dismissCard(card);
+        return api;
+      },
+      filter: function (type) { applyFilter(type || 'all'); return api; },
+      reset: function () { reset(); return api; },
+      destroy: function () {
+        timers.forEach(function (t) { window.clearTimeout(t); });
+        timers = [];
+        cleanup.forEach(function (fn) { fn(); });
+        cleanup = [];
+        if (root.__ttscInsights === api) delete root.__ttscInsights;
+      }
+    };
+
+    root.__ttscInsights = api;
+    return api;
+  }
+
+  window.TTSCInsights = { init: init };
+
+  var mount = document.getElementById('insightPanel');
+  if (mount) init(mount);
+})();
+</script>
+</body>
+</html>

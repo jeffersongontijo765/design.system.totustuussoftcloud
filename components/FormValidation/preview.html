@@ -1,0 +1,125 @@
+<!-- @dsCard group="Formulários · Plugins" height=240 subtitle="FormValidation 2.4.0 · Trigger, SubmitButton, Message, Aria, Sequence · notEmpty, regexp, promise (código único), stringLength, integer, between" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>FormValidation</title>
+<link rel="stylesheet" href="../../vendor/form-validation/form-validation.min.css">
+<script src="../../vendor/form-validation/form-validation.bundle.js"></script>
+<style>
+  .fv-form { display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 16px; }
+  .fv-form .fv-wide { grid-column: 1 / -1; }
+  .fv-form .ttsc-form-item { gap: 6px; }
+  .fv-form .ttsc-form-label .req { color: var(--ttsc-danger-text); }
+  .fv-plugins-message-container { display: block; font-size: 12px; line-height: 16px; color: var(--ttsc-danger-text); min-height: 16px; }
+  .fv-plugins-message-container .fv-help-block { display: flex; gap: 6px; align-items: center; }
+  .fv-plugins-message-container .fv-help-block::before { content: "\f06a"; font-family: "Font Awesome 7 Pro"; font-weight: 300; }
+  .fv-hint { font-size: 12px; color: var(--ttsc-text-muted); }
+  .ttsc-input.is-valid { border-color: var(--ttsc-accent-border); }
+  .fv-result { display: none; gap: 8px; align-items: center; padding: 10px 12px; border-radius: var(--ttsc-radius-control); border: 1px solid var(--ttsc-accent-border); background: var(--ttsc-accent-soft); color: var(--ttsc-text); }
+  .fv-result.show { display: flex; }
+  .fv-result i { color: var(--ttsc-accent-text); }
+  .fv-validating .ttsc-btn-primary i { animation: fvspin .8s linear infinite; }
+  @keyframes fvspin { to { transform: rotate(360deg); } }
+  @media (max-width: 640px) { .fv-form { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="ds-label">Cadastro de curso · erros após tentativa de salvar</div>
+  <form id="course-form" class="fv-form" novalidate>
+    <div class="ttsc-form-item">
+      <label class="ttsc-form-label" for="course-code">Código <span class="req" aria-hidden="true">*</span></label>
+      <input class="ttsc-input" id="course-code" name="code" value="ADM-01" autocomplete="off" aria-required="true">
+      <div data-fv-message="code"></div>
+    </div>
+    <div class="ttsc-form-item">
+      <label class="ttsc-form-label" for="course-name">Nome do curso <span class="req" aria-hidden="true">*</span></label>
+      <input class="ttsc-input" id="course-name" name="name" value="Ad" aria-required="true">
+      <div data-fv-message="name"></div>
+    </div>
+    <div class="ttsc-form-item">
+      <label class="ttsc-form-label" for="course-hours">Carga horária (h) <span class="req" aria-hidden="true">*</span></label>
+      <input class="ttsc-input" id="course-hours" name="total_hours" value="36o0" inputmode="numeric" aria-required="true">
+      <div data-fv-message="total_hours"></div>
+    </div>
+    <div class="ttsc-form-item fv-wide">
+      <span class="fv-hint">Códigos já usados nesta unidade: ADM-01, DIR-01, PED-02. Use letras maiúsculas, números e hífen.</span>
+    </div>
+    <div class="fv-wide ds-row" style="justify-content:space-between">
+      <div class="fv-result" id="fv-ok" role="status"><i class="fa-light fa-circle-check"></i> Curso válido — pronto para enviar ao servidor.</div>
+      <div class="ds-row" style="margin-left:auto">
+        <button type="reset" class="ttsc-btn ttsc-btn-ghost">Limpar</button>
+        <button type="submit" class="ttsc-btn ttsc-btn-primary"><i class="fa-light fa-floppy-disk"></i> Salvar curso</button>
+      </div>
+    </div>
+  </form>
+</div>
+<script>
+TTSC.init();
+var form = document.getElementById('course-form');
+var existingCodes = ['ADM-01', 'DIR-01', 'PED-02'];   // no app: GET /academic/courses/check-code
+
+var fv = FormValidation.formValidation(form, {
+  fields: {
+    code: {
+      validators: {
+        notEmpty: { message: 'Informe o código do curso.' },
+        regexp: { regexp: /^[A-Z0-9-]{2,20}$/, message: 'Use de 2 a 20 caracteres: A–Z, 0–9 e hífen.' },
+        promise: {
+          message: 'Este código já está em uso nesta unidade.',
+          promise: function (input) {
+            return new Promise(function (resolve) {
+              setTimeout(function () {
+                resolve({ valid: existingCodes.indexOf(input.value.trim().toUpperCase()) === -1 });
+              }, 250);
+            });
+          }
+        }
+      }
+    },
+    name: {
+      validators: {
+        notEmpty: { message: 'Informe o nome do curso.' },
+        stringLength: { min: 3, max: 255, message: 'O nome deve ter entre 3 e 255 caracteres.' }
+      }
+    },
+    total_hours: {
+      validators: {
+        notEmpty: { message: 'Informe a carga horária.' },
+        integer: { message: 'Use apenas números inteiros.', thousandsSeparator: '.', decimalSeparator: ',' },
+        between: { min: 20, max: 10000, message: 'Entre 20 e 10.000 horas.' }
+      }
+    }
+  },
+  plugins: {
+    trigger: new FormValidation.plugins.Trigger({ event: { code: 'blur', name: 'blur input', total_hours: 'blur input' } }),
+    sequence: new FormValidation.plugins.Sequence({ enabled: true }),
+    aria: new FormValidation.plugins.Aria(),
+    message: new FormValidation.plugins.Message({
+      clazz: 'fv-help-block',
+      container: function (field) { return form.querySelector('[data-fv-message="' + field + '"]'); }
+    }),
+    submitButton: new FormValidation.plugins.SubmitButton()
+  }
+});
+
+fv.on('core.element.validated', function (e) {
+  e.element.classList.toggle('is-valid', e.valid);   // aria-invalid/aria-describedby: plugin Aria
+});
+fv.on('core.form.validating', function () { form.classList.add('fv-validating'); });
+fv.on('core.form.invalid', function () {
+  form.classList.remove('fv-validating');
+  document.getElementById('fv-ok').classList.remove('show');
+  var first = form.querySelector('[aria-invalid="true"]'); if (first) first.focus();
+});
+fv.on('core.form.valid', function () {
+  form.classList.remove('fv-validating');
+  document.getElementById('fv-ok').classList.add('show');
+});
+form.addEventListener('reset', function () { setTimeout(function () { fv.resetForm(true); document.getElementById('fv-ok').classList.remove('show'); }); });
+form.querySelector('[name="code"]').addEventListener('input', function () { this.value = this.value.toUpperCase(); });
+
+// Estado inicial do preview: tentativa de salvar com erros
+fv.validate();
+</script>
+</body>
+</html>

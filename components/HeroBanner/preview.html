@@ -1,0 +1,82 @@
+<!-- @dsCard group="Componentes" height=344 subtitle="Hero com status, índice em anel e linha de KPIs · destaque da visão geral" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>HeroBanner</title>
+<style>
+  html,body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font-family:Inter,system-ui,sans-serif;font-size:13px;-webkit-font-smoothing:antialiased}
+  .demo{padding:16px;display:grid;gap:14px;max-width:1100px}
+  .card{background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-surface);padding:16px}
+  .card-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+  .card-t{margin:0;font-size:14px;font-weight:600;color:var(--ttsc-text)}
+  .card-s{margin:2px 0 0;font-size:11px;color:var(--ttsc-text-muted)}
+  .pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:var(--ttsc-radius-pill);border:1px solid var(--ttsc-border);color:var(--ttsc-text-2);white-space:nowrap;background:var(--ttsc-surface)}
+  .pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+  .pill-ok{color:var(--ttsc-success);border-color:color-mix(in srgb,var(--ttsc-success) 40%,transparent)}
+  .pill-warn{color:var(--ttsc-warning-text);border-color:color-mix(in srgb,var(--ttsc-warning) 45%,transparent)}
+  .pill-bad{color:var(--ttsc-danger-text);border-color:color-mix(in srgb,var(--ttsc-danger) 40%,transparent)}
+  .pill-info{color:var(--ttsc-info-text);border-color:color-mix(in srgb,var(--ttsc-info) 40%,transparent)}
+  .av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text);flex-shrink:0}
+  .ib{width:30px;height:30px;border-radius:8px;border:1px solid var(--ttsc-border);background:var(--ttsc-surface);display:grid;place-items:center;color:var(--ttsc-text-2);cursor:pointer}
+  .ib:hover{background:var(--ttsc-canvas-2)}
+  .ib-ok:hover{color:var(--ttsc-success)} .ib-no:hover{color:var(--ttsc-danger-text)}
+  .muted{color:var(--ttsc-text-muted)} .tnum{font-variant-numeric:tabular-nums}
+  :focus-visible{outline:2px solid var(--ttsc-accent);outline-offset:2px}
+
+  .ttsc-hero{display:grid;grid-template-columns:minmax(0,1fr) 150px;gap:16px;padding:20px;border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-surface);background:linear-gradient(135deg,var(--ttsc-accent-soft),var(--ttsc-surface) 70%)}
+  .ttsc-hero-eyebrow{margin:0;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ttsc-accent-text)}
+  .ttsc-hero-title{margin:4px 0 0;font-size:20px;font-weight:700;color:var(--ttsc-text)}
+  .ttsc-hero-sub{margin:6px 0 0;color:var(--ttsc-text-2);max-width:62ch}
+  .ttsc-hero-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+  .ttsc-hero-chip{font-size:11px;padding:3px 9px;border-radius:var(--ttsc-radius-pill);border:1px solid var(--ttsc-border);background:var(--ttsc-surface);color:var(--ttsc-text-2)}
+  .ttsc-hero-chip-live{border-color:var(--ttsc-accent-border);color:var(--ttsc-accent-text)}
+  .ttsc-hero-score{position:relative;display:grid;place-items:center;align-content:center;height:150px}
+  .ttsc-hero-ring{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-90deg)}
+  .ttsc-hero-ring circle{fill:none;stroke-width:9}
+  .ttsc-hero-ring .trk{stroke:var(--ttsc-surface-2)}
+  .ttsc-hero-ring .val{stroke:var(--ttsc-accent);stroke-linecap:round;stroke-dasharray:326.73;stroke-dashoffset:calc(326.73 * (1 - var(--p) / 100))}
+  .ttsc-hero-score-num{font-size:30px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums;color:var(--ttsc-text)}
+  .ttsc-hero-score-num small{font-size:12px;font-weight:500;color:var(--ttsc-text-muted)}
+  .ttsc-hero-score-label{font-size:11px;color:var(--ttsc-text-2);margin-top:4px}
+  .ttsc-hero-kpis{grid-column:1/-1;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:0}
+  .ttsc-hero-kpis>div{display:grid;gap:2px;padding:10px 12px;border-radius:var(--ttsc-radius-control);background:var(--ttsc-surface);border:1px solid var(--ttsc-border-soft)}
+  .ttsc-hero-kpis dt{font-size:11px;color:var(--ttsc-text-muted)}
+  .ttsc-hero-kpis dd{margin:0;font-size:18px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--ttsc-text)}
+  .ttsc-hero-kpis .up{font-size:11px;color:var(--ttsc-success)}
+  .ttsc-hero-kpis .down{font-size:11px;color:var(--ttsc-danger-text)}
+  .ttsc-hero-kpis .flat{font-size:11px;color:var(--ttsc-text-muted)}
+  @media (max-width:640px){.ttsc-hero{grid-template-columns:1fr}.ttsc-hero-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+<main class="demo">
+
+  <section class="ttsc-hero" aria-labelledby="hero-t">
+    <div>
+      <p class="ttsc-hero-eyebrow">Gestão acadêmica · 2026.2</p>
+      <h2 id="hero-t" class="ttsc-hero-title">Visão geral da instituição</h2>
+      <p class="ttsc-hero-sub">Matrículas, frequência e inadimplência do período, atualizados a cada 15 minutos.</p>
+      <div class="ttsc-hero-chips">
+        <span class="ttsc-hero-chip ttsc-hero-chip-live">Atualizado há 3 min</span>
+        <span class="ttsc-hero-chip">12 alertas abertos</span>
+        <span class="ttsc-hero-chip">Período: 2º semestre</span>
+      </div>
+    </div>
+    <div class="ttsc-hero-score" role="img" aria-label="Índice de saúde acadêmica: 94 de 100">
+      <svg class="ttsc-hero-ring" viewBox="0 0 120 120" aria-hidden="true">
+        <circle class="trk" cx="60" cy="60" r="52"/>
+        <circle class="val" cx="60" cy="60" r="52" style="--p:94"/>
+      </svg>
+      <span class="ttsc-hero-score-num">94<small>/100</small></span>
+      <span class="ttsc-hero-score-label">Saúde acadêmica</span>
+    </div>
+    <dl class="ttsc-hero-kpis">
+      <div><dt>Matrículas ativas</dt><dd class="tnum">1.284</dd><span class="up">↑ 4,2% vs. período anterior</span></div>
+      <div><dt>Frequência média</dt><dd class="tnum">91,4%</dd><span class="up">↑ 0,8 pt</span></div>
+      <div><dt>Inadimplência</dt><dd class="tnum">6,1%</dd><span class="down">↑ 1,2 pt</span></div>
+      <div><dt>Turmas abertas</dt><dd class="tnum">48</dd><span class="flat">de 52 planejadas</span></div>
+    </dl>
+  </section>
+
+</main>
+</body>
+</html>

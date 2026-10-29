@@ -1,0 +1,131 @@
+<!-- @dsCard group="Gráficos" height=415 subtitle="amCharts 5.17.2 · colunas (matrículas por mês) e rosca (por modalidade), escala ttsc-primary, rótulos ttsc-text-muted, tema escuro" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>AmCharts</title>
+<script src="../../vendor/amcharts5/index.js"></script>
+<script src="../../vendor/amcharts5/xy.js"></script>
+<script src="../../vendor/amcharts5/percent.js"></script>
+<script src="../../vendor/amcharts5/themes/Animated.js"></script>
+<style>
+  .ac-grid { display: grid; grid-template-columns: 3fr 2fr; gap: 16px; }
+  .ac-card { border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); background: var(--ttsc-surface); box-shadow: var(--ttsc-shadow-sm); padding: 14px 16px 8px; min-width: 0; }
+  .ac-card h3 { margin: 0; font-size: 14px; font-weight: 600; color: var(--ttsc-text); }
+  .ac-card p { margin: 2px 0 0; font-size: 12px; color: var(--ttsc-text-muted); }
+  .ac-chart { height: 260px; }
+  /* Barra de catálogo oficial */
+  .ac-demos { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 0 0 14px; padding: 9px 12px; border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-control); background: var(--ttsc-surface); }
+  .ac-demos i { color: var(--ttsc-accent-text); font-size: 12px; }
+  .ac-demos a { color: var(--ttsc-accent-text); font-weight: 600; font-size: 13px; text-decoration: underline; text-underline-offset: 3px; }
+  .ac-demos a:hover { color: var(--ttsc-accent-hover); }
+  .ac-demos a:focus-visible { outline: 2px solid var(--ttsc-accent); outline-offset: 2px; border-radius: var(--ttsc-radius-xs); }
+  .ac-demos-txt { font-size: 12px; color: var(--ttsc-text-2); }
+  .ac-demos-micro { margin-left: auto; font-size: 11px; color: var(--ttsc-text-muted); }
+  @media (max-width: 720px) { .ac-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="ds-pad">
+  <div class="ac-demos">
+    <i class="fa-light fa-arrow-up-right-from-square" aria-hidden="true"></i>
+    <a href="https://www.amcharts.com/demos/" target="_blank" rel="noopener">Catálogo oficial amCharts 5</a>
+    <span class="ac-demos-txt">— 303 demos ao vivo</span>
+    <span class="ac-demos-micro">bundle vendorizado: core, percent e xy</span>
+  </div>
+  <div class="ac-grid">
+    <figure class="ac-card" style="margin:0">
+      <h3>Matrículas por mês</h3><p>2026 · todas as unidades · 1.284 matrículas</p>
+      <div class="ac-chart" id="chart-enrollments" role="img" aria-label="Gráfico de colunas: matrículas por mês em 2026, pico de 312 em fevereiro."></div>
+    </figure>
+    <figure class="ac-card" style="margin:0">
+      <h3>Por modalidade</h3><p>Matrículas ativas</p>
+      <div class="ac-chart" id="chart-modality" role="img" aria-label="Gráfico de rosca: presencial 62%, EAD 24%, semipresencial 14%."></div>
+    </figure>
+  </div>
+</div>
+<script>
+TTSC.init();
+var MONTHS = [
+  { month: 'jan', total: 184 }, { month: 'fev', total: 312 }, { month: 'mar', total: 146 }, { month: 'abr', total: 58 },
+  { month: 'mai', total: 41 }, { month: 'jun', total: 37 }, { month: 'jul', total: 129 }, { month: 'ago', total: 168 },
+  { month: 'set', total: 74 }, { month: 'out', total: 52 }, { month: 'nov', total: 39 }, { month: 'dez', total: 44 }
+];
+var MODALITY = [
+  { modality: 'Presencial', total: 796 }, { modality: 'EAD', total: 308 }, { modality: 'Semipresencial', total: 180 }
+];
+
+function tok(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+/* O CSS do app usa oklch(); o amCharts 5 so entende hex/rgb. O canvas normaliza a cor para rgb. */
+var _cv = document.createElement('canvas').getContext('2d');
+function rgb(c) { _cv.fillStyle = '#000'; _cv.fillStyle = c; var v = _cv.fillStyle; if (v.charAt(0) === '#') return v; _cv.fillRect(0, 0, 1, 1); var d = _cv.getImageData(0, 0, 1, 1).data; return 'rgb(' + d[0] + ',' + d[1] + ',' + d[2] + ')'; }
+function col(name) { return am5.color(rgb(tok(name))); }
+function ttscTheme(root) {
+  var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  root.setThemes([am5themes_Animated.new(root)]);
+  root.locale = { _decimalSeparator: ',', _thousandSeparator: '.' };
+  root.numberFormatter.set('numberFormat', '#,###');
+  root.interfaceColors.set('text', col('--ttsc-text-muted'));
+  root.interfaceColors.set('grid', col('--ttsc-border'));
+  root.interfaceColors.set('background', col('--ttsc-surface'));
+  root.interfaceColors.set('alternativeBackground', col('--ttsc-text'));
+  root.interfaceColors.set('alternativeText', col('--ttsc-surface'));
+  return dark;
+}
+
+// Colunas: matrículas por mês
+(function () {
+  var root = am5.Root.new('chart-enrollments');
+  var dark = ttscTheme(root);
+  var chart = root.container.children.push(am5xy.XYChart.new(root, { paddingLeft: 0, paddingRight: 0, panX: false, panY: false, wheelX: 'none', wheelY: 'none' }));
+  var xRenderer = am5xy.AxisRendererX.new(root, { minGridDistance: 20, cellStartLocation: 0.15, cellEndLocation: 0.85 });
+  xRenderer.labels.template.setAll({ fill: col('--ttsc-text-muted'), fontSize: 11 });
+  xRenderer.grid.template.set('visible', false);
+  var xAxis = chart.xAxes.push(am5xy.CategoryAxis.new(root, { categoryField: 'month', renderer: xRenderer }));
+  var yRenderer = am5xy.AxisRendererY.new(root, {});
+  yRenderer.labels.template.setAll({ fill: col('--ttsc-text-muted'), fontSize: 11 });
+  yRenderer.grid.template.setAll({ stroke: col('--ttsc-border'), strokeOpacity: 1, strokeDasharray: [3, 3] });
+  var yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root, { min: 0, renderer: yRenderer, maxPrecision: 0 }));
+  var series = chart.series.push(am5xy.ColumnSeries.new(root, {
+    name: 'Matrículas', xAxis: xAxis, yAxis: yAxis, valueYField: 'total', categoryXField: 'month',
+    tooltip: am5.Tooltip.new(root, { labelText: '{categoryX}: {valueY} matrículas' })
+  }));
+  series.columns.template.setAll({ cornerRadiusTL: 4, cornerRadiusTR: 4, strokeOpacity: 0, fill: col(dark ? '--ttsc-primary-400' : '--ttsc-primary-500') });
+  // Destaque do mês de pico com o tom mais forte da escala
+  series.columns.template.adapters.add('fill', function (fill, target) {
+    var d = target.dataItem && target.dataItem.dataContext;
+    return d && d.total === 312 ? col(dark ? '--ttsc-primary-200' : '--ttsc-primary-700') : fill;
+  });
+  var tip = series.get('tooltip');
+  tip.get('background').setAll({ fill: col('--ttsc-text'), stroke: col('--ttsc-text') });
+  tip.label.setAll({ fill: col('--ttsc-surface'), fontSize: 12 });
+  series.bullets.push(function () {
+    return am5.Bullet.new(root, { locationY: 1, sprite: am5.Label.new(root, { text: '{valueY}', fill: col('--ttsc-text-muted'), fontSize: 10, centerX: am5.p50, centerY: am5.p100, populateText: true, dy: -2 }) });
+  });
+  xAxis.data.setAll(MONTHS); series.data.setAll(MONTHS);
+  chart.set('cursor', am5xy.XYCursor.new(root, { behavior: 'none' })).lineY.set('visible', false);
+  series.appear(600); chart.appear(600, 100);
+})();
+
+// Rosca: por modalidade
+(function () {
+  var root = am5.Root.new('chart-modality');
+  var dark = ttscTheme(root);
+  var chart = root.container.children.push(am5percent.PieChart.new(root, { innerRadius: am5.percent(62), layout: root.verticalLayout }));
+  var series = chart.series.push(am5percent.PieSeries.new(root, { valueField: 'total', categoryField: 'modality', alignLabels: false }));
+  series.get('colors').set('colors', dark
+    ? [col('--ttsc-primary-400'), col('--ttsc-primary-200'), col('--ttsc-primary-700')]
+    : [col('--ttsc-primary-500'), col('--ttsc-primary-800'), col('--ttsc-primary-200')]);
+  series.slices.template.setAll({ stroke: col('--ttsc-surface'), strokeWidth: 2, cornerRadius: 4, tooltipText: '{category}: {value} ({valuePercentTotal.formatNumber("#.")}%)' });
+  series.labels.template.set('forceHidden', true);
+  series.ticks.template.set('forceHidden', true);
+  var label = series.children.push(am5.Label.new(root, { text: '[fontSize:20px bold]1.284[/]\n[fontSize:11px]matrículas[/]', centerX: am5.p50, centerY: am5.p50, textAlign: 'center', fill: col('--ttsc-text') }));
+  var legend = chart.children.push(am5.Legend.new(root, { centerX: am5.p50, x: am5.p50, marginTop: 6 }));
+  legend.labels.template.setAll({ fill: col('--ttsc-text-2'), fontSize: 12 });
+  legend.valueLabels.template.setAll({ fill: col('--ttsc-text-muted'), fontSize: 12 });
+  legend.markerRectangles.template.setAll({ cornerRadiusTL: 3, cornerRadiusTR: 3, cornerRadiusBL: 3, cornerRadiusBR: 3 });
+  series.data.setAll(MODALITY);
+  legend.data.setAll(series.dataItems);
+  series.appear(600, 100);
+})();
+</script>
+</body>
+</html>

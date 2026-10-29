@@ -1,0 +1,100 @@
+<!-- @dsCard group="Geral" height=335 subtitle="jsTree 3.3.17 · unidade › curso › turma, plugins checkbox + types + search, ícones FA light, tema claro/escuro por tokens" -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><title>jsTree</title>
+<link rel="stylesheet" href="../../vendor/jstree/themes/default/style.min.css">
+<style>
+  .jt-grid { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 16px; align-items: start; }
+  .jt-panel { background: var(--ttsc-surface); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); padding: 10px; }
+  /* Tema jsTree "default" ligado aos tokens */
+  .ttsc-jstree .jstree-default .jstree-anchor { color: var(--ttsc-text-2); font-size: 13px; height: 26px; line-height: 26px; border-radius: var(--ttsc-radius-xs); }
+  .ttsc-jstree .jstree-default .jstree-node { min-height: 26px; line-height: 26px; }
+  .ttsc-jstree .jstree-default .jstree-hovered { background: var(--ttsc-canvas-2); box-shadow: none; color: var(--ttsc-text); }
+  .ttsc-jstree .jstree-default .jstree-clicked { background: var(--ttsc-accent-soft); box-shadow: none; color: var(--ttsc-accent-text); }
+  .ttsc-jstree .jstree-default .jstree-wholerow-hovered { background: var(--ttsc-canvas-2); }
+  .ttsc-jstree .jstree-default .jstree-search { color: var(--ttsc-accent-text); font-style: normal; font-weight: 600; }
+  .ttsc-jstree .jstree-default .jstree-themeicon-custom { background: none; color: var(--ttsc-text-muted); font-size: 13px; text-align: center; }
+  .ttsc-jstree .jstree-default .jstree-anchor:focus-visible { outline: 2px solid var(--ttsc-accent); outline-offset: -1px; }
+  /* No escuro, os sprites (setas e checkboxes) são escuros: inverte só os ícones-sprite */
+  /* Setas do sprite são escuras: no tema escuro, inverte só elas */
+  [data-theme="dark"] .ttsc-jstree .jstree-default .jstree-ocl { filter: invert(1) brightness(1.2); }
+  /* Checkbox desenhado com tokens (substitui o sprite) */
+  .ttsc-jstree .jstree-default .jstree-checkbox { background: none !important; position: relative; }
+  .ttsc-jstree .jstree-default .jstree-checkbox::before { content: ""; position: absolute; left: 5px; top: 5px; width: 14px; height: 14px; box-sizing: border-box;
+    border: 1px solid var(--ttsc-border-strong); border-radius: 3px; background: var(--ttsc-surface); }
+  .ttsc-jstree .jstree-default .jstree-clicked > .jstree-checkbox::before { background: var(--ttsc-accent); border-color: var(--ttsc-accent); }
+  .ttsc-jstree .jstree-default .jstree-clicked > .jstree-checkbox::after { content: ""; position: absolute; left: 10px; top: 7px; width: 4px; height: 8px;
+    border: solid var(--ttsc-accent-on); border-width: 0 2px 2px 0; transform: rotate(45deg); }
+  .ttsc-jstree .jstree-default .jstree-checkbox.jstree-undetermined::before { border-color: var(--ttsc-accent); }
+  .ttsc-jstree .jstree-default .jstree-checkbox.jstree-undetermined::after { content: ""; position: absolute; left: 8px; top: 11px; width: 8px; height: 2px; background: var(--ttsc-accent); }
+  .ttsc-jstree .jstree-default .jstree-disabled { color: var(--ttsc-text-muted); }
+  .ttsc-jstree .jstree-default .jstree-disabled > .jstree-checkbox::before { background: var(--ttsc-canvas-2); }
+  .ttsc-jstree .jstree-default .jstree-node.jstree-leaf > .jstree-ocl { background: transparent; }
+  .jt-count { font-size: 11px; color: var(--ttsc-text-muted); margin-left: 4px; }
+  .jt-sel { font-size: 12px; color: var(--ttsc-text-2); display: flex; flex-direction: column; gap: 4px; max-height: 210px; overflow: auto; }
+  .jt-sel li { list-style: none; display: flex; gap: 6px; align-items: center; }
+  .jt-sel ul { margin: 0; padding: 0; }
+</style>
+</head>
+<body>
+<div class="ds-pad">
+  <div class="jt-grid">
+    <div class="jt-panel ds-stack">
+      <div class="ttsc-input-group">
+        <span class="ttsc-input-addon"><i class="fa-light fa-magnifying-glass"></i></span>
+        <input type="search" class="ttsc-input" id="jt-search" placeholder="Buscar unidade, curso ou turma" aria-label="Buscar na árvore">
+      </div>
+      <div class="ttsc-jstree"><div id="jt-tree" aria-label="Unidades, cursos e turmas"></div></div>
+    </div>
+    <div class="jt-panel ds-stack">
+      <div class="ds-label">Turmas selecionadas (<span id="jt-n">0</span>)</div>
+      <div class="jt-sel"><ul id="jt-list"></ul></div>
+      <button type="button" class="ttsc-btn ttsc-btn-primary ttsc-btn-sm" id="jt-apply"><i class="fa-light fa-paper-plane"></i> Enviar comunicado</button>
+    </div>
+  </div>
+</div>
+<script src="../../vendor/jquery/jquery.min.js"></script>
+<script src="../../vendor/jstree/jstree.min.js"></script>
+<script>
+  var data = [
+    { id: 'u-centro', parent: '#', text: 'Unidade Centro', type: 'unit', state: { opened: true } },
+    { id: 'c-em', parent: 'u-centro', text: 'Ensino Médio', type: 'course', state: { opened: true } },
+    { id: 't-1a', parent: 'c-em', text: '1º ano A — Manhã', type: 'class', li_attr: { 'data-students': 34 } },
+    { id: 't-1b', parent: 'c-em', text: '1º ano B — Tarde', type: 'class', li_attr: { 'data-students': 29 }, state: { selected: true } },
+    { id: 't-2a', parent: 'c-em', text: '2º ano A — Manhã', type: 'class', li_attr: { 'data-students': 31 }, state: { selected: true } },
+    { id: 'c-inf', parent: 'u-centro', text: 'Técnico em Informática', type: 'course' },
+    { id: 't-inf1', parent: 'c-inf', text: 'Módulo I — Noite', type: 'class', li_attr: { 'data-students': 27 } },
+    { id: 't-inf2', parent: 'c-inf', text: 'Módulo II — Noite', type: 'class', li_attr: { 'data-students': 22 } },
+    { id: 'u-norte', parent: '#', text: 'Unidade Zona Norte', type: 'unit', state: { opened: true } },
+    { id: 'c-ef2', parent: 'u-norte', text: 'Ensino Fundamental II', type: 'course' },
+    { id: 't-9a', parent: 'c-ef2', text: '9º ano A — Manhã', type: 'class', li_attr: { 'data-students': 33 } },
+    { id: 't-9b', parent: 'c-ef2', text: '9º ano B — Tarde', type: 'class', li_attr: { 'data-students': 30 } },
+    { id: 'c-enf', parent: 'u-norte', text: 'Técnico em Enfermagem', type: 'course', state: { disabled: true }, a_attr: { title: 'Curso inativo' } }
+  ];
+  $('#jt-tree').jstree({
+    core: { data: data, themes: { name: 'default', dots: false, icons: true, responsive: false }, multiple: true,
+      strings: { 'Loading ...': 'Carregando…' } },
+    plugins: ['checkbox', 'types', 'search', 'wholerow'],
+    checkbox: { three_state: true, keep_selected_style: false },
+    types: {
+      unit: { icon: 'fa-light fa-building' },
+      course: { icon: 'fa-light fa-graduation-cap' },
+      'class': { icon: 'fa-light fa-users', max_children: 0 }
+    },
+    search: { show_only_matches: true, show_only_matches_children: true }
+  }).on('changed.jstree ready.jstree', function () {
+    var tree = $('#jt-tree').jstree(true);
+    var classes = tree.get_selected(true).filter(function (n) { return n.type === 'class'; });
+    var total = classes.reduce(function (s, n) { return s + Number(n.li_attr['data-students'] || 0); }, 0);
+    $('#jt-n').text(classes.length);
+    $('#jt-list').html(classes.map(function (n) {
+      return '<li><i class="fa-light fa-users"></i>' + $('<span>').text(n.text).html() + '<span class="jt-count">' + n.li_attr['data-students'] + ' alunos</span></li>';
+    }).join('') || '<li class="jt-count">Nenhuma turma marcada</li>');
+    $('#jt-apply').prop('disabled', !classes.length).attr('title', total + ' destinatários');
+  });
+  var t; $('#jt-search').on('input', function () { var v = this.value; clearTimeout(t); t = setTimeout(function () { $('#jt-tree').jstree(true).search(v); }, 250); });
+  TTSC.init();
+</script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!-- @dsCard group="Componentes" height=325 subtitle="Funil de etapas com barras decrescentes, valor e porcentagem do topo" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>FunnelBars</title>
+<style>
+  html,body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font-family:Inter,system-ui,sans-serif;font-size:13px;-webkit-font-smoothing:antialiased}
+  .demo{padding:16px;display:grid;gap:14px;max-width:1100px}
+  .card{background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-surface);padding:16px}
+  .card-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+  .card-t{margin:0;font-size:14px;font-weight:600;color:var(--ttsc-text)}
+  .card-s{margin:2px 0 0;font-size:11px;color:var(--ttsc-text-muted)}
+  .pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:var(--ttsc-radius-pill);border:1px solid var(--ttsc-border);color:var(--ttsc-text-2);white-space:nowrap;background:var(--ttsc-surface)}
+  .pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+  .pill-ok{color:var(--ttsc-success);border-color:color-mix(in srgb,var(--ttsc-success) 40%,transparent)}
+  .pill-warn{color:var(--ttsc-warning-text);border-color:color-mix(in srgb,var(--ttsc-warning) 45%,transparent)}
+  .pill-bad{color:var(--ttsc-danger-text);border-color:color-mix(in srgb,var(--ttsc-danger) 40%,transparent)}
+  .pill-info{color:var(--ttsc-info-text);border-color:color-mix(in srgb,var(--ttsc-info) 40%,transparent)}
+  .av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text);flex-shrink:0}
+  .ib{width:30px;height:30px;border-radius:8px;border:1px solid var(--ttsc-border);background:var(--ttsc-surface);display:grid;place-items:center;color:var(--ttsc-text-2);cursor:pointer}
+  .ib:hover{background:var(--ttsc-canvas-2)}
+  .ib-ok:hover{color:var(--ttsc-success)} .ib-no:hover{color:var(--ttsc-danger-text)}
+  .muted{color:var(--ttsc-text-muted)} .tnum{font-variant-numeric:tabular-nums}
+  :focus-visible{outline:2px solid var(--ttsc-accent);outline-offset:2px}
+
+  .funnel{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+  .funnel li{display:grid;grid-template-columns:minmax(120px,170px) minmax(0,1fr) 150px;gap:12px;align-items:center}
+  .funnel-label{font-size:12px;color:var(--ttsc-text-2)}
+  .funnel-track{position:relative;height:30px;border-radius:var(--ttsc-radius-control);background:var(--ttsc-surface-2);overflow:hidden}
+  .funnel-bar{position:absolute;inset:0 auto 0 0;width:calc(var(--w) * 1%);min-width:4px;display:flex;align-items:center;padding:0 10px;border-radius:var(--ttsc-radius-control);background:color-mix(in srgb,var(--ttsc-accent) calc(100% - var(--i) * 7%),var(--ttsc-surface));color:var(--ttsc-accent-on);font-size:12px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .funnel-value{display:flex;justify-content:flex-end;align-items:baseline;gap:8px;font-variant-numeric:tabular-nums;color:var(--ttsc-text)}
+  .funnel-value small{font-size:11px;color:var(--ttsc-text-muted)}
+  .funnel-drop{font-size:11px;color:var(--ttsc-danger-text);padding-left:calc(170px + 12px)}
+  @media (max-width:640px){.funnel li{grid-template-columns:1fr;gap:4px}.funnel-value{justify-content:flex-start}.funnel-drop{padding-left:0}}
+</style>
+</head>
+<body>
+<main class="demo">
+
+  <section class="card" aria-labelledby="fn-t">
+    <div class="card-h">
+      <div><h2 id="fn-t" class="card-t">Funil de matrícula</h2><p class="card-s">Coorte do processo seletivo 2026.2</p></div>
+      <span class="pill pill-info">6.840 interessados</span>
+    </div>
+    <ol class="funnel">
+      <li style="--i:0"><span class="funnel-label">Interessados</span>
+        <div class="funnel-track"><div class="funnel-bar" style="--w:100" role="img" aria-label="Interessados: 6.840">6.840</div></div>
+        <span class="funnel-value">6.840 <small>100%</small></span></li>
+      <li style="--i:1"><span class="funnel-label">Inscritos</span>
+        <div class="funnel-track"><div class="funnel-bar" style="--w:68" role="img" aria-label="Inscritos: 4.644">4.644</div></div>
+        <span class="funnel-value">4.644 <small>67,9%</small></span></li>
+      <li style="--i:2"><span class="funnel-label">Matriculados</span>
+        <div class="funnel-track"><div class="funnel-bar" style="--w:41" role="img" aria-label="Matriculados: 2.814">2.814</div></div>
+        <span class="funnel-value">2.814 <small>41,1%</small></span></li>
+      <li style="--i:3"><span class="funnel-label">Frequentando o 1º mês</span>
+        <div class="funnel-track"><div class="funnel-bar" style="--w:29" role="img" aria-label="Frequentando: 2.007">2.007</div></div>
+        <span class="funnel-value">2.007 <small>29,3%</small></span></li>
+      <li style="--i:4"><span class="funnel-label">Concluintes</span>
+        <div class="funnel-track"><div class="funnel-bar" style="--w:17" role="img" aria-label="Concluintes: 1.180">1.180</div></div>
+        <span class="funnel-value">1.180 <small>17,2%</small></span></li>
+    </ol>
+  </section>
+
+</main>
+</body>
+</html>

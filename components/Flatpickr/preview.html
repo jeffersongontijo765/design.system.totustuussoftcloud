@@ -1,0 +1,85 @@
+<!-- @dsCard group="Formulários · Plugins" height=358 subtitle="flatpickr 4.6.13 + l10n pt · inline range, single (altInput), range, time 24h · tema com tokens" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Flatpickr</title>
+<link rel="stylesheet" href="../../vendor/flatpickr/flatpickr.min.css">
+<script src="../../vendor/flatpickr/flatpickr.min.js"></script>
+<script src="../../vendor/flatpickr/l10n/pt.js"></script>
+<style>
+  /* Tema TTSC para flatpickr (vale nos dois temas porque só usa tokens) */
+  .flatpickr-calendar { background: var(--ttsc-surface); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-control);
+    box-shadow: var(--ttsc-shadow-popover); font-family: inherit; font-size: 13px; }
+  .flatpickr-calendar.inline { box-shadow: none; }
+  .flatpickr-calendar.arrowTop::before, .flatpickr-calendar.arrowTop::after, .flatpickr-calendar.arrowBottom::before, .flatpickr-calendar.arrowBottom::after { display: none; }
+  .flatpickr-months .flatpickr-month, .flatpickr-current-month input.cur-year, .flatpickr-current-month .flatpickr-monthDropdown-months { color: var(--ttsc-text); fill: var(--ttsc-text); background: transparent; }
+  .flatpickr-current-month { font-size: 14px; font-weight: 600; }
+  .flatpickr-current-month .flatpickr-monthDropdown-months .flatpickr-monthDropdown-month { background: var(--ttsc-surface); color: var(--ttsc-text); }
+  .flatpickr-months .flatpickr-prev-month, .flatpickr-months .flatpickr-next-month { color: var(--ttsc-text-2); fill: var(--ttsc-text-2); }
+  .flatpickr-months .flatpickr-prev-month:hover svg, .flatpickr-months .flatpickr-next-month:hover svg { fill: var(--ttsc-accent-text); }
+  .numInputWrapper span.arrowUp::after { border-bottom-color: var(--ttsc-text-2); }
+  .numInputWrapper span.arrowDown::after { border-top-color: var(--ttsc-text-2); }
+  span.flatpickr-weekday { color: var(--ttsc-text-muted); font-weight: 500; font-size: 11px; text-transform: uppercase; background: transparent; }
+  .flatpickr-day { color: var(--ttsc-text); border-radius: var(--ttsc-radius-xs); }
+  .flatpickr-day:hover, .flatpickr-day:focus { background: var(--ttsc-canvas-2); border-color: var(--ttsc-canvas-2); color: var(--ttsc-text); }
+  .flatpickr-day.today { border-color: var(--ttsc-accent); }
+  .flatpickr-day.today:hover { background: var(--ttsc-accent-soft); border-color: var(--ttsc-accent); color: var(--ttsc-text); }
+  .flatpickr-day.prevMonthDay, .flatpickr-day.nextMonthDay, .flatpickr-day.flatpickr-disabled, .flatpickr-day.flatpickr-disabled:hover { color: var(--ttsc-text-muted); opacity: .55; }
+  .flatpickr-day.selected, .flatpickr-day.startRange, .flatpickr-day.endRange,
+  .flatpickr-day.selected:hover, .flatpickr-day.startRange:hover, .flatpickr-day.endRange:hover,
+  .flatpickr-day.selected.prevMonthDay, .flatpickr-day.selected.nextMonthDay { background: var(--ttsc-accent); border-color: var(--ttsc-accent); color: var(--ttsc-accent-on); font-weight: 600; }
+  .flatpickr-day.inRange, .flatpickr-day.inRange:hover { --fp-range: color-mix(in oklab, var(--ttsc-accent) 16%, var(--ttsc-surface)); background: var(--fp-range); border-color: transparent; box-shadow: -5px 0 0 var(--fp-range), 5px 0 0 var(--fp-range); color: var(--ttsc-text); }
+  .flatpickr-day.selected.startRange + .endRange:not(:nth-child(7n+1)), .flatpickr-day.startRange.startRange + .endRange:not(:nth-child(7n+1)), .flatpickr-day.endRange.startRange + .endRange:not(:nth-child(7n+1)) { box-shadow: -10px 0 0 var(--ttsc-accent); }
+  .flatpickr-day.selected.startRange, .flatpickr-day.startRange.startRange { border-radius: var(--ttsc-radius-xs) 0 0 var(--ttsc-radius-xs); }
+  .flatpickr-day.selected.endRange, .flatpickr-day.endRange.endRange { border-radius: 0 var(--ttsc-radius-xs) var(--ttsc-radius-xs) 0; }
+  .flatpickr-day.startRange.endRange { border-radius: var(--ttsc-radius-xs); }
+  .flatpickr-time { border-top: 1px solid var(--ttsc-border) !important; }
+  .flatpickr-time input, .flatpickr-time .flatpickr-time-separator, .flatpickr-time .flatpickr-am-pm { color: var(--ttsc-text); background: transparent; }
+  .flatpickr-time input:hover, .flatpickr-time input:focus, .flatpickr-time .flatpickr-am-pm:hover { background: var(--ttsc-canvas-2); }
+  .flatpickr-input[readonly] { cursor: pointer; }
+  .fp-cols { display: grid; grid-template-columns: auto 1fr; gap: 24px; align-items: start; }
+  .fp-field { display: flex; flex-direction: column; gap: 6px; }
+  .fp-icon { position: relative; }
+  .fp-icon > i { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--ttsc-text-muted); pointer-events: none; z-index: 1; }
+  .fp-icon > .ttsc-input { padding-left: 32px; width: 100%; }
+  .fp-out { font-size: 12px; color: var(--ttsc-text-muted); }
+  .fp-out b { color: var(--ttsc-text); font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="ds-pad fp-cols">
+  <div>
+    <div class="ds-label" style="margin-bottom:6px">Inline · período de rematrícula</div>
+    <input type="text" id="fp-inline" aria-label="Período de rematrícula" style="display:none">
+  </div>
+  <div class="ds-stack">
+    <div class="fp-field">
+      <label class="ttsc-form-label" for="fp-single">Data de nascimento</label>
+      <div class="fp-icon"><i class="fa-light fa-calendar"></i><input class="ttsc-input" id="fp-single" name="birth_date" value="2009-03-14" placeholder="dd/mm/aaaa"></div>
+    </div>
+    <div class="fp-field">
+      <label class="ttsc-form-label" for="fp-range">Período da turma (início — fim)</label>
+      <div class="fp-icon"><i class="fa-light fa-calendar-range"></i><input class="ttsc-input" id="fp-range" placeholder="Selecione o intervalo"></div>
+    </div>
+    <div class="fp-field">
+      <label class="ttsc-form-label" for="fp-time">Horário da aula</label>
+      <div class="fp-icon"><i class="fa-light fa-clock"></i><input class="ttsc-input" id="fp-time" value="19:00" placeholder="hh:mm"></div>
+    </div>
+    <div class="fp-out" role="status" aria-live="polite">Rematrícula: <b id="fp-out">—</b></div>
+  </div>
+</div>
+<script>
+  flatpickr.localize(flatpickr.l10ns.pt);
+  var today = new Date(), y = today.getFullYear(), m = today.getMonth();
+  var out = document.getElementById('fp-out');
+  flatpickr('#fp-inline', {
+    inline: true, mode: 'range', dateFormat: 'Y-m-d', minDate: 'today',
+    defaultDate: [new Date(y, m, today.getDate() + 3), new Date(y, m, today.getDate() + 9)],
+    onReady: function (d, s, fp) { out.textContent = fp.formatDate(d[0], 'd/m/Y') + ' a ' + fp.formatDate(d[1], 'd/m/Y'); },
+    onChange: function (d, s, fp) { out.textContent = d.length === 2 ? fp.formatDate(d[0], 'd/m/Y') + ' a ' + fp.formatDate(d[1], 'd/m/Y') : 'selecione o fim…'; }
+  });
+  flatpickr('#fp-single', { dateFormat: 'Y-m-d', altInput: true, altFormat: 'd/m/Y', altInputClass: 'ttsc-input', allowInput: true, maxDate: 'today' });
+  flatpickr('#fp-range', { mode: 'range', dateFormat: 'Y-m-d', altInput: true, altFormat: 'd/m/Y', altInputClass: 'ttsc-input', locale: { rangeSeparator: ' a ' } });
+  flatpickr('#fp-time', { enableTime: true, noCalendar: true, dateFormat: 'H:i', time_24hr: true, minuteIncrement: 5 });
+</script>
+</body>
+</html>

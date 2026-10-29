@@ -1,0 +1,63 @@
+<!-- @dsCard group="Componentes" height=330 subtitle="FileManager · file manager com estados, ações e acessibilidade (padrões de referência adaptados) " -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>FileManager</title>
+<style>
+  html,body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font-family:Inter,system-ui,sans-serif;font-size:13px;-webkit-font-smoothing:antialiased}
+  .demo{padding:16px;display:grid;gap:14px;max-width:1100px}
+  .card{background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-surface);padding:16px}
+  .card-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+  .card-t{margin:0;font-size:14px;font-weight:600;color:var(--ttsc-text)}
+  .card-s{margin:2px 0 0;font-size:11px;color:var(--ttsc-text-muted)}
+  .pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:var(--ttsc-radius-pill);border:1px solid var(--ttsc-border);color:var(--ttsc-text-2);white-space:nowrap;background:var(--ttsc-surface)}
+  .pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+  .pill-ok{color:var(--ttsc-success);border-color:color-mix(in srgb,var(--ttsc-success) 40%,transparent)}
+  .pill-warn{color:var(--ttsc-warning-text);border-color:color-mix(in srgb,var(--ttsc-warning) 45%,transparent)}
+  .pill-bad{color:var(--ttsc-danger-text);border-color:color-mix(in srgb,var(--ttsc-danger) 40%,transparent)}
+  .pill-info{color:var(--ttsc-info-text);border-color:color-mix(in srgb,var(--ttsc-info) 40%,transparent)}
+  .av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:11px;font-weight:700;background:var(--ttsc-accent-soft);color:var(--ttsc-accent-text);flex-shrink:0}
+  .ib{width:30px;height:30px;border-radius:8px;border:1px solid var(--ttsc-border);background:var(--ttsc-surface);display:grid;place-items:center;color:var(--ttsc-text-2);cursor:pointer}
+  .ib:hover{background:var(--ttsc-canvas-2)}
+  .ib-ok:hover{color:var(--ttsc-success)} .ib-no:hover{color:var(--ttsc-danger-text)}
+  .muted{color:var(--ttsc-text-muted)} .tnum{font-variant-numeric:tabular-nums}
+  :focus-visible{outline:2px solid var(--ttsc-accent);outline-offset:2px}
+
+  .fm{display:grid;gap:10px}
+  .fm-path{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--ttsc-text-muted)}
+  .fm-path a{color:var(--ttsc-text-2);text-decoration:none}
+  .fm-path a:hover{text-decoration:underline}
+  .fm-table{width:100%;border-collapse:collapse;font-size:12px}
+  .fm-table th{text-align:left;font-weight:600;color:var(--ttsc-text-muted);padding:8px;border-bottom:1px solid var(--ttsc-border)}
+  .fm-table td{padding:9px 8px;border-bottom:1px solid var(--ttsc-border-soft);color:var(--ttsc-text-2);vertical-align:middle}
+  .fm-name{display:flex;align-items:center;gap:10px;color:var(--ttsc-text);font-weight:500}
+  .fm-ic{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:var(--ttsc-surface-2);color:var(--ttsc-text-2);flex-shrink:0}
+  .fm-ic.pdf{color:var(--ttsc-danger-text)} .fm-ic.img{color:var(--ttsc-info-text)} .fm-ic.dir{color:var(--ttsc-accent-text)}
+  .fm-acts{display:flex;gap:6px;justify-content:flex-end}
+  .fm-status{font-size:11px}
+  @media (max-width:640px){.fm-table .hide-sm{display:none}}
+</style>
+</head>
+<body>
+<main class="demo">
+
+  <section class="card" aria-labelledby="fm-t">
+    <div class="card-h">
+      <div><h2 id="fm-t" class="card-t">Documentos do aluno</h2><p class="card-s">Matrícula 2027 · Ana Souza</p></div>
+      <button class="pc-btn" type="button" style="width:auto">Enviar arquivo</button>
+    </div>
+    <nav class="fm-path" aria-label="Caminho da pasta"><a href="#">Documentos</a><span>/</span><a href="#">Matrícula 2027</a><span>/</span><span>Ana Souza</span></nav>
+    <table class="fm-table">
+      <caption class="sr-only" style="position:absolute;left:-9999px">Arquivos da pasta</caption>
+      <thead><tr><th scope="col">Nome</th><th scope="col" class="hide-sm">Tamanho</th><th scope="col" class="hide-sm">Enviado em</th><th scope="col">Situação</th><th scope="col"><span class="sr-only" style="position:absolute;left:-9999px">Ações</span></th></tr></thead>
+      <tbody>
+        <tr><td><span class="fm-name"><span class="fm-ic dir" aria-hidden="true"><i class="fa-light fa-folder"></i></span>Certidões</span></td><td class="hide-sm">3 itens</td><td class="hide-sm">02/12/2026</td><td><span class="pill pill-ok fm-status">Completa</span></td><td><div class="fm-acts"><button class="ib" type="button" aria-label="Abrir pasta Certidões"><i class="fa-light fa-arrow-right" aria-hidden="true"></i></button></div></td></tr>
+        <tr><td><span class="fm-name"><span class="fm-ic pdf" aria-hidden="true"><i class="fa-light fa-file-pdf"></i></span>Certidão de nascimento.pdf</span></td><td class="hide-sm">1,2 MB</td><td class="hide-sm">02/12/2026</td><td><span class="pill pill-ok fm-status">Validado</span></td><td><div class="fm-acts"><button class="ib" type="button" aria-label="Baixar Certidão de nascimento"><i class="fa-light fa-download" aria-hidden="true"></i></button><button class="ib" type="button" aria-label="Remover Certidão de nascimento"><i class="fa-light fa-trash" aria-hidden="true"></i></button></div></td></tr>
+        <tr><td><span class="fm-name"><span class="fm-ic img" aria-hidden="true"><i class="fa-light fa-image"></i></span>Foto 3x4.jpg</span></td><td class="hide-sm">420 KB</td><td class="hide-sm">05/12/2026</td><td><span class="pill pill-warn fm-status">Em análise</span></td><td><div class="fm-acts"><button class="ib" type="button" aria-label="Baixar Foto 3x4"><i class="fa-light fa-download" aria-hidden="true"></i></button></div></td></tr>
+        <tr><td><span class="fm-name"><span class="fm-ic pdf" aria-hidden="true"><i class="fa-light fa-file-pdf"></i></span>Histórico escolar.pdf</span></td><td class="hide-sm">2,8 MB</td><td class="hide-sm">06/12/2026</td><td><span class="pill pill-bad fm-status">Recusado</span></td><td><div class="fm-acts"><button class="ib" type="button" aria-label="Baixar Histórico escolar"><i class="fa-light fa-download" aria-hidden="true"></i></button></div></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!-- @dsCard group="Componentes" height=295 subtitle="ttsc-progress · primary, success, warning, destructive, info, mono, indeterminado, circular" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Progress</title>
+<style>
+  .ttsc-progress-success .ttsc-progress-indicator { background-color: var(--ttsc-success); }
+  .ttsc-progress-warning .ttsc-progress-indicator { background-color: var(--ttsc-warning); }
+  .ttsc-progress-info .ttsc-progress-indicator { background-color: var(--ttsc-info); }
+  .ttsc-progress-indeterminate .ttsc-progress-indicator { position: absolute; inset-block: 0; width: 40%; animation: ttsc-progress-slide 1.2s ease-in-out infinite; }
+  @keyframes ttsc-progress-slide { from { left: -40%; } to { left: 100%; } }
+  .ttsc-progress-ring { transform: rotate(-90deg); }
+  .ttsc-progress-ring circle { fill: none; stroke-width: 4; }
+  .ttsc-progress-ring-track { stroke: var(--ttsc-surface-2); }
+  .ttsc-progress-ring-value { stroke: var(--ttsc-accent); stroke-linecap: round; stroke-dasharray: 100; transition: stroke-dashoffset .4s ease; }
+  .ttsc-progress-ring-label { transform: rotate(90deg); transform-origin: center; fill: var(--ttsc-text); font-size: 10px; font-weight: 600; text-anchor: middle; dominant-baseline: central; }
+  .pv-cols { display: grid; grid-template-columns: 1fr 1fr; gap: var(--ttsc-space-6); }
+  .pv-line { display: flex; flex-direction: column; gap: 6px; }
+  .pv-meta { display: flex; justify-content: space-between; font-size: 12px; color: var(--ttsc-text-2); }
+  .pv-meta b { color: var(--ttsc-text); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .pv-kpi { display: flex; align-items: center; gap: var(--ttsc-space-3); padding: var(--ttsc-space-3); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); background: var(--ttsc-surface); }
+  .pv-kpi small { display: block; font-size: 12px; color: var(--ttsc-text-muted); }
+  .pv-kpi strong { font-size: 14px; color: var(--ttsc-text); }
+</style>
+</head>
+<body>
+<div class="ds-pad pv-cols">
+  <div class="ds-stack">
+    <div class="ds-label">Frequência por matrícula</div>
+    <div class="pv-line">
+      <div class="pv-meta"><span id="l1">Ana Beatriz Moreira</span><b data-progress-value>92%</b></div>
+      <div class="ttsc-progress ttsc-progress-success" role="progressbar" aria-labelledby="l1" aria-valuemin="0" aria-valuemax="100" aria-valuenow="92"><div class="ttsc-progress-indicator" style="width:92%"></div></div>
+    </div>
+    <div class="pv-line">
+      <div class="pv-meta"><span id="l2">Carlos Eduardo Lima</span><b data-progress-value>68%</b></div>
+      <div class="ttsc-progress ttsc-progress-warning" role="progressbar" aria-labelledby="l2" aria-valuemin="0" aria-valuemax="100" aria-valuenow="68"><div class="ttsc-progress-indicator" style="width:68%"></div></div>
+    </div>
+    <div class="pv-line">
+      <div class="pv-meta"><span id="l3">Juliana Ferreira Santos</span><b data-progress-value>54%</b></div>
+      <div class="ttsc-progress ttsc-progress-destructive" role="progressbar" aria-labelledby="l3" aria-valuemin="0" aria-valuemax="100" aria-valuenow="54"><div class="ttsc-progress-indicator" style="width:54%"></div></div>
+    </div>
+    <div class="pv-line">
+      <div class="pv-meta"><span id="l4">Simulador (arraste)</span><b data-progress-value>40%</b></div>
+      <div class="ttsc-progress ttsc-progress-primary" id="sim" role="progressbar" aria-labelledby="l4" aria-valuemin="0" aria-valuemax="100" aria-valuenow="40"><div class="ttsc-progress-indicator" style="width:40%"></div></div>
+      <input type="range" min="0" max="100" value="40" id="sim-range" aria-label="Valor do simulador" style="accent-color: var(--ttsc-accent)">
+    </div>
+  </div>
+  <div class="ds-stack">
+    <div class="ds-label">Cores</div>
+    <div class="ttsc-progress ttsc-progress-primary" role="progressbar" aria-label="Primary" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100"><div class="ttsc-progress-indicator" style="width:70%"></div></div>
+    <div class="ttsc-progress ttsc-progress-info" role="progressbar" aria-label="Info" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"><div class="ttsc-progress-indicator" style="width:45%"></div></div>
+    <div class="ttsc-progress ttsc-progress-mono" role="progressbar" aria-label="Mono" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"><div class="ttsc-progress-indicator" style="width:30%"></div></div>
+    <div class="ds-label">Indeterminado</div>
+    <div class="pv-meta"><span>Importando planilha de alunos…</span></div>
+    <div class="ttsc-progress ttsc-progress-indeterminate" role="progressbar" aria-label="Importando planilha" aria-busy="true"><div class="ttsc-progress-indicator"></div></div>
+    <div class="ds-label">Circular</div>
+    <div class="pv-kpi">
+      <svg class="ttsc-progress-ring" id="ring" viewBox="0 0 40 40" width="56" height="56" role="progressbar" aria-label="Frequência média da turma" aria-valuemin="0" aria-valuemax="100" aria-valuenow="76">
+        <circle class="ttsc-progress-ring-track" cx="20" cy="20" r="17"></circle>
+        <circle class="ttsc-progress-ring-value" cx="20" cy="20" r="17" pathLength="100" style="stroke-dashoffset:24"></circle>
+        <text x="20" y="20" class="ttsc-progress-ring-label">76%</text>
+      </svg>
+      <div><small>Frequência média</small><strong>Turma 3º A · Manhã</strong></div>
+    </div>
+  </div>
+</div>
+<script>
+  TTSC.init();
+  function setProgress(el, v) {
+    v = Math.max(0, Math.min(100, Math.round(v)));
+    el.querySelector('.ttsc-progress-indicator').style.width = v + '%';
+    el.setAttribute('aria-valuenow', String(v));
+    ['ttsc-progress-success', 'ttsc-progress-warning', 'ttsc-progress-destructive', 'ttsc-progress-primary'].forEach(function (c) { el.classList.remove(c); });
+    el.classList.add(v >= 75 ? 'ttsc-progress-success' : v >= 60 ? 'ttsc-progress-warning' : 'ttsc-progress-destructive');
+    el.parentElement.querySelector('[data-progress-value]').textContent = v + '%';
+  }
+  function setRing(svg, v) {
+    svg.querySelector('.ttsc-progress-ring-value').style.strokeDashoffset = String(100 - v);
+    svg.querySelector('.ttsc-progress-ring-label').textContent = Math.round(v) + '%';
+    svg.setAttribute('aria-valuenow', String(v));
+  }
+  document.getElementById('sim-range').addEventListener('input', function () {
+    setProgress(document.getElementById('sim'), Number(this.value));
+    setRing(document.getElementById('ring'), Number(this.value));
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,417 @@
+/* =====================================================
+   ERROR PAGES — TTSC SUPABASE THEME
+   Light/Dark mode via [data-theme] on <html>
+   Design language mirrors ttsc.supabase.css
+   ===================================================== */
+
+/* ─── Light Mode Variables (default) ─── */
+:root {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --sb-page: #fcfcfc;
+  --sb-surface: #ffffff;
+  --sb-surface-raised: #f8f9fa;
+  --sb-text: #1c1c1c;
+  --sb-text-secondary: #4d4d4d;
+  --sb-text-muted: #6b6b6b;
+  --sb-green: #10b981;
+  --sb-green-link: #00c573;
+  --sb-green-border: rgba(16, 185, 129, 0.3);
+  --sb-danger: #ef4444;
+  --sb-danger-soft: rgba(239, 68, 68, 0.1);
+  --sb-warning: #f59e0b;
+  --sb-warning-soft: rgba(245, 158, 11, 0.1);
+  --sb-info: #3b82f6;
+  --sb-info-soft: rgba(59, 130, 246, 0.1);
+  --sb-border: #e5e7eb;
+  --sb-border-subtle: #ebebeb;
+  --sb-border-prominent: #d1d5db;
+  --sb-radius: 8px;
+  --sb-radius-lg: 12px;
+  --sb-radius-xl: 16px;
+  --sb-radius-2xl: 24px;
+  --sb-radius-pill: 9999px;
+  --sb-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  --sb-shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.08);
+  --sb-page-bg: #fcfcfc;
+}
+
+/* ─── Dark Mode ─── */
+[data-theme="dark"] {
+  --sb-page: #171717;
+  --sb-surface: #1c1c1c;
+  --sb-surface-raised: #242424;
+  --sb-text: #fafafa;
+  --sb-text-secondary: #b4b4b4;
+  --sb-text-muted: #898989;
+  --sb-green: #3ecf8e;
+  --sb-green-link: #00c573;
+  --sb-green-border: rgba(62, 207, 142, 0.3);
+  --sb-danger: #ef4444;
+  --sb-danger-soft: rgba(239, 68, 68, 0.12);
+  --sb-warning: #f59e0b;
+  --sb-warning-soft: rgba(245, 158, 11, 0.12);
+  --sb-info: #06b6d4;
+  --sb-info-soft: rgba(6, 182, 212, 0.12);
+  --sb-border: #2e2e2e;
+  --sb-border-subtle: #242424;
+  --sb-border-prominent: #363636;
+  --sb-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --sb-shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.4);
+  --sb-page-bg: #171717;
+}
+
+/* ─── Base Styles ─── */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-family: var(--font-sans);
+}
+
+body {
+  min-height: 100vh;
+  background: var(--sb-page-bg);
+  color: var(--sb-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  transition: background 0.3s ease, color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Theme Toggle ─── */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--sb-radius);
+  border: 1px solid var(--sb-border);
+  background: var(--sb-surface);
+  color: var(--sb-text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+}
+
+.theme-toggle:hover {
+  border-color: var(--sb-border-prominent);
+  color: var(--sb-text);
+  background: var(--sb-surface-raised);
+}
+
+/* ─── Error Card Container ─── */
+.error-container {
+  max-width: 560px;
+  width: 100%;
+  text-align: center;
+  animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Error Code Badge ─── */
+.error-code {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  border-radius: var(--sb-radius-pill);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 32px;
+  border: 1px solid;
+}
+
+.error-code._404 {
+  color: var(--sb-warning);
+  border-color: rgba(245, 158, 11, 0.3);
+  background: var(--sb-warning-soft);
+}
+
+.error-code._500 {
+  color: var(--sb-danger);
+  border-color: rgba(239, 68, 68, 0.3);
+  background: var(--sb-danger-soft);
+}
+
+.error-code .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.error-code._404 .dot { background: var(--sb-warning); }
+.error-code._500 .dot { background: var(--sb-danger); }
+
+/* ─── Icon ─── */
+.error-icon {
+  width: 88px;
+  height: 88px;
+  border-radius: var(--sb-radius-2xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 28px;
+  font-size: 36px;
+  position: relative;
+}
+
+.error-icon._404 {
+  background: var(--sb-warning-soft);
+  color: var(--sb-warning);
+}
+
+.error-icon._500 {
+  background: var(--sb-danger-soft);
+  color: var(--sb-danger);
+}
+
+.error-icon .glow {
+  position: absolute;
+  inset: -12px;
+  border-radius: inherit;
+  opacity: 0.15;
+  filter: blur(20px);
+}
+
+.error-icon._404 .glow { background: var(--sb-warning); }
+.error-icon._500 .glow { background: var(--sb-danger); }
+
+/* ─── Title ─── */
+.error-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--sb-text);
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  margin-bottom: 12px;
+}
+
+/* ─── Description ─── */
+.error-desc {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--sb-text-secondary);
+  margin-bottom: 36px;
+  max-width: 420px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ─── Suggestions / Helpful Links ─── */
+.error-suggestions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 36px;
+  padding: 16px 20px;
+  background: var(--sb-surface);
+  border: 1px solid var(--sb-border);
+  border-radius: var(--sb-radius-lg);
+  text-align: left;
+}
+
+.error-suggestions-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--sb-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.error-suggestion-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: var(--sb-radius);
+  color: var(--sb-text-secondary);
+  text-decoration: none;
+  font-size: 13px;
+  transition: all 0.15s ease;
+}
+
+.error-suggestion-link:hover {
+  background: var(--sb-surface-raised);
+  color: var(--sb-green-link);
+}
+
+.error-suggestion-link i {
+  width: 20px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--sb-text-muted);
+}
+
+.error-suggestion-link:hover i {
+  color: var(--sb-green);
+}
+
+/* ─── Action Buttons ─── */
+.error-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.error-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  border-radius: var(--sb-radius);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.error-btn:active {
+  transform: scale(0.97);
+}
+
+.error-btn-primary {
+  background: var(--sb-green);
+  color: #ffffff;
+  border: none;
+}
+
+[data-theme="dark"] .error-btn-primary {
+  color: #0f0f0f;
+}
+
+.error-btn-primary:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.2);
+}
+
+.error-btn-secondary {
+  background: var(--sb-surface);
+  color: var(--sb-text);
+  border: 1px solid var(--sb-border);
+}
+
+.error-btn-secondary:hover {
+  border-color: var(--sb-border-prominent);
+  background: var(--sb-surface-raised);
+  transform: translateY(-1px);
+}
+
+/* ─── Footer Info ─── */
+.error-footer {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--sb-border-subtle);
+}
+
+.error-footer-text {
+  font-size: 12px;
+  color: var(--sb-text-muted);
+  line-height: 1.6;
+}
+
+.error-footer-text code {
+  font-family: 'SF Mono', 'Source Code Pro', monospace;
+  font-size: 11px;
+  background: var(--sb-surface);
+  border: 1px solid var(--sb-border-subtle);
+  padding: 2px 8px;
+  border-radius: 4px;
+  color: var(--sb-text-muted);
+}
+
+/* ─── Decorative background shapes ─── */
+.error-bg-shapes {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.error-bg-shapes .shape {
+  position: absolute;
+  border-radius: var(--sb-radius-2xl);
+  opacity: 0.04;
+}
+
+.error-bg-shapes .shape:nth-child(1) {
+  top: -80px;
+  right: -40px;
+  width: 300px;
+  height: 300px;
+  background: var(--sb-green);
+  transform: rotate(15deg);
+}
+
+.error-bg-shapes .shape:nth-child(2) {
+  bottom: -100px;
+  left: -60px;
+  width: 350px;
+  height: 350px;
+  background: var(--sb-info);
+  transform: rotate(-10deg);
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 480px) {
+  body {
+    padding: 16px;
+  }
+
+  .error-title {
+    font-size: 22px;
+  }
+
+  .error-desc {
+    font-size: 14px;
+  }
+
+  .error-actions {
+    flex-direction: column;
+  }
+
+  .error-btn {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .error-icon {
+    width: 72px;
+    height: 72px;
+    font-size: 28px;
+  }
+}
+
+/* ─── Reduced Motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  .error-container {
+    animation: none;
+  }
+  * {
+    transition: none !important;
+  }
+}

@@ -1,0 +1,87 @@
+<!-- @dsCard group="Componentes" height=260 subtitle="ttsc-skeleton · card KPI, tabela, lista com avatar, pulse, alternar carregado" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Skeleton</title>
+<style>
+  .ttsc-skeleton { background-color: var(--ttsc-border-strong); }
+  .pv-cols { display: grid; grid-template-columns: 1fr 1.5fr 1fr; gap: var(--ttsc-space-4); align-items: start; }
+  .pv-card { border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); background: var(--ttsc-surface); padding: var(--ttsc-space-4); display: flex; flex-direction: column; gap: var(--ttsc-space-3); }
+  .sk-line { height: 10px; }
+  .sk-title { height: 14px; width: 60%; }
+  .sk-kpi { height: 28px; width: 45%; }
+  .sk-avatar { width: 32px; height: 32px; border-radius: var(--ttsc-radius-pill); flex-shrink: 0; }
+  .sk-row { display: flex; align-items: center; gap: var(--ttsc-space-3); }
+  .sk-col { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .sk-table { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 10px var(--ttsc-space-3); }
+  .sk-table .h { height: 8px; width: 50%; }
+  .pv-real { display: none; }
+  .is-loaded .pv-sk { display: none; }
+  .is-loaded .pv-real { display: flex; }
+  .pv-real-t { font-size: 12px; color: var(--ttsc-text-muted); }
+  .pv-real-v { font-size: 22px; font-weight: 700; color: var(--ttsc-text); }
+  .pv-li { font-size: 12px; color: var(--ttsc-text-2); }
+  .pv-li b { color: var(--ttsc-text); font-weight: 500; display: block; }
+  .pv-av { width: 32px; height: 32px; border-radius: var(--ttsc-radius-pill); background: var(--ttsc-accent-soft); color: var(--ttsc-accent-text); display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; flex-shrink: 0; }
+  @media (prefers-reduced-motion: reduce) { .ttsc-skeleton { animation: none; } }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack" id="root">
+  <div class="ds-row">
+    <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-sm" id="toggle"><i class="fa-light fa-arrows-rotate"></i> Simular carregamento concluído</button>
+    <span class="ds-note" id="state" aria-live="polite">Carregando dados da turma…</span>
+  </div>
+  <div class="pv-cols" aria-busy="true" id="area">
+    <div class="pv-card">
+      <div class="ds-label">Card KPI</div>
+      <div class="pv-sk ds-stack" aria-hidden="true">
+        <div class="ttsc-skeleton sk-line" style="width:50%"></div>
+        <div class="ttsc-skeleton sk-kpi"></div>
+        <div class="ttsc-skeleton sk-line" style="width:80%"></div>
+      </div>
+      <div class="pv-real" style="flex-direction:column;gap:4px">
+        <span class="pv-real-t">Matrículas ativas</span><span class="pv-real-v">1.284</span><span class="pv-real-t">+3,2% sobre setembro</span>
+      </div>
+    </div>
+    <div class="pv-card">
+      <div class="ds-label">Tabela</div>
+      <div class="pv-sk sk-table" aria-hidden="true">
+        <div class="ttsc-skeleton sk-line h"></div><div class="ttsc-skeleton sk-line h"></div><div class="ttsc-skeleton sk-line h"></div>
+        <div class="ttsc-skeleton sk-line"></div><div class="ttsc-skeleton sk-line"></div><div class="ttsc-skeleton sk-line"></div>
+        <div class="ttsc-skeleton sk-line"></div><div class="ttsc-skeleton sk-line"></div><div class="ttsc-skeleton sk-line"></div>
+        <div class="ttsc-skeleton sk-line"></div><div class="ttsc-skeleton sk-line"></div><div class="ttsc-skeleton sk-line"></div>
+      </div>
+      <div class="pv-real" style="flex-direction:column;gap:6px">
+        <div class="pv-li"><b>3º A · Manhã</b>Ensino Médio · 32/35</div>
+        <div class="pv-li"><b>2º B · Tarde</b>Ensino Médio · 28/35</div>
+        <div class="pv-li"><b>9º A · Manhã</b>Fundamental II · 30/30</div>
+      </div>
+    </div>
+    <div class="pv-card">
+      <div class="ds-label">Lista</div>
+      <div class="pv-sk ds-stack" aria-hidden="true">
+        <div class="sk-row"><div class="ttsc-skeleton sk-avatar"></div><div class="sk-col"><div class="ttsc-skeleton sk-line" style="width:70%"></div><div class="ttsc-skeleton sk-line" style="width:40%"></div></div></div>
+        <div class="sk-row"><div class="ttsc-skeleton sk-avatar"></div><div class="sk-col"><div class="ttsc-skeleton sk-line" style="width:60%"></div><div class="ttsc-skeleton sk-line" style="width:35%"></div></div></div>
+        <div class="sk-row"><div class="ttsc-skeleton sk-avatar"></div><div class="sk-col"><div class="ttsc-skeleton sk-line" style="width:75%"></div><div class="ttsc-skeleton sk-line" style="width:45%"></div></div></div>
+      </div>
+      <div class="pv-real" style="flex-direction:column;gap:10px">
+        <div class="sk-row"><span class="pv-av">AB</span><div class="pv-li"><b>Ana Beatriz Moreira</b>2026001</div></div>
+        <div class="sk-row"><span class="pv-av">CL</span><div class="pv-li"><b>Carlos Eduardo Lima</b>2026002</div></div>
+        <div class="sk-row"><span class="pv-av">JS</span><div class="pv-li"><b>Juliana F. Santos</b>2026003</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  TTSC.init();
+  document.getElementById('toggle').addEventListener('click', function () {
+    var area = document.getElementById('area');
+    var loaded = !document.getElementById('root').classList.contains('is-loaded');
+    document.getElementById('root').classList.toggle('is-loaded', loaded);
+    area.setAttribute('aria-busy', String(!loaded));
+    document.getElementById('state').textContent = loaded ? 'Dados carregados.' : 'Carregando dados da turma…';
+    this.lastChild.textContent = loaded ? ' Voltar ao skeleton' : ' Simular carregamento concluído';
+  });
+</script>
+</body>
+</html>

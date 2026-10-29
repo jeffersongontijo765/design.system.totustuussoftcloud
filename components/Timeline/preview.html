@@ -1,0 +1,73 @@
+<!-- @dsCard group="Geral" height=655 subtitle="Implementação TTSC (CSS) · histórico da solicitação de matrícula (enrollment_request_history), ícones por ação, status antigo → novo, ator" -->
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><title>Timeline</title>
+<style>
+  .ttsc-timeline { list-style: none; margin: 0; padding: 0; position: relative; }
+  .ttsc-timeline-item { position: relative; display: grid; grid-template-columns: 32px 1fr; gap: 12px; padding-bottom: 18px; }
+  .ttsc-timeline-item:not(:last-child)::before { content: ""; position: absolute; left: 15px; top: 32px; bottom: 0; width: 2px; background: var(--ttsc-border-soft); }
+  .ttsc-timeline-icon { width: 32px; height: 32px; border-radius: var(--ttsc-radius-pill); display: flex; align-items: center; justify-content: center; font-size: 14px;
+    background: var(--tl-soft, var(--ttsc-surface-2)); color: var(--tl-text, var(--ttsc-text-muted)); border: 1px solid var(--tl-border, var(--ttsc-border)); }
+  .ttsc-timeline-body { min-width: 0; padding-top: 5px; }
+  .ttsc-timeline-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; }
+  .ttsc-timeline-title { font-size: 13px; font-weight: 600; color: var(--ttsc-text); }
+  .ttsc-timeline-time { font-size: 12px; color: var(--ttsc-text-muted); margin-left: auto; white-space: nowrap; }
+  .ttsc-timeline-meta { font-size: 12px; color: var(--ttsc-text-2); margin-top: 2px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+  .ttsc-timeline-meta i { color: var(--ttsc-text-muted); }
+  .ttsc-timeline-note { margin-top: 6px; font-size: 12px; line-height: 1.5; color: var(--ttsc-text-2); background: var(--ttsc-canvas); border: 1px solid var(--ttsc-border-soft); border-radius: var(--ttsc-radius-control); padding: 8px 10px; }
+  .tl-success { --tl-soft: var(--ttsc-accent-soft); --tl-text: var(--ttsc-accent-text); --tl-border: var(--ttsc-accent-border); }
+  .tl-danger { --tl-soft: color-mix(in srgb, var(--ttsc-danger) 12%, transparent); --tl-text: var(--ttsc-danger-text); --tl-border: color-mix(in srgb, var(--ttsc-danger) 35%, transparent); }
+  .tl-info { --tl-soft: color-mix(in srgb, var(--ttsc-info) 12%, transparent); --tl-text: var(--ttsc-info-text); --tl-border: color-mix(in srgb, var(--ttsc-info) 35%, transparent); }
+  .tl-warning { --tl-soft: color-mix(in srgb, var(--ttsc-warning) 14%, transparent); --tl-text: var(--ttsc-warning-text); --tl-border: color-mix(in srgb, var(--ttsc-warning) 40%, transparent); }
+  .tl-card { background: var(--ttsc-surface); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-surface); padding: 16px; }
+  .tl-card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .tl-card-head h3 { margin: 0; font-size: 14px; font-weight: 600; color: var(--ttsc-text); }
+  .tl-arrow { color: var(--ttsc-text-muted); }
+</style>
+</head>
+<body>
+<div class="ds-pad">
+  <section class="tl-card" aria-labelledby="tl-title">
+    <div class="tl-card-head">
+      <h3 id="tl-title">Histórico da solicitação · Camila Rocha — 1º ano B</h3>
+      <span class="ttsc-badge ttsc-badge-sm ttsc-badge-outline ttsc-badge-success">Confirmada</span>
+    </div>
+    <ol class="ttsc-timeline" id="tl-list"></ol>
+  </section>
+</div>
+<script>
+  // Mapeamento action -> rótulo, ícone e tom (igual ao helper PHP do README)
+  var ACTIONS = {
+    created: ['Solicitação criada', 'fa-file-circle-plus', ''], submitted: ['Enviada para análise', 'fa-paper-plane', 'tl-info'],
+    auto_evaluated: ['Avaliação automática', 'fa-microchip', 'tl-info'], reviewed: ['Em revisão', 'fa-magnifying-glass', 'tl-warning'],
+    approved: ['Aprovada', 'fa-circle-check', 'tl-success'], rejected: ['Recusada', 'fa-circle-xmark', 'tl-danger'],
+    confirmed: ['Matrícula confirmada', 'fa-badge-check', 'tl-success'], cancelled: ['Cancelada', 'fa-ban', 'tl-danger'], notified: ['Responsável notificado', 'fa-bell', '']
+  };
+  var STATUS = { draft: 'Rascunho', submitted: 'Enviada', pending_review: 'Em análise', approved: 'Aprovada', rejected: 'Recusada', confirmed: 'Confirmada', cancelled: 'Cancelada', expired: 'Expirada' };
+  var ACTOR = { student: 'Responsável/aluno', admin: 'Secretaria', system: 'Sistema' };
+  var rows = [ // ORDER BY created_at DESC
+    { action: 'confirmed', old_status: 'approved', new_status: 'confirmed', actor_name: 'Juliana Prado', actor_type: 'admin', created_at: '2026-10-20T15:42:00', details: 'Matrícula MAT-2026-0103 gerada na turma 1º ano B — Tarde.' },
+    { action: 'notified', old_status: null, new_status: null, actor_name: null, actor_type: 'system', created_at: '2026-10-18T09:01:00', details: 'E-mail e notificação no portal enviados ao responsável.' },
+    { action: 'approved', old_status: 'pending_review', new_status: 'approved', actor_name: 'Juliana Prado', actor_type: 'admin', created_at: '2026-10-18T09:00:00', details: null },
+    { action: 'reviewed', old_status: 'submitted', new_status: 'pending_review', actor_name: 'Juliana Prado', actor_type: 'admin', created_at: '2026-10-17T14:10:00', details: 'Comprovante de residência reenviado; documentação completa.' },
+    { action: 'auto_evaluated', old_status: null, new_status: null, actor_name: null, actor_type: 'system', created_at: '2026-10-16T20:31:00', details: 'Vagas disponíveis: 3 · sem pendências financeiras.' },
+    { action: 'submitted', old_status: 'draft', new_status: 'submitted', actor_name: 'Marcos Rocha', actor_type: 'student', created_at: '2026-10-16T20:30:00', details: null }
+  ];
+  var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  var fmt = new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+  document.getElementById('tl-list').innerHTML = rows.map(function (r) {
+    var a = ACTIONS[r.action] || [r.action, 'fa-circle', ''];
+    var d = new Date(r.created_at);
+    var change = r.old_status && r.new_status ? '<span class="ttsc-badge ttsc-badge-sm ttsc-badge-outline">' + STATUS[r.old_status] + '</span><i class="fa-light fa-arrow-right tl-arrow" aria-label="para"></i><span class="ttsc-badge ttsc-badge-sm ttsc-badge-outline">' + STATUS[r.new_status] + '</span>' : '';
+    return '<li class="ttsc-timeline-item ' + a[2] + '">' +
+      '<span class="ttsc-timeline-icon" aria-hidden="true"><i class="fa-light ' + a[1] + '"></i></span>' +
+      '<div class="ttsc-timeline-body"><div class="ttsc-timeline-head"><span class="ttsc-timeline-title">' + a[0] + '</span>' +
+      '<time class="ttsc-timeline-time" datetime="' + r.created_at + '">' + fmt.format(d).replace(',', ' às') + '</time></div>' +
+      '<div class="ttsc-timeline-meta"><i class="fa-light ' + (r.actor_type === 'system' ? 'fa-gear' : 'fa-user') + '"></i>' + esc(r.actor_name || ACTOR[r.actor_type]) + (change ? ' · ' + change : '') + '</div>' +
+      (r.details ? '<div class="ttsc-timeline-note">' + esc(r.details) + '</div>' : '') + '</div></li>';
+  }).join('');
+  TTSC.init();
+</script>
+</body>
+</html>

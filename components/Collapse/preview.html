@@ -1,0 +1,60 @@
+<!-- @dsCard group="Componentes" height=280 subtitle="data-ttsc-collapse · filtros avançados (aberto), mostrar mais (fechado), eventos expand/collapse" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>Collapse</title>
+<style>
+  .ttsc-collapse-target { transition: height .25s ease; }
+  .ttsc-collapse-indicator { transition: transform .2s ease; font-size: 12px; color: var(--ttsc-text-muted); }
+  .ttsc-collapse-toggle.active .ttsc-collapse-indicator { transform: rotate(180deg); }
+  .ttsc-collapse-toggle.active.ttsc-btn-outline { background: var(--ttsc-canvas-2); border-color: var(--ttsc-border-strong); }
+  .cl-panel { background: var(--ttsc-surface); border: 1px solid var(--ttsc-border); border-radius: var(--ttsc-radius-sm); padding: 12px 16px; }
+  .cl-form { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; border-top: 1px dashed var(--ttsc-border); margin-top: 12px; padding-top: 12px; }
+  .cl-form label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--ttsc-text-muted); }
+  .cl-text { color: var(--ttsc-text-2); font-size: 13px; line-height: 1.6; padding-top: 8px; }
+  .cl-head { display: flex; align-items: center; gap: 8px; }
+  #cl-log { margin-inline-start: auto; }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="ds-label">Toolbar da listagem — aberto por filtro aplicado na URL</div>
+  <div class="cl-panel">
+    <div class="cl-head">
+      <input class="ttsc-input ttsc-input-sm" style="max-width:260px" placeholder="Buscar aluno ou matrícula" aria-label="Buscar aluno ou matrícula">
+      <button type="button" class="ttsc-btn ttsc-btn-outline ttsc-btn-sm ttsc-collapse-toggle active" id="cl-toggle" data-ttsc-collapse="#filtros-avancados" aria-controls="filtros-avancados" aria-expanded="true">
+        <i class="fa-light fa-sliders"></i> Filtros avançados <i class="fa-light fa-chevron-down ttsc-collapse-indicator" aria-hidden="true"></i>
+      </button>
+      <span class="ds-note" id="cl-log">evento: —</span>
+    </div>
+    <div id="filtros-avancados" class="ttsc-collapse-target active">
+      <form class="cl-form" onsubmit="return false">
+        <label>Curso<select class="ttsc-select ttsc-select-sm"><option>Todos</option><option selected>Pedagogia (412)</option><option>Administração (286)</option></select></label>
+        <label>Turno<select class="ttsc-select ttsc-select-sm"><option>Todos</option><option>Manhã</option><option>Noite</option></select></label>
+        <label>Período<select class="ttsc-select ttsc-select-sm"><option>2026.2</option><option>2026.1</option></select></label>
+      </form>
+    </div>
+  </div>
+
+  <div class="ds-label">Mostrar mais — fechado</div>
+  <div class="cl-panel">
+    <div class="cl-head">
+      <span style="font-weight:500;color:var(--ttsc-text)">Ana Beatriz Souza · MAT-2026-0381</span>
+      <button type="button" class="ttsc-link ttsc-link-sm ttsc-collapse-toggle" data-ttsc-collapse="#obs-aluno" aria-controls="obs-aluno" aria-expanded="false" style="margin-inline-start:auto">
+        <span>Mostrar observações</span> <i class="fa-light fa-chevron-down ttsc-collapse-indicator" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div id="obs-aluno" class="ttsc-collapse-target hidden">
+      <div class="cl-text">Aluna transferida da rede municipal em 2025. Responsável financeiro: Marcos Souza (pai). Atendimento educacional especializado às quintas-feiras, 14h.</div>
+    </div>
+  </div>
+</div>
+<script>
+  TTSC.init();
+  var t = document.getElementById('cl-toggle'), log = document.getElementById('cl-log');
+  ['expand', 'expanded', 'collapse', 'collapsed'].forEach(function (ev) { t.addEventListener(ev, function () { log.textContent = 'evento: ' + ev; }); });
+  var obs = document.querySelector('[data-ttsc-collapse="#obs-aluno"]');
+  obs.addEventListener('expanded', function () { obs.querySelector('span').textContent = 'Ocultar observações'; });
+  obs.addEventListener('collapsed', function () { obs.querySelector('span').textContent = 'Mostrar observações'; });
+</script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!-- @dsCard group="Editores" height=330 subtitle="CKEditor 5 classic 41.4.2 · toolbar pt-BR, variáveis --ck-color-* ligadas aos tokens, contador de palavras, somente leitura" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>CKEditor</title>
+<script>
+  // Tradução pt-BR mínima da toolbar (o build classic só traz "en"; no app, carregue translations/pt-br.js)
+  window.CKEDITOR_TRANSLATIONS = window.CKEDITOR_TRANSLATIONS || {};
+  window.CKEDITOR_TRANSLATIONS['pt-br'] = {
+    dictionary: {
+      'Undo': 'Desfazer', 'Redo': 'Refazer', 'Heading': 'Título', 'Choose heading': 'Escolher título', 'Paragraph': 'Parágrafo',
+      'Heading 1': 'Título 1', 'Heading 2': 'Título 2', 'Heading 3': 'Título 3', 'Bold': 'Negrito', 'Italic': 'Itálico',
+      'Link': 'Link', 'Link URL': 'URL do link', 'Link URL must not be empty.': 'Informe a URL do link.', 'Save': 'Salvar', 'Cancel': 'Cancelar',
+      'Unlink': 'Remover link', 'Edit link': 'Editar link', 'Open link in new tab': 'Abrir em nova aba',
+      'Insert table': 'Inserir tabela', 'Block quote': 'Citação', 'Bulleted List': 'Lista com marcadores', 'Numbered List': 'Lista numerada',
+      'Decrease indent': 'Diminuir recuo', 'Increase indent': 'Aumentar recuo', 'Show more items': 'Mostrar mais itens',
+      'Editor toolbar': 'Barra de ferramentas do editor', 'Rich Text Editor': 'Editor de texto formatado',
+      'Editor editing area: %0': 'Área de edição: %0', 'Rich Text Editor. Editing area: %0': 'Editor de texto formatado. Área de edição: %0',
+      'Column': 'Coluna', 'Row': 'Linha', 'Merge cells': 'Mesclar células', 'Table toolbar': 'Barra da tabela'
+    },
+    getPluralForm: function (n) { return n > 1; }
+  };
+</script>
+<script src="/_blob/7dea5e7432b0eec9f13a5acc991fc877"></script>
+<style>
+  :root:root {
+    --ck-border-radius: var(--ttsc-radius-sm);
+    --ck-font-size-base: 13px;
+    --ck-color-base-foreground: var(--ttsc-canvas-2);
+    --ck-color-base-background: var(--ttsc-surface);
+    --ck-color-base-border: var(--ttsc-border);
+    --ck-color-base-text: var(--ttsc-text);
+    --ck-color-text: var(--ttsc-text);
+    --ck-color-shadow-drop: rgba(0, 0, 0, .15);
+    --ck-color-shadow-inner: transparent;
+    --ck-color-focus-border: var(--ttsc-accent);
+    --ck-color-focus-outer-shadow: var(--ttsc-accent-soft);
+    --ck-focus-ring: 1px solid var(--ttsc-accent);
+    --ck-color-toolbar-background: var(--ttsc-canvas-2);
+    --ck-color-toolbar-border: var(--ttsc-border);
+    --ck-color-button-default-background: transparent;
+    --ck-color-button-default-hover-background: var(--ttsc-surface-2);
+    --ck-color-button-default-active-background: var(--ttsc-border);
+    --ck-color-button-on-background: var(--ttsc-accent-soft);
+    --ck-color-button-on-hover-background: var(--ttsc-accent-soft);
+    --ck-color-button-on-color: var(--ttsc-accent-text);
+    --ck-color-button-action-background: var(--ttsc-accent);
+    --ck-color-button-action-text: var(--ttsc-accent-on);
+    --ck-color-button-save: var(--ttsc-accent-text);
+    --ck-color-button-cancel: var(--ttsc-danger-text);
+    --ck-color-dropdown-panel-background: var(--ttsc-surface);
+    --ck-color-dropdown-panel-border: var(--ttsc-border);
+    --ck-color-panel-background: var(--ttsc-surface);
+    --ck-color-panel-border: var(--ttsc-border);
+    --ck-color-list-background: var(--ttsc-surface);
+    --ck-color-list-button-hover-background: var(--ttsc-canvas-2);
+    --ck-color-list-button-on-background: var(--ttsc-accent-soft);
+    --ck-color-list-button-on-background-focus: var(--ttsc-accent-soft);
+    --ck-color-list-button-on-text: var(--ttsc-text);
+    --ck-color-input-background: var(--ttsc-surface);
+    --ck-color-input-border: var(--ttsc-border-strong);
+    --ck-color-input-text: var(--ttsc-text);
+    --ck-color-input-disabled-background: var(--ttsc-surface-2);
+    --ck-color-labeled-field-label-background: var(--ttsc-surface);
+    --ck-color-tooltip-background: var(--ttsc-text);
+    --ck-color-tooltip-text: var(--ttsc-surface);
+    --ck-color-link-default: var(--ttsc-accent-text);
+    --ck-color-engine-placeholder-text: var(--ttsc-text-muted);
+    --ck-color-split-button-hover-background: var(--ttsc-surface-2);
+    --ck-color-split-button-hover-border: var(--ttsc-border);
+    --ck-color-switch-button-off-background: var(--ttsc-border-strong);
+    --ck-color-switch-button-on-background: var(--ttsc-accent);
+    --ck-color-widget-blurred-border: var(--ttsc-border-strong);
+    --ck-color-widget-hover-border: var(--ttsc-accent-border);
+    --ck-color-widget-editable-focus-background: var(--ttsc-surface);
+  }
+  .ttsc-ck .ck.ck-editor__top .ck-sticky-panel .ck-toolbar { border-radius: var(--ttsc-radius-control) var(--ttsc-radius-control) 0 0; }
+  .ttsc-ck .ck.ck-editor__main > .ck-editor__editable { min-height: 160px; max-height: 260px; border-radius: 0 0 var(--ttsc-radius-control) var(--ttsc-radius-control); }
+  .ttsc-ck .ck-content { color: var(--ttsc-text); line-height: 1.6; }
+  .ttsc-ck .ck-content h2 { font-size: 16px; font-weight: 600; margin: 0 0 6px; }
+  .ttsc-ck .ck-content blockquote { border-inline-start: 3px solid var(--ttsc-accent); color: var(--ttsc-text-2); font-style: normal; margin-inline: 0; padding-inline-start: 12px; }
+  .ttsc-ck .ck-content ul { list-style: disc; padding-inline-start: 22px; }
+  .ttsc-ck .ck-content ol { list-style: decimal; padding-inline-start: 22px; }
+  .ttsc-ck .ck-content a { color: var(--ttsc-accent-text); }
+  .ttsc-ck .ck-content table td, .ttsc-ck .ck-content table th { border-color: var(--ttsc-border-strong); }
+  .ck-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+  .ck-head label { font-size: 13px; font-weight: 500; color: var(--ttsc-text); }
+  .ck-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="ck-head"><label id="lbl-desc">Descrição do curso (courses.description)</label><span class="ds-note" id="ck-count" aria-live="polite"></span></div>
+  <div class="ttsc-ck">
+    <textarea id="course-description" name="description" aria-labelledby="lbl-desc">
+      <h2>Administração — Bacharelado</h2>
+      <p>O curso forma gestores capazes de planejar, organizar e controlar organizações públicas e privadas, com ênfase em <strong>finanças</strong>, <em>pessoas</em> e inovação. Duração de 8 semestres, 3.000 horas.</p>
+      <ul><li>Estágio supervisionado a partir do 5º período</li><li>Atividades complementares: 200 h</li></ul>
+      <blockquote><p>Reconhecido pela Portaria MEC nº 1.234/2024.</p></blockquote>
+    </textarea>
+  </div>
+  <div class="ck-foot">
+    <label class="ds-row" style="gap:8px;font-size:13px;color:var(--ttsc-text-2)"><input type="checkbox" class="ttsc-switch ttsc-switch-sm" id="ck-ro"> Somente leitura</label>
+    <button type="button" class="ttsc-btn ttsc-btn-primary" id="ck-save"><i class="fa-light fa-floppy-disk"></i> Salvar descrição</button>
+  </div>
+</div>
+<script>
+TTSC.init();
+ClassicEditor.create(document.getElementById('course-description'), {
+  language: 'pt-br',
+  toolbar: { items: ['undo', 'redo', '|', 'heading', '|', 'bold', 'italic', 'link', '|', 'bulletedList', 'numberedList', 'outdent', 'indent', '|', 'blockQuote', 'insertTable'], shouldNotGroupWhenFull: false },
+  heading: { options: [
+    { model: 'paragraph', title: 'Parágrafo', class: 'ck-heading_paragraph' },
+    { model: 'heading2', view: 'h2', title: 'Título', class: 'ck-heading_heading2' },
+    { model: 'heading3', view: 'h3', title: 'Subtítulo', class: 'ck-heading_heading3' }
+  ] },
+  link: { defaultProtocol: 'https://', decorators: { openInNewTab: { mode: 'manual', label: 'Abrir em nova aba', attributes: { target: '_blank', rel: 'noopener noreferrer' } } } },
+  placeholder: 'Descreva o curso, público-alvo e diferenciais...'
+}).then(function (editor) {
+  window.courseEditor = editor;
+  function count() {
+    var text = editor.getData().replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ').trim();
+    var words = text ? text.split(/\s+/).length : 0;
+    document.getElementById('ck-count').textContent = words + ' palavras · ' + editor.getData().length + ' caracteres HTML';
+  }
+  editor.model.document.on('change:data', count); count();
+  document.getElementById('ck-ro').addEventListener('change', function (e) {
+    if (e.target.checked) editor.enableReadOnlyMode('ttsc-preview'); else editor.disableReadOnlyMode('ttsc-preview');
+  });
+  document.getElementById('ck-save').addEventListener('click', function () { editor.updateSourceElement(); });
+});
+</script>
+</body>
+</html>

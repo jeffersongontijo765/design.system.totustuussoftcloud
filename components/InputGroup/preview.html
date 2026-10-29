@@ -1,0 +1,86 @@
+<!-- @dsCard group="Formulários" height=270 subtitle="ttsc-input-group · addon R$, %, @, prefixo+sufixo, botão anexado, sm/lg, inválido" -->
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><title>InputGroup</title>
+<style>
+  .pv-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ttsc-space-4) var(--ttsc-space-5); }
+  .ttsc-input-group:focus-within .ttsc-input-addon { border-color: var(--ttsc-accent); }
+  .ttsc-form-message { color: var(--ttsc-danger-text); }
+  .ttsc-form-label { color: var(--ttsc-text); }
+  /* Addon com a cor do DS, sem depender de --muted (o app redefine --muted como cinza fixo no escuro) */
+  .ttsc-input-group .ttsc-input-addon {
+    background-color: var(--ttsc-surface-2);
+    color: var(--ttsc-text-2);
+    border-color: var(--ttsc-border);
+  }
+  .ttsc-input-group .ttsc-input-addon-icon i { color: var(--ttsc-text-muted); }
+</style>
+</head>
+<body>
+<div class="ds-pad ds-stack">
+  <div class="pv-grid">
+    <div class="ttsc-form-item">
+      <label class="ttsc-form-label" for="pv-amount">Valor da mensalidade (R$)</label>
+      <div class="ttsc-input-group">
+        <span class="ttsc-input-addon">R$</span>
+        <input class="ttsc-input" id="pv-amount" inputmode="decimal" data-ttsc-money value="125000">
+        <span class="ttsc-input-addon">/ mês</span>
+      </div>
+    </div>
+    <div class="ttsc-form-item">
+      <label class="ttsc-form-label" for="pv-pct">Percentual de desconto</label>
+      <div class="ttsc-input-group">
+        <input class="ttsc-input" id="pv-pct" inputmode="decimal" value="15" aria-describedby="pv-pct-unit">
+        <span class="ttsc-input-addon" id="pv-pct-unit">%</span>
+      </div>
+    </div>
+    <div class="ttsc-form-item">
+      <label class="ttsc-form-label" for="pv-user">E-mail institucional</label>
+      <div class="ttsc-input-group">
+        <span class="ttsc-input-addon ttsc-input-addon-icon"><i class="fa-light fa-at" aria-hidden="true"></i></span>
+        <input class="ttsc-input" id="pv-user" value="ana.souza">
+        <span class="ttsc-input-addon">@escola.com.br</span>
+      </div>
+    </div>
+    <div class="ttsc-form-item">
+      <label class="ttsc-form-label" for="pv-cep">CEP</label>
+      <div class="ttsc-input-group">
+        <input class="ttsc-input" id="pv-cep" inputmode="numeric" maxlength="9" value="0131" aria-describedby="pv-cep-msg">
+        <button type="button" class="ttsc-btn ttsc-btn-outline" id="pv-cep-btn"><i class="fa-light fa-magnifying-glass"></i> Buscar CEP</button>
+      </div>
+      <div class="ttsc-form-message" id="pv-cep-msg">Informe os 8 dígitos do CEP.</div>
+    </div>
+  </div>
+  <div class="ds-label">Tamanhos</div>
+  <div class="ds-row">
+    <div class="ttsc-input-group w-[200px]">
+      <span class="ttsc-input-addon ttsc-input-addon-sm">R$</span>
+      <input class="ttsc-input ttsc-input-sm" aria-label="Valor (pequeno)" value="89,90">
+    </div>
+    <div class="ttsc-input-group w-[200px]">
+      <span class="ttsc-input-addon">R$</span>
+      <input class="ttsc-input" aria-label="Valor (padrão)" value="89,90">
+    </div>
+    <div class="ttsc-input-group w-[220px]">
+      <span class="ttsc-input-addon ttsc-input-addon-lg">R$</span>
+      <input class="ttsc-input ttsc-input-lg" aria-label="Valor (grande)" value="89,90">
+    </div>
+  </div>
+</div>
+<script>
+  TTSC.init();
+  var brl = new Intl.NumberFormat('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  document.querySelectorAll('[data-ttsc-money]').forEach(function (input) {
+    var render = function () {
+      var d = input.value.replace(/\D/g, '');
+      input.value = d === '' ? '' : brl.format(parseInt(d, 10) / 100);
+    };
+    input.addEventListener('input', render); render();
+  });
+  var cep = document.getElementById('pv-cep');
+  var check = function () { cep.setAttribute('aria-invalid', cep.value.replace(/\D/g, '').length === 8 ? 'false' : 'true'); };
+  document.getElementById('pv-cep-btn').addEventListener('click', check);
+  check();
+</script>
+</body>
+</html>
