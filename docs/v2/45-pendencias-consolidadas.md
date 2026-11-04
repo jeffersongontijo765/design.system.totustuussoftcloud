@@ -42,7 +42,7 @@ Nenhum item de tabela aberto. OCO-01, BIB-04, IA-01, IA-07 e NOT-01, e o prazo d
 
 Continuam com o autor, no texto corrido: Frotas nesta versão e lista de jurisdições (seções 8.5 e 8.2).
 
-**Licenciamento e permissões:** todas as propostas dos documentos [77](77-licenciamento-planos-e-limites.md) e [78](78-permissoes-e-papeis.md) foram aprovadas em 04/11/2026 (seção 9.1).
+**Licenciamento e permissões:** todas as propostas dos documentos [77](77-licenciamento-planos-e-limites.md) e [78](78-permissoes-e-papeis.md) foram aprovadas em 04/11/2026 (seção 9.1). Em aberto: **D-44** (tributos e obrigações da empresa) e **D-45** (papéis do contábil da plataforma), em [78](78-permissoes-e-papeis.md), seção 6.
 
 ---
 
