@@ -8940,7 +8940,7 @@ Nenhum item de tabela aberto. OCO-01, BIB-04, IA-01, IA-07 e NOT-01, e o prazo d
 
 Continuam com o autor, no texto corrido: Frotas nesta versão e lista de jurisdições (seções 8.5 e 8.2).
 
-**Propostas de licenciamento e permissões ainda sem resposta do autor:** D-34 (nome e código do plano), D-35 (módulos incluídos no plano), D-36 (situação do plano), D-37 (situações da assinatura), D-38 (níveis de papel 0 a 7), D-39 (separação de funções) e D-40 (regras transversais de permissão). Documentos [77](#parte-77), seção 5, e [78](#parte-78), seção 6.
+**Licenciamento e permissões:** todas as propostas dos documentos [77](#parte-77) e [78](#parte-78) foram aprovadas em 04/11/2026 (seção 9.1).
 
 ---
 
@@ -9216,6 +9216,13 @@ Status atualizado no documento de origem, porque a pendência já tinha sido res
 | D-30 | Códigos dos papéis de gestão como na seção 4 do [78](#parte-78). **Aprovada em 04/11/2026** |
 | D-31 | Professor que também coordena: dois papéis, um por portal. **Aprovada em 04/11/2026** ([78](#parte-78)) |
 | D-32 | Responsável com mais de um aluno: escopo `proprio` com dependentes vinculados. **Aprovada em 04/11/2026** ([78](#parte-78)) |
+| D-34 | Nome e código do plano únicos na plataforma. **Aprovada em 04/11/2026** ([77](#parte-77), seção 2) |
+| D-35 | Cada plano tem uma lista de módulos; a entidade só vê no portal os módulos do plano. **Aprovada em 04/11/2026** ([77](#parte-77), seção 2) |
+| D-36 | Plano ativo ou descontinuado; descontinuado não aceita novas assinaturas. **Aprovada em 04/11/2026** ([77](#parte-77), seção 2) |
+| D-37 | Assinatura ativa, inadimplente, suspensa ou cancelada, com os efeitos da seção 3.1. **Aprovada em 04/11/2026** ([77](#parte-77)) |
+| D-38 | Oito níveis de papel, de 0 (próprio) a 7 (desenvolvedor). **Aprovada em 04/11/2026** ([78](#parte-78), seção 2.1) |
+| D-39 | Separação de funções nas ações da seção 2.2. **Aprovada em 04/11/2026** ([78](#parte-78)) |
+| D-40 | Seis regras transversais de permissão. **Aprovada em 04/11/2026** ([78](#parte-78), seção 5) |
 
 #### 9.2 Documentos escritos depois da auditoria
 
@@ -17231,7 +17238,7 @@ Foto é opcional. Aparece para pessoas com vínculo na mesma unidade. **Decidido
 ## 77 — Licenciamento, planos, assinaturas e limites
 
 > Parte do [SDD v2](#parte-00). Complementa [16](#parte-16) (cobrança da assinatura do SaaS) e [20](#parte-20) (pagamentos). Permissões em [78](#parte-78).
-> **Status:** L-01 e D-27 a D-29 aprovadas pelo autor em 04/11/2026. Itens ainda marcados **[Proposta]** estão numerados de D-34 a D-37 (seção 5) e aguardam o autor.
+> **Status:** aprovado pelo autor em 04/11/2026 (L-01 e D-27 a D-29, D-34 a D-37). Não há proposta em aberto neste documento.
 
 ---
 
@@ -17246,12 +17253,12 @@ Foto é opcional. Aparece para pessoas com vínculo na mesma unidade. **Decidido
 
 | Campo | Regra | Situação |
 |---|---|---|
-| Nome e código | Únicos na plataforma. | [Proposta] D-34 |
+| Nome e código | Únicos na plataforma. | D-34 (aprovada) |
 | Limite de alunos | Número inteiro, definido pelo desenvolvedor. Contabiliza **alunos com matrícula ativa** em qualquer unidade da entidade. | L-01 (aprovada) |
-| Módulos incluídos | Lista de módulos licenciados para o plano. Entidade sem o módulo não vê o item no portal. | [Proposta] D-35 (ver [23](#parte-23), seção 1) |
+| Módulos incluídos | Lista de módulos licenciados para o plano. Entidade sem o módulo não vê o item no portal. | D-35 (aprovada) (ver [23](#parte-23), seção 1) |
 | Ciclo de cobrança | Mensal ou anual, definido por plano. | D-29 (aprovada) |
 | Preço | Definido pelo desenvolvedor, por plano, em moeda única da plataforma. | D-29 (aprovada) |
-| Situação | Ativo, descontinuado. Plano descontinuado não aceita novas assinaturas, e as existentes seguem até a renovação. | [Proposta] D-36 |
+| Situação | Ativo, descontinuado. Plano descontinuado não aceita novas assinaturas, e as existentes seguem até a renovação. | D-36 (aprovada) |
 
 ### 3. Assinatura da entidade
 
@@ -17259,7 +17266,7 @@ Foto é opcional. Aparece para pessoas com vínculo na mesma unidade. **Decidido
 - Mudança de plano: efeito na data definida pelo desenvolvedor. Aumento de limite pode ser imediato; redução só vale na renovação, sem remover alunos já matriculados.
 - Cobrança de assinatura: integrada ao provedor de pagamento, sem dado bancário no sistema ([16](#parte-16), seção 2.1).
 
-#### 3.1 Situações da assinatura [Proposta] D-37
+#### 3.1 Situações da assinatura (D-37, aprovada)
 
 | Situação | Quando | Efeito |
 |---|---|---|
@@ -17285,10 +17292,10 @@ Prazo de carência: **15 dias**, ajustável pelo desenvolvedor por plano (D-28, 
 | D-27 | Comportamento ao exceder o limite de alunos | Bloquear novas matrículas ativas (seção 4). **Aprovada pelo autor em 04/11/2026.** | Tolerância com cobrança adicional |
 | D-28 | Prazo de carência por inadimplência | 15 dias, por plano. **Aprovada pelo autor em 04/11/2026.** | Prazo único para todos os planos |
 | D-29 | Preço e ciclo por plano | Definidos pelo desenvolvedor, por plano. **Aprovada pelo autor em 04/11/2026.** | Preço único da plataforma |
-| D-34 | Nome e código do plano | Únicos na plataforma (seção 2) | Únicos por grupo de planos |
-| D-35 | Módulos incluídos no plano | Lista de módulos por plano; entidade sem o módulo não vê o item no portal (seção 2) | Todos os módulos em todos os planos, com limite só de alunos |
-| D-36 | Situação do plano | Ativo ou descontinuado; descontinuado não aceita novas assinaturas (seção 2) | Plano pode ser excluído |
-| D-37 | Situações da assinatura | Ativa, inadimplente, suspensa, cancelada, com os efeitos da seção 3.1 | Só ativa e cancelada |
+| D-34 | Nome e código do plano | Únicos na plataforma (seção 2). **Aprovada pelo autor em 04/11/2026.** | Únicos por grupo de planos |
+| D-35 | Módulos incluídos no plano | Lista de módulos por plano; entidade sem o módulo não vê o item no portal (seção 2). **Aprovada pelo autor em 04/11/2026.** | Todos os módulos em todos os planos, com limite só de alunos |
+| D-36 | Situação do plano | Ativo ou descontinuado; descontinuado não aceita novas assinaturas (seção 2). **Aprovada pelo autor em 04/11/2026.** | Plano pode ser excluído |
+| D-37 | Situações da assinatura | Ativa, inadimplente, suspensa, cancelada, com os efeitos da seção 3.1. **Aprovada pelo autor em 04/11/2026.** | Só ativa e cancelada |
 
 ### 6. Critérios de aceite
 
@@ -17306,7 +17313,7 @@ Prazo de carência: **15 dias**, ajustável pelo desenvolvedor por plano (D-28, 
 ## 78 — Permissões, papéis e níveis de acesso por portal
 
 > Parte do [SDD v2](#parte-00). Estende [06](#parte-06), seção 9 (RBAC com contexto) e a seção 10 (contas de plataforma). Escopo de portais em [23](#parte-23) e [31](#parte-31).
-> **Status:** L-02, P-01 e D-30 a D-33 aprovadas pelo autor em 04/11/2026. Itens ainda marcados **[Proposta]** estão numerados de D-38 a D-40 (seção 6) e aguardam o autor.
+> **Status:** aprovado pelo autor em 04/11/2026 (L-02, P-01, D-30 a D-33 e D-38 a D-40). Não há proposta em aberto neste documento.
 
 ---
 
@@ -17325,7 +17332,7 @@ Prazo de carência: **15 dias**, ajustável pelo desenvolvedor por plano (D-28, 
 - **Vínculo:** uma pessoa tem um ou mais vínculos (entidade, unidade, papel). Permissão efetiva é a união dos vínculos ativos, menos as negações.
 - **Negação explícita** vence concessão ([06](#parte-06), seção 9).
 
-#### 2.1 Níveis de papel [Proposta] D-38
+#### 2.1 Níveis de papel (D-38, aprovada)
 
 | Nível | Nome | O que faz | Exemplo |
 |---|---|---|---|
@@ -17343,7 +17350,7 @@ Regras de nível:
 - Papéis de nível 3 e acima, e todos os da plataforma, exigem **justificativa** e **revisão trimestral** ([06](#parte-06), seção 9).
 - Papéis de nível 0 a 2 têm revisão anual.
 
-#### 2.2 Separação de funções [Proposta] D-39
+#### 2.2 Separação de funções (D-39, aprovada)
 
 | Ação | Não pode ser feita pela mesma pessoa |
 |---|---|
@@ -17418,7 +17425,7 @@ Papéis listados por portal, com o nível máximo previsto. Permissões detalhad
 | `thirdparty` | 0 | proprio (contrato vinculado) | Ver contratos, entregas, faturas e solicitações da própria organização |
 | `thirdparty.manager` | 1 | entidade (contrato) | Gestão de entregas e faturas do contrato vinculado |
 
-### 5. Regras transversais [Proposta] D-40
+### 5. Regras transversais (D-40, aprovada)
 
 1. **Default-deny:** rota ou ação sem papel explícito é negada, como em [03](#parte-03).
 2. **Escopo verificado no servidor:** o escopo `turma`, `unidade` ou `proprio` é conferido em cada consulta, não só na tela.
@@ -17435,9 +17442,9 @@ Papéis listados por portal, com o nível máximo previsto. Permissões detalhad
 | D-31 | Papel de professor que também coordena | Dois papéis, um por portal. **Aprovada pelo autor em 04/11/2026.** | Um papel com acúmulo de escopo |
 | D-32 | Papel do responsável com mais de um aluno | Escopo `proprio` com dependentes vinculados. **Aprovada pelo autor em 04/11/2026.** | Papel por aluno |
 | D-33 | Papel que aprova a publicação no Editor de portais (diferente de quem editou) | `platform.developer` aprova o que o `platform.builder` edita. **Aprovada pelo autor em 04/11/2026.** | Papel de revisão separado, criado só para isso |
-| D-38 | Níveis de papel | Oito níveis, de 0 (próprio) a 7 (desenvolvedor), com as regras da seção 2.1 | Menos níveis, por exemplo 0, 1, 3, 4 e 7 |
-| D-39 | Separação de funções | As cinco ações da seção 2.2 | Lista definida por módulo |
-| D-40 | Regras transversais | As seis regras da seção 5 | Regras definidas por portal |
+| D-38 | Níveis de papel | Oito níveis, de 0 (próprio) a 7 (desenvolvedor), com as regras da seção 2.1. **Aprovada pelo autor em 04/11/2026.** | Menos níveis, por exemplo 0, 1, 3, 4 e 7 |
+| D-39 | Separação de funções | As cinco ações da seção 2.2. **Aprovada pelo autor em 04/11/2026.** | Lista definida por módulo |
+| D-40 | Regras transversais | As seis regras da seção 5. **Aprovada pelo autor em 04/11/2026.** | Regras definidas por portal |
 
 ### 7. Critérios de aceite
 

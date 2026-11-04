@@ -42,7 +42,7 @@ Nenhum item de tabela aberto. OCO-01, BIB-04, IA-01, IA-07 e NOT-01, e o prazo d
 
 Continuam com o autor, no texto corrido: Frotas nesta versão e lista de jurisdições (seções 8.5 e 8.2).
 
-**Propostas de licenciamento e permissões ainda sem resposta do autor:** D-34 (nome e código do plano), D-35 (módulos incluídos no plano), D-36 (situação do plano), D-37 (situações da assinatura), D-38 (níveis de papel 0 a 7), D-39 (separação de funções) e D-40 (regras transversais de permissão). Documentos [77](77-licenciamento-planos-e-limites.md), seção 5, e [78](78-permissoes-e-papeis.md), seção 6.
+**Licenciamento e permissões:** todas as propostas dos documentos [77](77-licenciamento-planos-e-limites.md) e [78](78-permissoes-e-papeis.md) foram aprovadas em 04/11/2026 (seção 9.1).
 
 ---
 
@@ -318,6 +318,13 @@ Status atualizado no documento de origem, porque a pendência já tinha sido res
 | D-30 | Códigos dos papéis de gestão como na seção 4 do [78](78-permissoes-e-papeis.md). **Aprovada em 04/11/2026** |
 | D-31 | Professor que também coordena: dois papéis, um por portal. **Aprovada em 04/11/2026** ([78](78-permissoes-e-papeis.md)) |
 | D-32 | Responsável com mais de um aluno: escopo `proprio` com dependentes vinculados. **Aprovada em 04/11/2026** ([78](78-permissoes-e-papeis.md)) |
+| D-34 | Nome e código do plano únicos na plataforma. **Aprovada em 04/11/2026** ([77](77-licenciamento-planos-e-limites.md), seção 2) |
+| D-35 | Cada plano tem uma lista de módulos; a entidade só vê no portal os módulos do plano. **Aprovada em 04/11/2026** ([77](77-licenciamento-planos-e-limites.md), seção 2) |
+| D-36 | Plano ativo ou descontinuado; descontinuado não aceita novas assinaturas. **Aprovada em 04/11/2026** ([77](77-licenciamento-planos-e-limites.md), seção 2) |
+| D-37 | Assinatura ativa, inadimplente, suspensa ou cancelada, com os efeitos da seção 3.1. **Aprovada em 04/11/2026** ([77](77-licenciamento-planos-e-limites.md)) |
+| D-38 | Oito níveis de papel, de 0 (próprio) a 7 (desenvolvedor). **Aprovada em 04/11/2026** ([78](78-permissoes-e-papeis.md), seção 2.1) |
+| D-39 | Separação de funções nas ações da seção 2.2. **Aprovada em 04/11/2026** ([78](78-permissoes-e-papeis.md)) |
+| D-40 | Seis regras transversais de permissão. **Aprovada em 04/11/2026** ([78](78-permissoes-e-papeis.md), seção 5) |
 
 ### 9.2 Documentos escritos depois da auditoria
 

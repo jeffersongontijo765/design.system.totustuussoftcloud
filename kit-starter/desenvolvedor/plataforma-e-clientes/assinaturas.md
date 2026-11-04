@@ -22,7 +22,7 @@ Gerir a assinatura de cada entidade: plano, ciclo de cobrança, renovação e ca
 - Modelo da assinatura: **[Sem detalhamento]**.
 
 ## 5. Campos e validações
-- Situações da assinatura: ativa, inadimplente, suspensa, cancelada (SDD 77, seção 3.1, proposta D-37; carência de 15 dias aprovada em D-28).
+- Situações da assinatura: ativa, inadimplente, suspensa, cancelada (SDD 77, seção 3.1, D-37 aprovada; carência de 15 dias aprovada em D-28).
 - Plano, ciclo, valor, data de início e de renovação: SDD 77, seção 2 (preço e ciclo por plano aprovados em D-29).
 
 ## 6. Indicadores e gráficos

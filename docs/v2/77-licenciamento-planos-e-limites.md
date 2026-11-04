@@ -1,7 +1,7 @@
 # 77 — Licenciamento, planos, assinaturas e limites
 
 > Parte do [SDD v2](00-README.md). Complementa [16](16-integracoes-externas.md) (cobrança da assinatura do SaaS) e [20](20-pagamentos-seguranca.md) (pagamentos). Permissões em [78](78-permissoes-e-papeis.md).
-> **Status:** L-01 e D-27 a D-29 aprovadas pelo autor em 04/11/2026. Itens ainda marcados **[Proposta]** estão numerados de D-34 a D-37 (seção 5) e aguardam o autor.
+> **Status:** aprovado pelo autor em 04/11/2026 (L-01 e D-27 a D-29, D-34 a D-37). Não há proposta em aberto neste documento.
 
 ---
 
@@ -16,12 +16,12 @@
 
 | Campo | Regra | Situação |
 |---|---|---|
-| Nome e código | Únicos na plataforma. | [Proposta] D-34 |
+| Nome e código | Únicos na plataforma. | D-34 (aprovada) |
 | Limite de alunos | Número inteiro, definido pelo desenvolvedor. Contabiliza **alunos com matrícula ativa** em qualquer unidade da entidade. | L-01 (aprovada) |
-| Módulos incluídos | Lista de módulos licenciados para o plano. Entidade sem o módulo não vê o item no portal. | [Proposta] D-35 (ver [23](23-dominios-provisionamento-ciclo-de-vida.md), seção 1) |
+| Módulos incluídos | Lista de módulos licenciados para o plano. Entidade sem o módulo não vê o item no portal. | D-35 (aprovada) (ver [23](23-dominios-provisionamento-ciclo-de-vida.md), seção 1) |
 | Ciclo de cobrança | Mensal ou anual, definido por plano. | D-29 (aprovada) |
 | Preço | Definido pelo desenvolvedor, por plano, em moeda única da plataforma. | D-29 (aprovada) |
-| Situação | Ativo, descontinuado. Plano descontinuado não aceita novas assinaturas, e as existentes seguem até a renovação. | [Proposta] D-36 |
+| Situação | Ativo, descontinuado. Plano descontinuado não aceita novas assinaturas, e as existentes seguem até a renovação. | D-36 (aprovada) |
 
 ## 3. Assinatura da entidade
 
@@ -29,7 +29,7 @@
 - Mudança de plano: efeito na data definida pelo desenvolvedor. Aumento de limite pode ser imediato; redução só vale na renovação, sem remover alunos já matriculados.
 - Cobrança de assinatura: integrada ao provedor de pagamento, sem dado bancário no sistema ([16](16-integracoes-externas.md), seção 2.1).
 
-### 3.1 Situações da assinatura [Proposta] D-37
+### 3.1 Situações da assinatura (D-37, aprovada)
 
 | Situação | Quando | Efeito |
 |---|---|---|
@@ -55,10 +55,10 @@ Prazo de carência: **15 dias**, ajustável pelo desenvolvedor por plano (D-28, 
 | D-27 | Comportamento ao exceder o limite de alunos | Bloquear novas matrículas ativas (seção 4). **Aprovada pelo autor em 04/11/2026.** | Tolerância com cobrança adicional |
 | D-28 | Prazo de carência por inadimplência | 15 dias, por plano. **Aprovada pelo autor em 04/11/2026.** | Prazo único para todos os planos |
 | D-29 | Preço e ciclo por plano | Definidos pelo desenvolvedor, por plano. **Aprovada pelo autor em 04/11/2026.** | Preço único da plataforma |
-| D-34 | Nome e código do plano | Únicos na plataforma (seção 2) | Únicos por grupo de planos |
-| D-35 | Módulos incluídos no plano | Lista de módulos por plano; entidade sem o módulo não vê o item no portal (seção 2) | Todos os módulos em todos os planos, com limite só de alunos |
-| D-36 | Situação do plano | Ativo ou descontinuado; descontinuado não aceita novas assinaturas (seção 2) | Plano pode ser excluído |
-| D-37 | Situações da assinatura | Ativa, inadimplente, suspensa, cancelada, com os efeitos da seção 3.1 | Só ativa e cancelada |
+| D-34 | Nome e código do plano | Únicos na plataforma (seção 2). **Aprovada pelo autor em 04/11/2026.** | Únicos por grupo de planos |
+| D-35 | Módulos incluídos no plano | Lista de módulos por plano; entidade sem o módulo não vê o item no portal (seção 2). **Aprovada pelo autor em 04/11/2026.** | Todos os módulos em todos os planos, com limite só de alunos |
+| D-36 | Situação do plano | Ativo ou descontinuado; descontinuado não aceita novas assinaturas (seção 2). **Aprovada pelo autor em 04/11/2026.** | Plano pode ser excluído |
+| D-37 | Situações da assinatura | Ativa, inadimplente, suspensa, cancelada, com os efeitos da seção 3.1. **Aprovada pelo autor em 04/11/2026.** | Só ativa e cancelada |
 
 ## 6. Critérios de aceite
 
