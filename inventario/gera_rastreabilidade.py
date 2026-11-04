@@ -47,9 +47,10 @@ for raiz, _, nomes in os.walk(KIT):
     for n in nomes:
         if n.endswith('.md'):
             t = open(os.path.join(raiz, n), encoding='utf8').read()
-            m = re.search(r'^- Fonte da v1: \[([^\]]+)\]', t, re.M)
+            m = re.search(r'^- Fonte da v1: (.*)$', t, re.M)
             if m and 'absorvida integralmente' in t:
-                absorvidos.setdefault(m.group(1), []).append(os.path.relpath(os.path.join(raiz, n), ROOT).replace(os.sep, '/'))
+                for nome_v1 in re.findall(r'\[([^\]]+)\]\(', m.group(1)):
+                    absorvidos.setdefault(nome_v1, []).append(os.path.relpath(os.path.join(raiz, n), ROOT).replace(os.sep, '/'))
 
 linhas_tab = []
 contagem = {}

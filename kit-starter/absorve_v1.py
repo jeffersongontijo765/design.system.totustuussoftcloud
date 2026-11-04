@@ -43,26 +43,39 @@ def telas(texto):
 def monta(cfg):
     destino = os.path.join(KIT, cfg['arquivo'])
     d = os.path.dirname(destino)
-    v1 = os.path.join(V2, 'anexo-v1', cfg['v1'])
-    texto_v1 = open(v1, encoding='utf8').read()
+    fontes = cfg['v1'] if isinstance(cfg['v1'], list) else [cfg['v1']]
+    textos = [(n, open(os.path.join(V2, 'anexo-v1', n), encoding='utf8').read()) for n in fontes]
     r = lambda doc: rel(d, os.path.join(V2, doc))
     linha = lambda t: re.sub(r'\{(\d\d-[^}]+\.md)\}', lambda m: r(m.group(1)), t)
+    if textos:
+        fonte = '- Fonte da v1: ' + '; '.join(f"[{n}]({rel(d, os.path.join(V2, 'anexo-v1', n))}) ({len(t.splitlines())} linhas)" for n, t in textos)
+        status = 'detalhado; especificação da v1 absorvida integralmente (seção 13), com as correções da v2 e as decisões por padrão (seções 1 a 12)'
+        indice = '\n\n'.join((f'**{n}**\n\n' if len(textos) > 1 else '') + telas(t) for n, t in textos)
+        integral = '\n\n'.join((f'### Fonte: {n}\n\n' if len(textos) > 1 else '') + rebaixa(t, 3 if len(textos) > 1 else 2) for n, t in textos)
+        sec13 = f"## 13. Conteúdo integral da v1 (absorvido)\n\n{integral}\n"
+        leitura = 'As seções 1 a 12 prevalecem sobre a seção 13. A seção 13 é o texto integral da v1, sem corte, para que nenhum detalhe se perca. Quando a seção 13 disser algo diferente das seções 1 a 12, vale o que está nas seções 1 a 12.'
+    else:
+        fonte = '- Fonte da v1: sem especificação própria (regras no SDD v2, seção 4 desta ficha)'
+        status = 'detalhado a partir do SDD v2 (sem especificação própria na v1)'
+        indice = linha(cfg.get('telas', '- Telas na seção 4.'))
+        sec13 = ''
+        leitura = 'Não há especificação própria na v1. Valem as regras do SDD v2 citadas nesta ficha.'
     corpo = f"""# {cfg['titulo']}
 
 - Portal: {cfg['portal']}
 - Área: {cfg['area']}
 - Domínio: {linha(cfg['dominio'])}
-- Status: detalhado; especificação da v1 absorvida integralmente (seção 13), com as correções da v2 e as decisões por padrão (seções 1 a 12)
-- Fonte da v1: [{cfg['v1']}]({rel(d, v1)}) ({len(texto_v1.splitlines())} linhas)
+- Status: {status}
+{fonte}
 
 ## 1. Regra de leitura
-As seções 1 a 12 prevalecem sobre a seção 13. A seção 13 é o texto integral da v1, sem corte, para que nenhum detalhe se perca. Quando a seção 13 disser algo diferente das seções 1 a 12, vale o que está nas seções 1 a 12.
+{leitura}
 
 ## 2. Objetivo e escopo
 {linha(cfg['objetivo'])}
 
-## 3. Telas (índice da v1)
-{telas(texto_v1)}
+## 3. Telas{' (índice da v1)' if textos else ''}
+{indice if textos else linha(cfg.get('telas', ''))}
 
 ## 4. Correções da v2 que prevalecem
 {linha(cfg['correcoes'])}
@@ -80,7 +93,7 @@ As seções 1 a 12 prevalecem sobre a seção 13. A seção 13 é o texto integr
 {linha(cfg['integracoes'])}
 
 ## 9. Exportação, auditoria e privacidade
-- Exportação de listas: CSV, XLSX, PDF e JSON, com permissão de exportação e step-up; CSV com células neutralizadas ([{{08}}]({r('08-frontend-design-system.md')}), seção 3).
+- Exportação de listas: CSV, XLSX, PDF e JSON, com permissão de exportação e step-up; CSV com células neutralizadas ([08]({r('08-frontend-design-system.md')}), seção 3).
 - Auditoria conforme [29]({r('29-auditoria.md')}); dados pessoais conforme [07]({r('07-privacidade-lgpd.md')}).
 {linha(cfg.get('privacidade', ''))}
 
@@ -94,11 +107,7 @@ As seções 1 a 12 prevalecem sobre a seção 13. A seção 13 é o texto integr
 ## 12. Pendências
 {linha(cfg['pendencias'])}
 
-## 13. Conteúdo integral da v1 (absorvido)
-
-{rebaixa(texto_v1)}
-"""
-    corpo = corpo.replace('[{08}]', '[08]')
+{sec13}"""
     open(destino, 'w', encoding='utf8').write(corpo)
     return destino, len(corpo.splitlines())
 
@@ -196,7 +205,53 @@ FICHAS = [
   integracoes="- `smt.cat.created` → Pessoas (afastamento); `hcm.employee.created` → agenda do exame admissional ([39]({39-departamento-pessoal-rh-medicina-por-portal.md}), seção 8).\n- eSocial S-2220, S-2230 e S-2240, conforme D-08 ([16]({16-integracoes-externas.md}), seção 6).\n- Clínica de ASO pelo portal de terceiros: recebe agendamento e devolve resultado ([38]({38-portal-de-terceiros-prestadores.md}), seção 3.11).",
   privacidade="- Dado de saúde é dado sensível (LGPD, art. 11): necessidade, acesso por papel, cifragem, registro de leitura e guarda mínima de 20 anos para prontuário e ASO.",
   pendencias="- CAT com CID emitida pelo médico, não pela gestão **(verificar)**, no [39]({39-departamento-pessoal-rh-medicina-por-portal.md}), seção 5.1.\n- Revisão do owner do [52]({52-medicina-do-trabalho-especificacao.md}) (HCM-07)."),
-
+ dict(arquivo='desenvolvedor/suporte/chamados-dos-clientes.md', v1=['SPEC-HELPDESK.md', 'spec_chat_rapido_sac.md', 'SPEC-LAYOUT-TICKET.md'],
+  titulo='Chamados dos clientes (suporte da plataforma)', portal='Desenvolvedor (`desenvolvedor.`)', area='Suporte', dominio=PLAT,
+  objetivo='Atender as entidades clientes da plataforma: abertura, triagem, atendimento, escalonamento e encerramento dos chamados, por todos os canais.',
+  correcoes="""- **Modelo único** ([32]({32-atendimento-privacidade-por-portal.md}), seção 2.1; [19]({19-regras-modulos-3.md}), seção 7): Helpdesk é a base; SAC e chat rápido são canais ou tipos do mesmo registro. As três especificações da v1 da seção 13 descrevem partes desse mesmo módulo.
+- **Protocolo** (ATD-01): todo pedido com responsável e prazo recebe número de protocolo; pergunta resolvida pelo bot ou pela base de conhecimento, sem fila, não recebe.
+- **Estados e transições** ([32]({32-atendimento-privacidade-por-portal.md}), seção 2.2): `novo`, `aberto`, `em_triagem`, `em_atendimento`, `aguardando_cliente`, `aguardando_terceiro`, `aguardando_aprovacao`, `em_pausa`, `resolvido`, `fechado`, `reaberto`, `escalonado`, `cancelado`. Transição inválida é recusada pela aplicação. Cancelar, escalonar e reabrir gravam motivo.
+- **Prioridade, categoria e fila** (seção 2.4): baixa, média, alta e urgente; urgente só em categoria que permita; atribuição automática por fila.
+- **Canais** (seção 2.5; [22]({22-crm-canais-e-papeis.md}), seções 2 e 3): opção "Abrir ticket" sem IA em todo ponto de atendimento (D-18); texto do solicitante guardado literal; campos obrigatórios por tipo e lista fixa de campos padrão.
+- **Portal do cliente** (seção 2.6): nota interna nunca aparece para o solicitante; respostas públicas por padrão; avaliação do atendimento.
+- **Visibilidade no portal do desenvolvedor** (seção 2.8): chamados das entidades; nenhum dado de aluno sem chamado vinculado ([29]({29-auditoria.md}), seção 8).
+- **Bots** (seção 2.9): categoria sensível (saúde, denúncia, conflito) vai para humano (ATD-05).
+- **Perfis da v1:** substituídos pelos papéis da seção 6.""",
+  decisoes="- Nenhuma decisão nova: modelo, estados, SLA e categoria sensível já decididos no [32]({32-atendimento-privacidade-por-portal.md}) (ATD-01, ATD-02, ATD-05).",
+  papeis="- `platform.operator` (nível 5): atender chamados das entidades; consulta de dado de cliente só com motivo registrado ([78]({78-permissoes-e-papeis.md}), seção 4.1).\n- `platform.manager` (nível 6): redistribuir filas, ver estouros de SLA, aprovar escalonamento.\n- `platform.chatbot.operator`: atender as conversas dos canais e transferir.\n- Solicitante (usuário da entidade): o próprio chamado.",
+  dados="- DDL do atendimento em [51]({51-ddl-modulos-novos.md}), seção 1 (ATD-04, revisão do owner pendente), que prevalece sobre os modelos da v1.",
+  integracoes="- SLA (ficha [sla.md](sla.md)); base de conhecimento ([base-de-conhecimento.md](base-de-conhecimento.md)).\n- Notificações por mudança de estado e por alerta de SLA ([57]({57-notificacoes-por-portal.md})).\n- CRM da plataforma: conversa de canal que vira oportunidade comercial.",
+  privacidade="- Retenção de tickets e transcrições: ATD-03 (jurídico), ligado ao L-24 do [22]({22-crm-canais-e-papeis.md}).",
+  pendencias="- ATD-03 (retenção) e revisão do DDL (ATD-04), no [32]({32-atendimento-privacidade-por-portal.md}), seção 2.10."),
+ dict(arquivo='desenvolvedor/suporte/base-de-conhecimento.md', v1='spec_gestao_sac_base_conhecimento.md',
+  titulo='Base de conhecimento da plataforma', portal='Desenvolvedor (`desenvolvedor.`)', area='Suporte', dominio=PLAT,
+  objetivo='Manter os artigos de ajuda da plataforma, usados pelo atendimento, pelo portal do cliente e pelo bot.',
+  correcoes="""- **Artigo** ([32]({32-atendimento-privacidade-por-portal.md}), seção 2.7): autor, revisor, versão, data de revisão e público (interno, portal ou público). Artigo com dado pessoal não é publicado.
+- **Sugestão por IA:** só a partir de fonte cadastrada ([27]({27-inteligencia-artificial-e-portais.md}); D-18 do [22]({22-crm-canais-e-papeis.md})).
+- **Bot:** responde só com artigos publicados para o público do canal; fora da base, encaminha para humano.
+- **Perfis da v1:** substituídos pelos papéis da seção 6.""",
+  decisoes="- Revisão obrigatória antes de publicar, por pessoa diferente do autor (critério 4 do [80]({80-decisoes-por-padrao.md})).",
+  papeis="- `platform.operator`: escrever e atualizar artigos.\n- `platform.manager`: revisar e publicar; não publica artigo que ele mesmo escreveu.",
+  dados="- Modelo de artigos da v1 (seção 13) e DDL do atendimento ([51]({51-ddl-modulos-novos.md}), seção 1), com versão e público.",
+  integracoes="- Chamados: artigo sugerido ao atendente e ao solicitante antes de abrir o chamado.\n- Bot dos canais ([22]({22-crm-canais-e-papeis.md}), seção 3).",
+  pendencias="- Nenhuma além das do atendimento ([32]({32-atendimento-privacidade-por-portal.md}), seção 2.10)."),
+ dict(arquivo='desenvolvedor/suporte/sla.md', v1=[],
+  titulo='SLA do suporte da plataforma', portal='Desenvolvedor (`desenvolvedor.`)', area='Suporte', dominio=PLAT,
+  objetivo='Definir e acompanhar os prazos de atendimento dos chamados das entidades clientes.',
+  telas="""- **Regras de SLA** (datatable): aplicação (entidade, cliente, fila, tipo, categoria, prioridade), tipo de prazo (primeira resposta, próxima resposta, resolução, fechamento) e valor. A regra mais específica vence.
+- **Painel de SLA** (dashboard): chamados dentro do prazo, com 80% do prazo consumido e com prazo estourado, por fila e por prioridade; gráfico de cumprimento por período.
+- **Calendário de dias úteis** (configuração): dias úteis e feriados usados na contagem.""",
+  correcoes="""- **Tipos de prazo** ([32]({32-atendimento-privacidade-por-portal.md}), seção 2.3): primeira resposta, próxima resposta, resolução e fechamento.
+- **Padrão aprovado** (ATD-02): urgente 1 h e 4 h; alta 4 h e 2 dias úteis; média 1 dia útil e 5 dias úteis; baixa 2 dias úteis e 10 dias úteis (primeira resposta e resolução). Ajustável por entidade dentro do limite do contrato.
+- **Fechamento automático:** 3 dias úteis após `resolvido`, sem resposta do solicitante.
+- **Pausa:** tempo em `aguardando_*` não conta.
+- **Sem SLA:** sem valor definido, o chamado não recebe prazo e o painel mostra "sem SLA".
+- **Alertas:** 80% do prazo consumido e prazo estourado; o estouro aparece no painel do gestor, não no portal do solicitante.""",
+  decisoes="- Nenhuma decisão nova: valores e regras já aprovados (ATD-02).",
+  papeis="- `platform.manager`: configurar regras e calendário; ver o painel completo.\n- `platform.operator`: ver o prazo dos próprios chamados.",
+  dados="- Regras de SLA e contagem no DDL do atendimento ([51]({51-ddl-modulos-novos.md}), seção 1).",
+  integracoes="- Chamados: prazo calculado na abertura e recalculado em cada mudança de estado.\n- Notificações de alerta e de estouro ([57]({57-notificacoes-por-portal.md})).\n- Contrato do cliente: limite de SLA contratado.",
+  pendencias="- Nenhuma além das do atendimento ([32]({32-atendimento-privacidade-por-portal.md}), seção 2.10)."),
 ]
 
 for cfg in FICHAS:
