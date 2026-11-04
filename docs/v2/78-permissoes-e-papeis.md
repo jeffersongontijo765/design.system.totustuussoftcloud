@@ -1,7 +1,7 @@
 # 78 — Permissões, papéis e níveis de acesso por portal
 
 > Parte do [SDD v2](00-README.md). Estende [06](06-identidade-acesso.md), seção 9 (RBAC com contexto) e a seção 10 (contas de plataforma). Escopo de portais em [23](23-dominios-provisionamento-ciclo-de-vida.md) e [31](31-matriz-portais-modulos.md).
-> **Status:** aprovado pelo autor em 04/11/2026 (L-02, P-01, D-30 a D-33 e D-38 a D-40). Não há proposta em aberto neste documento.
+> **Status:** aprovado pelo autor em 04/11/2026 (L-02, P-01, D-30 a D-33 e D-38 a D-40). Proposta em aberto: D-41 (códigos dos papéis comerciais).
 
 ---
 
@@ -72,6 +72,11 @@ Papéis listados por portal, com o nível máximo previsto. Permissões detalhad
 | `platform.operator` | 5 | plataforma | Suporte e atendimento; consulta de cliente com motivo registrado |
 | `platform.builder` | 7 | plataforma | Editor de portais, com passkey e sessão curta (mantido de [06](06-identidade-acesso.md), seção 9) |
 | `platform.auditor` | 2 | plataforma | Leitura de auditoria e relatórios de conformidade |
+| `platform.sales.sdr` | 1 | plataforma (leads) | Pré-vendas: qualificar, agendar demonstração, registrar interação (SDD 22, seção 4.1) |
+| `platform.sales.ae` | 1 | plataforma (carteira própria) | Vendedor: criar proposta e avançar o funil até negociação (SDD 22, seção 4.1) |
+| `platform.sales.manager` | 2 | plataforma (equipe comercial) | Gerente comercial: atribuir leads, aprovar desconto na alçada, ver funil da equipe (SDD 22, seção 4.1) |
+| `platform.chatbot.operator` | 1 | plataforma (fila de conversas) | Atender, transferir e registrar conversas dos canais (SDD 22, seção 4.1) |
+| `platform.customer_success` | 1 | plataforma (clientes ativos) | Acompanhar implantação e uso, sem alterar cobrança (SDD 22, seção 4.1) |
 
 ### 4.2 Portal de Gestão (SaaS da entidade)
 
@@ -133,6 +138,7 @@ Papéis listados por portal, com o nível máximo previsto. Permissões detalhad
 | D-38 | Níveis de papel | Oito níveis, de 0 (próprio) a 7 (desenvolvedor), com as regras da seção 2.1. **Aprovada pelo autor em 04/11/2026.** | Menos níveis, por exemplo 0, 1, 3, 4 e 7 |
 | D-39 | Separação de funções | As cinco ações da seção 2.2. **Aprovada pelo autor em 04/11/2026.** | Lista definida por módulo |
 | D-40 | Regras transversais | As seis regras da seção 5. **Aprovada pelo autor em 04/11/2026.** | Regras definidas por portal |
+| D-41 | Códigos dos papéis comerciais da plataforma (SDD 22, seção 4.1) | Os cinco códigos `platform.sales.*`, `platform.chatbot.operator` e `platform.customer_success` da seção 4.1 | Outros nomes, mantidos os níveis |
 
 ## 7. Critérios de aceite
 
