@@ -2,6 +2,7 @@
 
 > Parte do [SDD v2](00-README.md). Fecha os DDL pendentes listados no [45](45-pendencias-consolidadas.md), seção 4. Convenções: MySQL 8 ou MariaDB 10.6, `utf8mb4`, horários em UTC (`DATETIME(3)`), chave interna `BIGINT UNSIGNED AUTO_INCREMENT` e `uuid CHAR(36)` para referência externa. Toda tabela de unidade tem `unidade_uuid` (regra de [03](03-dominio-tenancy.md), seção 1.1). Soft delete com `deleted_at` e `deleted_by` ([19](19-regras-modulos-3.md), seção 14). Tabelas de entidade ficam no banco da unidade. Tabelas de plataforma ficam no master.
 > **Status:** DDL proposto, criado em 03/11/2026. Não foi executado. Antes de implementar, cada DDL passa por revisão do owner do módulo e por teste de migração ([10](10-implantacao-operacao.md), seção 5). Valores de domínio marcados com (jurídico) dependem do parecer ([50](50-pacote-juridico-e-norma.md)).
+> **Coluna gerada (04/11/2026):** coluna gerada não lê coluna `CHAR`, porque no MariaDB o resultado depende do modo `PAD_CHAR_TO_FULL_LENGTH` (erro 1901). Para chave única de "registro ativo", use um indicador `TINYINT` gerado (1 ou NULL) num índice único composto; quando a expressão precisa ler o UUID, declare a coluna como `VARCHAR(36)`. Todo o DDL do SDD foi executado sem erro em MariaDB 10.11 com `utf8mb4`.
 
 ---
 
@@ -526,8 +527,8 @@ CREATE TABLE matriculas (
   created_by      CHAR(36) NOT NULL,
   created_at      DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
   deleted_at      DATETIME(3) NULL,
-  vinculo_ativo_chave VARCHAR(120) AS (CASE WHEN estado IN ('solicitada','em_analise','condicional','ativa','trancada') THEN CONCAT(aluno_uuid,'|',unidade_uuid,'|',periodo_letivo) ELSE NULL END) STORED,
-  UNIQUE KEY ux_matricula_ativa (vinculo_ativo_chave)
+  vinculo_ativo    TINYINT AS (CASE WHEN estado IN ('solicitada','em_analise','condicional','ativa','trancada') THEN 1 ELSE NULL END) STORED,
+  UNIQUE KEY ux_matricula_ativa (aluno_uuid, unidade_uuid, periodo_letivo, vinculo_ativo)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE vagas_reserva (
@@ -605,7 +606,7 @@ CREATE TABLE lista_espera (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ```
 
-A coluna gerada `vinculo_ativo_chave` só tem valor para matrícula em andamento ou ativa. A constraint `ux_matricula_ativa` impede dois vínculos desses no mesmo aluno, unidade e período. Matrículas canceladas ou concluídas não entram na chave. Concorrência de vaga é tratada na transação de confirmação, com bloqueio da turma ([46](46-matricula-e-rematricula-por-portal.md), seção 7).
+A coluna gerada `vinculo_ativo` só vale 1 para matrícula em andamento ou ativa; fora disso é NULL, e o índice único aceita vários NULL. A constraint `ux_matricula_ativa` impede dois vínculos desses no mesmo aluno, unidade e período. Matrículas canceladas ou concluídas não entram na chave. Concorrência de vaga é tratada na transação de confirmação, com bloqueio da turma ([46](46-matricula-e-rematricula-por-portal.md), seção 7).
 
 ---
 
@@ -1122,10 +1123,10 @@ CREATE TABLE tur_enturmacoes (
   turma_id          BIGINT UNSIGNED NOT NULL,
   matricula_uuid    CHAR(36) NOT NULL,
   estado            ENUM('ativa','transferida','cancelada') NOT NULL,
-  vinculo_ativo_chave VARCHAR(100) AS (CASE WHEN estado = 'ativa' THEN CONCAT(matricula_uuid, '|', turma_id) END) STORED,
+  vinculo_ativo     TINYINT AS (CASE WHEN estado = 'ativa' THEN 1 END) STORED,
   criado_em         DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
   CONSTRAINT fk_enturma_turma FOREIGN KEY (turma_id) REFERENCES tur_turmas (id),
-  UNIQUE KEY ux_enturmacao_ativa (vinculo_ativo_chave)
+  UNIQUE KEY ux_enturmacao_ativa (matricula_uuid, turma_id, vinculo_ativo)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE tur_grupos_horario (
@@ -2448,8 +2449,8 @@ Soma de rateio igual a 100 e teto de caixa aberto por conta são regras de aplic
 CREATE TABLE cpf_definicoes (
   id                    BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   uuid                  CHAR(36) NOT NULL UNIQUE,
-  unidade_uuid          CHAR(36) NULL,
-  unidade_chave         CHAR(36) AS (IFNULL(unidade_uuid, 'ENTIDADE')) STORED,
+  unidade_uuid          VARCHAR(36) NULL,         -- VARCHAR: lido pela coluna gerada (no MariaDB, coluna gerada não lê CHAR)
+  unidade_chave         VARCHAR(36) AS (IFNULL(unidade_uuid, 'ENTIDADE')) STORED,
   escopo                ENUM('entidade','unidade') NOT NULL,
   objeto                ENUM('aluno','responsavel','turma','disciplina','recurso','fornecedor','contrato') NOT NULL,
   chave                 VARCHAR(60) NOT NULL,
@@ -2542,7 +2543,7 @@ Valor de dado sensível não entra em `per_historico` em claro: o campo fica `NU
 CREATE TABLE sim_perfis (
   id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   uuid              CHAR(36) NOT NULL UNIQUE,
-  unidade_uuid      CHAR(36) NULL,
+  unidade_uuid      VARCHAR(36) NULL,  -- VARCHAR: lido pela coluna gerada (no MariaDB, coluna gerada não lê CHAR)
   origem            ENUM('modelo_plataforma','entidade') NOT NULL,
   codigo            VARCHAR(40) NOT NULL,
   nome              VARCHAR(120) NOT NULL,
@@ -2551,7 +2552,7 @@ CREATE TABLE sim_perfis (
   estado            ENUM('rascunho','publicado','arquivado') NOT NULL DEFAULT 'rascunho',
   publicado_por     CHAR(36) NULL,
   publicado_em      DATETIME(3) NULL,
-  unidade_chave     CHAR(36) AS (IFNULL(unidade_uuid, 'MODELO')) STORED,
+  unidade_chave     VARCHAR(36) AS (IFNULL(unidade_uuid, 'MODELO')) STORED,
   CONSTRAINT ck_perfil_origem CHECK ((origem = 'modelo_plataforma' AND unidade_uuid IS NULL) OR (origem = 'entidade' AND unidade_uuid IS NOT NULL)),
   CONSTRAINT ck_perfil_publicado CHECK (estado <> 'publicado' OR publicado_em IS NOT NULL),
   UNIQUE KEY ux_perfil_versao (unidade_chave, codigo, versao)
@@ -2836,3 +2837,323 @@ CREATE TABLE int_reconciliacoes (
 ```
 
 Os `CHECK` de `int_conexoes` gravam no banco os canais de [74](74-integracoes-educacionais-oficiais.md): Educacenso e SIGEP só por arquivo; SGP e Pé-de-Meia só por API. O sistema municipal aceita os dois (INT-01). Nenhuma coluna guarda endereço de banco de terceiro. Lote de arquivo enviado ao órgão exige aprovação da gestão e conferência por pessoa diferente de quem gerou. Envio incremental por API é aprovado uma vez, na ativação da conexão. Rejeição não é corrigida no lote: volta ao módulo de origem e só fecha como `corrigida` ou `descartada` com motivo (princípio 5 de [74](74-integracoes-educacionais-oficiais.md)). Diferença de reconciliação vira item para a secretaria, sem correção automática.
+
+---
+
+## 16. Suprimentos (LAC-05)
+
+Escrito em 04/11/2026 a partir dos campos da v1 (especificação de suprimentos, seção 18), com as regras da v2: estados de [17](17-regras-modulos.md), seção 6.3; suprimentos como dono do estoque ([19](19-regras-modulos-3.md), seção 2); separação de funções ([22](22-crm-canais-e-papeis.md), seção 5); valores em centavos inteiros. Aguarda revisão do owner e teste de migração (DDL-01 e DDL-02).
+
+Correções em relação à v1:
+
+- `procurement_contracts` não vira tabela de suprimentos. Contrato é do módulo de contratos ([51](51-ddl-modulos-novos.md), seção 3, CTR-01); o pedido referencia `contrato_uuid`.
+- `approval_workflows` e `approval_instances` ficam no escopo de suprimentos. Outro módulo que precisar de fluxo de aprovação usa o próprio.
+- Estados da cotação e do recebimento não estavam na v1 nem na v2. Os desta seção são **proposta**, para revisão do owner.
+- Separação de funções é verificada pelo serviço e por teste, não só pela tela: quem pede não aprova a própria requisição; quem comprou não registra o recebimento da própria compra.
+
+```sql
+CREATE TABLE sup_fornecedores (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  unidade_uuid      CHAR(36) NOT NULL,
+  codigo            VARCHAR(30) NOT NULL,
+  razao_social      VARCHAR(200) NOT NULL,
+  nome_fantasia     VARCHAR(200) NULL,
+  documento         VARCHAR(18) NOT NULL,          -- CNPJ ou CPF, validado (doc 15)
+  inscricao_estadual   VARCHAR(30) NULL,
+  inscricao_municipal  VARCHAR(30) NULL,
+  email             VARCHAR(254) NULL,
+  telefone          VARCHAR(30) NULL,
+  site              VARCHAR(255) NULL,
+  pais              CHAR(2) NOT NULL DEFAULT 'BR',
+  uf                CHAR(2) NULL,
+  cidade            VARCHAR(120) NULL,
+  endereco_json     JSON NULL,
+  conta_bancaria_ref VARCHAR(120) NULL,            -- referência ao cofre; nunca o dado bancário em claro
+  homologacao       ENUM('pendente','homologado','reprovado') NOT NULL DEFAULT 'pendente',
+  nivel_risco       ENUM('baixo','medio','alto') NOT NULL DEFAULT 'medio',
+  estado            ENUM('ativo','bloqueado','inativo') NOT NULL DEFAULT 'ativo',
+  bloqueio_motivo   VARCHAR(255) NULL,
+  created_at        DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  updated_at        DATETIME(3) NULL,
+  deleted_at        DATETIME(3) NULL,
+  deleted_by        CHAR(36) NULL,
+  UNIQUE KEY ux_fornecedor_doc (unidade_uuid, documento),
+  UNIQUE KEY ux_fornecedor_cod (unidade_uuid, codigo)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE sup_fornecedor_documentos (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  fornecedor_uuid   CHAR(36) NOT NULL,
+  tipo              VARCHAR(60) NOT NULL,           -- certidão, contrato social, alvará, seguro
+  arquivo_uuid      CHAR(36) NOT NULL,              -- storage_files.uuid
+  emitido_em        DATE NULL,
+  vence_em          DATE NULL,
+  validacao         ENUM('pendente','valido','recusado','vencido') NOT NULL DEFAULT 'pendente',
+  observacao        VARCHAR(500) NULL,
+  created_at        DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  INDEX ix_fdoc_venc (fornecedor_uuid, vence_em)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE sup_requisicoes (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  unidade_uuid      CHAR(36) NOT NULL,
+  codigo            VARCHAR(30) NOT NULL,
+  solicitante_uuid  CHAR(36) NOT NULL,
+  setor_uuid        CHAR(36) NULL,
+  titulo            VARCHAR(200) NOT NULL,
+  descricao         TEXT NULL,
+  tipo              ENUM('material','servico','ativo') NOT NULL,
+  prioridade        ENUM('baixa','media','alta','urgente') NOT NULL DEFAULT 'media',
+  motivo_urgencia   VARCHAR(255) NULL,
+  centro_custo_uuid CHAR(36) NULL,
+  conta_orcamento_uuid CHAR(36) NULL,
+  projeto_uuid      CHAR(36) NULL,
+  valor_estimado_centavos BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  moeda             CHAR(3) NOT NULL DEFAULT 'BRL',
+  necessario_em     DATE NULL,
+  fluxo_uuid        CHAR(36) NULL,
+  origem            ENUM('manual','reposicao_automatica','merenda') NOT NULL DEFAULT 'manual',
+  origem_ref_uuid   CHAR(36) NULL,
+  estado            ENUM('rascunho','em_aprovacao','aprovada','reprovada','cancelada') NOT NULL DEFAULT 'rascunho',
+  created_at        DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  updated_at        DATETIME(3) NULL,
+  deleted_at        DATETIME(3) NULL,
+  deleted_by        CHAR(36) NULL,
+  UNIQUE KEY ux_req_codigo (unidade_uuid, codigo),
+  INDEX ix_req_fila (unidade_uuid, estado, prioridade, necessario_em)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE sup_requisicao_itens (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  requisicao_uuid   CHAR(36) NOT NULL,
+  item_uuid         CHAR(36) NULL,
+  descricao         VARCHAR(255) NOT NULL,
+  especificacao     TEXT NULL,
+  categoria_uuid    CHAR(36) NULL,
+  quantidade        DECIMAL(14,3) NOT NULL,
+  unidade_medida    VARCHAR(10) NOT NULL,
+  preco_estimado_centavos BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  marca_preferida   VARCHAR(120) NULL,
+  fornecedor_preferido_uuid CHAR(36) NULL,
+  e_estoque         TINYINT(1) NOT NULL DEFAULT 0,
+  e_servico         TINYINT(1) NOT NULL DEFAULT 0,
+  e_ativo           TINYINT(1) NOT NULL DEFAULT 0,  -- gera bem no patrimônio ao receber (doc 19, seção 8)
+  local_entrega     VARCHAR(200) NULL,
+  necessario_em     DATE NULL,
+  observacao        VARCHAR(500) NULL,
+  CONSTRAINT ck_req_qtd CHECK (quantidade > 0),
+  INDEX ix_reqitem (requisicao_uuid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE sup_fluxos_aprovacao (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  unidade_uuid      CHAR(36) NOT NULL,
+  nome              VARCHAR(120) NOT NULL,
+  condicao_json     JSON NOT NULL,                  -- faixa de valor, tipo, centro de custo
+  ativo             TINYINT(1) NOT NULL DEFAULT 1,
+  created_at        DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE sup_fluxo_etapas (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  fluxo_uuid        CHAR(36) NOT NULL,
+  ordem             SMALLINT UNSIGNED NOT NULL,
+  tipo_aprovador    ENUM('papel','pessoa','gestor_do_setor') NOT NULL,
+  aprovador_ref     VARCHAR(120) NOT NULL,          -- código do papel ou uuid da pessoa
+  prazo_horas       SMALLINT UNSIGNED NULL,
+  obrigatoria       TINYINT(1) NOT NULL DEFAULT 1,
+  UNIQUE KEY ux_etapa (fluxo_uuid, ordem)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE sup_aprovacoes (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  fluxo_uuid        CHAR(36) NOT NULL,
+  documento_tipo    ENUM('requisicao','pedido') NOT NULL,
+  documento_uuid    CHAR(36) NOT NULL,
+  etapa_atual       SMALLINT UNSIGNED NOT NULL DEFAULT 1,
+  aprovador_uuid    CHAR(36) NULL,
+  decisao           ENUM('pendente','aprovada','reprovada') NOT NULL DEFAULT 'pendente',
+  motivo            VARCHAR(500) NULL,
+  iniciada_em       DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  decidida_em       DATETIME(3) NULL,
+  INDEX ix_aprov_doc (documento_tipo, documento_uuid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE sup_cotacoes (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  unidade_uuid      CHAR(36) NOT NULL,
+  codigo            VARCHAR(30) NOT NULL,
+  requisicao_uuid   CHAR(36) NOT NULL,
+  comprador_uuid    CHAR(36) NOT NULL,
+  prazo_resposta    DATETIME(3) NOT NULL,
+  minimo_propostas  TINYINT UNSIGNED NOT NULL DEFAULT 3,
+  justificativa_fonte_unica VARCHAR(500) NULL,      -- obrigatória quando houver uma só proposta
+  vencedor_uuid     CHAR(36) NULL,
+  motivo_escolha    VARCHAR(500) NULL,
+  estado            ENUM('aberta','encerrada','adjudicada','cancelada') NOT NULL DEFAULT 'aberta',  -- proposta
+  created_at        DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  updated_at        DATETIME(3) NULL,
+  UNIQUE KEY ux_cot_codigo (unidade_uuid, codigo)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE sup_cotacao_fornecedores (
+  cotacao_uuid      CHAR(36) NOT NULL,
+  fornecedor_uuid   CHAR(36) NOT NULL,
+  convidado_em      DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  respondeu_em      DATETIME(3) NULL,
+  resposta          ENUM('aguardando','respondeu','declinou','sem_resposta') NOT NULL DEFAULT 'aguardando',
+  PRIMARY KEY (cotacao_uuid, fornecedor_uuid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE sup_cotacao_propostas (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  cotacao_uuid      CHAR(36) NOT NULL,
+  fornecedor_uuid   CHAR(36) NOT NULL,
+  valor_total_centavos BIGINT UNSIGNED NOT NULL,
+  prazo_entrega_dias SMALLINT UNSIGNED NULL,
+  condicao_pagamento VARCHAR(120) NULL,
+  valida_ate        DATE NULL,
+  frete             VARCHAR(60) NULL,
+  nota_preco        DECIMAL(5,2) NULL,
+  nota_prazo        DECIMAL(5,2) NULL,
+  nota_qualidade    DECIMAL(5,2) NULL,
+  nota_conformidade DECIMAL(5,2) NULL,
+  nota_total        DECIMAL(5,2) NULL,
+  estado            ENUM('recebida','desclassificada','vencedora','perdedora') NOT NULL DEFAULT 'recebida',
+  created_at        DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  UNIQUE KEY ux_proposta (cotacao_uuid, fornecedor_uuid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE sup_pedidos (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  unidade_uuid      CHAR(36) NOT NULL,
+  codigo            VARCHAR(30) NOT NULL,
+  requisicao_uuid   CHAR(36) NULL,
+  cotacao_uuid      CHAR(36) NULL,
+  fornecedor_uuid   CHAR(36) NOT NULL,
+  contrato_uuid     CHAR(36) NULL,                  -- contrato do módulo de contratos (seção 3)
+  comprador_uuid    CHAR(36) NOT NULL,
+  emitido_em        DATE NOT NULL,
+  entrega_prevista  DATE NULL,
+  confirmado_fornecedor_em DATETIME(3) NULL,
+  subtotal_centavos BIGINT UNSIGNED NOT NULL,
+  impostos_centavos BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  frete_centavos    BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  total_centavos    BIGINT UNSIGNED NOT NULL,
+  moeda             CHAR(3) NOT NULL DEFAULT 'BRL',
+  condicao_pagamento VARCHAR(120) NULL,
+  endereco_entrega_json JSON NULL,
+  endereco_cobranca_json JSON NULL,
+  aprovacao_snapshot_json JSON NULL,                -- quem aprovou e em que alçada, no momento da emissão
+  estado            ENUM('emitido','em_transito','recebido_parcial','recebido','cancelado') NOT NULL DEFAULT 'emitido',
+  created_at        DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  updated_at        DATETIME(3) NULL,
+  deleted_at        DATETIME(3) NULL,
+  deleted_by        CHAR(36) NULL,
+  CONSTRAINT ck_ped_total CHECK (total_centavos = subtotal_centavos + impostos_centavos + frete_centavos),
+  UNIQUE KEY ux_ped_codigo (unidade_uuid, codigo),
+  INDEX ix_ped_estado (unidade_uuid, estado, entrega_prevista)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE sup_pedido_itens (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  pedido_uuid       CHAR(36) NOT NULL,
+  requisicao_item_uuid CHAR(36) NULL,
+  item_uuid         CHAR(36) NULL,
+  descricao         VARCHAR(255) NOT NULL,
+  qtd_pedida        DECIMAL(14,3) NOT NULL,
+  qtd_recebida      DECIMAL(14,3) NOT NULL DEFAULT 0,
+  qtd_recusada      DECIMAL(14,3) NOT NULL DEFAULT 0,
+  preco_unitario_centavos BIGINT UNSIGNED NOT NULL,
+  total_centavos    BIGINT UNSIGNED NOT NULL,
+  unidade_medida    VARCHAR(10) NOT NULL,
+  CONSTRAINT ck_pi_qtd CHECK (qtd_recebida + qtd_recusada <= qtd_pedida),
+  INDEX ix_pi_pedido (pedido_uuid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE sup_recebimentos (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  unidade_uuid      CHAR(36) NOT NULL,
+  codigo            VARCHAR(30) NOT NULL,
+  pedido_uuid       CHAR(36) NOT NULL,
+  fornecedor_uuid   CHAR(36) NOT NULL,
+  recebedor_uuid    CHAR(36) NOT NULL,              -- diferente do comprador do pedido (verificado no serviço)
+  entregue_em       DATETIME(3) NOT NULL,
+  nota_numero       VARCHAR(20) NULL,
+  nota_serie        VARCHAR(5) NULL,
+  nota_data         DATE NULL,
+  almoxarifado_uuid CHAR(36) NULL,
+  inspecao          ENUM('pendente','aprovada','reprovada','parcial') NOT NULL DEFAULT 'pendente',   -- proposta
+  divergencia       ENUM('sem_divergencia','com_divergencia','resolvida') NOT NULL DEFAULT 'sem_divergencia',
+  estado            ENUM('rascunho','conferido','lancado_no_estoque','cancelado') NOT NULL DEFAULT 'rascunho', -- proposta
+  observacao        VARCHAR(500) NULL,
+  created_at        DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  UNIQUE KEY ux_rec_codigo (unidade_uuid, codigo),
+  INDEX ix_rec_pedido (pedido_uuid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE sup_recebimento_itens (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  recebimento_uuid  CHAR(36) NOT NULL,
+  pedido_item_uuid  CHAR(36) NOT NULL,
+  qtd_recebida      DECIMAL(14,3) NOT NULL,
+  qtd_recusada      DECIMAL(14,3) NOT NULL DEFAULT 0,
+  lote              VARCHAR(60) NULL,                -- obrigatório para item controlado (doc 19, seção 5)
+  validade          DATE NULL,
+  numero_serie      VARCHAR(80) NULL,
+  resultado_inspecao ENUM('aprovado','reprovado') NULL,
+  motivo_divergencia VARCHAR(255) NULL,
+  lancado_no_estoque TINYINT(1) NOT NULL DEFAULT 0,
+  INDEX ix_ri_rec (recebimento_uuid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE sup_avaliacoes_fornecedor (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  fornecedor_uuid   CHAR(36) NOT NULL,
+  recebimento_uuid  CHAR(36) NULL,
+  periodo           CHAR(7) NOT NULL,                -- AAAA-MM
+  nota_qualidade    DECIMAL(5,2) NOT NULL,
+  nota_prazo        DECIMAL(5,2) NOT NULL,
+  nota_preco        DECIMAL(5,2) NOT NULL,
+  nota_atendimento  DECIMAL(5,2) NOT NULL,
+  nota_conformidade DECIMAL(5,2) NOT NULL,
+  nota_total        DECIMAL(5,2) NOT NULL,
+  avaliador_uuid    CHAR(36) NOT NULL,
+  observacao        VARCHAR(500) NULL,
+  created_at        DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  INDEX ix_aval_forn (fornecedor_uuid, periodo)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE sup_regras_reposicao (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  unidade_uuid      CHAR(36) NOT NULL,
+  item_uuid         CHAR(36) NOT NULL,
+  estoque_minimo    DECIMAL(14,3) NOT NULL,
+  estoque_maximo    DECIMAL(14,3) NOT NULL,
+  ponto_pedido      DECIMAL(14,3) NOT NULL,
+  estoque_seguranca DECIMAL(14,3) NOT NULL DEFAULT 0,
+  consumo_medio_dia DECIMAL(14,3) NULL,
+  prazo_reposicao_dias SMALLINT UNSIGNED NULL,
+  gera_requisicao   TINYINT(1) NOT NULL DEFAULT 0,  -- cria requisição em rascunho, nunca aprovada
+  ativo             TINYINT(1) NOT NULL DEFAULT 1,
+  CONSTRAINT ck_repos CHECK (estoque_minimo <= ponto_pedido AND ponto_pedido <= estoque_maximo),
+  UNIQUE KEY ux_repos (unidade_uuid, item_uuid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+`supply_automation_jobs` da v1 não vira tabela própria: as automações de suprimentos usam a fila de jobs da plataforma ([10](10-implantacao-operacao.md), seção 8), com idempotência por chave de evento.

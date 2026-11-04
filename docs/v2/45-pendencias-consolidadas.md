@@ -26,9 +26,9 @@ A versão anterior desta lista tinha seções separadas para os docs 00 a 54 e 5
 | Jurídico, sem decisão | 59 | Parecer escrito, com data e nome do responsável (seção 3.1) |
 | Jurídico, decidido pelo autor | 14 | Parecer sobre a regra já adotada (seção 3.2) |
 | Conferência de norma | 25 | Confirmar o texto da norma antes da implementação (seção 4) |
-| Documento a escrever | 3 | Especificação ou modelo de dados (seção 5) |
+| Documento a escrever | 2 | Especificação ou modelo de dados (seção 5) |
 | Homologação e operação | 12 | Medir, dimensionar ou escolher produto antes da produção (seção 6) |
-| Revisão do owner | 41 | Revisar o que já foi escrito e testar a migração (seção 7) |
+| Revisão do owner | 42 | Revisar o que já foi escrito e testar a migração (seção 7) |
 
 Os pacotes para o jurídico ([50](50-pacote-juridico-e-norma.md), [53](53-pacote-documentos-e-contratos.md) e [73](73-resumo-juridico-academico.md)) agrupam as mesmas perguntas por tema. Não são itens a mais.
 
@@ -181,11 +181,10 @@ Itens que tratam do mesmo ponto: REL-01 e INT-02 (censo). Uma resposta vale para
 
 ## 5. Documento a escrever
 
-Os oito itens anteriores desta seção foram escritos em 03/11/2026 (seção 9.2). Em 04/11/2026, a revisão das lacunas encontrou três DDL que ainda não existem na v2:
+Os oito itens anteriores desta seção foram escritos em 03/11/2026 (seção 9.2). Em 04/11/2026, a revisão das lacunas encontrou três DDL que não existiam na v2. O de suprimentos (LAC-05) foi escrito no mesmo dia ([51](51-ddl-modulos-novos.md), seção 16) e foi para a revisão do owner (seção 7). Ficam dois:
 
 | Código | Pendência | Documento |
 |---|---|---|
-| LAC-05 | DDL de suprimentos (requisição, cotação, pedido, recebimento, fornecedor), a partir dos campos da v1 | [17](17-regras-modulos.md), seção 6 |
 | LAC-13 | DDL de recursos humanos e de contábil e fiscal | [18](18-regras-modulos-2.md) |
 | LAC-20 | DDL de marketing e redes sociais | [19](19-regras-modulos-3.md), seção 15 |
 
@@ -219,7 +218,7 @@ O texto ou o DDL já existe. Falta a revisão do owner do módulo e, no caso de 
 | DDL-01 | Revisão de cada DDL pelo owner do módulo antes da migração | [51](51-ddl-modulos-novos.md) |
 | GD-08 | Revisão do DDL pelo owner de cada contexto e teste de migração | [54](54-gestao-de-documentos-tres-contextos.md) |
 
-Itens escritos que aguardam essa revisão: CLA-02 ([81](81-classe-mural-materiais-tarefas.md)), MOD-07, MOD-08, MOD-09, ATD-04, LGPD-01, LGPD-02, CTR-01, ACC-06, ACC-08, TI-04, HCM-07, LIV-10, FRM-05, PRE-08, PAS-10, AMB-08, MAT-07, DOC-06, NOT-07, CAL-05, EST-07, TUR-05, DIA-08, BOL-10, OCO-09, PLA-07, ETC-09, PRT-06, ARQ-07, BIB-08, REL-07, IMP-06, FIN-08, CPF-04, PER-07, SIM-07, INT-07, IMP-05.
+Itens escritos que aguardam essa revisão: LAC-05 ([51](51-ddl-modulos-novos.md), seção 16), CLA-02 ([81](81-classe-mural-materiais-tarefas.md)), MOD-07, MOD-08, MOD-09, ATD-04, LGPD-01, LGPD-02, CTR-01, ACC-06, ACC-08, TI-04, HCM-07, LIV-10, FRM-05, PRE-08, PAS-10, AMB-08, MAT-07, DOC-06, NOT-07, CAL-05, EST-07, TUR-05, DIA-08, BOL-10, OCO-09, PLA-07, ETC-09, PRT-06, ARQ-07, BIB-08, REL-07, IMP-06, FIN-08, CPF-04, PER-07, SIM-07, INT-07, IMP-05.
 
 ---
 
