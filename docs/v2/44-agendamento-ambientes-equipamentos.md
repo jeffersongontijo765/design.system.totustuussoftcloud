@@ -1,7 +1,7 @@
 # 44 — Agendamento de Ambientes e Equipamentos, por Portal (Acadêmico)
 
 > Parte do [SDD v2](00-README.md). Turmas em [17](17-regras-modulos.md). Aulas online, que não ocupam ambiente físico, em [40](40-aulas-online-por-portal.md). Equipamento como bem patrimonial em [19](19-regras-modulos-3.md), seção 8. Chamados de manutenção em [36](36-tecnologia-da-informacao-por-portal.md). Matriz de portais em [31](31-matriz-portais-modulos.md). Auditoria em [29](29-auditoria.md).
-> **Status:** especificação proposta, criada em 03/11/2026. A v1 tem "Agendamento Espaços PRO" (laboratórios, quadras, auditórios, salas multimídia, termos de uso) só como item de navegação, em `12-portals-navigation-sidebar-pages-spec.md`, seção 4.2. Não há especificação, DDL nem regra de conflito. Itens **[Decisão do autor]** dependem de resposta.
+> **Status:** especificação proposta, criada em 03/11/2026. A v1 tem "Agendamento Espaços PRO" (laboratórios, quadras, auditórios, salas multimídia, termos de uso) só como item de navegação, em [`12-portals-navigation-sidebar-pages-spec.md`](anexo-v1/12-portals-navigation-sidebar-pages-spec.md), seção 4.2. Não há especificação, DDL nem regra de conflito. Itens **[Decisão do autor]** dependem de resposta.
 
 ---
 

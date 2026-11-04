@@ -1,7 +1,7 @@
 # 33 — Gestão de Contratos, por Portal
 
 > Parte do [SDD v2](00-README.md). Regras atuais em [17](17-regras-modulos.md), seção 7. Matriz de portais em [31](31-matriz-portais-modulos.md). Assinatura e base legal em [26](26-sdd-juridico-regulatorio.md), seção 6. Auditoria em [29](29-auditoria.md). Privacidade em [32](32-atendimento-privacidade-por-portal.md), seção 3.
-> **Status:** aprovada pelo autor em 03/11/2026, com as propostas adotadas. Itens sem valor definido continuam pendentes, criada em 03/11/2026 a partir de `spec_gestao_contratos_completo.md` (v1, 1.376 linhas). Itens **[Decisão do autor]** dependem de resposta. Itens **(jurídico)** dependem de parecer. Este documento não é parecer contratual.
+> **Status:** aprovada pelo autor em 03/11/2026, com as propostas adotadas. Itens sem valor definido continuam pendentes, criada em 03/11/2026 a partir de [`spec_gestao_contratos_completo.md`](anexo-v1/spec_gestao_contratos_completo.md) (v1, 1.376 linhas). Itens **[Decisão do autor]** dependem de resposta. Itens **(jurídico)** dependem de parecer. Este documento não é parecer contratual.
 > **Atualização de 03/11/2026:** a assinatura passa a ser serviço comum, usado também por documentos administrativos e emitidos. Ver [54](54-gestao-de-documentos-tres-contextos.md), seção 5.
 
 ---

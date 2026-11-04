@@ -1,7 +1,7 @@
 # 42 — Preceptoria e Autoavaliação, por Portal
 
 > Parte do [SDD v2](00-README.md). Motor de formulários em [41](41-formularios-e-pesquisas.md). Anonimato em [41](41-formularios-e-pesquisas.md), seção 3. Regras já existentes em [19](19-regras-modulos-3.md), seção 11. Estágio e campos de prática em [17](17-regras-modulos.md). Planejamento de desenvolvimento de colaborador em [37](37-planejamento-e-empenho.md), seção 4. Terceiros (campo de estágio) em [38](38-portal-de-terceiros-prestadores.md). Auditoria em [29](29-auditoria.md).
-> **Status:** análise e especificação proposta, criada em 03/11/2026 a partir de `spec-gestao-preceptoria-autoavaliacao.md` (409 linhas, v1) e da linha "Preceptoria PRO" de `12-portals-navigation-sidebar-pages-spec.md` (v1, seção 4.2). Itens **[Decisão do autor]** e **(verificar)** dependem de resposta ou de conferência de norma. Não é parecer.
+> **Status:** análise e especificação proposta, criada em 03/11/2026 a partir de [`spec-gestao-preceptoria-autoavaliacao.md`](anexo-v1/spec-gestao-preceptoria-autoavaliacao.md) (409 linhas, v1) e da linha "Preceptoria PRO" de [`12-portals-navigation-sidebar-pages-spec.md`](anexo-v1/12-portals-navigation-sidebar-pages-spec.md) (v1, seção 4.2). Itens **[Decisão do autor]** e **(verificar)** dependem de resposta ou de conferência de norma. Não é parecer.
 
 ---
 

@@ -9,12 +9,12 @@
 
 | Assunto | Estado na v2 | Veredito |
 |---|---|---|
-| Gateways de pagamento | Lista de adapters em [16](16-integracoes-externas.md), seção 3. Segurança em [20](20-pagamentos-seguranca.md) | **Completa** desde 03/11/2026: EFÍ incluída, um gateway primário por unidade (SRC-05) e contingência na seção 2.3 (PAG-01). Fonte da lista: `spec_gestao_billing_cobranca_mensalidades.md`, seção 17.1 |
+| Gateways de pagamento | Lista de adapters em [16](16-integracoes-externas.md), seção 3. Segurança em [20](20-pagamentos-seguranca.md) | **Completa** desde 03/11/2026: EFÍ incluída, um gateway primário por unidade (SRC-05) e contingência na seção 2.3 (PAG-01). Fonte da lista: [`spec_gestao_billing_cobranca_mensalidades.md`](anexo-v1/spec_gestao_billing_cobranca_mensalidades.md), seção 17.1 |
 | Split de pagamento | Opção (c) em [20](20-pagamentos-seguranca.md), seção 2. Não decidida | **Incompleta.** Sem decisão, sem modelo de subconta, sem regra de taxa |
 | Emissão de nota fiscal | [16](16-integracoes-externas.md) (NFS-e por município) e [18](18-regras-modulos-2.md), seção 2.7 | **Incompleta.** Faltam NFS-e Nacional, cancelamento, XML e PDF, certificado, nota da plataforma e nota de terceiros |
 | Bancos | Módulo "Bancos" tratado como dados bancários em [19](19-regras-modulos-3.md), seções 2 e 16 | **Errado.** Ver seção 4 |
 | Carteiras digitais e débito automático | Não há especificação | **Ausente** |
-| Open Finance | Não há especificação na v2. A v1 cita em `spec_gestao_billing_cobranca_mensalidades.md` | **Ausente** |
+| Open Finance | Não há especificação na v2. A v1 cita em [`spec_gestao_billing_cobranca_mensalidades.md`](anexo-v1/spec_gestao_billing_cobranca_mensalidades.md) | **Ausente** |
 
 ---
 
@@ -97,7 +97,7 @@ Cada unidade tem **um gateway primário** (SRC-05). A unidade pode cadastrar **u
 
 ## 4. Módulo "Bancos": achado crítico
 
-Os dois arquivos `spec_gestao_bancos.md` e `spec_gestao_bancos_completo.md` têm 305 linhas cada e são **idênticos em conteúdo**. Não tratam de dados bancários de alunos, entidades ou fornecedores. Tratam de **gestão de bancos de dados**:
+Os dois arquivos [`spec_gestao_bancos.md`](anexo-v1/spec_gestao_bancos.md) e [`spec_gestao_bancos_completo.md`](anexo-v1/spec_gestao_bancos_completo.md) têm 305 linhas cada e são **idênticos em conteúdo**. Não tratam de dados bancários de alunos, entidades ou fornecedores. Tratam de **gestão de bancos de dados**:
 
 - inventário e descoberta de instâncias;
 - console SQL com histórico, snippets e favoritos;
@@ -148,7 +148,7 @@ Faltam:
 
 ### 5.3 Nota do fornecedor (terceiros)
 
-A v1 (`12-portals-navigation-sidebar-pages-spec.md`, portal de terceiros, "Emissão e Upload de NF-e de Serviços") diz que o portal **emite** a nota. Isso não se sustenta: a nota é emitida pelo prestador, no município ou no seu sistema.
+A v1 ([`12-portals-navigation-sidebar-pages-spec.md`](anexo-v1/12-portals-navigation-sidebar-pages-spec.md), portal de terceiros, "Emissão e Upload de NF-e de Serviços") diz que o portal **emite** a nota. Isso não se sustenta: a nota é emitida pelo prestador, no município ou no seu sistema.
 
 **Proposta:** o portal de terceiros **recebe e valida** a nota (XML, valor, tomador, competência), vincula à ordem de compra e ao pagamento, e não emite. Qualquer mudança de "emissão" para "envio" passa por revisão **(jurídico)** e fiscal.
 
@@ -206,7 +206,7 @@ A v1 (`12-portals-navigation-sidebar-pages-spec.md`, portal de terceiros, "Emiss
 | PAG-06 | Nota do fornecedor: recebe e valida, não emite (seção 5.3) | **Decidido** em 03/11/2026: só recebe e valida |
 | PAG-07 | Open Finance e débito automático | (jurídico) |
 | PAG-08 | Carteira digital: escopo e provedor (seção 7) | **Decidido** em 03/11/2026: Pix e cartão pelo gateway da entidade, sem carteira própria |
-| PAG-09 | Corrigir a referência de fonte da lista de gateways: a lista vem de `spec_gestao_billing_cobranca_mensalidades.md` (v1), não de [01](01-visao-escopo.md) | **Feito** em 03/11/2026 na tabela de origem |
+| PAG-09 | Corrigir a referência de fonte da lista de gateways: a lista vem de [`spec_gestao_billing_cobranca_mensalidades.md`](anexo-v1/spec_gestao_billing_cobranca_mensalidades.md) (v1), não de [01](01-visao-escopo.md) | **Feito** em 03/11/2026 na tabela de origem |
 
 ---
 

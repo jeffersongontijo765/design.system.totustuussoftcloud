@@ -1,7 +1,7 @@
 # 47 — Simulados e Correção de Redação, por Portal
 
 > Parte do [SDD v2](00-README.md). Matriz em [31](31-matriz-portais-modulos.md), seção 2, e pendências MOD-05, MOD-06 e MOD-08. Gateway de IA e regras de nota por IA em [27](27-inteligencia-artificial-e-portais.md). Formulários de pesquisa em [41](41-formularios-e-pesquisas.md). Agendamento de sala de prova em [44](44-agendamento-ambientes-equipamentos.md). Dado de aluno e de menor em [07](07-privacidade-lgpd.md). Armazenamento de redação e imagem em [21](21-busca-e-armazenamento.md). Auditoria em [29](29-auditoria.md).
-> **Status:** especificação proposta, criada em 03/11/2026 a partir de `spec_gestao_simulados_ia.md` (v1, seções de escopo, perfis, fluxo, correção, OCR e automações). Fecha MOD-08 da [31](31-matriz-portais-modulos.md). Itens **[Decisão do autor]** e **(jurídico)** dependem de resposta.
+> **Status:** especificação proposta, criada em 03/11/2026 a partir de [`spec_gestao_simulados_ia.md`](anexo-v1/spec_gestao_simulados_ia.md) (v1, seções de escopo, perfis, fluxo, correção, OCR e automações). Fecha MOD-08 da [31](31-matriz-portais-modulos.md). Itens **[Decisão do autor]** e **(jurídico)** dependem de resposta.
 
 ---
 

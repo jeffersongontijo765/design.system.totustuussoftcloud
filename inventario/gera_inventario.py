@@ -1,4 +1,4 @@
-"""Gera inventario/inventario-paginas.md a partir da seção 2 de docs/31-matriz-portais-modulos.md.
+"""Gera inventario/inventario-paginas.md a partir da seção 2 de docs/v2/31-matriz-portais-modulos.md.
 
 Uso: python3 inventario/gera_inventario.py
 Saída: portal -> área -> módulos (com escopo e referência do SDD). Telas individuais são detalhadas por módulo, depois.
@@ -6,7 +6,7 @@ Saída: portal -> área -> módulos (com escopo e referência do SDD). Telas ind
 import os, re
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-MATRIZ = os.path.join(ROOT, 'docs', '31-matriz-portais-modulos.md')
+MATRIZ = os.path.join(ROOT, 'docs', 'v2', '31-matriz-portais-modulos.md')
 SAIDA = os.path.join(ROOT, 'inventario', 'inventario-paginas.md')
 
 linhas = open(MATRIZ, encoding='utf8').read().splitlines()
@@ -14,7 +14,7 @@ inicio = next(i for i, l in enumerate(linhas) if l.startswith('## 2. Matriz por 
 fim = next(i for i, l in enumerate(linhas) if l.startswith('## 3. Fronteiras'))
 portal = None
 saida = ['# Inventário de telas por portal', '',
-         'Gerado por `inventario/gera_inventario.py` a partir de `docs/31-matriz-portais-modulos.md`, seção 2.',
+         'Gerado por `inventario/gera_inventario.py` a partir de `docs/v2/31-matriz-portais-modulos.md`, seção 2.',
          'Nível: portal → área → módulo. As telas de cada módulo são detalhadas antes de implementar.', '']
 total = 0
 for l in linhas[inicio:fim]:
@@ -28,6 +28,7 @@ for l in linhas[inicio:fim]:
         area = celulas[0]
         modulos = celulas[1]
         escopo = celulas[-1] if len(celulas) >= 3 else ''
+        escopo = re.sub(r'\]\((\d\d-[^)#\s]+\.md)', r'](../docs/v2/\1', escopo)  # links válidos a partir de inventario/
         itens = [x.strip() for x in modulos.split(', ') if x.strip()]
         total += len(itens)
         saida += [f'### {area}', '', f'Escopo: {escopo}', '']

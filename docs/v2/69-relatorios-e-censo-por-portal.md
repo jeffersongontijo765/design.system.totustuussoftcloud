@@ -1,7 +1,7 @@
 # 69 — Relatórios, Exportações Regulatórias e Censo, por Portal
 
 > Parte do [SDD v2](00-README.md). Décima segunda lacuna da ordem de [55](55-academico-verificacao-e-lacunas.md), seção 3. Regra geral de relatórios e lacunas do menu iScholar em [56](56-configuracoes-e-relatorios-lacunas.md), seções 3 a 7. Cada relatório depende do módulo que tem o dado, e por isso este documento só fecha o modelo comum e o catálogo. Documento oficial com código de validação em [48](48-gerador-de-documentos-por-portal.md), seção 6. Minimização em [07](07-privacidade-lgpd.md). Integração de envio em [16](16-integracoes-externas.md). Auditoria em [29](29-auditoria.md). Relatórios de estágio e TCC em [65](65-estagio-e-tcc-por-portal.md), e de conselho em [62](62-boletim-e-conselho-de-classe-por-portal.md).
-> **Status:** especificação proposta, criada em 03/11/2026. Fecha a lacuna 12 do acadêmico. A v1 tem relatórios de desempenho, frequência e regulatórios na API (`spec_gestao_academica_completo.md`, seção 15 e API). Pontos que dependem de norma ou de decisão do autor estão marcados.
+> **Status:** especificação proposta, criada em 03/11/2026. Fecha a lacuna 12 do acadêmico. A v1 tem relatórios de desempenho, frequência e regulatórios na API ([`spec_gestao_academica_completo.md`](anexo-v1/spec_gestao_academica_completo.md), seção 15 e API). Pontos que dependem de norma ou de decisão do autor estão marcados.
 
 ---
 

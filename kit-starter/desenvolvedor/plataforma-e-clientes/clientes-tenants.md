@@ -15,7 +15,7 @@ Gerir as entidades clientes (instituições) do SaaS: cadastro, status, unidades
 ## 3. Telas
 - **Lista de clientes** (datatable): nome, código, status, unidades, plano/licenciamento, data de provisionamento. Filtros por status. Ações em lote: não definidas. Exporta CSV, XLSX.
 - **Detalhe do cliente** (página com abas): identificação, unidades, bancos (`tt_NNN`, registro em `tenant_databases`), domínios, histórico de provisionamento, pedidos de saída.
-- **Nova entidade** (wizard de 8 etapas, ver `provisionamento-entidade-e-unidade.md`).
+- **Nova entidade** (wizard de 8 etapas, ver `provisionamento.md`).
 - **Saída de cliente** (fluxo de 7 etapas, SDD 23 seção 5): pedido com confirmação MFA recente, suspensão, exportação, retenção legal, encerramento, expurgo e certificado.
 - **Painel de clientes** (KPI): clientes ativos, em provisionamento, suspensos, encerrados.
 

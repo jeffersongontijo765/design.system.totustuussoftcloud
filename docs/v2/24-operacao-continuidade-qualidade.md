@@ -72,7 +72,7 @@ Regras:
 | Ponta a ponta | Fluxos principais: matrícula, cobrança, login, troca de contexto | Antes de cada release | QA |
 | Carga | Cenário de pico por entidade grande | Mensal e antes de mudança de infraestrutura | Operação |
 | Segurança (DAST) | Varredura na homologação | Antes de cada release | Segurança |
-| Pentest externo | Escopo definido em [penetration-test-spec-v2.md](../penetration-test-spec-v2.md) | Anual e após mudança de autenticação ou pagamento | Terceiro contratado |
+| Pentest externo | Escopo definido em [penetration-test-spec-v2.md](anexo-v1/penetration-test-spec-v2.md) | Anual e após mudança de autenticação ou pagamento | Terceiro contratado |
 | Restauração | Restauração de backup em ambiente isolado | Mensal (seção 1) | Operação |
 | Exercício de incidente | Simulação de vazamento ou de indisponibilidade | Semestral | Segurança e DPO |
 

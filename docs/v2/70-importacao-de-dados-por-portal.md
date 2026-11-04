@@ -1,7 +1,7 @@
 # 70 — Importação de Dados e Carga Inicial, por Portal
 
 > Parte do [SDD v2](00-README.md). Décima terceira e última lacuna da ordem de [55](55-academico-verificacao-e-lacunas.md), seção 3. Regra geral de importação (simulação, erro por linha, limite e idempotência) em [15](15-validacoes.md), seção 5. Carga de sistema legado por arquivo, sem acesso direto ao banco de terceiros, em [16](16-integracoes-externas.md). Cada tipo de dado segue o módulo de origem: estrutura ([59](59-estrutura-academica-por-portal.md)), turmas ([60](60-turmas-e-grade-de-horarios-por-portal.md)), matrícula ([46](46-matricula-e-rematricula-por-portal.md)), diário e boletim ([61](61-diario-escolar-por-portal.md), [62](62-boletim-e-conselho-de-classe-por-portal.md)), prontuário ([66](66-prontuario-e-portfolio-do-aluno-por-portal.md)), biblioteca ([68](68-biblioteca-por-portal.md)) e financeiro ([18](18-regras-modulos-2.md)). Notificação em massa em [57](57-notificacoes-por-portal.md). Auditoria em [29](29-auditoria.md).
-> **Status:** especificação proposta, criada em 03/11/2026. Fecha a lacuna 13 do acadêmico. A v1 tem importação em lote por CSV com validação e relatório de erros (`spec_gestao_academica_completo.md`, seção 15). Esta versão define a ordem, as regras de domínio e o que a importação não pode fazer.
+> **Status:** especificação proposta, criada em 03/11/2026. Fecha a lacuna 13 do acadêmico. A v1 tem importação em lote por CSV com validação e relatório de erros ([`spec_gestao_academica_completo.md`](anexo-v1/spec_gestao_academica_completo.md), seção 15). Esta versão define a ordem, as regras de domínio e o que a importação não pode fazer.
 
 ---
 

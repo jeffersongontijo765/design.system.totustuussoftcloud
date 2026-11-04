@@ -1,7 +1,7 @@
 # 39 — Departamento Pessoal, Recursos Humanos e Medicina do Trabalho, por Portal
 
 > Parte do [SDD v2](00-README.md). Regras atuais de RH e Pessoas em [17](17-regras-modulos.md), seção 3, e [18](18-regras-modulos-2.md), seção 3. Medicina e segurança em [17](17-regras-modulos.md), seção 5. Integrações e eSocial em [16](16-integracoes-externas.md), seção 6 (D-08) e em [14](14-integracao-modulos.md). Dado de saúde em [07](07-privacidade-lgpd.md), seção 2. Planejamento de desenvolvimento em [37](37-planejamento-e-empenho.md), seção 4. Prestadores em [38](38-portal-de-terceiros-prestadores.md).
-> **Status:** análise e especificação proposta, criada em 03/11/2026 a partir de `spec_gestao_pessoas_completo.md` (1.217 linhas), `spec_gestao_rh_completo.md` e `spec_gestao_seguranca_medicina_trabalho_completo.md`. Itens **(verificar)** dependem de conferência de norma trabalhista, previdenciária ou de saúde. Não é parecer.
+> **Status:** análise e especificação proposta, criada em 03/11/2026 a partir de [`spec_gestao_pessoas_completo.md`](anexo-v1/spec_gestao_pessoas_completo.md) (1.217 linhas), [`spec_gestao_rh_completo.md`](anexo-v1/spec_gestao_rh_completo.md) e [`spec_gestao_seguranca_medicina_trabalho_completo.md`](anexo-v1/spec_gestao_seguranca_medicina_trabalho_completo.md). Itens **(verificar)** dependem de conferência de norma trabalhista, previdenciária ou de saúde. Não é parecer.
 
 ---
 
@@ -177,7 +177,7 @@ Validade por NR, com alerta. Treinamento vencido bloqueia a função que exige a
 
 ## 7. Permissões
 
-A matriz da v1 (seção 20 de `spec_gestao_pessoas_completo.md`) é aproveitada, com estas correções:
+A matriz da v1 (seção 20 de [`spec_gestao_pessoas_completo.md`](anexo-v1/spec_gestao_pessoas_completo.md)) é aproveitada, com estas correções:
 
 | Permissão | v1 | Proposta |
 |---|---|---|

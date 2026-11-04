@@ -1,6 +1,6 @@
 # Inventário de telas por portal
 
-Gerado por `inventario/gera_inventario.py` a partir de `docs/31-matriz-portais-modulos.md`, seção 2.
+Gerado por `inventario/gera_inventario.py` a partir de `docs/v2/31-matriz-portais-modulos.md`, seção 2.
 Nível: portal → área → módulo. As telas de cada módulo são detalhadas antes de implementar.
 Total de módulos listados: 187. Status inicial: nenhum implementado.
 
@@ -9,7 +9,7 @@ Total de módulos listados: 187. Status inicial: nenhum implementado.
 
 ### Plataforma e clientes
 
-Escopo: Ciclo de vida da seção 5 de [23](23-dominios-provisionamento-ciclo-de-vida.md)
+Escopo: Ciclo de vida da seção 5 de [23](../docs/v2/23-dominios-provisionamento-ciclo-de-vida.md)
 
 - [ ] Clientes (tenants)
 - [ ] licenciamento
@@ -31,7 +31,7 @@ Escopo: D-23. Chamado de "builder de portais" na v1. **Não é o editor de model
 
 ### Comercial da plataforma
 
-Escopo: [22](22-crm-canais-e-papeis.md), seção 6.1. Não se mistura com o protocolo de atendimento (seção 3.2)
+Escopo: [22](../docs/v2/22-crm-canais-e-papeis.md), seção 6.1. Não se mistura com o protocolo de atendimento (seção 3.2)
 
 - [ ] CRM da plataforma
 - [ ] leads
@@ -77,7 +77,7 @@ Escopo: Seção 3.2
 
 ### Segurança e operação
 
-Escopo: [05](05-seguranca.md), [07](07-privacidade-lgpd.md), [10](10-implantacao-operacao.md)
+Escopo: [05](../docs/v2/05-seguranca.md), [07](../docs/v2/07-privacidade-lgpd.md), [10](../docs/v2/10-implantacao-operacao.md)
 
 - [ ] Acesso
 - [ ] MFA
@@ -91,7 +91,7 @@ Escopo: [05](05-seguranca.md), [07](07-privacidade-lgpd.md), [10](10-implantacao
 
 ### Acadêmico
 
-Escopo: [17](17-regras-modulos.md)
+Escopo: [17](../docs/v2/17-regras-modulos.md)
 
 - [ ] Administração escolar
 - [ ] pedagógico
@@ -114,7 +114,7 @@ Escopo: Sub-área do acadêmico. Ver seções 3.2 e 3.5
 
 ### Gestão de documentos
 
-Escopo: [54](54-gestao-de-documentos-tres-contextos.md). Ver também seções 3.1 e 3.4
+Escopo: [54](../docs/v2/54-gestao-de-documentos-tres-contextos.md). Ver também seções 3.1 e 3.4
 
 - [ ] Três contextos: documentos recebidos (validação)
 - [ ] documentos administrativos (tramitação) e documentos emitidos (modelos e emissão). Serviços comuns de assinatura
@@ -142,7 +142,7 @@ Escopo: Ver seção 3.1
 
 ### Financeiro da entidade
 
-Escopo: [17](17-regras-modulos.md), [18](18-regras-modulos-2.md), [20](20-pagamentos-seguranca.md)
+Escopo: [17](../docs/v2/17-regras-modulos.md), [18](../docs/v2/18-regras-modulos-2.md), [20](../docs/v2/20-pagamentos-seguranca.md)
 
 - [ ] Mensalidades
 - [ ] títulos
@@ -163,7 +163,7 @@ Escopo: Ver seção 3.3
 
 ### Comercial e admissões
 
-Escopo: [22](22-crm-canais-e-papeis.md), seção 6.2
+Escopo: [22](../docs/v2/22-crm-canais-e-papeis.md), seção 6.2
 
 - [ ] CRM do tenant (captação
 - [ ] pré-cadastro
@@ -171,7 +171,7 @@ Escopo: [22](22-crm-canais-e-papeis.md), seção 6.2
 
 ### Pessoas e RH
 
-Escopo: [18](18-regras-modulos-2.md), seção 3
+Escopo: [18](../docs/v2/18-regras-modulos-2.md), seção 3
 
 - [ ] HCM
 - [ ] folha
@@ -182,7 +182,7 @@ Escopo: [18](18-regras-modulos-2.md), seção 3
 
 ### Suprimentos e compras
 
-Escopo: [19](19-regras-modulos-3.md), seção 2
+Escopo: [19](../docs/v2/19-regras-modulos-3.md), seção 2
 
 - [ ] Requisição
 - [ ] cotação
@@ -192,7 +192,7 @@ Escopo: [19](19-regras-modulos-3.md), seção 2
 
 ### Patrimônio e frotas
 
-Escopo: [19](19-regras-modulos-3.md), seções 8 e 9
+Escopo: [19](../docs/v2/19-regras-modulos-3.md), seções 8 e 9
 
 - [ ] Bens
 - [ ] depreciação
@@ -202,7 +202,7 @@ Escopo: [19](19-regras-modulos-3.md), seções 8 e 9
 
 ### Contratos
 
-Escopo: [17](17-regras-modulos.md)
+Escopo: [17](../docs/v2/17-regras-modulos.md)
 
 - [ ] Contratos de fornecedor
 - [ ] de aluno e de pessoal
@@ -218,7 +218,7 @@ Escopo: Seção 3.7
 
 ### Arquivos
 
-Escopo: [21](21-busca-e-armazenamento.md)
+Escopo: [21](../docs/v2/21-busca-e-armazenamento.md)
 
 - [ ] Armazenamento de arquivos
 
@@ -231,7 +231,7 @@ Escopo: Seção 3.8
 
 ### Configuração e acesso
 
-Escopo: [06](06-identidade-acesso.md)
+Escopo: [06](../docs/v2/06-identidade-acesso.md)
 
 - [ ] Unidades
 - [ ] usuários
@@ -263,7 +263,7 @@ Escopo: Só turmas vinculadas
 
 ### Diário
 
-Escopo: Só turmas vinculadas. Nota só pelo professor da turma ([22](22-crm-canais-e-papeis.md), seção 5)
+Escopo: Só turmas vinculadas. Nota só pelo professor da turma ([22](../docs/v2/22-crm-canais-e-papeis.md), seção 5)
 
 - [ ] Frequência
 - [ ] conteúdo
@@ -347,7 +347,7 @@ Escopo: Usa o serviço de protocolo
 
 ### Documentos
 
-Escopo: Emissão pelo aluno conforme regra de [21](21-busca-e-armazenamento.md) e seção 3.5
+Escopo: Emissão pelo aluno conforme regra de [21](../docs/v2/21-busca-e-armazenamento.md) e seção 3.5
 
 - [ ] Boletim oficial
 - [ ] histórico
@@ -372,7 +372,7 @@ Escopo: Só títulos do próprio aluno
 
 ### Privacidade
 
-Escopo: [07](07-privacidade-lgpd.md)
+Escopo: [07](../docs/v2/07-privacidade-lgpd.md)
 
 - [ ] Dados cadastrais
 - [ ] solicitações LGPD
@@ -405,7 +405,7 @@ Escopo: Usa o serviço de protocolo
 
 ### Financeiro e matrícula
 
-Escopo: Seção 3.5. Bloqueio parcial por inadimplência ([26](26-sdd-juridico-regulatorio.md), seção 3)
+Escopo: Seção 3.5. Bloqueio parcial por inadimplência ([26](../docs/v2/26-sdd-juridico-regulatorio.md), seção 3)
 
 - [ ] Faturas dos filhos
 - [ ] PIX
@@ -414,7 +414,7 @@ Escopo: Seção 3.5. Bloqueio parcial por inadimplência ([26](26-sdd-juridico-r
 
 ### Privacidade e menores
 
-Escopo: Regra de menor de idade em [07](07-privacidade-lgpd.md)
+Escopo: Regra de menor de idade em [07](../docs/v2/07-privacidade-lgpd.md)
 
 - [ ] Consentimento de imagem
 - [ ] dados dos filhos

@@ -1,7 +1,7 @@
 # 36 — Tecnologia da Informação (TI), por Portal
 
 > Parte do [SDD v2](00-README.md). Operação da plataforma em [10](10-implantacao-operacao.md) e [24](24-operacao-continuidade-qualidade.md). Atendimento de chamados em [32](32-atendimento-privacidade-por-portal.md). Patrimônio em [19](19-regras-modulos-3.md), seção 8. Contratos em [33](33-contratos-por-portal.md). Achados da v1 em [13](13-achados-v1.md) (ACH-01, ACH-14).
-> **Status:** aprovada pelo autor em 03/11/2026, com as propostas adotadas. Itens sem valor definido continuam pendentes, criada em 03/11/2026 a partir de `spec_gestao_ti_completa.md` (882 linhas, 18 seções) e da navegação da v1 ([12](`12-portals-navigation-sidebar-pages-spec.md`, na pasta da v1), seção 4.1). Itens **[Decisão do autor]** dependem de resposta.
+> **Status:** aprovada pelo autor em 03/11/2026, com as propostas adotadas. Itens sem valor definido continuam pendentes, criada em 03/11/2026 a partir de [`spec_gestao_ti_completa.md`](anexo-v1/spec_gestao_ti_completa.md) (882 linhas, 18 seções) e da navegação da v1 ([12](anexo-v1/12-portals-navigation-sidebar-pages-spec.md), seção 4.1). Itens **[Decisão do autor]** dependem de resposta.
 
 ---
 
@@ -12,7 +12,7 @@
 | O módulo de TI está completo? | **Não.** A v1 tem o escopo (18 domínios e 19 itens de menu), mas nenhuma regra de validação, estado, DDL ou critério de aceite. O catálogo o marca como "Revisar" ([12](12-catalogo-modulos.md)) |
 | Está organizado por portal? | **Não.** A v1 mistura dois assuntos diferentes no mesmo módulo: a TI **da plataforma** e a TI **da entidade** |
 | Há duplicidade com outros módulos? | **Sim.** Ativos × Patrimônio; Chamados × Atendimento; Contratos e SLA × Contratos; Fornecedores × Suprimentos |
-| O código da view é aceitável? | **Não.** `sub_sidebar_itsm.php` tem `onclick=`, o que viola a regra de zero JavaScript inline ([02](02-arquitetura.md), ADR-07). Achado ACH-01 em [13](13-achados-v1.md) |
+| O código da view é aceitável? | **Não.** [`sub_sidebar_itsm.php`](anexo-v1/sub_sidebar_itsm.php) tem `onclick=`, o que viola a regra de zero JavaScript inline ([02](02-arquitetura.md), ADR-07). Achado ACH-01 em [13](13-achados-v1.md) |
 
 ---
 
@@ -146,7 +146,7 @@ A v1 inclui monitoramento de servidores, links e equipamentos. Para a entidade, 
 | TI-02 | Painel de monitoramento da plataforma por serviço, com escalonamento | **Escrito** na seção 11 |
 | TI-03 | Janela de manutenção programada e aviso aos clientes | **Escrito** na seção 11 |
 | TI-04 | DDL de ativo de TI, licença, incidente, problema, mudança, CMDB | **Escrito** em [51](51-ddl-modulos-novos.md), seção 11. Revisão do owner pendente (DDL-01) |
-| TI-05 | Remover `sub_sidebar_itsm.php` do repositório de especificações e corrigir o `onclick=` no código (ACH-01) | Código. **Decidido** em 03/11/2026: remover e corrigir |
+| TI-05 | Remover [`sub_sidebar_itsm.php`](anexo-v1/sub_sidebar_itsm.php) do repositório de especificações e corrigir o `onclick=` no código (ACH-01) | Código. **Decidido** em 03/11/2026: remover e corrigir |
 | TI-06 | Vista de ativo de TI sobre Patrimônio (seção 5) | **Decidido** em 03/11/2026: vista do patrimônio, sem cadastro próprio |
 | TI-07 | Comitê de mudança: quem participa e com que quórum | **Decidido** em 03/11/2026: gestor de TI, segurança e um representante da direção. Quórum de 2 de 3 |
 | TI-08 | Monitoramento de equipamento da entidade (seção 7) | **Decidido** em 03/11/2026: mantido, visível só à gestão de TI da entidade |
@@ -161,7 +161,7 @@ A v1 inclui monitoramento de servidores, links e equipamentos. Para a entidade, 
 - [ ] Mudança sem plano de volta é recusada (teste).
 - [ ] Credencial de equipamento não aparece em painel, relatório ou log (varredura).
 - [ ] Ativo de TI tem um único dono de dado (Patrimônio), sem cópia.
-- [ ] `sub_sidebar_itsm.php` sem `onclick=` ou removido do repositório de especificações.
+- [ ] [`sub_sidebar_itsm.php`](anexo-v1/sub_sidebar_itsm.php) sem `onclick=` ou removido do repositório de especificações.
 - [ ] Itens **[Decisão do autor]** respondidos ou marcados como pendentes no [00](00-README.md).
 
 ---

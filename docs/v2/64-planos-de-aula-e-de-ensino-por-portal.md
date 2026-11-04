@@ -1,7 +1,7 @@
 # 64 — Planos de Ensino e de Aula, por Portal
 
 > Parte do [SDD v2](00-README.md). Sétima lacuna da ordem de [55](55-academico-verificacao-e-lacunas.md), seção 3. Depende de estrutura acadêmica ([59](59-estrutura-academica-por-portal.md), disciplina e sistema avaliativo) e de turma e grade ([60](60-turmas-e-grade-de-horarios-por-portal.md)). O conteúdo realizado é registrado no diário ([61](61-diario-escolar-por-portal.md), seção 2). Geração de rascunho por IA em [27](27-inteligencia-artificial-e-portais.md), seção 5. Aviso de plano pendente em [57](57-notificacoes-por-portal.md). Acervo de bibliografia em [56](56-configuracoes-e-relatorios-lacunas.md), item de biblioteca. Projeto político-pedagógico e PPC em [59](59-estrutura-academica-por-portal.md), seção 3.4 e [37](37-planejamento-e-empenho.md), PLN-01. Auditoria em [29](29-auditoria.md).
-> **Status:** especificação proposta, criada em 03/11/2026. Fecha a lacuna 7 do acadêmico. A v1 tem `lesson_plans` e `teaching_plans` (`spec_gestao_academica_completo.md`, seções 7.1 e 7.2). Esta versão corrige um erro da v1: o projeto político-pedagógico (PPP) não é plano de aula.
+> **Status:** especificação proposta, criada em 03/11/2026. Fecha a lacuna 7 do acadêmico. A v1 tem `lesson_plans` e `teaching_plans` ([`spec_gestao_academica_completo.md`](anexo-v1/spec_gestao_academica_completo.md), seções 7.1 e 7.2). Esta versão corrige um erro da v1: o projeto político-pedagógico (PPP) não é plano de aula.
 
 ---
 
@@ -83,7 +83,7 @@ Plano de ensino (disciplina + turma + período)
 
 `rascunho` → `enviado` → `aprovado`, com `devolvido`.
 
-- **Prazo de envio:** o plano de aula é enviado 5 dias antes da aula, com alerta ao professor e à coordenação. **Decidido** em 03/11/2026, igual à regra da v1 (`spec_gestao_academica_completo.md`, linha 1182).
+- **Prazo de envio:** o plano de aula é enviado 5 dias antes da aula, com alerta ao professor e à coordenação. **Decidido** em 03/11/2026, igual à regra da v1 ([`spec_gestao_academica_completo.md`](anexo-v1/spec_gestao_academica_completo.md), linha 1182).
 - **Aula sem plano aprovado:** a aula acontece. O sistema registra pendência de planejamento, sem bloquear o diário.
 
 ### 4.3 Conteúdo realizado

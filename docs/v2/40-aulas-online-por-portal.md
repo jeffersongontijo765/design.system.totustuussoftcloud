@@ -1,7 +1,7 @@
 # 40 — Aulas Online e Reuniões ao Vivo, por Portal
 
 > Parte do [SDD v2](00-README.md). Matriz de portais em [31](31-matriz-portais-modulos.md). Portais e domínios em [23](23-dominios-provisionamento-ciclo-de-vida.md). Presença e frequência em [17](17-regras-modulos.md). Dado de menor, consentimento e gravação em [07](07-privacidade-lgpd.md) e [26](26-sdd-juridico-regulatorio.md). Gateway de IA em [27](27-inteligencia-artificial-e-portais.md). Auditoria em [29](29-auditoria.md). Retenção em [21](21-busca-e-armazenamento.md). Pendências de acesso físico e geolocalização em [35](35-acesso-e-seguranca-fisica-por-portal.md), seção 9.
-> **Status:** análise e especificação proposta, criada em 03/11/2026 a partir de `global_meeting_spec_v2_complete.md` (620 linhas, v1) e das partes de chamada e EAD de `spec_gestao_academica_completo.md` (seção 8.3 e linhas 596–612). Itens **[Decisão do autor]** e **(jurídico)** dependem de resposta ou parecer. Não é parecer.
+> **Status:** análise e especificação proposta, criada em 03/11/2026 a partir de [`global_meeting_spec_v2_complete.md`](anexo-v1/global_meeting_spec_v2_complete.md) (620 linhas, v1) e das partes de chamada e EAD de [`spec_gestao_academica_completo.md`](anexo-v1/spec_gestao_academica_completo.md) (seção 8.3 e linhas 596–612). Itens **[Decisão do autor]** e **(jurídico)** dependem de resposta ou parecer. Não é parecer.
 
 ---
 
@@ -23,11 +23,11 @@
 
 | Fonte | O que diz | Limite |
 |---|---|---|
-| `global_meeting_spec_v2_complete.md` | Reunião, sala, chat, sala de espera, presença, gravação, transcrição, relatórios, auditoria, RBAC por tenant e unidade | Genérica. Não separa aula de reunião de pais, de reunião pedagógica e de reunião administrativa como regras diferentes |
+| [`global_meeting_spec_v2_complete.md`](anexo-v1/global_meeting_spec_v2_complete.md) | Reunião, sala, chat, sala de espera, presença, gravação, transcrição, relatórios, auditoria, RBAC por tenant e unidade | Genérica. Não separa aula de reunião de pais, de reunião pedagógica e de reunião administrativa como regras diferentes |
 | Mesmo arquivo, seção 5.2 | "Live class": professor abre sessão para um grupo de alunos, com controle de áudio, vídeo, chat e ordem de fala | Não diz quem pode entrar além da turma, nem o que acontece com aluno fora da turma |
-| `spec_gestao_academica_completo.md`, seção 8.3 | Chamada por QR Code, por geolocalização no modo EAD e por IP e horário de acesso ao "LMS" | Cita um LMS que não tem especificação. Geolocalização já está pendente em [35](35-acesso-e-seguranca-fisica-por-portal.md) (ACC-05) |
-| `spec_gestao_academica_completo.md`, Conselho de Classe | Campo `meeting_link` na reunião do conselho | Sem regra de acesso nem de gravação |
-| `12-portals-navigation-sidebar-pages-spec.md` (v1) | "Calendário de Aulas" (professor), "Aulas e Conteúdos" (aluno), "Aulas de Hoje" (dashboard do professor) | Não há item de sala ao vivo na navegação. A aula é tratada como calendário e conteúdo |
+| [`spec_gestao_academica_completo.md`](anexo-v1/spec_gestao_academica_completo.md), seção 8.3 | Chamada por QR Code, por geolocalização no modo EAD e por IP e horário de acesso ao "LMS" | Cita um LMS que não tem especificação. Geolocalização já está pendente em [35](35-acesso-e-seguranca-fisica-por-portal.md) (ACC-05) |
+| [`spec_gestao_academica_completo.md`](anexo-v1/spec_gestao_academica_completo.md), Conselho de Classe | Campo `meeting_link` na reunião do conselho | Sem regra de acesso nem de gravação |
+| [`12-portals-navigation-sidebar-pages-spec.md`](anexo-v1/12-portals-navigation-sidebar-pages-spec.md) (v1) | "Calendário de Aulas" (professor), "Aulas e Conteúdos" (aluno), "Aulas de Hoje" (dashboard do professor) | Não há item de sala ao vivo na navegação. A aula é tratada como calendário e conteúdo |
 
 **Conclusão:** a v1 tem a sala ao vivo (genérica) e o calendário de aulas, mas não liga os dois. Não há um lugar onde a aula online se encontre com a turma, a presença e o portal do aluno.
 
@@ -162,7 +162,7 @@ Correções abaixo. A de [12](12-catalogo-modulos.md) já foi aplicada. As demai
 | [12](12-catalogo-modulos.md), linha "Reunião global" | Trocar "Especificado" por "Especificação genérica da v1. Aderente só após [40](40-aulas-online-por-portal.md)" |
 | [31](31-matriz-portais-modulos.md), matriz por portal | Incluir a aula online como módulo de entidade (E), ligado à turma e não ao módulo de comunicação |
 | [28](28-cobertura-ia-todos-os-modulos.md) | Marcar aula online e reunião como **Não** para transcrição e resumo de sessão com menor, até parecer |
-| `global_meeting_spec_v2_complete.md` (v1) | Não editar. Este documento substitui a parte de aula. A parte de reunião administrativa segue a v1 com as regras da seção 4 |
+| [`global_meeting_spec_v2_complete.md`](anexo-v1/global_meeting_spec_v2_complete.md) (v1) | Não editar. Este documento substitui a parte de aula. A parte de reunião administrativa segue a v1 com as regras da seção 4 |
 
 ---
 

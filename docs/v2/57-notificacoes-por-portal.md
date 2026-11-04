@@ -1,6 +1,6 @@
 # 57 — Notificações, por Portal
 
-> Parte do [SDD v2](00-README.md). Eventos que disparam notificação em [14](14-integracao-modulos.md). Canais e provedores de plataforma em [16](16-integracoes-externas.md). Verificação de contato e MFA em [06](06-identidade-acesso.md). Consentimento por canal em [26](26-sdd-juridico-regulatorio.md) e [22](22-crm-canais-e-papeis.md). Regras de envio, estados e dados sensíveis em [18](18-regras-modulos-2.md), seção 3. Auditoria em [29](29-auditoria.md). Idioma em [09](09-internacionalizacao.md). Referência de módulo: `spec_gestao_notificacoes_revisada.md` (v1, 642 linhas) unida a `spec_gestao_notificacoes.md` (v1, 378 linhas), por decisão NOT-01.
+> Parte do [SDD v2](00-README.md). Eventos que disparam notificação em [14](14-integracao-modulos.md). Canais e provedores de plataforma em [16](16-integracoes-externas.md). Verificação de contato e MFA em [06](06-identidade-acesso.md). Consentimento por canal em [26](26-sdd-juridico-regulatorio.md) e [22](22-crm-canais-e-papeis.md). Regras de envio, estados e dados sensíveis em [18](18-regras-modulos-2.md), seção 3. Auditoria em [29](29-auditoria.md). Idioma em [09](09-internacionalizacao.md). Referência de módulo: [`spec_gestao_notificacoes_revisada.md`](anexo-v1/spec_gestao_notificacoes_revisada.md) (v1, 642 linhas) unida a [`spec_gestao_notificacoes.md`](anexo-v1/spec_gestao_notificacoes.md) (v1, 378 linhas), por decisão NOT-01.
 > **Veredito:** o módulo de notificações **não está completo como módulo**. Há regras soltas para estados, validação, canais de conta e dado sensível. Falta o módulo em si: templates, regras de envio, preferências do usuário, targeting por portal, fallback entre provedores e painel de operação.
 
 ---
@@ -31,7 +31,7 @@
 6. **Templates e i18n ausentes.** Texto de aviso precisa de versão por idioma ([09](09-internacionalizacao.md)) e de variáveis validadas.
 7. **Fallback entre provedores ausente.** [16](16-integracoes-externas.md) define um provedor por tipo. A v1 prevê vários por canal e troca automática quando um cai.
 8. **Painel de operação ausente.** Fila, falhas, reenvio e métricas de entrega não têm tela nem métrica definida. [24](24-operacao-continuidade-qualidade.md) tem só uma meta ("99% em até 5 min"). **Escrito** nas seções 3.8 e 3.9 (NOT-08).
-9. **Conflito de versões da v1.** Há `spec_gestao_notificacoes.md` (378 linhas) e a revisada (642 linhas). **Decidido** em 03/11/2026 (NOT-01): as duas são unidas. A revisada dá estados, eventos, reenvio e observabilidade. A original dá as telas e o painel (seções 3.8 e 3.9).
+9. **Conflito de versões da v1.** Há [`spec_gestao_notificacoes.md`](anexo-v1/spec_gestao_notificacoes.md) (378 linhas) e a revisada (642 linhas). **Decidido** em 03/11/2026 (NOT-01): as duas são unidas. A revisada dá estados, eventos, reenvio e observabilidade. A original dá as telas e o painel (seções 3.8 e 3.9).
 10. **Notificação de saúde.** [18](18-regras-modulos-2.md), seção 3.3, proíbe diagnóstico no corpo. Não há regra de quem pode enviar aviso de saúde, nem para quem.
 
 ---
@@ -97,7 +97,7 @@ Público com mais de 500 destinatários exige aprovação de segunda pessoa, com
 
 ### 3.8 Telas do módulo
 
-Vêm da versão original da v1 (`spec_gestao_notificacoes.md`, seção 6), unida à revisada por decisão NOT-01. A regra da v2 prevalece quando há conflito: estados de [18](18-regras-modulos-2.md), seção 3.1, aprovação acima de 500 destinatários (NOT-03), silêncio (NOT-02) e permissão por papel.
+Vêm da versão original da v1 ([`spec_gestao_notificacoes.md`](anexo-v1/spec_gestao_notificacoes.md), seção 6), unida à revisada por decisão NOT-01. A regra da v2 prevalece quando há conflito: estados de [18](18-regras-modulos-2.md), seção 3.1, aprovação acima de 500 destinatários (NOT-03), silêncio (NOT-02) e permissão por papel.
 
 | Tela | Conteúdo | Regra da v2 |
 |---|---|---|

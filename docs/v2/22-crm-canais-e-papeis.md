@@ -1,6 +1,6 @@
 # 22 — CRM: Dois Contextos, Canais de Captação e Papéis
 
-> Parte do [SDD v2](00-README.md). Substitui e amplia a v1 `spec_crm_funil_comercial.md` (ver [19](19-regras-modulos-3.md), seção 6). Integrações de canal em [16](16-integracoes-externas.md). Consentimento e papéis de LGPD em [07](07-privacidade-lgpd.md). Permissões em [06](06-identidade-acesso.md). Pagamentos em [20](20-pagamentos-seguranca.md). Chatbots e captação usam a mesma camada de mensagens descrita aqui.
+> Parte do [SDD v2](00-README.md). Substitui e amplia a v1 [`spec_crm_funil_comercial.md`](anexo-v1/spec_crm_funil_comercial.md) (ver [19](19-regras-modulos-3.md), seção 6). Integrações de canal em [16](16-integracoes-externas.md). Consentimento e papéis de LGPD em [07](07-privacidade-lgpd.md). Permissões em [06](06-identidade-acesso.md). Pagamentos em [20](20-pagamentos-seguranca.md). Chatbots e captação usam a mesma camada de mensagens descrita aqui.
 > **Interpretação:** "papilanes" foi lido como **papéis** (perfis de usuário e de operação). Se a intenção for outra, esta seção será revisada.
 > **Status:** D-16, D-17 e D-18 decididas pelo autor em 02/11/2026 (seção 9).
 

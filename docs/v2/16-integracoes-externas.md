@@ -37,7 +37,7 @@ Regras:
 
 | Integração | Finalidade | Credencial típica | Regra |
 |---|---|---|---|
-| Gateway de pagamento | Cobrança de mensalidades, Pix, cartão | Chave da conta do tenant | Um gateway primário por unidade, dentro da entidade. Decidido em 03/11/2026 (SRC-05). Adapters: Asaas, Mercado Pago, Gerencianet / EFÍ, PagSeguro e Stripe (lista da v1, `spec_gestao_billing_cobranca_mensalidades.md`, seção 17.1). Contingência em [34](34-pagamentos-fiscal-bancos-por-portal.md), seção 2.3. |
+| Gateway de pagamento | Cobrança de mensalidades, Pix, cartão | Chave da conta do tenant | Um gateway primário por unidade, dentro da entidade. Decidido em 03/11/2026 (SRC-05). Adapters: Asaas, Mercado Pago, Gerencianet / EFÍ, PagSeguro e Stripe (lista da v1, [`spec_gestao_billing_cobranca_mensalidades.md`](anexo-v1/spec_gestao_billing_cobranca_mensalidades.md), seção 17.1). Contingência em [34](34-pagamentos-fiscal-bancos-por-portal.md), seção 2.3. |
 | ERP ou contabilidade | Exportação de lançamentos | Chave ou usuário do ERP | Envio por lote diário; idempotência por número de lançamento |
 | Emissão de nota fiscal (NFS-e, por município) | Nota de serviço educacional | Certificado digital e credencial da prefeitura | Certificado do tenant; sem certificado, a emissão não é habilitada |
 | eSocial (transmissão) | Eventos S-2220, S-2230, S-2240 e demais do RH e SMT | Certificado digital A1 ou A3 da entidade | Ver decisão D-08 (seção 6) |

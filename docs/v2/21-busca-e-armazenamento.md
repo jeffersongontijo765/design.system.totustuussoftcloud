@@ -1,6 +1,6 @@
 # 21 — Busca Full-Text e Armazenamento de Arquivos (Storage + Metadados)
 
-> Parte do [SDD v2](00-README.md). Validação de upload em [15](15-validacoes.md), seção 4.3. Eventos de indexação em [14](14-integracao-modulos.md). Isolamento de tenant em [03](03-dominio-tenancy.md). Criptografia em [05](05-seguranca.md). Retenção e expurgo em [07](07-privacidade-lgpd.md). Modelo de dados da v1 em `spec_object_storage_digital_assets.md`, seção 13.
+> Parte do [SDD v2](00-README.md). Validação de upload em [15](15-validacoes.md), seção 4.3. Eventos de indexação em [14](14-integracao-modulos.md). Isolamento de tenant em [03](03-dominio-tenancy.md). Criptografia em [05](05-seguranca.md). Retenção e expurgo em [07](07-privacidade-lgpd.md). Modelo de dados da v1 em [`spec_object_storage_digital_assets.md`](anexo-v1/spec_object_storage_digital_assets.md), seção 13.
 > **Status:** D-13, D-14 e D-15 decididas pelo autor em 02/11/2026 (seção 9). OCR entra nesta versão. Os valores numéricos são padrões iniciais para medir, não garantias.
 > **Atualização de 03/11/2026:** o armazenamento atende três contextos de documento, cada um com prefixo e prazo próprios. Ver [54](54-gestao-de-documentos-tres-contextos.md), seções 1 e 5.
 
@@ -159,7 +159,7 @@ Regras:
 
 ### 4.1 Correções ao modelo da v1
 
-A v1 (`spec_object_storage_digital_assets.md`, seção 13) define seis tabelas. Problemas:
+A v1 ([`spec_object_storage_digital_assets.md`](anexo-v1/spec_object_storage_digital_assets.md), seção 13) define seis tabelas. Problemas:
 
 | ID | Problema | Correção |
 |---|---|---|

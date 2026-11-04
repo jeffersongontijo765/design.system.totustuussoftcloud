@@ -1,7 +1,7 @@
 # 48 — Gerador de Documentos, por Portal
 
 > Parte do [SDD v2](00-README.md). Emissão de documento oficial da secretaria em [17](17-regras-modulos.md) e [46](46-matricula-e-rematricula-por-portal.md). Assinatura digital em [33](33-contratos-por-portal.md), seção 4, e decisão CTR-06. Biblioteca e acervo, separados, em [31](31-matriz-portais-modulos.md), seção 3. Armazenamento e checksum em [21](21-busca-e-armazenamento.md). Auditoria em [29](29-auditoria.md). Consulta pública e dado mínimo em [07](07-privacidade-lgpd.md).
-> **Status:** especificação proposta, criada em 03/11/2026 e verificada contra a v1 no mesmo dia (seção 11). **Escopo:** apenas documentos emitidos pela secretaria (contexto C de [54](54-gestao-de-documentos-tres-contextos.md)). Documentos recebidos e administrativos têm regras próprias a partir de `spec-builder-documentos-academicos.md` (editor de modelos, chamado de builder na v1: layout, variáveis, condicionais) e `spec_gestao_documentos_completo.md` (tipos, ciclo de vida, assinatura, permissões). Fecha MOD-07 da [31](31-matriz-portais-modulos.md). Itens **(jurídico)**, **(verificar)** e **[Decisão do autor]** dependem de resposta.
+> **Status:** especificação proposta, criada em 03/11/2026 e verificada contra a v1 no mesmo dia (seção 11). **Escopo:** apenas documentos emitidos pela secretaria (contexto C de [54](54-gestao-de-documentos-tres-contextos.md)). Documentos recebidos e administrativos têm regras próprias a partir de [`spec-builder-documentos-academicos.md`](anexo-v1/spec-builder-documentos-academicos.md) (editor de modelos, chamado de builder na v1: layout, variáveis, condicionais) e [`spec_gestao_documentos_completo.md`](anexo-v1/spec_gestao_documentos_completo.md) (tipos, ciclo de vida, assinatura, permissões). Fecha MOD-07 da [31](31-matriz-portais-modulos.md). Itens **(jurídico)**, **(verificar)** e **[Decisão do autor]** dependem de resposta.
 
 ---
 
@@ -137,7 +137,7 @@ Modelo não contém código executável. Condicional e repetição são interpre
 
 ## 11. Verificação contra a v1 e lacunas fechadas
 
-Verificado em 03/11/2026 contra `spec-builder-documentos-academicos.md` e `spec_gestao_documentos_completo.md`. A versão anterior deste documento cobria o núcleo (tipos, ciclo, editor de modelos, validação e portais), mas deixava de fora itens da v1. Os itens abaixo foram incluídos nas seções 12 a 19.
+Verificado em 03/11/2026 contra [`spec-builder-documentos-academicos.md`](anexo-v1/spec-builder-documentos-academicos.md) e [`spec_gestao_documentos_completo.md`](anexo-v1/spec_gestao_documentos_completo.md). A versão anterior deste documento cobria o núcleo (tipos, ciclo, editor de modelos, validação e portais), mas deixava de fora itens da v1. Os itens abaixo foram incluídos nas seções 12 a 19.
 
 | Item da v1 | Situação antes | Onde agora |
 |---|---|---|

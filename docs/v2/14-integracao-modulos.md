@@ -152,7 +152,7 @@ Estados da fila de envio: `pending` → `queued` → `sent` → `processed`. Est
 
 ## 7. Integrações obrigatórias da v1
 
-A v1 (`spec_complementar_integracoes_governanca.md`, seção 3) lista três integrações. A v2 define a forma de cada uma.
+A v1 ([`spec_complementar_integracoes_governanca.md`](anexo-v1/spec_complementar_integracoes_governanca.md), seção 3) lista três integrações. A v2 define a forma de cada uma.
 
 ### 7.1 RH ↔ SMT
 

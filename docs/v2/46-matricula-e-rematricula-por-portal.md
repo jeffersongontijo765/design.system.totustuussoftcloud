@@ -1,7 +1,7 @@
 # 46 — Matrícula e Rematrícula, por Portal (Acadêmico)
 
 > Parte do [SDD v2](00-README.md). Matriz em [31](31-matriz-portais-modulos.md). Regras de validação de matrícula em [15](15-validacoes.md), seção 7, e em [17](17-regras-modulos.md), seção 4. Bloqueio parcial por inadimplência em [26](26-sdd-juridico-regulatorio.md), seção 3. Contrato de matrícula em [33](33-contratos-por-portal.md). Pagamento da matrícula em [34](34-pagamentos-fiscal-bancos-por-portal.md). Protocolo de atendimento em [32](32-atendimento-privacidade-por-portal.md). Documentos exigidos e LGPD em [07](07-privacidade-lgpd.md). Auditoria em [29](29-auditoria.md).
-> **Status:** especificação proposta, criada em 03/11/2026 a partir de `spec_gestao_academica_completo.md` (seções 4.1 a 4.9 e 4.3 do portal online). Fecha M-01 a M-09 da [31](31-matriz-portais-modulos.md). Itens **(jurídico)** e **[Decisão do autor]** dependem de resposta.
+> **Status:** especificação proposta, criada em 03/11/2026 a partir de [`spec_gestao_academica_completo.md`](anexo-v1/spec_gestao_academica_completo.md) (seções 4.1 a 4.9 e 4.3 do portal online). Fecha M-01 a M-09 da [31](31-matriz-portais-modulos.md). Itens **(jurídico)** e **[Decisão do autor]** dependem de resposta.
 
 ---
 

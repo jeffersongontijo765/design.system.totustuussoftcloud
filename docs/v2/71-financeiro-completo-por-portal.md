@@ -1,7 +1,7 @@
 # 71 — Financeiro Completo, por Portal: Pagamentos, Cheques, Caixa, Fluxo, DRE e Conciliação
 
 > Parte do [SDD v2](00-README.md). Decisão CFG-04 em [56](56-configuracoes-e-relatorios-lacunas.md), seção 8: escopo financeiro completo, com cheques, caixa, DRE e fluxo de caixa. Este documento fecha o que faltava. Já especificado em outros documentos e só referenciado aqui: títulos, parcelas e descontos em [18](18-regras-modulos-2.md); cobrança e gateway em [20](20-pagamentos-seguranca.md); NFS-e, split e nota de fornecedor em [34](34-pagamentos-fiscal-bancos-por-portal.md); contratos em [33](33-contratos-por-portal.md); regras de conciliação e aprovação em [17](17-regras-modulos.md), seção 2. Financeiro da própria empresa desenvolvedora em [31](31-matriz-portais-modulos.md). Orçamento e empenho em [37](37-planejamento-e-empenho.md). Relatórios financeiros em [69](69-relatorios-e-censo-por-portal.md). Auditoria em [29](29-auditoria.md).
-> **Status:** especificação proposta, criada em 03/11/2026. Fecha a lacuna financeira de [56](56-configuracoes-e-relatorios-lacunas.md), seções 6 e 8. A v1 tem `spec_gestao_financeiro_completo.md` com contas a pagar, fluxo de caixa, conciliação, centros de custo, orçamentos, DRE e inadimplência. Esta versão corrige o que a v1 deixa solto: regime do DRE, cheques e caixa.
+> **Status:** especificação proposta, criada em 03/11/2026. Fecha a lacuna financeira de [56](56-configuracoes-e-relatorios-lacunas.md), seções 6 e 8. A v1 tem [`spec_gestao_financeiro_completo.md`](anexo-v1/spec_gestao_financeiro_completo.md) com contas a pagar, fluxo de caixa, conciliação, centros de custo, orçamentos, DRE e inadimplência. Esta versão corrige o que a v1 deixa solto: regime do DRE, cheques e caixa.
 
 ---
 

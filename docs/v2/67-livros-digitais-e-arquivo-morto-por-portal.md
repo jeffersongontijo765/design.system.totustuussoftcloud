@@ -1,7 +1,7 @@
 # 67 — Livros Digitais e Arquivo Morto, por Portal
 
 > Parte do [SDD v2](00-README.md). Décima lacuna da ordem de [55](55-academico-verificacao-e-lacunas.md), seção 3. Depende dos documentos de [54](54-gestao-de-documentos-tres-contextos.md) e do registro de matrícula de [46](46-matricula-e-rematricula-por-portal.md). Atas de conselho em [62](62-boletim-e-conselho-de-classe-por-portal.md) e [53](53-pacote-documentos-e-contratos.md), DC-17 e DC-18. Armazenamento, hash e OCR em [21](21-busca-e-armazenamento.md). Cadeia de integridade em [18](18-regras-modulos-2.md), seção 3. Assinatura e ICP-Brasil em [54](54-gestao-de-documentos-tres-contextos.md), seção 5, e [48](48-gerador-de-documentos-por-portal.md). Guarda e eliminação em [26](26-sdd-juridico-regulatorio.md), seção 6, e [07](07-privacidade-lgpd.md). Auditoria em [29](29-auditoria.md).
-> **Status:** especificação proposta, criada em 03/11/2026. Fecha a lacuna 10 do acadêmico. A v1 tem `book-registry`, `meeting-book` e `digital-archive` (`spec_gestao_academica_completo.md`, seções 6.4 a 6.6). Esta versão mantém o que a v1 tem e acrescenta as regras de imutabilidade, separação de funções e eliminação.
+> **Status:** especificação proposta, criada em 03/11/2026. Fecha a lacuna 10 do acadêmico. A v1 tem `book-registry`, `meeting-book` e `digital-archive` ([`spec_gestao_academica_completo.md`](anexo-v1/spec_gestao_academica_completo.md), seções 6.4 a 6.6). Esta versão mantém o que a v1 tem e acrescenta as regras de imutabilidade, separação de funções e eliminação.
 
 ---
 

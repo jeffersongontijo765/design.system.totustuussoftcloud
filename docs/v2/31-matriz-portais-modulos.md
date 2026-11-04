@@ -1,6 +1,6 @@
 # 31 — Matriz de Portais, Fronteiras entre Módulos, Logs, Testes, Segurança e Auditoria
 
-> Parte do [SDD v2](00-README.md). Portais em [23](23-dominios-provisionamento-ciclo-de-vida.md), seção 1. Catálogo em [12](12-catalogo-modulos.md). Auditoria em [29](29-auditoria.md). Testes em [24](24-operacao-continuidade-qualidade.md), seção 5. Logs em [10](10-implantacao-operacao.md), seção 7. Fonte dos módulos por portal: a navegação da v1 ([12-portals-navigation-sidebar-pages-spec.md](`12-portals-navigation-sidebar-pages-spec.md`, na pasta da v1), seção 4), agora reclassificada pelos seis portais da v2.
+> Parte do [SDD v2](00-README.md). Portais em [23](23-dominios-provisionamento-ciclo-de-vida.md), seção 1. Catálogo em [12](12-catalogo-modulos.md). Auditoria em [29](29-auditoria.md). Testes em [24](24-operacao-continuidade-qualidade.md), seção 5. Logs em [10](10-implantacao-operacao.md), seção 7. Fonte dos módulos por portal: a navegação da v1 ([12-portals-navigation-sidebar-pages-spec.md](anexo-v1/12-portals-navigation-sidebar-pages-spec.md), seção 4), agora reclassificada pelos seis portais da v2.
 > **Status:** aprovada pelo autor em 03/11/2026, com as propostas adotadas. Itens sem valor definido continuam pendentes, criada em 03/11/2026 a partir de auditoria das especificações da v1. Itens marcados **[Decisão do autor]** dependem de resposta. Itens **[Sem especificação]** não têm fonte na v1 ou na v2.
 
 ---
@@ -109,7 +109,7 @@ Legenda de origem: **P** = plataforma (banco master); **E** = entidade/unidade (
 
 ### 3.1 Biblioteca × Gestão de Documentos
 
-**Problema encontrado:** a especificação `spec_gestao_biblioteca_completo.md` (UI enterprise) inclui páginas de gestão de usuários, perfis, auditoria, integrações e **"Gestão de Documentos e Anexos"** (página 14). Isso mistura o acervo da biblioteca com o cofre de documentos da entidade.
+**Problema encontrado:** a especificação [`spec_gestao_biblioteca_completo.md`](anexo-v1/spec_gestao_biblioteca_completo.md) (UI enterprise) inclui páginas de gestão de usuários, perfis, auditoria, integrações e **"Gestão de Documentos e Anexos"** (página 14). Isso mistura o acervo da biblioteca com o cofre de documentos da entidade.
 
 **Decisão proposta:**
 
@@ -124,7 +124,7 @@ A página 14 da UI de biblioteca sai dela. A "Interface de biblioteca (UI)" do c
 
 Não encontrei na v1 um módulo chamado "CRM protocolo". O protocolo aparece em:
 
-- Secretaria (número e senha, consulta pública por número e CPF) — `spec_gestao_academica_completo.md`, seção 6.2;
+- Secretaria (número e senha, consulta pública por número e CPF) — [`spec_gestao_academica_completo.md`](anexo-v1/spec_gestao_academica_completo.md), seção 6.2;
 - Gestão de documentos e validações;
 - Serviços do portal do aluno, do professor e dos responsáveis;
 - Direitos do titular (solicitação LGPD com protocolo — [07](07-privacidade-lgpd.md));
@@ -147,7 +147,7 @@ Não encontrei na v1 um módulo chamado "CRM protocolo". O protocolo aparece em:
 | Receita | Assinaturas dos clientes ([20](20-pagamentos-seguranca.md)) | Mensalidades e serviços de alunos |
 | Despesa | Da própria empresa | Da entidade (fornecedor, folha) |
 | Contábil | Plano de contas da empresa | Plano de contas da entidade, com centro de custo por unidade |
-| Tributos | Da empresa | Retenções e apurações da entidade ([19](19-regras-modulos-3.md) e v1 `spec_gestao_contabil_fiscal_completo.md`, seção 6.5) |
+| Tributos | Da empresa | Retenções e apurações da entidade ([19](19-regras-modulos-3.md) e v1 [`spec_gestao_contabil_fiscal_completo.md`](anexo-v1/spec_gestao_contabil_fiscal_completo.md), seção 6.5) |
 
 **Proposta:** o módulo Financeiro e o Contábil são o mesmo código com dois donos de dado (banco master e banco de cada unidade). **Decidido** em 03/11/2026: a plataforma precisa dos módulos contábil e financeiro para a própria empresa.
 
@@ -158,8 +158,8 @@ O termo "builder" aparece em três lugares e pode confundir:
 | Nome | Dono | Função | Documento |
 |---|---|---|---|
 | Builder de portais | Plataforma | Páginas e layouts declarativos | [23](23-dominios-provisionamento-ciclo-de-vida.md), seção 3 |
-| Builder de documentos | Entidade (Gestão de documentos) | Modelos de documento com variáveis e emissão em PDF | `spec-builder-documentos-academicos.md` (26 seções) |
-| Builder de automações | Entidade (Automações) | Regras de disparo | `spec_gestao_biblioteca_completo.md`, página 7 |
+| Builder de documentos | Entidade (Gestão de documentos) | Modelos de documento com variáveis e emissão em PDF | [`spec-builder-documentos-academicos.md`](anexo-v1/spec-builder-documentos-academicos.md) (26 seções) |
+| Builder de automações | Entidade (Automações) | Regras de disparo | [`spec_gestao_biblioteca_completo.md`](anexo-v1/spec_gestao_biblioteca_completo.md), página 7 |
 
 **Ação (feita em 03/11/2026, MOD-12):** na v2 os nomes são "Editor de portais" ([23](23-dominios-provisionamento-ciclo-de-vida.md)), "Gerador de documentos", com o "editor de modelos" ([48](48-gerador-de-documentos-por-portal.md)), e "Automações". O termo "builder" fica só nos nomes de arquivo da v1 e no código do papel `platform.builder`.
 
@@ -172,7 +172,7 @@ O termo "builder" aparece em três lugares e pode confundir:
 
 ### 3.5 Matrícula e rematrícula
 
-A v2 tem só os estados da matrícula em [17](17-regras-modulos.md) (`pre_matricula`, `ativa`, `trancada`, `concluida`, `cancelada`, `transferida`). A v1 (`spec_gestao_academica_completo.md`) tem mais: kanban de rematrícula, wizard, prazo de 7 dias, lembrete, "não rematriculado" após 30 dias, matrícula condicional com prazo e trancamento com motivo e protocolo.
+A v2 tem só os estados da matrícula em [17](17-regras-modulos.md) (`pre_matricula`, `ativa`, `trancada`, `concluida`, `cancelada`, `transferida`). A v1 ([`spec_gestao_academica_completo.md`](anexo-v1/spec_gestao_academica_completo.md)) tem mais: kanban de rematrícula, wizard, prazo de 7 dias, lembrete, "não rematriculado" após 30 dias, matrícula condicional com prazo e trancamento com motivo e protocolo.
 
 **Lacunas do fluxo, a incluir na v2:**
 
@@ -195,7 +195,7 @@ A v2 tem só a regra de IA em [19](19-regras-modulos-3.md), seção 12, e a linh
 - **Banco de questões**, com origem, autoria, revisão e situação (`rascunho`, `revisada`, `publicada`, `arquivada`).
 - **Geração de prova** por perfil (ENEM, vestibular, interna) e gabarito.
 - **Gabarito óptico**: a v1 cita, mas não há especificação do leitor. **Decidido** em 03/11/2026: as duas opções, próprio e de terceiro, por configuração da entidade.
-- **Correção por IA**. **Conflito:** a v1 (`spec_gestao_simulados_ia.md`, seção "Correção automática por IA") tem como saída "nota final estimada". A v2 proíbe nota final dada só pela IA ([27](27-inteligencia-artificial-e-portais.md), princípio 2 e seção 5.11). Ação: a v2 fica com a regra da [27](27-inteligencia-artificial-e-portais.md). A nota da IA é sugestão; o professor confirma.
+- **Correção por IA**. **Conflito:** a v1 ([`spec_gestao_simulados_ia.md`](anexo-v1/spec_gestao_simulados_ia.md), seção "Correção automática por IA") tem como saída "nota final estimada". A v2 proíbe nota final dada só pela IA ([27](27-inteligencia-artificial-e-portais.md), princípio 2 e seção 5.11). Ação: a v2 fica com a regra da [27](27-inteligencia-artificial-e-portais.md). A nota da IA é sugestão; o professor confirma.
 - **Anonimização** do aluno enviado ao provedor de IA ([19](19-regras-modulos-3.md), seção 12).
 - **Relatórios por portal**: professor vê a turma; aluno vê as próprias provas; responsável vê os filhos; gestor vê a unidade.
 - **Plano**: a v1 marca o simulado como "PRO" no portal de gestão. **Decidido** em 03/11/2026: o PRO libera correção por IA e ranking.
@@ -204,9 +204,9 @@ A v2 tem só a regra de IA em [19](19-regras-modulos-3.md), seção 12, e a linh
 
 Há três especificações separadas, todas em "Revisar" no catálogo:
 
-- `spec_chat_rapido_sac.md`: chat rápido e abertura de ticket no SAC.
-- `SPEC-HELPDESK.md`: helpdesk com SLA, base de conhecimento e portal do cliente.
-- `spec_gestao_sac_base_conhecimento.md`.
+- [`spec_chat_rapido_sac.md`](anexo-v1/spec_chat_rapido_sac.md): chat rápido e abertura de ticket no SAC.
+- [`SPEC-HELPDESK.md`](anexo-v1/SPEC-HELPDESK.md): helpdesk com SLA, base de conhecimento e portal do cliente.
+- [`spec_gestao_sac_base_conhecimento.md`](anexo-v1/spec_gestao_sac_base_conhecimento.md).
 
 **Decisão proposta (já adotada na v1 do catálogo):** um módulo único de atendimento, com helpdesk como base ([19](19-regras-modulos-3.md), seção 2). Os canais (chat do site, WhatsApp, Telegram, Instagram, Messenger, telefone e presencial) são entradas desse módulo, com as regras de [22](22-crm-canais-e-papeis.md), seção 2.
 
@@ -217,13 +217,13 @@ Há três especificações separadas, todas em "Revisar" no catálogo:
 | Bot de captação (CRM) | CRM da plataforma ou do tenant | [22](22-crm-canais-e-papeis.md), seção 3 |
 | Bot de atendimento (SAC) | Atendimento | Mesma regra de IA: fonte cadastrada, humano para o resto, opção "Abrir ticket" sem IA (D-18) |
 
-A reunião global (`global_meeting_spec_v2_complete.md`) menciona proteção contra bot em entrada pública, sem módulo de bot. Não é um terceiro tipo.
+A reunião global ([`global_meeting_spec_v2_complete.md`](anexo-v1/global_meeting_spec_v2_complete.md)) menciona proteção contra bot em entrada pública, sem módulo de bot. Não é um terceiro tipo.
 
 Pendente: a v2 ainda não tem DDL do atendimento consolidado (T-02 em [19](19-regras-modulos-3.md)).
 
 ### 3.8 Gráficos e painéis
 
-`chart-builder-spec-complete.md` (16 seções: consulta, renderização, painéis, API, segurança, exportação, tempo real) está marcado como "Especificado" no catálogo, mas a v2 não tem regra para ele.
+[`chart-builder-spec-complete.md`](anexo-v1/chart-builder-spec-complete.md) (16 seções: consulta, renderização, painéis, API, segurança, exportação, tempo real) está marcado como "Especificado" no catálogo, mas a v2 não tem regra para ele.
 
 **Proposta:**
 

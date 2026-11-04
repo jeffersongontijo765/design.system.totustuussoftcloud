@@ -1,7 +1,7 @@
 # 66 — Prontuário e Portfólio do Aluno, por Portal
 
 > Parte do [SDD v2](00-README.md). Nona lacuna da ordem de [55](55-academico-verificacao-e-lacunas.md), seção 3. Depende do diário ([61](61-diario-escolar-por-portal.md)) e do boletim ([62](62-boletim-e-conselho-de-classe-por-portal.md)). Documentos recebidos e emitidos ficam em [54](54-gestao-de-documentos-tres-contextos.md), contextos A e C. O prontuário é uma visão sobre eles, sem cópia. Armazenamento, hash e OCR em [21](21-busca-e-armazenamento.md). Ocorrências em [63](63-ocorrencias-disciplinares-por-portal.md). Acesso a dado sensível e campos bloqueados em [18](18-regras-modulos-2.md), seção 3.3, e [38](38-portal-de-terceiros-prestadores.md). Dados de menor e imagem em [40](40-aulas-online-por-portal.md) e [07](07-privacidade-lgpd.md). Auditoria em [29](29-auditoria.md).
-> **Status:** especificação proposta, criada em 03/11/2026. Fecha a lacuna 9 do acadêmico. A v1 tem `student_records` e `student_portfolios` (`spec_gestao_academica_completo.md`, seções 5.3, 7.5 e 16). Pontos que dependem de norma ou de decisão do autor estão marcados.
+> **Status:** especificação proposta, criada em 03/11/2026. Fecha a lacuna 9 do acadêmico. A v1 tem `student_records` e `student_portfolios` ([`spec_gestao_academica_completo.md`](anexo-v1/spec_gestao_academica_completo.md), seções 5.3, 7.5 e 16). Pontos que dependem de norma ou de decisão do autor estão marcados.
 
 ---
 

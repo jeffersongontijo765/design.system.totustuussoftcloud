@@ -1,7 +1,7 @@
 # 68 — Biblioteca (Acervo, Empréstimos, Reservas, Multas e Salas de Leitura), por Portal
 
 > Parte do [SDD v2](00-README.md). Décima primeira lacuna da ordem de [55](55-academico-verificacao-e-lacunas.md), seção 3. Fronteira com Gestão de Documentos em [31](31-matriz-portais-modulos.md), seção 3.1: biblioteca e documentos são módulos separados. Multas viram cobrança em [18](18-regras-modulos-2.md). Aquisição em [17](17-regras-modulos.md), suprimentos. Patrimônio e baixa em [19](19-regras-modulos-3.md), seção 8. Salas de leitura usam o cadastro de recursos de [44](44-agendamento-ambientes-equipamentos.md) e [60](60-turmas-e-grade-de-horarios-por-portal.md), seção 2.2. Avisos de prazo em [57](57-notificacoes-por-portal.md). Busca no acervo em [21](21-busca-e-armazenamento.md), seção 6. Bibliografia do plano em [64](64-planos-de-aula-e-de-ensino-por-portal.md). Auditoria em [29](29-auditoria.md).
-> **Status:** especificação proposta, criada em 03/11/2026. Fecha a lacuna 11 do acadêmico. A referência de domínio é `spec_gestao_biblioteca_academica.md` (v1, Draft). O `spec_gestao_biblioteca_completo.md` é design de interface e não é usado aqui, conforme [31](31-matriz-portais-modulos.md), seção 3.1.
+> **Status:** especificação proposta, criada em 03/11/2026. Fecha a lacuna 11 do acadêmico. A referência de domínio é [`spec_gestao_biblioteca_academica.md`](anexo-v1/spec_gestao_biblioteca_academica.md) (v1, Draft). O [`spec_gestao_biblioteca_completo.md`](anexo-v1/spec_gestao_biblioteca_completo.md) é design de interface e não é usado aqui, conforme [31](31-matriz-portais-modulos.md), seção 3.1.
 
 ---
 

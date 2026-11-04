@@ -46,6 +46,12 @@ Continuam com o autor, no texto corrido: Frotas nesta versão e lista de jurisdi
 
 ---
 
+### 2.1 Especificações da v1 ainda não absorvidas na v2
+
+Dezessete arquivos de [anexo-v1/](anexo-v1/) estão no catálogo, mas nenhum documento da v2 usa o conteúdo deles (lista e situação em [79](79-rastreabilidade-v1-v2.md), seção 3, situação "Só catalogado"). **Antes de implementar o módulo correspondente, a especificação da v1 deve ser lida e as regras trazidas para a v2.** Responsável: owner de cada módulo. Ao absorver, regerar o [79](79-rastreabilidade-v1-v2.md).
+
+---
+
 ## 3. Jurídico (parecer)
 
 ### 3.1 Sem decisão

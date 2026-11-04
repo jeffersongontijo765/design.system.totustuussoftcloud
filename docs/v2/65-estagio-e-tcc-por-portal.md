@@ -1,7 +1,7 @@
 # 65 — Estágio e TCC, por Portal
 
 > Parte do [SDD v2](00-README.md). Oitava lacuna da ordem de [55](55-academico-verificacao-e-lacunas.md), seção 3. Depende da estrutura acadêmica ([59](59-estrutura-academica-por-portal.md), tipos de disciplina e carga horária). Decisão ACA-03: estágio obrigatório quando o curso exigir. TCC entra nesta versão (ACA-02, decidido em 03/11/2026). Campos de estágio já citados em [17](17-regras-modulos.md), seção 4.2. Convênio com empresa concedente em [33](33-contratos-por-portal.md). Motor de formulários para avaliação em [41](41-formularios-e-pesquisas.md). Convidado externo com link de uso único em [40](40-aulas-online-por-portal.md). Assinatura de termo e de ata em [54](54-gestao-de-documentos-tres-contextos.md), seção 5. Resultado no boletim em [62](62-boletim-e-conselho-de-classe-por-portal.md). Campo de estágio da preceptoria, que é outra coisa, em [42](42-preceptoria-por-portal.md). Auditoria em [29](29-auditoria.md).
-> **Status:** especificação proposta, criada em 03/11/2026. Fecha a lacuna 8 do acadêmico. A v1 tem `internships` e `thesis_works` (`spec_gestao_academica_completo.md`, seções 9 e 10). Pontos que dependem de norma ou de decisão do autor estão marcados.
+> **Status:** especificação proposta, criada em 03/11/2026. Fecha a lacuna 8 do acadêmico. A v1 tem `internships` e `thesis_works` ([`spec_gestao_academica_completo.md`](anexo-v1/spec_gestao_academica_completo.md), seções 9 e 10). Pontos que dependem de norma ou de decisão do autor estão marcados.
 
 ---
 
@@ -91,7 +91,7 @@ Tipos: TCC, monografia, projeto final e artigo. Aplica-se a cursos que exigem tr
 
 ### 3.4 Prazo
 
-- Aviso ao aluno e ao orientador 30 dias antes da entrega prevista, como a regra 17 da v1 (`spec_gestao_academica_completo.md`, linha 1183).
+- Aviso ao aluno e ao orientador 30 dias antes da entrega prevista, como a regra 17 da v1 ([`spec_gestao_academica_completo.md`](anexo-v1/spec_gestao_academica_completo.md), linha 1183).
 - Entrega atrasada não muda o estado sozinha. A coordenação decide sobre a prorrogação, com justificativa.
 
 ### 3.5 Banca de defesa

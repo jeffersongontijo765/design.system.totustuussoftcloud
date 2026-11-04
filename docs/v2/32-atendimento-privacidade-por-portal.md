@@ -1,7 +1,7 @@
 # 32 — Atendimento (Help Desk, SAC), Privacidade, LGPD e Encarregado, por Portal
 
 > Parte do [SDD v2](00-README.md). Matriz de portais e fronteiras em [31](31-matriz-portais-modulos.md). Protocolo e canais em [22](22-crm-canais-e-papeis.md) e [31](31-matriz-portais-modulos.md), seção 3.2. Base legal e direitos em [07](07-privacidade-lgpd.md). Incidentes em [07](07-privacidade-lgpd.md), seção 8, e [05](05-seguranca.md), seção 6. Auditoria em [29](29-auditoria.md).
-> **Status:** aprovada pelo autor em 03/11/2026, com as propostas adotadas. Itens sem valor definido continuam pendentes, criada em 03/11/2026 a partir das especificações da v1 (`SPEC-HELPDESK.md`, `spec_chat_rapido_sac.md`, `spec_gestao_sac_base_conhecimento.md`, `spec_gestao_privacy_global_completo.md`, `spec-sub-sidebar-privacidade-lgpd.md`). Itens **[Decisão do autor]** dependem de resposta. Itens **(jurídico)** dependem de parecer ([25](25-dossie-juridico-e-lacunas.md), [26](26-sdd-juridico-regulatorio.md)).
+> **Status:** aprovada pelo autor em 03/11/2026, com as propostas adotadas. Itens sem valor definido continuam pendentes, criada em 03/11/2026 a partir das especificações da v1 ([`SPEC-HELPDESK.md`](anexo-v1/SPEC-HELPDESK.md), [`spec_chat_rapido_sac.md`](anexo-v1/spec_chat_rapido_sac.md), [`spec_gestao_sac_base_conhecimento.md`](anexo-v1/spec_gestao_sac_base_conhecimento.md), [`spec_gestao_privacy_global_completo.md`](anexo-v1/spec_gestao_privacy_global_completo.md), [`spec-sub-sidebar-privacidade-lgpd.md`](anexo-v1/spec-sub-sidebar-privacidade-lgpd.md)). Itens **[Decisão do autor]** dependem de resposta. Itens **(jurídico)** dependem de parecer ([25](25-dossie-juridico-e-lacunas.md), [26](26-sdd-juridico-regulatorio.md)).
 > **Premissa:** o pedido diz "pdo". Entendi como **DPO (encarregado)**. Se for outra coisa, avise.
 > **Atualização de 03/11/2026:** o protocolo passa a ser serviço comum, usado também por documentos recebidos, administrativos e emitidos. Ver [54](54-gestao-de-documentos-tres-contextos.md), seção 5.
 
@@ -70,7 +70,7 @@ Conforme [22](22-crm-canais-e-papeis.md), seção 2, com estas regras de atendim
 
 - Opção "Abrir ticket" sem IA em todo ponto de atendimento (D-18).
 - Texto do solicitante é guardado literal, nunca interpretado como instrução ([05](05-seguranca.md)).
-- Campos obrigatórios variam por tipo, conforme a v1 (`SPEC-HELPDESK.md`, seção 7). Lista de campos padrão é fixa para todo tipo.
+- Campos obrigatórios variam por tipo, conforme a v1 ([`SPEC-HELPDESK.md`](anexo-v1/SPEC-HELPDESK.md), seção 7). Lista de campos padrão é fixa para todo tipo.
 
 ### 2.6 Portal do cliente (solicitante)
 
@@ -168,7 +168,7 @@ Já definido em [07](07-privacidade-lgpd.md), seção 8, com prazo de três dias
 
 ### 3.6 Transferência e operadores
 
-Lista de operadores e contrato de tratamento: [07](07-privacidade-lgpd.md), seção 7. Transferência internacional: **(jurídico)**. A v1 lista jurisdições de vários países (`spec_gestao_privacy_global_completo.md`, seção 4); a v2 limita ao Brasil, conforme [07](07-privacidade-lgpd.md), seção 3, até haver cliente fora do país.
+Lista de operadores e contrato de tratamento: [07](07-privacidade-lgpd.md), seção 7. Transferência internacional: **(jurídico)**. A v1 lista jurisdições de vários países ([`spec_gestao_privacy_global_completo.md`](anexo-v1/spec_gestao_privacy_global_completo.md), seção 4); a v2 limita ao Brasil, conforme [07](07-privacidade-lgpd.md), seção 3, até haver cliente fora do país.
 
 ### 3.7 Painel do DPO
 

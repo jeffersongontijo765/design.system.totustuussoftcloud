@@ -1,7 +1,7 @@
 # 43 — Gestão Pastoral, por Portal (eventos, missas e celebrações, ações sociais)
 
 > Parte do [SDD v2](00-README.md). Matriz de portais em [31](31-matriz-portais-modulos.md). Formulários de inscrição e pesquisa em [41](41-formularios-e-pesquisas.md). Espaços e equipamentos em [44](44-agendamento-ambientes-equipamentos.md). Eventos da escola em [17](17-regras-modulos.md). Dado sensível em [07](07-privacidade-lgpd.md) e [26](26-sdd-juridico-regulatorio.md). Doações e receitas em [33](33-contratos-por-portal.md) e [34](34-pagamentos-fiscal-bancos-por-portal.md). Terceiros em [38](38-portal-de-terceiros-prestadores.md). Auditoria em [29](29-auditoria.md).
-> **Status:** análise e especificação proposta, criada em 03/11/2026. A v1 tem a Gestão Pastoral só como lista de nomes na navegação ("Gestão Pastoral PRO", seção 4.2 de `12-portals-navigation-sidebar-pages-spec.md`), sem especificação. Missas e celebrações não aparecem na v1. Itens **[Decisão do autor]** e **(jurídico)** dependem de resposta ou parecer. Não é parecer.
+> **Status:** análise e especificação proposta, criada em 03/11/2026. A v1 tem a Gestão Pastoral só como lista de nomes na navegação ("Gestão Pastoral PRO", seção 4.2 de [`12-portals-navigation-sidebar-pages-spec.md`](anexo-v1/12-portals-navigation-sidebar-pages-spec.md)), sem especificação. Missas e celebrações não aparecem na v1. Itens **[Decisão do autor]** e **(jurídico)** dependem de resposta ou parecer. Não é parecer.
 
 ---
 

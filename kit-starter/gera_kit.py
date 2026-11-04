@@ -32,11 +32,15 @@ for l in linhas[ini + 1:fim]:
     elif l.startswith('- [ ] ') and area:
         modulo = l[6:].strip()
         caminho = os.path.join(DEST, slug(area), slug(modulo) + '.md')
+        if os.path.exists(caminho) and 'Status: pendente' not in open(caminho, encoding='utf8').read():
+            continue  # ficha já detalhada: não sobrescrever
+        rel = os.path.relpath(os.path.join(ROOT, 'docs', 'v2'), os.path.dirname(caminho)).replace(os.sep, '/')
+        escopo_ficha = escopo.replace('](../docs/v2/', f']({rel}/')
         open(caminho, 'w', encoding='utf8').write(
             f'# {modulo}\n\n'
             f'- Portal: Desenvolvedor (`desenvolvedor.`)\n'
             f'- Área: {area}\n'
-            f'- Escopo: {escopo}\n'
+            f'- Escopo: {escopo_ficha}\n'
             f'- Status: pendente (telas por detalhar)\n\n'
             '## Telas\n\n_A definir e aprovar antes da implementação._\n\n'
             '## Referências no SDD\n\n- `docs/31-matriz-portais-modulos.md`, seção 2.1\n')

@@ -83,7 +83,7 @@ Transições:
 
 ### 2.6 Régua de cobrança: pontos que exigem parecer
 
-A v1 define sete etapas de cobrança, de D+1 a D+90, com canais e ações (`spec_gestao_billing_cobranca_mensalidades.md`, seção 11). Três pontos precisam de parecer antes de implementar:
+A v1 define sete etapas de cobrança, de D+1 a D+90, com canais e ações ([`spec_gestao_billing_cobranca_mensalidades.md`](anexo-v1/spec_gestao_billing_cobranca_mensalidades.md), seção 11). Três pontos precisam de parecer antes de implementar:
 
 | Etapa | Ação na v1 | Risco | Tratamento proposto |
 |---|---|---|---|
