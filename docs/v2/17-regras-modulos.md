@@ -137,7 +137,7 @@ Matrícula, aluno, turma, disciplina, diário, avaliação, plano de aula, plano
 | CPF do aluno ou candidato | Único por tenant. Busca antes de cadastrar; alerta de matrícula duplicada (v1, seção 4.2). |
 | Documentos pessoais | Versionados, com data de upload, validade, responsável e hash de integridade (v1, seção 5). |
 | Matrícula | Um vínculo ativo por aluno e turma. Vaga disponível com bloqueio de concorrência ([15](15-validacoes.md), seção 7). |
-| Trancamento | Prazo máximo conforme regimento **[Pendente: valor do regimento, por curso]**. |
+| Trancamento | Prazo máximo de um ano letivo, configurável por curso. Decidido pelo autor em 03/11/2026 ([46](46-matricula-e-rematricula-por-portal.md), MAT-02). |
 | Nota | Dentro da faixa do método de avaliação; período de lançamento aberto. |
 | Presença por QR Code | Válido por 5 minutos por padrão, configurável pela escola. Decidido pelo autor em 03/11/2026. Geolocalização só com consentimento, conforme [07](07-privacidade-lgpd.md). |
 | Horas de atividade complementar | Status `pendente_validacao`, `validado`, `recusado`. Total validado nunca ultrapassa o limite do curso. |
@@ -260,10 +260,10 @@ Contrato, parte, valor, vigência, cláusula, obrigação, aprovação, assinatu
 
 | # | Lacuna | Dono sugerido | Situação em 04/11/2026 |
 |---|---|---|---|
-| LAC-01 | Faixas de valor para aprovação de despesa e contrato | Financeiro | Parcial: despesa decidida (acima de R$ 10.000, segundo aprovador; [17](17-regras-modulos.md), seção 2.4). Alçada de contrato em aberto ([33](33-contratos-por-portal.md), seção 4) |
+| LAC-01 | Faixas de valor para aprovação de despesa e contrato | Financeiro | Resolvida pelo autor em 03/11/2026: despesa acima de R$ 10.000 exige segundo aprovador ([17](17-regras-modulos.md), seção 2.4); faixas de contrato até R$ 10.000, de R$ 10.000 a R$ 100.000 e acima de R$ 100.000 ([33](33-contratos-por-portal.md), seção 4) |
 | LAC-02 | Regra de RG por UF e idade mínima por vínculo | Pessoas | Aberta |
 | LAC-03 | Prazo de experiência (CLT art. 445) | Jurídico | Aberta (jurídico) |
-| LAC-04 | Prazo de trancamento por curso e validade de QR Code | Acadêmico | Parcial: QR Code de 5 minutos decidido ([17](17-regras-modulos.md), seção 4.2). Prazo de trancamento depende do regimento de cada curso ([46](46-matricula-e-rematricula-por-portal.md), M-06) |
+| LAC-04 | Prazo de trancamento por curso e validade de QR Code | Acadêmico | Resolvida pelo autor em 03/11/2026: QR Code de 5 minutos ([17](17-regras-modulos.md), seção 4.2); trancamento de até um ano letivo, configurável por curso ([46](46-matricula-e-rematricula-por-portal.md), MAT-02) |
 | LAC-05 | Campos e DDL de Suprimentos e Contratos | Suprimentos, Contratos | Resolvida: DDL de suprimentos em [51](51-ddl-modulos-novos.md), seção 16, e de contratos em [51](51-ddl-modulos-novos.md), seção 3. Aguarda revisão do owner (DDL-01) |
 | LAC-06 | Tolerância de conciliação como parâmetro do tenant | Financeiro | Resolvida: parâmetro da entidade ([71](71-financeiro-completo-por-portal.md), seção 9) |
 

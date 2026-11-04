@@ -150,7 +150,7 @@ Etapas da v1 (seção 2.2), com donos:
 | Faixa 2 | Gestor + financeiro | **Decidido** em 03/11/2026: de R$ 10.000 a R$ 100.000 |
 | Acima da faixa 2 | Gestor executivo + financeiro + jurídico | **Decidido** em 03/11/2026: acima de R$ 100.000 |
 
-Sem os valores, a aplicação não tem regra de alçada. Lacuna LAC-01 em [17](../../../docs/v2/17-regras-modulos.md).
+As faixas acima resolvem a lacuna LAC-01 de [17](../../../docs/v2/17-regras-modulos.md).
 
 ---
 
