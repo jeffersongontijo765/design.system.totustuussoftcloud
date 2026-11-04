@@ -12,6 +12,10 @@
 <body>
 <main id="main-viewport" class="bg-slate-50">
   <div id="model-page" class="space-y-3.5" aria-live="polite"></div>
+  <section class="ttsc-card" style="margin:0 16px 16px"><div class="ttsc-card-content" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+    <div><h3 style="font-size:13px;margin:0 0 6px">Quem acessa</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)"><li>platform.people (nível 1): cadastro funcional, férias, afastamentos, ponto (ajuste com motivo), rescisão, benefícios.</li><li>platform.payroll (Folha, nível 1): processar a folha. Folha fechada não muda.</li><li>platform.payroll.approver (nível 2): aprovar a folha; não aprova a folha que processou.</li><li>Todo funcionário: o próprio holerite, férias, ponto e documentos.</li></ul></div>
+    <div><h3 style="font-size:13px;margin:0 0 6px">Regras essenciais</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)"><li>Módulo separado do RH (HCM-01 do 39, seção 11): Pessoas é dono de cadastro funcional, folha, férias, rescisão, eSocial e ponto; não é dono de processo seletivo, avaliação e clima. O cadastro funcional nasce aqui, quando o RH passa o candidato contratado por referência.</li><li>Dados civis ficam no banco de identidade; o HCM referencia person_id (D-19; 14, seção 3). Para a empresa, o banco é o master.</li><li>Regras do 39, seção 3 prevalecem sobre a v1: admissão, folha (folha fechada não é alterada), férias e afastamentos, ponto e jornada (ajuste manual só com motivo), rescisão (desligamento com afastamento ativo fica bloqueado) e benefícios.</li><li>Folha: quem processa não aprova (22, seção 5; 39, seção 7).</li></ul></div>
+  </div></section>
   <p class="pg-fonte">Tela gerada a partir de <a href="../../../../kit-starter/desenvolvedor/pessoas-da-plataforma/departamento-pessoal.md">Departamento pessoal da empresa (Pessoas)</a> (SDD v2: <a href="../../../../docs/v2/00-README.md">índice</a>). Registros de exemplo.</p>
 </main>
 <script>

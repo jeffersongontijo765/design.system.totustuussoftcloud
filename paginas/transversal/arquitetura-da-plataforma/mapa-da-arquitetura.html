@@ -12,6 +12,10 @@
 <body>
 <main id="main-viewport" class="bg-slate-50">
   <div id="model-page" class="space-y-3.5" aria-live="polite"></div>
+  <section class="ttsc-card" style="margin:0 16px 16px"><div class="ttsc-card-content" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+    <div><h3 style="font-size:13px;margin:0 0 6px">Quem acessa</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)"><li>Não se aplica (documento de arquitetura).</li></ul></div>
+    <div><h3 style="font-size:13px;margin:0 0 6px">Regras essenciais</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)"><li>Arquitetura, camadas, middleware e ADRs: o 02 prevalece.</li><li>Tenant, unidade e bancos: o 03 prevalece (banco por unidade, master da plataforma, banco de identidade da entidade).</li><li>Identidade: o 06 prevalece (conta global, vínculos e contexto, seção 12).</li><li>Portais e módulos: a matriz 31 prevalece; papéis no 78.</li></ul></div>
+  </div></section>
   <p class="pg-fonte">Tela gerada a partir de <a href="../../../kit-starter/transversal/arquitetura-da-plataforma.md">Arquitetura da plataforma educacional SaaS</a> (SDD v2: <a href="../../../docs/v2/00-README.md">índice</a>). Registros de exemplo.</p>
 </main>
 <script>

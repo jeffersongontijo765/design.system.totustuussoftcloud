@@ -12,6 +12,10 @@
 <body>
 <main id="main-viewport" class="bg-slate-50">
   <div id="model-page" class="space-y-3.5" aria-live="polite"></div>
+  <section class="ttsc-card" style="margin:0 16px 16px"><div class="ttsc-card-content" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+    <div><h3 style="font-size:13px;margin:0 0 6px">Quem acessa</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)"><li>platform.developer: alterar configurações de segurança e de limites.</li><li>platform.ops: alterar configurações operacionais (cache, manutenção).</li><li>Toda mudança vista por platform.auditor.</li></ul></div>
+    <div><h3 style="font-size:13px;margin:0 0 6px">Regras essenciais</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)"><li>Idiomas e locale: o 09 prevalece; as especificações da v1 de idioma e seletor de locale estão consolidadas nele (12).</li><li>Grupos de configuração (DP-04): idiomas e formatos (09); senha, sessão e MFA (06); limites de API (04); e-mail e integrações (16); cache (30); manutenção (24); tokens e webhooks (04, 16).</li><li>Valor fora do limite do documento de origem é recusado (por exemplo, sessão mais longa que o máximo do 06).</li><li>Configurações de entidade (feriados, fuso, campos personalizados) ficam no portal de gestão (56, seção 2).</li></ul></div>
+  </div></section>
   <p class="pg-fonte">Tela gerada a partir de <a href="../../../../kit-starter/desenvolvedor/seguranca-e-operacao/configuracoes-do-sistema.md">Configurações do sistema</a> (SDD v2: <a href="../../../../docs/v2/00-README.md">índice</a>). Registros de exemplo.</p>
 </main>
 <script>

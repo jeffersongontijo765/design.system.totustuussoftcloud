@@ -12,6 +12,10 @@
 <body>
 <main id="main-viewport" class="bg-slate-50">
   <div id="model-page" class="space-y-3.5" aria-live="polite"></div>
+  <section class="ttsc-card" style="margin:0 16px 16px"><div class="ttsc-card-content" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+    <div><h3 style="font-size:13px;margin:0 0 6px">Quem acessa</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)"><li>platform.integration (nível 6): configurar integrações de plataforma (plataforma.integracao.*).</li><li>platform.security: autorizar a visualização de segredo de tenant, com motivo.</li></ul></div>
+    <div><h3 style="font-size:13px;margin:0 0 6px">Regras essenciais</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)"><li>Dois níveis (16, seção 1): plataforma (credencial no cofre da plataforma, permissão plataforma.integracao.*) e tenant (cofre com chave por tenant).</li><li>Credencial de tenant nunca visível em texto claro para a equipe da plataforma; ver o segredo exige step-up, motivo e alerta ao canal de segurança.</li><li>Catálogo da plataforma (16, seção 2): e-mail transacional (obrigatório), SMS (não é MFA, desligado por padrão), armazenamento de objetos, antivírus de upload, captcha, cobrança da assinatura do SaaS, backup externo, monitoramento sem PII, verificação de documento opcional.</li><li>Ciclo de vida, segurança das chamadas, auditoria e testes (16, seções 5, 7, 9 e 10); governança da v1 ligada ao 04, seção 7.</li></ul></div>
+  </div></section>
   <p class="pg-fonte">Tela gerada a partir de <a href="../../../../kit-starter/desenvolvedor/seguranca-e-operacao/integracoes-globais.md">Integrações globais (plataforma)</a> (SDD v2: <a href="../../../../docs/v2/00-README.md">índice</a>). Registros de exemplo.</p>
 </main>
 <script>

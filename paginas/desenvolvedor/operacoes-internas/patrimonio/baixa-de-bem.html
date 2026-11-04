@@ -12,6 +12,10 @@
 <body>
 <main id="main-viewport" class="bg-slate-50">
   <div id="model-page" class="space-y-3.5" aria-live="polite"></div>
+  <section class="ttsc-card" style="margin:0 16px 16px"><div class="ttsc-card-content" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+    <div><h3 style="font-size:13px;margin:0 0 6px">Quem acessa</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)"><li>platform.assets (nível 1): cadastrar e movimentar bens, registrar manutenção, inventário e seguro.</li><li>platform.assets.approver (nível 2): aprovar transferência, descarte e manutenção acima do limite; não aprova o que ele mesmo registrou (DP-03; 78, seção 4.1).</li></ul></div>
+    <div><h3 style="font-size:13px;margin:0 0 6px">Regras essenciais</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)"><li>T-01: todas as 12 tabelas recebem tenant_id NOT NULL e índice composto (19, seção 1; 03).</li><li>T-04: current_value é calculado, não editável. Guardar o último cálculo com data e método; recalcular, não sobrescrever.</li><li>Regras de campo (19, seção 8.2): acquisition_value maior que zero e só alterável por correção com motivo; residual_value não negativo e não maior que acquisition_value; dep_method em linear, accelerated, degressive, unit; dep_rate entre 0 e 100%; ativo baixado não recebe depreciação nem movimento.</li><li>Instância da empresa: sem filtro de unidade, entidade ou filial; dados no banco master; o portal do desenvolvedor não vê o módulo de nenhuma entidade.</li></ul></div>
+  </div></section>
   <p class="pg-fonte">Tela gerada a partir de <a href="../../../../kit-starter/desenvolvedor/operacoes-internas/patrimonio.md">Patrimônio da empresa</a> (SDD v2: <a href="../../../../docs/v2/00-README.md">índice</a>). Registros de exemplo.</p>
 </main>
 <script>

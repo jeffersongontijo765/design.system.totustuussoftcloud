@@ -12,6 +12,10 @@
 <body>
 <main id="main-viewport" class="bg-slate-50">
   <div id="model-page" class="space-y-3.5" aria-live="polite"></div>
+  <section class="ttsc-card" style="margin:0 16px 16px"><div class="ttsc-card-content" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+    <div><h3 style="font-size:13px;margin:0 0 6px">Quem acessa</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)"><li>platform.sst.doctor (médico do trabalho): ASO completo, prontuário, CID, restrição detalhada.</li><li>platform.sst.technician (técnico de SESMT): ocorrências, EPI, NR, PGR, CAT, sem diagnóstico.</li><li>platform.people, platform.hr e platform.manager: só o resultado sem CID nem motivo clínico.</li><li>Funcionário: o próprio ASO e o próprio resultado.</li><li>Auditor: leitura com motivo registrado, sem conteúdo de dado de saúde (29, seção 5).</li></ul></div>
+    <div><h3 style="font-size:13px;margin:0 0 6px">Regras essenciais</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)"><li>Regra central de privacidade (39, seção 5.1, e HCM-06): RH e gestão nunca veem CID, diagnóstico ou prontuário; veem apenas apto, inapto ou apto com restrição, validade do ASO, restrição funcional sem motivo clínico e afastamento sem CID. A permissão &quot;SST — Gerenciar&quot; da v1 não existe: cada papel tem permissão própria.</li><li>PCMSO, PGR, LTCAT, CIPA e ergonomia: seguem o 52, que prevalece sobre a v1, inclusive o DDL proposto da seção 9.</li><li>Guarda do prontuário e do ASO: no mínimo 20 anos após o desligamento (HCM-08; NR-7, 7.6.1.1).</li><li>Regras do 17, seção 5 (ASO, CAT, EPI, NR, afastamento) prevalecem sobre a v1.</li></ul></div>
+  </div></section>
   <p class="pg-fonte">Tela gerada a partir de <a href="../../../../kit-starter/desenvolvedor/pessoas-da-plataforma/medicina-e-seguranca-do-trabalho-da-empresa.md">Medicina e segurança do trabalho da empresa</a> (SDD v2: <a href="../../../../docs/v2/00-README.md">índice</a>). Registros de exemplo.</p>
 </main>
 <script>

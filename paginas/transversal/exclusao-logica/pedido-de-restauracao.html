@@ -12,6 +12,10 @@
 <body>
 <main id="main-viewport" class="bg-slate-50">
   <div id="model-page" class="space-y-3.5" aria-live="polite"></div>
+  <section class="ttsc-card" style="margin:0 16px 16px"><div class="ttsc-card-content" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+    <div><h3 style="font-size:13px;margin:0 0 6px">Quem acessa</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)"><li>Quem pode excluir é definido pela permissão modulo.recurso.excluir de cada módulo (78); restaurar exige a mesma permissão; expurgo só pelo job de retenção.</li></ul></div>
+    <div><h3 style="font-size:13px;margin:0 0 6px">Regras essenciais</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)"><li>Exclusão é lógica por padrão (deleted_at); física só pelo processo de retenção ou pedido do titular (03, seção 6).</li><li>Colunas deleted_at e deleted_by em toda tabela que aceita exclusão (19, seção 14).</li><li>Exclusão bloqueada se houver dependente ativo; a resposta lista só os tipos de dependentes, sem dados (15, seções 4 e 5). Motivo obrigatório para registros financeiros e de saúde.</li><li>Auditoria nunca é expurgada por soft delete (19, seção 14; 29).</li></ul></div>
+  </div></section>
   <p class="pg-fonte">Tela gerada a partir de <a href="../../../kit-starter/transversal/exclusao-logica.md">Exclusão lógica (soft delete)</a> (SDD v2: <a href="../../../docs/v2/00-README.md">índice</a>). Registros de exemplo.</p>
 </main>
 <script>

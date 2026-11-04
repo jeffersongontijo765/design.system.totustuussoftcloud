@@ -12,6 +12,10 @@
 <body>
 <main id="main-viewport" class="bg-slate-50">
   <div id="model-page" class="space-y-3.5" aria-live="polite"></div>
+  <section class="ttsc-card" style="margin:0 16px 16px"><div class="ttsc-card-content" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+    <div><h3 style="font-size:13px;margin:0 0 6px">Quem acessa</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)"><li>platform.security (papel Segurança do 22, seção 5): investigar, bloquear conta; não concede permissão a si mesmo.</li><li>platform.manager e platform.developer: conceder papéis conforme o nível (78, seção 2.1).</li><li>Toda concessão e revogação com justificativa para níveis 3 e acima; revisão trimestral.</li></ul></div>
+    <div><h3 style="font-size:13px;margin:0 0 6px">Regras essenciais</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)"><li>O 06 prevalece em tudo que as especificações da v1 duplicam (19, seção 2): tipos de identidade, autenticação, senhas, recuperação de conta, limites de tentativa, sessão, tokens de API, RBAC com contexto, contas de plataforma (break-glass) e conta global com vínculos (seção 12). A v1 fica só com o que é específico de tela.</li><li>Cookies e sessões ficam no 06; a especificação de cookies da v1 é aproveitada só no que não contradiz o 06.</li><li>Conta global por e-mail verificado (D-21) e token só com o contexto ativo (D-20) (06, seção 12).</li><li>Login só no domínio de autenticação, com OIDC e PKCE (D-22, 23, seção 2).</li></ul></div>
+  </div></section>
   <p class="pg-fonte">Tela gerada a partir de <a href="../../../../kit-starter/desenvolvedor/seguranca-e-operacao/acesso.md">Acesso (identidade, autenticação, sessão e autorização)</a> (SDD v2: <a href="../../../../docs/v2/00-README.md">índice</a>). Registros de exemplo.</p>
 </main>
 <script>

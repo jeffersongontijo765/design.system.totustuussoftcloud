@@ -12,6 +12,10 @@
 <body>
 <main id="main-viewport" class="bg-slate-50">
   <div id="model-page" class="space-y-3.5" aria-live="polite"></div>
+  <section class="ttsc-card" style="margin:0 16px 16px"><div class="ttsc-card-content" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+    <div><h3 style="font-size:13px;margin:0 0 6px">Quem acessa</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)"><li>platform.auditor (nível 2): leitura de auditoria e relatórios de conformidade, com mascaramento padrão.</li><li>platform.security: investigação e alertas.</li><li>platform.dpo: consultas por CPF, leituras de cadastro civil e pedidos de titular.</li><li>Ninguém altera evento: correção é novo evento que referencia o original.</li></ul></div>
+    <div><h3 style="font-size:13px;margin:0 0 6px">Regras essenciais</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)"><li>O 29 prevalece: categorias, formato do evento, onde fica (ações da plataforma no master; ações de unidade no banco da unidade), integridade por cadeia de hash com verificação horária e ancoragem diária, imutabilidade (a aplicação só faz INSERT e SELECT), acesso por papel, mascaramento, retenção e alertas.</li><li>Auditoria × Logger (19, seção 2): a Auditoria é dona da trilha de negócio e de segurança (18, seção 4); o logger técnico fica no 10, seção 7. A especificação do Logger da v1 é absorvida só como referência técnica, sem dado pessoal nos logs (07, seção 6).</li><li>Toda leitura gera evento (audit.read); exportação exige MFA recente e motivo; auditoria de outra entidade é impossível pela aplicação (29, seção 5).</li><li>Suporte da plataforma vê eventos técnicos e de sessão do chamado, sem dado de aluno sem vínculo.</li></ul></div>
+  </div></section>
   <p class="pg-fonte">Tela gerada a partir de <a href="../../../../kit-starter/desenvolvedor/seguranca-e-operacao/auditoria.md">Auditoria</a> (SDD v2: <a href="../../../../docs/v2/00-README.md">índice</a>). Registros de exemplo.</p>
 </main>
 <script>

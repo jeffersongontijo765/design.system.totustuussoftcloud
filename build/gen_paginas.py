@@ -48,8 +48,12 @@ def ler_ficha(caminho):
             cab[k] = md_texto(m.group(1))
     m = re.search(r'^# (.+)$', t, re.M)
     cab['titulo'] = m.group(1).strip() if m else os.path.basename(caminho)
-    telas = []
+    telas, papeis, regras = [], [], []
     for titulo_s, corpo in secoes(t):
+        if re.match(r'^\d+\. (Papéis|Permissões e papéis)', titulo_s):
+            papeis += [md_texto(l[2:]) for l in corpo.splitlines() if l.startswith('- ')][:5]
+        elif re.search(r'Regras|Correções', titulo_s) and not regras:
+            regras += [md_texto(l[2:]) for l in corpo.splitlines() if l.startswith('- ')][:4]
         if re.match(r'^3\. Telas', titulo_s):
             vistos = set()
             for linha in corpo.splitlines():
@@ -57,7 +61,7 @@ def ler_ficha(caminho):
                 if m and m.group(1).strip().lower() not in vistos:
                     vistos.add(m.group(1).strip().lower())
                     telas.append((m.group(1).strip(), md_texto(m.group(2))))
-    return cab, telas
+    return cab, telas, papeis, regras
 
 
 def arquetipo(nome, desc):
@@ -318,7 +322,7 @@ def aba_inicial(arq):
     return {'painel': 'kpi', 'kanban': 'kanban'}.get(arq, 'table')
 
 
-def pagina(nome, spec, portal, modulo, rota, arq, ficha_rel, sdd_rel, tok, bun, js):
+def pagina(nome, spec, portal, modulo, rota, arq, ficha_rel, sdd_rel, tok, bun, js, papeis=(), regras=()):
     dados = json.dumps(spec, ensure_ascii=False).replace('</', '<\\/')
     return f'''<!doctype html>
 <html lang="pt-BR" data-theme="light">
@@ -334,6 +338,10 @@ def pagina(nome, spec, portal, modulo, rota, arq, ficha_rel, sdd_rel, tok, bun, 
 <body>
 <main id="main-viewport" class="bg-slate-50">
   <div id="model-page" class="space-y-3.5" aria-live="polite"></div>
+  <section class="ttsc-card" style="margin:0 16px 16px"><div class="ttsc-card-content" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+    <div><h3 style="font-size:13px;margin:0 0 6px">Quem acessa</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)">{''.join(f'<li>{html.escape(x)}</li>' for x in papeis) or '<li>Ver a ficha da tela.</li>'}</ul></div>
+    <div><h3 style="font-size:13px;margin:0 0 6px">Regras essenciais</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)">{''.join(f'<li>{html.escape(x)}</li>' for x in regras) or '<li>Ver a ficha da tela.</li>'}</ul></div>
+  </div></section>
   <p class="pg-fonte">Tela gerada a partir de <a href="{ficha_rel}">{html.escape(modulo)}</a> (SDD v2: <a href="{sdd_rel}">índice</a>). Registros de exemplo.</p>
 </main>
 <script>
@@ -357,14 +365,14 @@ def main():
     for caminho in sorted(glob.glob(os.path.join(KIT, '**', '*.md'), recursive=True)):
         if re.match(r'^(README|MODELO)', os.path.basename(caminho)):
             continue
-        cab, telas = ler_ficha(caminho)
+        cab, telas, papeis, regras = ler_ficha(caminho)
         if telas:
-            fichas.append((caminho, os.path.relpath(caminho, KIT).replace(os.sep, '/'), cab, telas))
+            fichas.append((caminho, os.path.relpath(caminho, KIT).replace(os.sep, '/'), cab, telas, papeis, regras))
     if os.path.isdir(OUT):
         import shutil
         shutil.rmtree(OUT)
     indice, total = [], 0
-    for caminho, rel, cab, telas in fichas:
+    for caminho, rel, cab, telas, papeis, regras in fichas:
         portal = re.sub(r'\s*\(`[^`]*`\)', '', cab.get('Portal', rel.split('/')[0])).strip()
         modulo = cab['titulo']
         pasta = os.path.join(OUT, rel[:-3])
@@ -378,7 +386,7 @@ def main():
             rel_ = lambda alvo: os.path.relpath(alvo, d).replace(os.sep, '/')
             rota = '/' + '/'.join(slug(x) for x in rel[:-3].split('/'))
             src = pagina(nome, spec, portal, modulo, rota, arq, rel_(caminho), rel_(os.path.join(ROOT, 'docs', 'v2', '00-README.md')),
-                         rel_(TOKENS), rel_(BUNDLE_CSS), rel_(BUNDLE_JS))
+                         rel_(TOKENS), rel_(BUNDLE_CSS), rel_(BUNDLE_JS), papeis, regras)
             open(fn, 'w', encoding='utf8').write(src)
             total += 1
             indice.append((portal, modulo, nome, arq, dom, rel_(fn) if False else os.path.relpath(fn, OUT).replace(os.sep, '/')))
