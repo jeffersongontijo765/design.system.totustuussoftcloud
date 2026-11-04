@@ -1,0 +1,179 @@
+# 65 — Estágio e TCC, por Portal
+
+> Parte do [SDD v2](00-README.md). Oitava lacuna da ordem de [55](55-academico-verificacao-e-lacunas.md), seção 3. Depende da estrutura acadêmica ([59](59-estrutura-academica-por-portal.md), tipos de disciplina e carga horária). Decisão ACA-03: estágio obrigatório quando o curso exigir. TCC entra nesta versão (ACA-02, decidido em 03/11/2026). Campos de estágio já citados em [17](17-regras-modulos.md), seção 4.2. Convênio com empresa concedente em [33](33-contratos-por-portal.md). Motor de formulários para avaliação em [41](41-formularios-e-pesquisas.md). Convidado externo com link de uso único em [40](40-aulas-online-por-portal.md). Assinatura de termo e de ata em [54](54-gestao-de-documentos-tres-contextos.md), seção 5. Resultado no boletim em [62](62-boletim-e-conselho-de-classe-por-portal.md). Campo de estágio da preceptoria, que é outra coisa, em [42](42-preceptoria-por-portal.md). Auditoria em [29](29-auditoria.md).
+> **Status:** especificação proposta, criada em 03/11/2026. Fecha a lacuna 8 do acadêmico. A v1 tem `internships` e `thesis_works` (`spec_gestao_academica_completo.md`, seções 9 e 10). Pontos que dependem de norma ou de decisão do autor estão marcados.
+
+---
+
+## 1. Resposta direta
+
+| Pergunta | Veredito |
+|---|---|
+| Estágio tem regra? | **Parcial.** Campos e estados em [17](17-regras-modulos.md) (CNPJ, apólice, `solicitado`, `ativo`, `concluido`, `cancelado`). Sem regra de horas, supervisão e avaliação |
+| TCC tem regra? | **Não.** Só a entidade `thesis_works` da v1, sem regra de orientação, banca nem versão final |
+| Banca de defesa? | **Não.** Só citada na v1, com composição e nota, sem regra |
+| Termo e ata? | **Parcial.** Termo e ata são documentos de [54](54-gestao-de-documentos-tres-contextos.md). Falta regra de quem assina |
+
+---
+
+## 2. Estágio
+
+### 2.1 Tipos
+
+| Tipo | Regra |
+|---|---|
+| Obrigatório | Exigido pelo curso ([59](59-estrutura-academica-por-portal.md), seção 2). Sem ele, o aluno não conclui. Decidido em ACA-03 |
+| Não obrigatório | Opcional, acrescido à carga horária regular (Lei 11.788/2008, art. 2º, § 2º). Bolsa ou outra contraprestação e auxílio-transporte são obrigatórios (art. 12). Seguro contra acidentes pessoais é obrigatório em todo estágio (art. 9º, IV). No obrigatório, a instituição pode assumir o seguro (art. 9º, § 1º) |
+
+### 2.2 Cadastro
+
+| Campo | Regra |
+|---|---|
+| Aluno e curso | Aluno com matrícula ativa. Curso que exige estágio tem carga horária obrigatória ([59](59-estrutura-academica-por-portal.md), disciplina do tipo estágio) |
+| Empresa concedente | CNPJ válido, nome, endereço e contrato de convênio vigente ([33](33-contratos-por-portal.md)). Regra de [17](17-regras-modulos.md) |
+| Supervisor da empresa | Pessoa da empresa concedente, com conta no portal de terceiros (seção 6) |
+| Professor orientador | Professor habilitado na disciplina de estágio da turma |
+| Período | Início, fim previsto e fim real. Dentro do período letivo ([58](58-calendario-e-eventos-por-portal.md)) |
+| Carga horária | Definida no projeto do curso (Lei 11.788/2008, art. 2º, § 1º) e combinada por semana. Limite: 4 h por dia e 20 h por semana na educação especial e nos anos finais do fundamental na EJA; 6 h por dia e 30 h por semana no superior, no médio e no técnico de nível médio; até 40 h por semana em período sem aula presencial, se o projeto do curso prever (art. 10). Em período de avaliação, cai pelo menos à metade (art. 10, § 2º). No mesmo concedente, até 2 anos, salvo pessoa com deficiência (art. 11). O sistema recusa termo acima desses limites |
+| Termo de compromisso | Assinado por aluno, empresa e instituição. Gerado pelo sistema ([54](54-gestao-de-documentos-tres-contextos.md)) |
+| Apólice de seguro | Arquivo, com validade. Regra de [17](17-regras-modulos.md) |
+
+### 2.3 Estados
+
+`solicitado` → `ativo` → `concluido`, com `interrompido` e `cancelado`.
+
+- `solicitado` para `ativo` só com termo assinado pelas três partes e apólice válida.
+- `concluido` só com horas cumpridas, relatório final e avaliação do supervisor e do orientador.
+- `interrompido` tem motivo registrado. Não conta como horas concluídas. Pode voltar a `ativo` por nova versão do termo.
+- `cancelado` antes de `ativo`. Depois de `ativo`, é `interrompido`.
+
+### 2.4 Supervisão e horas
+
+- O orientador registra visitas de supervisão, com data e observação.
+- O aluno envia relatórios periódicos, com atividades desenvolvidas, em prazo não superior a 6 meses (Lei 11.788/2008, art. 7º, IV). Estágio de 1 ano ou mais dá direito a recesso de 30 dias, remunerado quando há bolsa (art. 13).
+- Horas são registradas pelo aluno e confirmadas pelo supervisor da empresa.
+- Alerta quando as horas do mês ficam 20% abaixo do previsto. Decidido em ETC-07. Alerta ao aluno e ao orientador ([57](57-notificacoes-por-portal.md)).
+
+### 2.5 Avaliação e resultado
+
+- Avaliação de estágio tem duas partes: supervisor da empresa e orientador. Cada uma é um formulário ([41](41-formularios-e-pesquisas.md)).
+- A nota final segue o método do sistema avaliativo ([59](59-estrutura-academica-por-portal.md), seção 4). A v1 usa média das avaliações.
+- Resultado `aprovado` ou `reprovado` entra no resultado do período ([62](62-boletim-e-conselho-de-classe-por-portal.md)).
+- Declaração de conclusão de estágio segue [48](48-gerador-de-documentos-por-portal.md). Não sai sem resultado registrado.
+
+---
+
+## 3. TCC
+
+### 3.1 Tipos e escopo
+
+Tipos: TCC, monografia, projeto final e artigo. Aplica-se a cursos que exigem trabalho final ([59](59-estrutura-academica-por-portal.md), seção 2, graduação). Entra nesta versão: **decidido** em 03/11/2026 (ACA-02).
+
+### 3.2 Cadastro
+
+| Campo | Regra |
+|---|---|
+| Aluno, curso e tipo | Aluno com matrícula ativa no curso |
+| Título | Pode ser provisório. Muda com versão registrada |
+| Orientador | Professor habilitado, da lista de professores do curso |
+| Coorientador | Opcional. Mesma regra de habilitação |
+| Linha de pesquisa | Lista configurável por curso |
+| Datas | Início e entrega prevista. Entrega prevista é o prazo |
+| Termo de orientação | Assinado pelo aluno e pelo orientador. Gerado pelo sistema |
+
+### 3.3 Estados
+
+`em_orientacao` → `submetido` → `em_banca` → `aprovado` | `aprovado_com_ressalvas` | `reprovado`, com `reformulacao` a partir de `em_banca`.
+
+- `reformulacao` volta a `submetido` depois da nova versão, com prazo definido pela banca.
+- `aprovado_com_ressalvas` exige versão final com as correções. Sem ela, o trabalho não é encerrado.
+- `reprovado` encerra o trabalho. Nova tentativa segue a regra do curso **(verificar)**.
+
+### 3.4 Prazo
+
+- Aviso ao aluno e ao orientador 30 dias antes da entrega prevista, como a regra 17 da v1 (`spec_gestao_academica_completo.md`, linha 1183).
+- Entrega atrasada não muda o estado sozinha. A coordenação decide sobre a prorrogação, com justificativa.
+
+### 3.5 Banca de defesa
+
+| Regra | Detalhe |
+|---|---|
+| Composição | Orientador e dois membros, internos ou externos. Coorientador não entra na nota |
+| Membro externo | Cadastro com nome, titulação e instituição. Tem conta no portal de terceiros (seção 6) |
+| Agendamento | Data, hora e local. Local é sala reservada ([44](44-agendamento-ambientes-equipamentos.md)) ou link de sala online com convidado externo ([40](40-aulas-online-por-portal.md)) |
+| Avaliação | Cada membro lança nota e parecer, por formulário. Nota só é vista depois que todos lançaram |
+| Nota final | Média ponderada, com pesos configurados pela escola |
+| Resultado | Conforme seção 3.3 |
+| Ata | Gerada do registro da defesa. Assinada pela banca ([54](54-gestao-de-documentos-tres-contextos.md)) |
+
+### 3.6 Versão final e repositório
+
+- Versão final em PDF e no formato que a escola definir.
+- Publicação em repositório institucional depende de autorização do aluno e das regras de direito autoral **(jurídico)**. Sem autorização, o trabalho fica no acervo restrito.
+- Trabalho com dado pessoal de pesquisa segue [07](07-privacidade-lgpd.md).
+
+---
+
+## 4. Por portal
+
+| Portal | Pode | Não pode | Origem |
+|---|---|---|---|
+| **Desenvolvedor** | Publicar modelo de termo e de ata, sem dado | Ver estágio, TCC ou banca de entidade | P |
+| **Gestão** | Ver indicadores: estágios ativos, TCCs por status, prazos vencidos. Aprovar convênio com empresa concedente ([33](33-contratos-por-portal.md)) | Avaliar aluno ou aprovar resultado | E |
+| **Coordenação** | Aprovar estágio e TCC. Autorizar prorrogação. Montar banca. Ver todos da unidade | Lançar nota de avaliação de outro professor | E |
+| **Secretaria** | Cadastrar estágio e TCC aprovados. Emitir declaração e termo. Guardar a versão final | Aprovar ou avaliar | E |
+| **Professor orientador** | Ver e acompanhar os próprios orientandos. Registrar visitas. Avaliar. Participar da banca | Ver orientando de outro professor | E |
+| **Aluno** | Ver o próprio estágio ou TCC. Enviar relatórios e versões. Ver resultado | Ver avaliação de colega ou nota de banca | E |
+| **Responsáveis** | Ver status e resultado do dependente, quando houver | Ver relatório ou avaliação | E, só dependentes com vínculo ativo |
+| **Empresa concedente (supervisor)** | Pelo portal de terceiros: avaliar e confirmar horas do próprio estagiário | Ver outros estagiários. Ver a instituição | Terceiros |
+| **Membro externo de banca** | Pelo portal de terceiros: lançar a avaliação da própria banca | Ver outras bancas ou a nota dos colegas antes do fim | Terceiros |
+| **Terceiros** | Só os itens liberados pelo próprio vínculo | Qualquer outro item | E |
+
+---
+
+## 5. Integrações
+
+| Módulo | Relação |
+|---|---|
+| Estrutura ([59](59-estrutura-academica-por-portal.md)) | Estágio e TCC são disciplinas do curso. Carga horária e tipos |
+| Diário ([61](61-diario-escolar-por-portal.md)) | Visitas e avaliações de orientação seguem o diário, quando houver |
+| Boletim e resultado ([62](62-boletim-e-conselho-de-classe-por-portal.md)) | Resultado do estágio e do TCC |
+| Contratos ([33](33-contratos-por-portal.md)) | Convênio com empresa concedente |
+| Documentos ([48](48-gerador-de-documentos-por-portal.md), [54](54-gestao-de-documentos-tres-contextos.md)) | Termo, ata, declaração de conclusão e histórico |
+| Formulários ([41](41-formularios-e-pesquisas.md)) | Avaliação do supervisor e do orientador, e da banca |
+| Agendamento ([44](44-agendamento-ambientes-equipamentos.md)) e aula online ([40](40-aulas-online-por-portal.md)) | Defesa em sala ou por link |
+| Notificações ([57](57-notificacoes-por-portal.md)) | Prazo, horas abaixo do esperado, resultado |
+
+---
+
+## 6. Pessoas de fora do sistema
+
+Supervisor da empresa e membro externo de banca têm conta no portal de terceiros ([38](38-portal-de-terceiros-prestadores.md)), com acesso só aos próprios itens. Não veem dados de outros estudantes nem de outras bancas. Decidido em ETC-04. A conta é criada pela secretaria, com verificação de e-mail ([06](06-identidade-acesso.md)).
+
+---
+
+## 7. Pendências
+
+| # | Pendência | Tipo |
+|---|---|---|
+| ETC-01 | Limite semanal e total de jornada de estágio (seção 2.2) | **Conferido** em 03/11/2026: Lei 11.788/2008, arts. 10 e 11 |
+| ETC-02 | Estágio não obrigatório: bolsa, auxílio e benefício (seção 2.1) | Texto da lei conferido em 03/11/2026 (Lei 11.788/2008, arts. 9º, 12 e 13) e registrado na seção 2.1. Parecer do (jurídico) pendente |
+| ETC-03 | Carga horária mínima de estágio obrigatório por curso (seção 2.1) | **Conferido** em 03/11/2026: a lei não fixa horas e remete ao projeto do curso (Lei 11.788/2008, art. 2º, § 1º). O valor fica no curso, em [59](59-estrutura-academica-por-portal.md) |
+| ETC-04 | Supervisor de empresa e membro externo acessam (seção 6) | **Decidido** em 03/11/2026: conta no portal de terceiros |
+| ETC-05 | Publicação de TCC em repositório: autorização do aluno e prazo de acesso (seção 3.6) | (jurídico) |
+| ETC-06 | Verificação de similaridade (plágio) no TCC | **Decidido** em 03/11/2026: não nesta versão |
+| ETC-07 | Percentual de horas mensais abaixo do esperado para alerta (seção 2.4) | **Decidido** em 03/11/2026: 20% abaixo do previsto |
+| ETC-08 | Nova tentativa de TCC reprovado (seção 3.3) | (verificar) |
+| ETC-09 | DDL das tabelas: estágio, horas, relatório, supervisão, TCC, versão, banca e avaliação | **Escrito** em [51](51-ddl-modulos-novos.md), seção 15.10. Revisão do owner pendente (DDL-01) |
+
+---
+
+## 8. Critérios de aceite
+
+- [ ] Estágio não vira `ativo` sem termo assinado pelas três partes e apólice válida (teste).
+- [ ] Estágio `concluido` sem avaliação do supervisor e do orientador é recusado (teste).
+- [ ] Supervisor de empresa não vê outro estagiário, e membro externo não vê outra banca (teste de isolamento).
+- [ ] Nota da banca não aparece antes de todos os membros lançarem (teste).
+- [ ] Versão final sem autorização do aluno não vai para o repositório público (teste).
+- [ ] Declaração de conclusão não sai sem resultado registrado (teste).
+- [ ] Itens **(verificar)**, **(jurídico)** e **[Decisão do autor]** respondidos ou marcados como pendentes no [00](00-README.md).
