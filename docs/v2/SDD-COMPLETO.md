@@ -1068,7 +1068,7 @@ Matriz de base legal por finalidade. Status: **proposta, pendente de parecer jur
 | Segurança e logs | Acesso, IP, registro de ações | Legítimo interesse (art. 7º, IX), com teste de balanceamento documentado | Normas de segurança da informação | **(jurídico)** |
 | Consulta por CPF ([21](#parte-21), seção 6.8) | Identificação | Mesma base da finalidade declarada pelo tenant, sem base própria | Conforme a finalidade | **(jurídico)** |
 
-**Escopo de legislação:** esta matriz cobre a legislação brasileira. Não afirma conformidade com outras jurisdições. A plataforma só atende outro país após revisão específica (lacuna L-15 em [19](#parte-19)). "Atender toda a legislação" não é uma condição que este SDD possa certificar: é tarefa contínua do jurídico, com revisão a cada mudança normativa.
+**Escopo de legislação:** esta matriz cobre a legislação brasileira. Não afirma conformidade com outras jurisdições. A plataforma só atende outro país após revisão específica (lacuna LAC-15 em [19](#parte-19)). "Atender toda a legislação" não é uma condição que este SDD possa certificar: é tarefa contínua do jurídico, com revisão a cada mudança normativa.
 
 ### 4. Direitos do titular
 
@@ -1770,16 +1770,16 @@ Evidência: **[Verificado]** = conferido com grep ou leitura neste ciclo. **[Dec
 | ACH-25 | Alta | Nenhuma tabela de Financeiro e Acadêmico tem `tenant_id`; Pessoas e SMT usam `entityid`; Suprimentos isola por `entity_uuid`. | **[Verificado]** contagem de `tenant_id` nos DDL e nas queries | Correção T-01 em [17](#parte-17), seção 1 |
 | ACH-26 | Média | Financeiro armazena `overdue` como estado, que depende de data. | **[Verificado]** [`spec_gestao_financeiro_completo.md`](anexo-v1/spec_gestao_financeiro_completo.md), DDL de `financial_receivables` | Correção T-04 em [17](#parte-17), seção 2.3 |
 | ACH-27 | Média | Acadêmico diz "CPF único por tenant", mas o DDL não tem tenant. | **[Verificado]** | Correção T-05 em [17](#parte-17) |
-| ACH-28 | Média | Pessoas define contrato de experiência com texto contraditório: "máximo 90 dias (prorrogável 1× até 90 dias)". | **[Verificado]** [`spec_gestao_pessoas_completo.md`](anexo-v1/spec_gestao_pessoas_completo.md), linha 238 | Pendente jurídico, L-03 em [17](#parte-17) |
+| ACH-28 | Média | Pessoas define contrato de experiência com texto contraditório: "máximo 90 dias (prorrogável 1× até 90 dias)". | **[Verificado]** [`spec_gestao_pessoas_completo.md`](anexo-v1/spec_gestao_pessoas_completo.md), linha 238 | Pendente jurídico, LAC-03 em [17](#parte-17) |
 | ACH-29 | Alta | Suprimentos e Contratos não têm DDL na v1. | **[Verificado]** zero `CREATE TABLE` | T-02 em [17](#parte-17) |
 | ACH-30 | Alta | Régua de cobrança prevê bloqueio do portal aos 90 dias de atraso, sem ressalva para menor de idade e documento obrigatório. | **[Verificado]** [`spec_gestao_billing_cobranca_mensalidades.md`](anexo-v1/spec_gestao_billing_cobranca_mensalidades.md), seção 11 | Bloqueio parcial e parecer jurídico em [18](#parte-18), seção 2.6 |
-| ACH-31 | Alta | Régua prevê negativação aos 30 dias e mensagens por SMS e WhatsApp sem base legal documentada. | **[Verificado]** mesma seção | Parecer em [18](#parte-18), seção 2.6 (L-07) |
+| ACH-31 | Alta | Régua prevê negativação aos 30 dias e mensagens por SMS e WhatsApp sem base legal documentada. | **[Verificado]** mesma seção | Parecer em [18](#parte-18), seção 2.6 (LAC-07) |
 | ACH-32 | Média | Cobrança armazena `overdue` e `viewed` como estado. | **[Verificado]** DDL `billing_invoices` | T-04, [18](#parte-18), seção 2.3 |
 | ACH-33 | Média | RH e Pessoas descrevem o mesmo colaborador sem fronteira definida. | **[Verificado]** pelos índices das duas specs | T-07, [18](#parte-18), seção 4.1 |
 | ACH-34 | Média | Auditoria não define imutabilidade nem cadeia de integridade; prevê expurgo e edição de registro. | **[Verificado]** [`spec_gestao_auditoria_completo.md`](anexo-v1/spec_gestao_auditoria_completo.md), seção 4 | [18](#parte-18), seção 4.2 |
 | ACH-35 | Média | Quatro módulos da v1 descrevem o mesmo domínio: estoque em Armazenamento e Suprimentos; atendimento em três specs; Logger e Auditoria; Autenticação e 06. | **[Verificado]** pelo conteúdo | Seção 2 de [19](#parte-19) |
 | ACH-36 | Média | Módulos com DDL sem `tenant_id`: CRM, Patrimônio, Frotas, Biblioteca e Armazenamento. | **[Verificado]** contagem nos DDL | T-01, [19](#parte-19), seção 1 |
-| ACH-37 | Baixa | Privacidade global lista jurisdições fora do Brasil sem cliente que as justifique. | **[Verificado]** | L-15, [19](#parte-19), seção 4 |
+| ACH-37 | Baixa | Privacidade global lista jurisdições fora do Brasil sem cliente que as justifique. | **[Verificado]** | LAC-15, [19](#parte-19), seção 4 |
 | ACH-38 | Alta | A v1 não define o escopo PCI nem proíbe armazenar PAN ou CVV. Não há ledger de partidas dobradas, e cobrança usa `DECIMAL` sem regra de centavos. | **[Verificado]** ausência nas specs de cobrança e financeiro | [20](#parte-20), seções 3, 4 e 5 |
 | ACH-39 | Alta | Webhook de pagamento sem regra de assinatura, deduplicação e consulta de confirmação na v1. | **[Verificado]** ausência em `04` e nas specs de cobrança | [20](#parte-20), seção 7 |
 | ACH-40 | Alta | Modelo de armazenamento da v1 sem `tenant_id`, com `visibility = public` permitido e UUID gerado por `UUID()` (versão 1). | **[Verificado]** [`spec_object_storage_digital_assets.md`](anexo-v1/spec_object_storage_digital_assets.md), seção 13 | Correções S-01 a S-10 em [21](#parte-21), seção 4.1 |
@@ -2685,14 +2685,14 @@ Contrato, parte, valor, vigência, cláusula, obrigação, aprovação, assinatu
 
 ### 8. Lacunas abertas
 
-| # | Lacuna | Dono sugerido |
-|---|---|---|
-| L-01 | Faixas de valor para aprovação de despesa e contrato | Financeiro |
-| L-02 | Regra de RG por UF e idade mínima por vínculo | Pessoas |
-| L-03 | Prazo de experiência (CLT art. 445) | Jurídico |
-| L-04 | Prazo de trancamento por curso e validade de QR Code | Acadêmico |
-| L-05 | Campos e DDL de Suprimentos e Contratos | Suprimentos, Contratos |
-| L-06 | Tolerância de conciliação como parâmetro do tenant | Financeiro |
+| # | Lacuna | Dono sugerido | Situação em 04/11/2026 |
+|---|---|---|---|
+| LAC-01 | Faixas de valor para aprovação de despesa e contrato | Financeiro | Parcial: despesa decidida (acima de R$ 10.000, segundo aprovador; [17](#parte-17), seção 2.4). Alçada de contrato em aberto ([33](#parte-33), seção 4) |
+| LAC-02 | Regra de RG por UF e idade mínima por vínculo | Pessoas | Aberta |
+| LAC-03 | Prazo de experiência (CLT art. 445) | Jurídico | Aberta (jurídico) |
+| LAC-04 | Prazo de trancamento por curso e validade de QR Code | Acadêmico | Parcial: QR Code de 5 minutos decidido ([17](#parte-17), seção 4.2). Prazo de trancamento depende do regimento de cada curso ([46](#parte-46), M-06) |
+| LAC-05 | Campos e DDL de Suprimentos e Contratos | Suprimentos, Contratos | Parcial: DDL de contratos em [51](#parte-51), seção 3. Campos de suprimentos na v1 (especificação de suprimentos, seção 18). DDL de suprimentos a escrever |
+| LAC-06 | Tolerância de conciliação como parâmetro do tenant | Financeiro | Resolvida: parâmetro da entidade ([71](#parte-71), seção 9) |
 
 ### 9. Critérios de aceite
 
@@ -2899,21 +2899,21 @@ Conforme a proposta da seção 4.1, as regras abaixo são do submódulo RH/HCM.
 
 ### 7. Lacunas
 
-| # | Lacuna | Dono sugerido |
-|---|---|---|
-| L-07 | Parecer sobre base legal, negativação e bloqueio de portal (seção 2.6) | Jurídico |
-| L-08 | Limite de valor para baixa manual e aprovação de desconto | Financeiro |
-| L-09 | Política de acumulatividade de descontos | Financeiro |
-| L-10 | Regra de NFSe por município | Fiscal |
-| L-11 | Fronteira RH/Pessoas (seção 4.1) | Produto |
-| L-12 | Regra CLT de férias e fracionamento | Jurídico, RH |
-| L-13 | DDL de RH e Contábil/Fiscal | RH, Contábil |
+| # | Lacuna | Dono sugerido | Situação em 04/11/2026 |
+|---|---|---|---|
+| LAC-07 | Parecer sobre base legal, negativação e bloqueio de portal (seção 2.6) | Jurídico | Aberta (jurídico). Ver [26](#parte-26), seção 4 |
+| LAC-08 | Limite de valor para baixa manual e aprovação de desconto | Financeiro | Parcial: baixa manual acima de R$ 1.000 exige segundo aprovador ([18](#parte-18), seção 2.4). Limite de aprovação de desconto em aberto |
+| LAC-09 | Política de acumulatividade de descontos | Financeiro | Resolvida: descontos não acumulam, vale o maior, configurável por entidade ([18](#parte-18), seção 2.5) |
+| LAC-10 | Regra de NFSe por município | Fiscal | Parcial: regras gerais em [34](#parte-34), seção 5. Regra de cada município depende do provedor (homologação) |
+| LAC-11 | Fronteira RH/Pessoas (seção 4.1) | Produto | Resolvida: um módulo HCM com submódulos ([39](#parte-39), seção 2) |
+| LAC-12 | Regra CLT de férias e fracionamento | Jurídico, RH | Aberta (jurídico): HCM-03 ([39](#parte-39)) |
+| LAC-13 | DDL de RH e Contábil/Fiscal | RH, Contábil | Parcial: DDL de pessoas na v1 (especificação de pessoas). DDL de RH e de contábil a escrever |
 
 ### 8. Critérios de aceite
 
 - [ ] Todas as tabelas de Cobrança têm `tenant_id NOT NULL` (T-01).
 - [ ] `overdue` e `viewed` saem de `status` e passam a ser calculados (T-04).
-- [ ] Régua de cobrança com parecer jurídico registrado antes de ativar cada etapa (L-07).
+- [ ] Régua de cobrança com parecer jurídico registrado antes de ativar cada etapa (LAC-07).
 - [ ] Auditoria com cadeia de hash e registros imutáveis (seção 4.2).
 - [ ] RH e Contábil com DDL escrito (T-02).
 
@@ -3125,15 +3125,15 @@ A especificação v1 (1.001 linhas) já exige Argon2id e refresh token armazenad
 
 ### 18. Lacunas
 
-| # | Lacuna | Dono sugerido |
-|---|---|---|
-| L-14 | Fronteira Armazenamento/Suprimentos (seção 2) | Produto |
-| L-15 | Lista de jurisdições da privacidade (seção 4) | Jurídico |
-| L-16 | Anonimato na avaliação de preceptor (seção 11) | Acadêmico |
-| L-17 | Regra de revisão humana de conteúdo gerado por IA (seção 12) | Acadêmico, Jurídico |
-| L-18 | Regra de depreciação por categoria (seção 8) | Contabilidade |
-| L-19 | Módulo de atendimento único (seção 7) | Produto |
-| L-20 | DDL de Documentos, Marketing, Atendimento, Simulados, Preceptoria, Privacidade | Owners |
+| # | Lacuna | Dono sugerido | Situação em 04/11/2026 |
+|---|---|---|---|
+| LAC-14 | Fronteira Armazenamento/Suprimentos (seção 2) | Produto | Resolvida ([19](#parte-19), seção 2) |
+| LAC-15 | Lista de jurisdições da privacidade (seção 4) | Jurídico | Resolvida: só legislação brasileira ([07](#parte-07), seção 3) |
+| LAC-16 | Anonimato na avaliação de preceptor (seção 11) | Acadêmico | Resolvida: anônima, mínimo de 2 respostas por grupo ([42](#parte-42), PRE-03) |
+| LAC-17 | Regra de revisão humana de conteúdo gerado por IA (seção 12) | Acadêmico, Jurídico | Resolvida: a IA sugere e a pessoa decide ([27](#parte-27), princípio 2) |
+| LAC-18 | Regra de depreciação por categoria (seção 8) | Contabilidade | Resolvida por padrão: DP-02 ([80](#parte-80)) |
+| LAC-19 | Módulo de atendimento único (seção 7) | Produto | Resolvida: modelo único de ticket ([32](#parte-32), seção 2.1) |
+| LAC-20 | DDL de Documentos, Marketing, Atendimento, Simulados, Preceptoria, Privacidade | Owners | Parcial: DDL de documentos ([51](#parte-51), seção 12; [54](#parte-54), seção 10), atendimento ([51](#parte-51), seção 1), simulados e preceptoria ([51](#parte-51), seções 15 e 6) e privacidade ([51](#parte-51), seção 2). DDL de marketing a escrever |
 
 ### 19. Critérios de aceite
 
@@ -4200,13 +4200,13 @@ Notas:
 
 ### 10. Lacunas
 
-| # | Lacuna | Dono sugerido |
-|---|---|---|
-| L-21 | Texto de aceite de finalidade por contexto | Jurídico |
-| L-22 | Limite de mensagens proativas por canal | Comercial, Jurídico |
-| L-23 | Alçada de desconto do CRM da plataforma | Comercial |
-| L-24 | Retenção de transcrição e de gravação de ligação | Jurídico, DPO |
-| L-25 | Contrato de operadora entre plataforma e tenant para atendimento de canal | Jurídico |
+| # | Lacuna | Dono sugerido | Situação em 04/11/2026 |
+|---|---|---|---|
+| LAC-21 | Texto de aceite de finalidade por contexto | Jurídico | Aberta (jurídico) |
+| LAC-22 | Limite de mensagens proativas por canal | Comercial, Jurídico | Aberta |
+| LAC-23 | Alçada de desconto do CRM da plataforma | Comercial | Aberta |
+| LAC-24 | Retenção de transcrição e de gravação de ligação | Jurídico, DPO | Aberta (jurídico): ATD-03 ([32](#parte-32)) |
+| LAC-25 | Contrato de operadora entre plataforma e tenant para atendimento de canal | Jurídico | Aberta (jurídico) |
 
 ---
 
@@ -4332,7 +4332,7 @@ Um cliente que sai da plataforma precisa de um fluxo próprio, com prazos e regi
 | 6. Expurgo | Banco da unidade e banco de identidade removidos. Arquivos expurgados. Backups expiram no prazo de retenção de backup. | Conforme política |
 | 7. Registro final | Certificado de encerramento com o que foi exportado, retido e expurgado | Imediato após o expurgo |
 
-Pendência: o prazo de guarda para retenção legal depende do jurídico (lacuna L-25 em [19](#parte-19)).
+Pendência: o prazo de guarda para retenção legal depende do jurídico (matriz de retenção, [26](#parte-26), seção 3).
 
 ### 6. Decisões propostas
 
@@ -6149,7 +6149,7 @@ Bot de atendimento segue [22](#parte-22), seção 3 e [31](#parte-31), seção 3
 |---|---|---|
 | ATD-01 | Ticket como tipo de protocolo (seção 2.1) | **Aprovado em parte** em 03/11/2026: pedido com responsável e prazo recebe protocolo |
 | ATD-02 | Valores padrão de SLA (seção 2.3) | **Decidido** em 03/11/2026: 1 hora a 10 dias úteis por prioridade, ajustável por entidade |
-| ATD-03 | Retenção de tickets e de transcrição | (jurídico) — ver L-24 em [22](#parte-22) |
+| ATD-03 | Retenção de tickets e de transcrição | (jurídico) — ver LAC-24 em [22](#parte-22) |
 | ATD-04 | DDL do módulo de atendimento (estados, SLA, canais, artigos) | **Escrito** em [51](#parte-51), seção 1. Revisão do owner pendente (DDL-01) |
 | ATD-05 | Regra para categoria sensível e encaminhamento | **Decidido** em 03/11/2026: encaminha ao canal da entidade e restringe o acesso |
 
@@ -6380,7 +6380,7 @@ Etapas da v1 (seção 2.2), com donos:
 | Faixa 2 | Gestor + financeiro | **Decidido** em 03/11/2026: de R$ 10.000 a R$ 100.000 |
 | Acima da faixa 2 | Gestor executivo + financeiro + jurídico | **Decidido** em 03/11/2026: acima de R$ 100.000 |
 
-Sem os valores, a aplicação não tem regra de alçada. Lacuna L-01 em [17](#parte-17).
+Sem os valores, a aplicação não tem regra de alçada. Lacuna LAC-01 em [17](#parte-17).
 
 ---
 
@@ -7766,7 +7766,7 @@ Dados civis do colaborador ficam no banco de identidade da entidade, como manda 
 
 #### 3.3 Férias e afastamentos
 
-- Período aquisitivo e concessivo com cálculo de direito. **(verificar)** art. 130 da CLT e fracionamento. Pendência L-12 de [18](#parte-18).
+- Período aquisitivo e concessivo com cálculo de direito. **(verificar)** art. 130 da CLT e fracionamento. Pendência LAC-12 de [18](#parte-18).
 - Programação pelo colaborador ou gestor, com aprovação do RH.
 - Afastamento com data fim não anterior ao início e sem sobreposição ([17](#parte-17), seção 5.2).
 
@@ -7916,7 +7916,7 @@ Transmissão do eSocial segue D-08 ([16](#parte-16), seção 6): certificado da 
 |---|---|---|
 | HCM-01 | RH e Pessoas como módulos separados, com fronteira definida (seção 11) | **Decidido** em 03/11/2026 |
 | HCM-02 | Catálogo de verbas e tabelas de INSS, IRRF e FGTS por competência | (verificar) e Documento |
-| HCM-03 | Regra de férias, 13.º e rescisão (L-12) | (verificar) e (jurídico) |
+| HCM-03 | Regra de férias, 13.º e rescisão (LAC-12) | (verificar) e (jurídico) |
 | HCM-04 | Eventos eSocial S-2200, S-1200, S-1210, S-2299 | (verificar) e Documento |
 | HCM-05 | Ponto e jornada: regra de registro e controle | **Conferido** em parte em 03/11/2026: CLT, arts. 66, 71 e 74 (seção 3.4). Professor conferido nos arts. 317 a 323. Faltam a Portaria MTP nº 671/2021 (REP) e o estatuto do servidor de cada ente **(verificar)** |
 | HCM-06 | Permissão "SST — Gerenciar" por papel e portal que precisa, fora de RH e gestão (seção 11) | **Decidido** em 03/11/2026 |
@@ -8240,7 +8240,7 @@ Esta é a regra mais sensível do motor.
 4. **Mínimo de respostas por grupo.** Relatório por grupo (turma, unidade, tópico) só aparece com **no mínimo 2 respostas** no grupo. Decidido pelo autor em 03/11/2026. Abaixo disso, o grupo é agregado com o grupo de nível superior ou fica oculto.
 5. **Comentário livre.** Campo de texto livre em formulário anônimo é exibido só em lista sem vínculo com grupo pequeno. Antes de exibir, o sistema procura nomes próprios e números de telefone e mascara, com revisão humana antes de publicar o relatório.
 
-**Atende:** L-16 em [19](#parte-19), seção 11 (anonimato na avaliação de preceptor).
+**Atende:** LAC-16 em [19](#parte-19), seção 11 (anonimato na avaliação de preceptor).
 
 ---
 
@@ -8409,7 +8409,7 @@ Formulário não envia resposta a módulo consumidor. O consumidor lê a respost
 | A preceptoria está especificada? | **Em parte.** A v1 tem especificação de avaliação e autoavaliação. Não tem DDL (T-02), não tem regra de portal além de telas, e a navegação usa o mesmo nome para outra coisa |
 | Está organizada por portal? | **Não.** A v1 descreve telas, mas não diz quem vê o quê entre preceptor, residente, gestão e campo de estágio |
 | Tem todas as ferramentas? | **Não.** Falta tutoria com registro de encontros, metas com prazo, PDI com plano, evidências com validação, e vínculo com carga de prática |
-| Avaliação de preceptor é anônima? | **Pendente.** Regra de anonimato ainda aberta (L-16). Proposta em [41](#parte-41), seção 3 |
+| Avaliação de preceptor é anônima? | **Pendente.** Regra de anonimato ainda aberta (LAC-16). Proposta em [41](#parte-41), seção 3 |
 | Usa o motor de formulários? | **Deve usar.** A v1 construiu um editor próprio de perguntas, que duplica [41](#parte-41) |
 
 ---
@@ -8537,7 +8537,7 @@ Arquivo ou link anexado a uma resposta ou meta (certificado, registro de procedi
 |---|---|---|
 | PRE-01 | Preceptoria com partes A e B (seção 2) | **Decidido** em 03/11/2026 |
 | PRE-02 | Peso entre autoavaliação e preceptor (seção 3.3) | **Decidido** em 03/11/2026: definido ao criar a autoavaliação |
-| PRE-03 | Anonimato da avaliação de preceptor e mínimo de respostas (L-16) | **Decidido** em 03/11/2026: anônima, com mínimo de 2 respostas por grupo ([41](#parte-41), FRM-01) |
+| PRE-03 | Anonimato da avaliação de preceptor e mínimo de respostas (LAC-16) | **Decidido** em 03/11/2026: anônima, com mínimo de 2 respostas por grupo ([41](#parte-41), FRM-01) |
 | PRE-04 | Regra de regulamento de residência e avaliação por programa | (verificar) |
 | PRE-05 | Prazo de guarda de avaliação, tutoria e PDI | (jurídico) |
 | PRE-06 | Consentimento para tutoria de aluno menor com dado sensível (seção 5) | (jurídico) |
@@ -8950,7 +8950,7 @@ A versão anterior desta lista tinha seções separadas para os docs 00 a 54 e 5
 | Jurídico, sem decisão | 59 | Parecer escrito, com data e nome do responsável (seção 3.1) |
 | Jurídico, decidido pelo autor | 14 | Parecer sobre a regra já adotada (seção 3.2) |
 | Conferência de norma | 25 | Confirmar o texto da norma antes da implementação (seção 4) |
-| Documento a escrever | 0 | Especificação ou modelo de dados (seção 5) |
+| Documento a escrever | 3 | Especificação ou modelo de dados (seção 5) |
 | Homologação e operação | 12 | Medir, dimensionar ou escolher produto antes da produção (seção 6) |
 | Revisão do owner | 41 | Revisar o que já foi escrito e testar a migração (seção 7) |
 
@@ -9080,7 +9080,7 @@ Itens que tratam do mesmo ponto: REL-01 e INT-02 (censo). Uma resposta vale para
 | TER-06 | Validade do selo do cartório digital por tipo de ato | [38](#parte-38) |
 | TER-07 | Documentos exigidos por tipo (alvará, seguro, certidões) | [38](#parte-38) |
 | HCM-02 | Catálogo de verbas e tabelas de INSS, IRRF e FGTS por competência | [39](#parte-39) |
-| HCM-03 | Regra de férias, 13.º e rescisão (L-12) | [39](#parte-39) |
+| HCM-03 | Regra de férias, 13.º e rescisão (LAC-12) | [39](#parte-39) |
 | HCM-04 | Eventos eSocial S-2200, S-1200, S-1210, S-2299 | [39](#parte-39) |
 | HCM-05 | Ponto e jornada: regra de registro e controle (conferido em parte: CLT, arts. 66, 71 e 74. Professor conferido. Faltam a Portaria MTP 671/2021 e o estatuto do servidor) | [39](#parte-39) |
 | PRE-04 | Regra de regulamento de residência e avaliação por programa | [42](#parte-42) |
@@ -9105,7 +9105,13 @@ Itens que tratam do mesmo ponto: REL-01 e INT-02 (censo). Uma resposta vale para
 
 ### 5. Documento a escrever
 
-Nenhum item aberto. Os oito itens desta seção foram escritos em 03/11/2026 (seção 9.2).
+Os oito itens anteriores desta seção foram escritos em 03/11/2026 (seção 9.2). Em 04/11/2026, a revisão das lacunas encontrou três DDL que ainda não existem na v2:
+
+| Código | Pendência | Documento |
+|---|---|---|
+| LAC-05 | DDL de suprimentos (requisição, cotação, pedido, recebimento, fornecedor), a partir dos campos da v1 | [17](#parte-17), seção 6 |
+| LAC-13 | DDL de recursos humanos e de contábil e fiscal | [18](#parte-18) |
+| LAC-20 | DDL de marketing e redes sociais | [19](#parte-19), seção 15 |
 
 ---
 
@@ -9167,7 +9173,7 @@ Esta seção foi montada por varredura dos marcadores `[Pendente`, `Pendente:`, 
 | Documento | Item | Dono sugerido |
 |---|---|---|
 | [17](#parte-17) | Idade mínima para vínculo, por tipo | Jurídico |
-| [17](#parte-17) | Contrato de experiência: texto contraditório da v1 (L-03) | Jurídico |
+| [17](#parte-17) | Contrato de experiência: texto contraditório da v1 (LAC-03) | Jurídico |
 | [18](#parte-18) | Férias: período e fracionamento, CLT art. 130 | Jurídico e norma |
 | [20](#parte-20) | Prazo de resposta a chargeback, em 3 dias | Norma da bandeira (verificar) |
 | [37](#parte-37) | Plano institucional, colegiado e Lei 4.320 art. 61 e seguintes (também em PLN-01 e PLN-02) | Norma |
@@ -16697,7 +16703,7 @@ A importação entra pelos mesmos caminhos de regra que a tela. Por isso:
 
 Regras já definidas em [17](#parte-17), seção 2.5, e [20](#parte-20), seção 12. Reforço:
 
-- Tolerância de arredondamento é parâmetro da entidade, não constante ([17](#parte-17), L-06).
+- Tolerância de arredondamento é parâmetro da entidade, não constante ([17](#parte-17), LAC-06).
 - Conciliação não ajusta sozinha. Diferença vira item de conciliação e o ajuste é lançamento com motivo e aprovação.
 - Extrato OFX é importado com hash por linha, para não duplicar.
 
@@ -17716,7 +17722,7 @@ Os papéis acima vêm dos papéis nomeados no [22](#parte-22), seção 5, e nos 
 | # | Assunto | Decisão | Motivo | Alternativa descartada | Onde se aplica |
 |---|---|---|---|---|---|
 | DP-01 | Frotas nesta versão (pendência do autor em [45](#parte-45), seção 2) | **Entra nesta versão**, para a empresa e para as entidades | Completude; a especificação da v1 é completa e o transporte escolar é uso real | Deixar para versão futura | Portal do desenvolvedor (operações internas) e portal de gestão |
-| DP-02 | Regra de depreciação por categoria (lacuna L-18 do [19](#parte-19)) | Cada categoria de ativo tem método e taxa **aprovados pelo contábil**. Categoria sem regra aprovada **não deprecia** e aparece como pendência no painel | Critério 3: não inventar taxa contábil; não deixar ativo sem controle | Taxa padrão do sistema para todas as categorias | Patrimônio (empresa e entidade) |
+| DP-02 | Regra de depreciação por categoria (lacuna LAC-18 do [19](#parte-19)) | Cada categoria de ativo tem método e taxa **aprovados pelo contábil**. Categoria sem regra aprovada **não deprecia** e aparece como pendência no painel | Critério 3: não inventar taxa contábil; não deixar ativo sem controle | Taxa padrão do sistema para todas as categorias | Patrimônio (empresa e entidade) |
 | DP-03 | Papéis de patrimônio e frotas (não definidos no [22](#parte-22), seção 5) | Operador (nível 1) e aprovador (nível 2) separados, para patrimônio e para frotas. Compras, almoxarifado e aprovador de compras seguem o [22](#parte-22), seção 5 | Critério 4; mesmo padrão dos papéis departamentais já aprovados | Um único papel por módulo | [78](#parte-78), seção 4.1 (plataforma) |
 | DP-04 | Conteúdo das configurações do sistema da plataforma (não definido em nenhum documento) | Configurações agrupadas pelo documento do SDD que define cada regra (idiomas [09](#parte-09); senha, sessão e MFA [06](#parte-06); limites de API [04](#parte-04); e-mail e integrações [16](#parte-16); cache [30](#parte-30); manutenção [24](#parte-24)). Toda mudança exige step-up, motivo, auditoria e gera versão com rollback. Valor fora do limite do documento de origem é recusado | Critérios 1 e 4; o sistema não aceita configuração que contrarie o SDD | Tela livre de chave e valor | Portal do desenvolvedor (segurança e operação) |
 | DP-05 | Códigos dos papéis da entidade no portal de gestão (o [22](#parte-22), seção 5, e os documentos por portal nomeiam os papéis, mas o [78](#parte-78), seção 4.2, só listava nove) | Um código `unit.*` ou `entity.*` para cada papel já nomeado no SDD (contábil, fiscal, comercial, compras, almoxarifado, aprovador de compras, folha, aprovador da folha, médico do trabalho, SESMT, jurídico, encarregado, segurança, TI, preceptoria, pastoral, portaria). Patrimônio e frotas da entidade seguem o DP-03 (operador e aprovador separados). Aprovador financeiro da unidade separado de quem lança ([17](#parte-17), seção 2.4) | Critério 4; nenhum papel novo de negócio, só o código do que já existe | Reaproveitar os nove papéis genéricos | [78](#parte-78), seção 4.2 |

@@ -100,6 +100,8 @@ Do [69](../../../docs/v2/69-relatorios-e-censo-por-portal.md):
 
 #### 3. Relatórios: regra geral que falta
 
+Atualizado em 04/11/2026: a regra geral foi escrita no [69](../../../docs/v2/69-relatorios-e-censo-por-portal.md), seção 2 (tipos, ciclo, formatos e regras), com o catálogo por módulo na seção 3. O texto abaixo é a análise original.
+
 Nenhum documento define como um relatório é gerado. Proposta, para ser validada:
 
 1. **Relatório pertence ao módulo que tem o dado.** Não existe "relatório central". Cada módulo expõe os seus relatórios, com a mesma regra de acesso.

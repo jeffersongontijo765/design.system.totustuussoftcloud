@@ -258,14 +258,14 @@ Contrato, parte, valor, vigência, cláusula, obrigação, aprovação, assinatu
 
 ## 8. Lacunas abertas
 
-| # | Lacuna | Dono sugerido |
-|---|---|---|
-| L-01 | Faixas de valor para aprovação de despesa e contrato | Financeiro |
-| L-02 | Regra de RG por UF e idade mínima por vínculo | Pessoas |
-| L-03 | Prazo de experiência (CLT art. 445) | Jurídico |
-| L-04 | Prazo de trancamento por curso e validade de QR Code | Acadêmico |
-| L-05 | Campos e DDL de Suprimentos e Contratos | Suprimentos, Contratos |
-| L-06 | Tolerância de conciliação como parâmetro do tenant | Financeiro |
+| # | Lacuna | Dono sugerido | Situação em 04/11/2026 |
+|---|---|---|---|
+| LAC-01 | Faixas de valor para aprovação de despesa e contrato | Financeiro | Parcial: despesa decidida (acima de R$ 10.000, segundo aprovador; [17](17-regras-modulos.md), seção 2.4). Alçada de contrato em aberto ([33](33-contratos-por-portal.md), seção 4) |
+| LAC-02 | Regra de RG por UF e idade mínima por vínculo | Pessoas | Aberta |
+| LAC-03 | Prazo de experiência (CLT art. 445) | Jurídico | Aberta (jurídico) |
+| LAC-04 | Prazo de trancamento por curso e validade de QR Code | Acadêmico | Parcial: QR Code de 5 minutos decidido ([17](17-regras-modulos.md), seção 4.2). Prazo de trancamento depende do regimento de cada curso ([46](46-matricula-e-rematricula-por-portal.md), M-06) |
+| LAC-05 | Campos e DDL de Suprimentos e Contratos | Suprimentos, Contratos | Parcial: DDL de contratos em [51](51-ddl-modulos-novos.md), seção 3. Campos de suprimentos na v1 (especificação de suprimentos, seção 18). DDL de suprimentos a escrever |
+| LAC-06 | Tolerância de conciliação como parâmetro do tenant | Financeiro | Resolvida: parâmetro da entidade ([71](71-financeiro-completo-por-portal.md), seção 9) |
 
 ## 9. Critérios de aceite
 

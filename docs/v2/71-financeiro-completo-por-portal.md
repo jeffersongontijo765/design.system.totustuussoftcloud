@@ -142,7 +142,7 @@
 
 Regras já definidas em [17](17-regras-modulos.md), seção 2.5, e [20](20-pagamentos-seguranca.md), seção 12. Reforço:
 
-- Tolerância de arredondamento é parâmetro da entidade, não constante ([17](17-regras-modulos.md), L-06).
+- Tolerância de arredondamento é parâmetro da entidade, não constante ([17](17-regras-modulos.md), LAC-06).
 - Conciliação não ajusta sozinha. Diferença vira item de conciliação e o ajuste é lançamento com motivo e aprovação.
 - Extrato OFX é importado com hash por linha, para não duplicar.
 

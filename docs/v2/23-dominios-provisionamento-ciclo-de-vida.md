@@ -107,7 +107,7 @@ Um cliente que sai da plataforma precisa de um fluxo próprio, com prazos e regi
 | 6. Expurgo | Banco da unidade e banco de identidade removidos. Arquivos expurgados. Backups expiram no prazo de retenção de backup. | Conforme política |
 | 7. Registro final | Certificado de encerramento com o que foi exportado, retido e expurgado | Imediato após o expurgo |
 
-Pendência: o prazo de guarda para retenção legal depende do jurídico (lacuna L-25 em [19](19-regras-modulos-3.md)).
+Pendência: o prazo de guarda para retenção legal depende do jurídico (matriz de retenção, [26](26-sdd-juridico-regulatorio.md), seção 3).
 
 ## 6. Decisões propostas
 

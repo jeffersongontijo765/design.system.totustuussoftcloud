@@ -63,7 +63,7 @@ Esta é a regra mais sensível do motor.
 4. **Mínimo de respostas por grupo.** Relatório por grupo (turma, unidade, tópico) só aparece com **no mínimo 2 respostas** no grupo. Decidido pelo autor em 03/11/2026. Abaixo disso, o grupo é agregado com o grupo de nível superior ou fica oculto.
 5. **Comentário livre.** Campo de texto livre em formulário anônimo é exibido só em lista sem vínculo com grupo pequeno. Antes de exibir, o sistema procura nomes próprios e números de telefone e mascara, com revisão humana antes de publicar o relatório.
 
-**Atende:** L-16 em [19](19-regras-modulos-3.md), seção 11 (anonimato na avaliação de preceptor).
+**Atende:** LAC-16 em [19](19-regras-modulos-3.md), seção 11 (anonimato na avaliação de preceptor).
 
 ---
 

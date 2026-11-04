@@ -101,7 +101,7 @@ Do [39](../../../docs/v2/39-departamento-pessoal-rh-medicina-por-portal.md):
 
 ##### 3.3 Férias e afastamentos
 
-- Período aquisitivo e concessivo com cálculo de direito. **(verificar)** art. 130 da CLT e fracionamento. Pendência L-12 de [18](../../../docs/v2/18-regras-modulos-2.md).
+- Período aquisitivo e concessivo com cálculo de direito. **(verificar)** art. 130 da CLT e fracionamento. Pendência LAC-12 de [18](../../../docs/v2/18-regras-modulos-2.md).
 - Programação pelo colaborador ou gestor, com aprovação do RH.
 - Afastamento com data fim não anterior ao início e sem sobreposição ([17](../../../docs/v2/17-regras-modulos.md), seção 5.2).
 

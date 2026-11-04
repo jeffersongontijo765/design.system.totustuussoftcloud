@@ -226,13 +226,13 @@ Notas:
 
 ## 10. Lacunas
 
-| # | Lacuna | Dono sugerido |
-|---|---|---|
-| L-21 | Texto de aceite de finalidade por contexto | Jurídico |
-| L-22 | Limite de mensagens proativas por canal | Comercial, Jurídico |
-| L-23 | Alçada de desconto do CRM da plataforma | Comercial |
-| L-24 | Retenção de transcrição e de gravação de ligação | Jurídico, DPO |
-| L-25 | Contrato de operadora entre plataforma e tenant para atendimento de canal | Jurídico |
+| # | Lacuna | Dono sugerido | Situação em 04/11/2026 |
+|---|---|---|---|
+| LAC-21 | Texto de aceite de finalidade por contexto | Jurídico | Aberta (jurídico) |
+| LAC-22 | Limite de mensagens proativas por canal | Comercial, Jurídico | Aberta |
+| LAC-23 | Alçada de desconto do CRM da plataforma | Comercial | Aberta |
+| LAC-24 | Retenção de transcrição e de gravação de ligação | Jurídico, DPO | Aberta (jurídico): ATD-03 ([32](32-atendimento-privacidade-por-portal.md)) |
+| LAC-25 | Contrato de operadora entre plataforma e tenant para atendimento de canal | Jurídico | Aberta (jurídico) |
 
 ---
 

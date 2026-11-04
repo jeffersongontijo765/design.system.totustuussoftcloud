@@ -94,9 +94,9 @@ Do [71](../../../docs/v2/71-financeiro-completo-por-portal.md):
 | Item | Cobertura | Situação |
 |---|---|---|
 | Financeiro (parcelas, cobrança, conciliação, NF, cheques, cartões, estoque) | [18](../../../docs/v2/18-regras-modulos-2.md), [20](../../../docs/v2/20-pagamentos-seguranca.md), [34](../../../docs/v2/34-pagamentos-fiscal-bancos-por-portal.md) | Coberto no financeiro. Cheques e estoque de cantina não têm especificação |
-| Centros de custo | [17](../../../docs/v2/17-regras-modulos.md) e [31](../../../docs/v2/31-matriz-portais-modulos.md) | Citado, sem especificação |
+| Centros de custo | [71](../../../docs/v2/71-financeiro-completo-por-portal.md), seções 3 e 4 (rateio por centro de custo em lançamento e despesa) | Coberto como atributo; sem cadastro próprio especificado |
 | Controle patrimonial | [19](../../../docs/v2/19-regras-modulos-3.md), seção 8 | Coberto |
 | Catraca | [35](../../../docs/v2/35-acesso-e-seguranca-fisica-por-portal.md) | Coberto |
-| Biblioteca (bibliografias, empréstimos e reservas) | [31](../../../docs/v2/31-matriz-portais-modulos.md), seção 3.1 | Citado. **Sem especificação própria** |
-| Administração (usuários, grupos, integrações, importação, notificações) | [06](../../../docs/v2/06-identidade-acesso.md), [16](../../../docs/v2/16-integracoes-externas.md), [19](../../../docs/v2/19-regras-modulos-3.md), seção 13 | Coberto, exceto importação de dados, que é lacuna |
+| Biblioteca (bibliografias, empréstimos e reservas) | [68](../../../docs/v2/68-biblioteca-por-portal.md) | Coberto |
+| Administração (usuários, grupos, integrações, importação, notificações) | [06](../../../docs/v2/06-identidade-acesso.md), [16](../../../docs/v2/16-integracoes-externas.md), [19](../../../docs/v2/19-regras-modulos-3.md), seção 13; importação em [70](../../../docs/v2/70-importacao-de-dados-por-portal.md) | Coberto |
 | Ischolar Intelligence | [27](../../../docs/v2/27-inteligencia-artificial-e-portais.md) e [28](../../../docs/v2/28-cobertura-ia-todos-os-modulos.md) | Coberto |

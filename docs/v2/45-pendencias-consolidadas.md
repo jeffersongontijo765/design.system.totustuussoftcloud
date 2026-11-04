@@ -26,7 +26,7 @@ A versão anterior desta lista tinha seções separadas para os docs 00 a 54 e 5
 | Jurídico, sem decisão | 59 | Parecer escrito, com data e nome do responsável (seção 3.1) |
 | Jurídico, decidido pelo autor | 14 | Parecer sobre a regra já adotada (seção 3.2) |
 | Conferência de norma | 25 | Confirmar o texto da norma antes da implementação (seção 4) |
-| Documento a escrever | 0 | Especificação ou modelo de dados (seção 5) |
+| Documento a escrever | 3 | Especificação ou modelo de dados (seção 5) |
 | Homologação e operação | 12 | Medir, dimensionar ou escolher produto antes da produção (seção 6) |
 | Revisão do owner | 41 | Revisar o que já foi escrito e testar a migração (seção 7) |
 
@@ -156,7 +156,7 @@ Itens que tratam do mesmo ponto: REL-01 e INT-02 (censo). Uma resposta vale para
 | TER-06 | Validade do selo do cartório digital por tipo de ato | [38](38-portal-de-terceiros-prestadores.md) |
 | TER-07 | Documentos exigidos por tipo (alvará, seguro, certidões) | [38](38-portal-de-terceiros-prestadores.md) |
 | HCM-02 | Catálogo de verbas e tabelas de INSS, IRRF e FGTS por competência | [39](39-departamento-pessoal-rh-medicina-por-portal.md) |
-| HCM-03 | Regra de férias, 13.º e rescisão (L-12) | [39](39-departamento-pessoal-rh-medicina-por-portal.md) |
+| HCM-03 | Regra de férias, 13.º e rescisão (LAC-12) | [39](39-departamento-pessoal-rh-medicina-por-portal.md) |
 | HCM-04 | Eventos eSocial S-2200, S-1200, S-1210, S-2299 | [39](39-departamento-pessoal-rh-medicina-por-portal.md) |
 | HCM-05 | Ponto e jornada: regra de registro e controle (conferido em parte: CLT, arts. 66, 71 e 74. Professor conferido. Faltam a Portaria MTP 671/2021 e o estatuto do servidor) | [39](39-departamento-pessoal-rh-medicina-por-portal.md) |
 | PRE-04 | Regra de regulamento de residência e avaliação por programa | [42](42-preceptoria-por-portal.md) |
@@ -181,7 +181,13 @@ Itens que tratam do mesmo ponto: REL-01 e INT-02 (censo). Uma resposta vale para
 
 ## 5. Documento a escrever
 
-Nenhum item aberto. Os oito itens desta seção foram escritos em 03/11/2026 (seção 9.2).
+Os oito itens anteriores desta seção foram escritos em 03/11/2026 (seção 9.2). Em 04/11/2026, a revisão das lacunas encontrou três DDL que ainda não existem na v2:
+
+| Código | Pendência | Documento |
+|---|---|---|
+| LAC-05 | DDL de suprimentos (requisição, cotação, pedido, recebimento, fornecedor), a partir dos campos da v1 | [17](17-regras-modulos.md), seção 6 |
+| LAC-13 | DDL de recursos humanos e de contábil e fiscal | [18](18-regras-modulos-2.md) |
+| LAC-20 | DDL de marketing e redes sociais | [19](19-regras-modulos-3.md), seção 15 |
 
 ---
 
@@ -243,7 +249,7 @@ Esta seção foi montada por varredura dos marcadores `[Pendente`, `Pendente:`, 
 | Documento | Item | Dono sugerido |
 |---|---|---|
 | [17](17-regras-modulos.md) | Idade mínima para vínculo, por tipo | Jurídico |
-| [17](17-regras-modulos.md) | Contrato de experiência: texto contraditório da v1 (L-03) | Jurídico |
+| [17](17-regras-modulos.md) | Contrato de experiência: texto contraditório da v1 (LAC-03) | Jurídico |
 | [18](18-regras-modulos-2.md) | Férias: período e fracionamento, CLT art. 130 | Jurídico e norma |
 | [20](20-pagamentos-seguranca.md) | Prazo de resposta a chargeback, em 3 dias | Norma da bandeira (verificar) |
 | [37](37-planejamento-e-empenho.md) | Plano institucional, colegiado e Lei 4.320 art. 61 e seguintes (também em PLN-01 e PLN-02) | Norma |

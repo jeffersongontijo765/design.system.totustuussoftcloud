@@ -76,8 +76,8 @@ Configurações da entidade e da unidade: idioma, fuso, feriados locais, parâme
 | Financeiro (configurações gerais) | Parcial | [18](../../../docs/v2/18-regras-modulos-2.md), [34](../../../docs/v2/34-pagamentos-fiscal-bancos-por-portal.md) |
 | Mensagens de carnê | Lacuna | Modelo de carnê não especificado. Ver [53](../../../docs/v2/53-pacote-documentos-e-contratos.md), DC-25 |
 | Mensagens de NFS-e | Parcial | [34](../../../docs/v2/34-pagamentos-fiscal-bancos-por-portal.md), seção 5 |
-| Gerenciar feriados | Lacuna | Só citado em [44](../../../docs/v2/44-agendamento-ambientes-equipamentos.md) e [51](../../../docs/v2/51-ddl-modulos-novos.md). **Precisa de calendário** ([55](../../../docs/v2/55-academico-verificacao-e-lacunas.md), item 1) |
-| Campos personalizados | Lacuna | Não especificado em nenhum documento |
+| Gerenciar feriados | Coberto | [58](../../../docs/v2/58-calendario-e-eventos-por-portal.md), seções 3 e 4: dia não letivo (feriado, recesso, ponto facultativo) no calendário da unidade |
+| Campos personalizados | Coberto | [72](../../../docs/v2/72-campos-personalizados-por-portal.md) (CFG-06) |
 | Matrícula online | Coberto | [46](../../../docs/v2/46-matricula-e-rematricula-por-portal.md), seção 3 |
 | Gerenciar tokens | Coberto | [06](../../../docs/v2/06-identidade-acesso.md) e [04](../../../docs/v2/04-api.md) |
 | Fuso horário | Parcial | Horários em UTC, com exibição no fuso da unidade ([44](../../../docs/v2/44-agendamento-ambientes-equipamentos.md)). Configuração por unidade não especificada |
@@ -86,7 +86,7 @@ Configurações da entidade e da unidade: idioma, fuso, feriados locais, parâme
 | Preferências de comunicação | Parcial | Consentimento por finalidade em [32](../../../docs/v2/32-atendimento-privacidade-por-portal.md), seção 3.2. Sem tela de canal preferido |
 | Tipos de descontos | Parcial | [18](../../../docs/v2/18-regras-modulos-2.md), seção 2.6 (acumulação decidida). Tipos não listados |
 | Catraca | Coberto | [35](../../../docs/v2/35-acesso-e-seguranca-fisica-por-portal.md) |
-| Tipos de justificativa de falta | Lacuna | Depende de frequência ([55](../../../docs/v2/55-academico-verificacao-e-lacunas.md), item 4) |
+| Tipos de justificativa de falta | Coberto | [61](../../../docs/v2/61-diario-escolar-por-portal.md), seção 4.2 |
 | Integração de parceiros | Coberto | [16](../../../docs/v2/16-integracoes-externas.md) |
 | Outras configurações | Não aplicável | Genérico |
 

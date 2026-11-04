@@ -487,7 +487,7 @@ flowchart LR
   q -->|padrão seguro| dp[Decisão por padrão no 80]
 ```
 
-**Situação em aberto** ([45](#doc-45), seção 1): 59 itens jurídicos sem decisão, 14 jurídicos já decididos pelo autor, 25 de conferência de norma, 12 de homologação e 41 de revisão do owner. Nenhum item de decisão de produto está em aberto.
+**Situação em aberto** ([45](#doc-45), seção 1): 59 itens jurídicos sem decisão, 14 jurídicos já decididos pelo autor, 25 de conferência de norma, 3 documentos a escrever (DDL de suprimentos, de RH e contábil e de marketing), 12 de homologação e 41 de revisão do owner. Nenhum item de decisão de produto está em aberto. As lacunas LAC-01 a LAC-25 têm a situação de cada uma nos documentos 17, 18, 19 e 22.
 """),
 ]
 

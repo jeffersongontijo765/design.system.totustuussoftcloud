@@ -178,7 +178,7 @@ Bot de atendimento segue [22](../../../docs/v2/22-crm-canais-e-papeis.md), seç�
 |---|---|---|
 | ATD-01 | Ticket como tipo de protocolo (seção 2.1) | **Aprovado em parte** em 03/11/2026: pedido com responsável e prazo recebe protocolo |
 | ATD-02 | Valores padrão de SLA (seção 2.3) | **Decidido** em 03/11/2026: 1 hora a 10 dias úteis por prioridade, ajustável por entidade |
-| ATD-03 | Retenção de tickets e de transcrição | (jurídico) — ver L-24 em [22](../../../docs/v2/22-crm-canais-e-papeis.md) |
+| ATD-03 | Retenção de tickets e de transcrição | (jurídico) — ver LAC-24 em [22](../../../docs/v2/22-crm-canais-e-papeis.md) |
 | ATD-04 | DDL do módulo de atendimento (estados, SLA, canais, artigos) | **Escrito** em [51](../../../docs/v2/51-ddl-modulos-novos.md), seção 1. Revisão do owner pendente (DDL-01) |
 | ATD-05 | Regra para categoria sensível e encaminhamento | **Decidido** em 03/11/2026: encaminha ao canal da entidade e restringe o acesso |
 

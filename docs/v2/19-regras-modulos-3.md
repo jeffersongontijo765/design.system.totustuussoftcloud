@@ -202,15 +202,15 @@ A especificação v1 (1.001 linhas) já exige Argon2id e refresh token armazenad
 
 ## 18. Lacunas
 
-| # | Lacuna | Dono sugerido |
-|---|---|---|
-| L-14 | Fronteira Armazenamento/Suprimentos (seção 2) | Produto |
-| L-15 | Lista de jurisdições da privacidade (seção 4) | Jurídico |
-| L-16 | Anonimato na avaliação de preceptor (seção 11) | Acadêmico |
-| L-17 | Regra de revisão humana de conteúdo gerado por IA (seção 12) | Acadêmico, Jurídico |
-| L-18 | Regra de depreciação por categoria (seção 8) | Contabilidade |
-| L-19 | Módulo de atendimento único (seção 7) | Produto |
-| L-20 | DDL de Documentos, Marketing, Atendimento, Simulados, Preceptoria, Privacidade | Owners |
+| # | Lacuna | Dono sugerido | Situação em 04/11/2026 |
+|---|---|---|---|
+| LAC-14 | Fronteira Armazenamento/Suprimentos (seção 2) | Produto | Resolvida ([19](19-regras-modulos-3.md), seção 2) |
+| LAC-15 | Lista de jurisdições da privacidade (seção 4) | Jurídico | Resolvida: só legislação brasileira ([07](07-privacidade-lgpd.md), seção 3) |
+| LAC-16 | Anonimato na avaliação de preceptor (seção 11) | Acadêmico | Resolvida: anônima, mínimo de 2 respostas por grupo ([42](42-preceptoria-por-portal.md), PRE-03) |
+| LAC-17 | Regra de revisão humana de conteúdo gerado por IA (seção 12) | Acadêmico, Jurídico | Resolvida: a IA sugere e a pessoa decide ([27](27-inteligencia-artificial-e-portais.md), princípio 2) |
+| LAC-18 | Regra de depreciação por categoria (seção 8) | Contabilidade | Resolvida por padrão: DP-02 ([80](80-decisoes-por-padrao.md)) |
+| LAC-19 | Módulo de atendimento único (seção 7) | Produto | Resolvida: modelo único de ticket ([32](32-atendimento-privacidade-por-portal.md), seção 2.1) |
+| LAC-20 | DDL de Documentos, Marketing, Atendimento, Simulados, Preceptoria, Privacidade | Owners | Parcial: DDL de documentos ([51](51-ddl-modulos-novos.md), seção 12; [54](54-gestao-de-documentos-tres-contextos.md), seção 10), atendimento ([51](51-ddl-modulos-novos.md), seção 1), simulados e preceptoria ([51](51-ddl-modulos-novos.md), seções 15 e 6) e privacidade ([51](51-ddl-modulos-novos.md), seção 2). DDL de marketing a escrever |
 
 ## 19. Critérios de aceite
 

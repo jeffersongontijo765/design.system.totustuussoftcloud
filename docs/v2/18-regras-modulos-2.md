@@ -191,20 +191,20 @@ Conforme a proposta da seção 4.1, as regras abaixo são do submódulo RH/HCM.
 
 ## 7. Lacunas
 
-| # | Lacuna | Dono sugerido |
-|---|---|---|
-| L-07 | Parecer sobre base legal, negativação e bloqueio de portal (seção 2.6) | Jurídico |
-| L-08 | Limite de valor para baixa manual e aprovação de desconto | Financeiro |
-| L-09 | Política de acumulatividade de descontos | Financeiro |
-| L-10 | Regra de NFSe por município | Fiscal |
-| L-11 | Fronteira RH/Pessoas (seção 4.1) | Produto |
-| L-12 | Regra CLT de férias e fracionamento | Jurídico, RH |
-| L-13 | DDL de RH e Contábil/Fiscal | RH, Contábil |
+| # | Lacuna | Dono sugerido | Situação em 04/11/2026 |
+|---|---|---|---|
+| LAC-07 | Parecer sobre base legal, negativação e bloqueio de portal (seção 2.6) | Jurídico | Aberta (jurídico). Ver [26](26-sdd-juridico-regulatorio.md), seção 4 |
+| LAC-08 | Limite de valor para baixa manual e aprovação de desconto | Financeiro | Parcial: baixa manual acima de R$ 1.000 exige segundo aprovador ([18](18-regras-modulos-2.md), seção 2.4). Limite de aprovação de desconto em aberto |
+| LAC-09 | Política de acumulatividade de descontos | Financeiro | Resolvida: descontos não acumulam, vale o maior, configurável por entidade ([18](18-regras-modulos-2.md), seção 2.5) |
+| LAC-10 | Regra de NFSe por município | Fiscal | Parcial: regras gerais em [34](34-pagamentos-fiscal-bancos-por-portal.md), seção 5. Regra de cada município depende do provedor (homologação) |
+| LAC-11 | Fronteira RH/Pessoas (seção 4.1) | Produto | Resolvida: um módulo HCM com submódulos ([39](39-departamento-pessoal-rh-medicina-por-portal.md), seção 2) |
+| LAC-12 | Regra CLT de férias e fracionamento | Jurídico, RH | Aberta (jurídico): HCM-03 ([39](39-departamento-pessoal-rh-medicina-por-portal.md)) |
+| LAC-13 | DDL de RH e Contábil/Fiscal | RH, Contábil | Parcial: DDL de pessoas na v1 (especificação de pessoas). DDL de RH e de contábil a escrever |
 
 ## 8. Critérios de aceite
 
 - [ ] Todas as tabelas de Cobrança têm `tenant_id NOT NULL` (T-01).
 - [ ] `overdue` e `viewed` saem de `status` e passam a ser calculados (T-04).
-- [ ] Régua de cobrança com parecer jurídico registrado antes de ativar cada etapa (L-07).
+- [ ] Régua de cobrança com parecer jurídico registrado antes de ativar cada etapa (LAC-07).
 - [ ] Auditoria com cadeia de hash e registros imutáveis (seção 4.2).
 - [ ] RH e Contábil com DDL escrito (T-02).

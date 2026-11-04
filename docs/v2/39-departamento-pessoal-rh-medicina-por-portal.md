@@ -60,7 +60,7 @@ Dados civis do colaborador ficam no banco de identidade da entidade, como manda 
 
 ### 3.3 Férias e afastamentos
 
-- Período aquisitivo e concessivo com cálculo de direito. **(verificar)** art. 130 da CLT e fracionamento. Pendência L-12 de [18](18-regras-modulos-2.md).
+- Período aquisitivo e concessivo com cálculo de direito. **(verificar)** art. 130 da CLT e fracionamento. Pendência LAC-12 de [18](18-regras-modulos-2.md).
 - Programação pelo colaborador ou gestor, com aprovação do RH.
 - Afastamento com data fim não anterior ao início e sem sobreposição ([17](17-regras-modulos.md), seção 5.2).
 
@@ -210,7 +210,7 @@ Transmissão do eSocial segue D-08 ([16](16-integracoes-externas.md), seção 6)
 |---|---|---|
 | HCM-01 | RH e Pessoas como módulos separados, com fronteira definida (seção 11) | **Decidido** em 03/11/2026 |
 | HCM-02 | Catálogo de verbas e tabelas de INSS, IRRF e FGTS por competência | (verificar) e Documento |
-| HCM-03 | Regra de férias, 13.º e rescisão (L-12) | (verificar) e (jurídico) |
+| HCM-03 | Regra de férias, 13.º e rescisão (LAC-12) | (verificar) e (jurídico) |
 | HCM-04 | Eventos eSocial S-2200, S-1200, S-1210, S-2299 | (verificar) e Documento |
 | HCM-05 | Ponto e jornada: regra de registro e controle | **Conferido** em parte em 03/11/2026: CLT, arts. 66, 71 e 74 (seção 3.4). Professor conferido nos arts. 317 a 323. Faltam a Portaria MTP nº 671/2021 (REP) e o estatuto do servidor de cada ente **(verificar)** |
 | HCM-06 | Permissão "SST — Gerenciar" por papel e portal que precisa, fora de RH e gestão (seção 11) | **Decidido** em 03/11/2026 |

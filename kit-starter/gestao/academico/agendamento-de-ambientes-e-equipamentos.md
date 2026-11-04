@@ -82,6 +82,8 @@ Do [44](../../../docs/v2/44-agendamento-ambientes-equipamentos.md):
 
 #### 1. Resposta direta
 
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
+
 | Pergunta | Veredito |
 |---|---|
 | Há gestão de agendamento de ambientes na v2? | **Não.** Só aparece "reserva de laboratório" como exemplo de pedido no portal do professor ([31](../../../docs/v2/31-matriz-portais-modulos.md), seção 2) |

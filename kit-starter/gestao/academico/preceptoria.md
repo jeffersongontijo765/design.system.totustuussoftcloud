@@ -82,12 +82,14 @@ Do [42](../../../docs/v2/42-preceptoria-por-portal.md):
 
 #### 1. Resposta direta
 
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
+
 | Pergunta | Veredito |
 |---|---|
 | A preceptoria está especificada? | **Em parte.** A v1 tem especificação de avaliação e autoavaliação. Não tem DDL (T-02), não tem regra de portal além de telas, e a navegação usa o mesmo nome para outra coisa |
 | Está organizada por portal? | **Não.** A v1 descreve telas, mas não diz quem vê o quê entre preceptor, residente, gestão e campo de estágio |
 | Tem todas as ferramentas? | **Não.** Falta tutoria com registro de encontros, metas com prazo, PDI com plano, evidências com validação, e vínculo com carga de prática |
-| Avaliação de preceptor é anônima? | **Pendente.** Regra de anonimato ainda aberta (L-16). Proposta em [41](../../../docs/v2/41-formularios-e-pesquisas.md), seção 3 |
+| Avaliação de preceptor é anônima? | **Pendente.** Regra de anonimato ainda aberta (LAC-16). Proposta em [41](../../../docs/v2/41-formularios-e-pesquisas.md), seção 3 |
 | Usa o motor de formulários? | **Deve usar.** A v1 construiu um editor próprio de perguntas, que duplica [41](../../../docs/v2/41-formularios-e-pesquisas.md) |
 
 ---
@@ -215,7 +217,7 @@ Arquivo ou link anexado a uma resposta ou meta (certificado, registro de procedi
 |---|---|---|
 | PRE-01 | Preceptoria com partes A e B (seção 2) | **Decidido** em 03/11/2026 |
 | PRE-02 | Peso entre autoavaliação e preceptor (seção 3.3) | **Decidido** em 03/11/2026: definido ao criar a autoavaliação |
-| PRE-03 | Anonimato da avaliação de preceptor e mínimo de respostas (L-16) | **Decidido** em 03/11/2026: anônima, com mínimo de 2 respostas por grupo ([41](../../../docs/v2/41-formularios-e-pesquisas.md), FRM-01) |
+| PRE-03 | Anonimato da avaliação de preceptor e mínimo de respostas (LAC-16) | **Decidido** em 03/11/2026: anônima, com mínimo de 2 respostas por grupo ([41](../../../docs/v2/41-formularios-e-pesquisas.md), FRM-01) |
 | PRE-04 | Regra de regulamento de residência e avaliação por programa | (verificar) |
 | PRE-05 | Prazo de guarda de avaliação, tutoria e PDI | (jurídico) |
 | PRE-06 | Consentimento para tutoria de aluno menor com dado sensível (seção 5) | (jurídico) |
