@@ -31,14 +31,7 @@
   window.__ttscBoot = [];
   function boot() {
     var q = window.__ttscBoot; window.__ttscBoot = { push: function (c) { (0, eval)(c); } };
-    /* Listeners de DOMContentLoaded adicionados DURANTE o evento nao disparam (spec do DOM). No app eles sao
-       registrados antes do evento; aqui sao enfileirados e chamados logo apos os motores, na mesma ordem. */
-    var add = document.addEventListener, late = [];
-    document.addEventListener = function (t, f, o) { if (t === 'DOMContentLoaded') { late.push(f); return; } return add.call(this, t, f, o); };
     for (var i = 0; i < q.length; i++) { try { (0, eval)(q[i]); } catch (e) { console.error(e); } }
-    document.addEventListener = add;
-    var ev = new Event('DOMContentLoaded');
-    late.forEach(function (f) { try { typeof f === 'function' ? f.call(document, ev) : f.handleEvent(ev); } catch (e) { console.error(e); } });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else setTimeout(boot, 0);
 })();
@@ -961,6 +954,8 @@ window.__ttscBoot.push("/* Shared shell behaviour for every page rendered by app
 
   /* ── record generation ─────────────────────────────────────────────────── */
   function generate(page, route) {
+    // Registros explícitos (spec.rows) têm precedência: permitem valores calculados coerentes entre campos.
+    if (Array.isArray(page.rows)) return page.rows.map(function (row, i) { return Object.assign({ _id: 'm' + i }, row); });
     var r = rng(hash(route)), n = page.count == null ? 24 : page.count, rows = [];
     for (var i = 0; i < n; i++) {
       var row = { _id: 'm' + i };

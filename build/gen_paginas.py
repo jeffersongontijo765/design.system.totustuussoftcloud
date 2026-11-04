@@ -9,7 +9,9 @@ formato de models/academico.json (campos, status, KPIs, Kanban, Analytics, gavet
 Os campos e status vêm do domínio que o módulo gerencia (ver DOMINIOS). Registros de exemplo são
 gerados pelo próprio renderizador a partir da especificação.
 """
-import glob, html, json, os, re, unicodedata
+import glob, html, json, os, re, sys, unicodedata
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from telas_especificas import ESPECIFICAS
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 KIT = os.path.join(ROOT, 'kit-starter')
@@ -532,6 +534,66 @@ def pagina_estatica(nome, spec, portal, modulo, rota, arq, ficha_rel, sdd_rel, t
 """
 
 
+
+def registros_calculados(spec, semente):
+    """Registros de exemplo com campos calculados (pct = a/b; situação derivada do percentual)."""
+    import telas_especificas as te
+    rnd = _rng(str(semente) + 'c')
+    regs = []
+    for i in range(spec['count']):
+        reg = {}
+        for c in spec['fields']:
+            if c.get('calc') == 'situacao_meta':
+                reg[c['key']] = te._situacao_meta(reg['percentual'])
+            elif c['type'] == 'pct' and c.get('calc'):
+                a, b = c['calc']
+                reg[c['key']] = round(100 * reg[a] / reg[b]) if reg[b] else 0
+            elif c['type'] == 'status':
+                reg[c['key']] = rnd.choice(spec['statuses'])['id']
+            elif c['type'] == 'money':
+                reg[c['key']] = rnd.randint(c.get('min', 100), c.get('max', 1000))
+            elif c['type'] == 'enum':
+                reg[c['key']] = rnd.choice(c['values'])['id']
+            else:
+                reg[c['key']] = celula(c, rnd, i + 1)
+        regs.append(reg)
+    return regs
+
+
+def aplica_especifica(nome, spec, esp):
+    """Substitui campos, situações, KPIs e análise pelos da especificação e liga os registros calculados."""
+    spec = dict(spec)
+    spec['title'] = esp['titulo']
+    spec['icon'] = esp['icone']
+    spec['banner'] = dict(spec['banner'], title=esp['titulo'], desc=esp['descricao'])
+    spec['entity'] = dict(spec['entity'], singular=esp['titulo'], plural=esp['titulo'], icon=esp['icone'])
+    spec['fields'] = esp['campos']
+    spec['statuses'] = esp['statuses']
+    spec['stages'] = esp['statuses']
+    spec['statusField'] = 'status'
+    spec['stageField'] = 'status'
+    spec['titleField'] = 'name'
+    spec['codeField'] = 'code'
+    spec['subField'] = next((c['key'] for c in esp['campos'] if c['type'] == 'enum'), 'status')
+    spec['form'] = [c['key'] for c in esp['campos'] if c['key'] not in ('status', 'code', 'percentual')]
+    spec['kpis'] = []
+    for label, sub, icone, status_id, unidade in esp['kpis']:
+        money = next((c['key'] for c in esp['campos'] if c['type'] == 'money' and c['key'] == 'realizado'), None) or \
+            next((c['key'] for c in esp['campos'] if c['type'] == 'money'), None)
+        if unidade == 'money' and money:
+            valor = {'agg': 'sum', 'field': money, 'where': {} if status_id == 'all' else {'status': status_id}}
+            un = 'money'
+        else:
+            valor = {'agg': 'count', 'where': {'status': status_id}}
+            un = 'count'
+        spec['kpis'].append({'label': label, 'sub': sub, 'icon': icone, 'tone': 'blue', 'value': valor, 'unitLabel': 'Registros', 'unit': un})
+    spec['analytics'] = [{'title': t, 'desc': d, 'by': b, 'type': ty, 'measure': {'agg': 'count', 'unit': 'count'}}
+                         for t, d, b, ty in esp['analise']]
+    spec['breakdown'] = {'by': spec['subField'], 'title': 'Distribuição', 'desc': 'Distribuição atual', 'icon': 'fa-layer-group'}
+    spec['rows'] = registros_calculados(spec, nome)
+    return spec
+
+
 def aba_inicial(arq):
     return {'painel': 'kpi', 'kanban': 'kanban'}.get(arq, 'table')
 
@@ -595,6 +657,9 @@ def main():
             arq = arquetipo(nome, desc)
             dom = dominio_de(' '.join([portal, cab.get('Área', ''), modulo, nome, desc]))
             spec = tela_spec(nome, desc, modulo, arq, dom)
+            chave_esp = (rel[:-3], nome)
+            if chave_esp in ESPECIFICAS:
+                spec = aplica_especifica(nome, spec, ESPECIFICAS[chave_esp])
             fn = os.path.join(pasta, slug(nome) + '.html')
             d = os.path.dirname(fn)
             rel_ = lambda alvo: os.path.relpath(alvo, d).replace(os.sep, '/')

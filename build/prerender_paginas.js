@@ -6,6 +6,7 @@ const { chromium } = require('playwright');
 const fs = require('fs'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const PAG = path.join(ROOT, 'paginas');
+const FILTRO = process.argv[2] || '';
 const arquivos = [];
 (function w(d) { for (const f of fs.readdirSync(d).sort()) { const p = path.join(d, f); fs.statSync(p).isDirectory() ? w(p) : (f.endsWith('.html') && f !== 'index.html' && arquivos.push(p)); } })(PAG);
 
@@ -17,6 +18,7 @@ const arquivos = [];
     const src = fs.readFileSync(arq, 'utf8');
     const m = src.match(/<main[^>]*id="main-viewport"[\s\S]*?<\/main>/);
     if (!m || !/TTSCModelKit\.render/.test(src)) continue; // já estático ou sem especificação
+    if (FILTRO && !arq.includes(FILTRO)) continue;
     await pg.goto('file://' + arq, { waitUntil: 'load' });
     await pg.waitForFunction(() => document.querySelector('#model-page #view-table tbody tr'), null, { timeout: 15000 }).catch(() => falhas.push(arq));
     // Algumas visões (kanban, analytics) são montadas ao abrir a aba: abre todas antes de gravar.
