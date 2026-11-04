@@ -2895,7 +2895,7 @@ Conforme a proposta da seção 4.1, as regras abaixo são do submódulo RH/HCM.
 | Lançamento | `rascunho`, `em_validacao`, `aprovado`, `estornado` |
 | Obrigação fiscal | `pendente`, `transmitida`, `paga`, `em_atraso` (calculado por data) |
 
-**Defeito:** sem DDL (T-02). Não há campos, tipos de valor nem chaves definidos para validar.
+**Defeito:** sem DDL (T-02). Não há campos, tipos de valor nem chaves definidos para validar. **Resolvido em 04/11/2026:** DDL em [51](#parte-51), seção 18.
 
 ### 7. Lacunas
 
@@ -2907,7 +2907,7 @@ Conforme a proposta da seção 4.1, as regras abaixo são do submódulo RH/HCM.
 | LAC-10 | Regra de NFSe por município | Fiscal | Parcial: regras gerais em [34](#parte-34), seção 5. Regra de cada município depende do provedor (homologação) |
 | LAC-11 | Fronteira RH/Pessoas (seção 4.1) | Produto | Resolvida: um módulo HCM com submódulos ([39](#parte-39), seção 2) |
 | LAC-12 | Regra CLT de férias e fracionamento | Jurídico, RH | Aberta (jurídico): HCM-03 ([39](#parte-39)) |
-| LAC-13 | DDL de RH e Contábil/Fiscal | RH, Contábil | Parcial: DDL de pessoas na v1 (especificação de pessoas). DDL de RH e de contábil a escrever |
+| LAC-13 | DDL de RH e Contábil/Fiscal | RH, Contábil | Resolvida: DDL de pessoas e RH em [51](#parte-51), seção 17, e de contábil e fiscal em [51](#parte-51), seção 18. Aguarda revisão do owner (DDL-01) |
 
 ### 8. Critérios de aceite
 
@@ -3113,7 +3113,7 @@ Categorias de ativo, ativos e demais. Valores em `DECIMAL(15,2)` e taxa em `DECI
 | Palavras bloqueadas | Lista de termos que impede publicação (linha 282). |
 | Contato | Bloquear, silenciar ou priorizar contato respeita consentimento ([07](#parte-07)). |
 
-**Defeito:** sem DDL (T-02). Sem tenant.
+**Defeito:** sem DDL (T-02). Sem tenant. **Resolvido em 04/11/2026:** DDL com `unidade_uuid` em [51](#parte-51), seção 19.
 
 ### 16. Bancos
 
@@ -3133,7 +3133,7 @@ A especificação v1 (1.001 linhas) já exige Argon2id e refresh token armazenad
 | LAC-17 | Regra de revisão humana de conteúdo gerado por IA (seção 12) | Acadêmico, Jurídico | Resolvida: a IA sugere e a pessoa decide ([27](#parte-27), princípio 2) |
 | LAC-18 | Regra de depreciação por categoria (seção 8) | Contabilidade | Resolvida por padrão: DP-02 ([80](#parte-80)) |
 | LAC-19 | Módulo de atendimento único (seção 7) | Produto | Resolvida: modelo único de ticket ([32](#parte-32), seção 2.1) |
-| LAC-20 | DDL de Documentos, Marketing, Atendimento, Simulados, Preceptoria, Privacidade | Owners | Parcial: DDL de documentos ([51](#parte-51), seção 12; [54](#parte-54), seção 10), atendimento ([51](#parte-51), seção 1), simulados e preceptoria ([51](#parte-51), seções 15 e 6) e privacidade ([51](#parte-51), seção 2). DDL de marketing a escrever |
+| LAC-20 | DDL de Documentos, Marketing, Atendimento, Simulados, Preceptoria, Privacidade | Owners | Resolvida: DDL de documentos ([51](#parte-51), seção 12; [54](#parte-54), seção 10), atendimento ([51](#parte-51), seção 1), privacidade ([51](#parte-51), seção 2), preceptoria ([51](#parte-51), seção 6), simulados ([51](#parte-51), seção 15) e marketing ([51](#parte-51), seção 19). Aguarda revisão do owner |
 
 ### 19. Critérios de aceite
 
@@ -8950,9 +8950,9 @@ A versão anterior desta lista tinha seções separadas para os docs 00 a 54 e 5
 | Jurídico, sem decisão | 59 | Parecer escrito, com data e nome do responsável (seção 3.1) |
 | Jurídico, decidido pelo autor | 14 | Parecer sobre a regra já adotada (seção 3.2) |
 | Conferência de norma | 25 | Confirmar o texto da norma antes da implementação (seção 4) |
-| Documento a escrever | 2 | Especificação ou modelo de dados (seção 5) |
+| Documento a escrever | 0 | Especificação ou modelo de dados (seção 5) |
 | Homologação e operação | 12 | Medir, dimensionar ou escolher produto antes da produção (seção 6) |
-| Revisão do owner | 42 | Revisar o que já foi escrito e testar a migração (seção 7) |
+| Revisão do owner | 44 | Revisar o que já foi escrito e testar a migração (seção 7) |
 
 Os pacotes para o jurídico ([50](#parte-50), [53](#parte-53) e [73](#parte-73)) agrupam as mesmas perguntas por tema. Não são itens a mais.
 
@@ -9105,12 +9105,8 @@ Itens que tratam do mesmo ponto: REL-01 e INT-02 (censo). Uma resposta vale para
 
 ### 5. Documento a escrever
 
-Os oito itens anteriores desta seção foram escritos em 03/11/2026 (seção 9.2). Em 04/11/2026, a revisão das lacunas encontrou três DDL que não existiam na v2. O de suprimentos (LAC-05) foi escrito no mesmo dia ([51](#parte-51), seção 16) e foi para a revisão do owner (seção 7). Ficam dois:
+Os oito itens anteriores desta seção foram escritos em 03/11/2026 (seção 9.2). Em 04/11/2026, a revisão das lacunas encontrou três DDL que não existiam na v2. Os três foram escritos no mesmo dia e foram para a revisão do owner (seção 7): suprimentos (LAC-05, [51](#parte-51), seção 16), pessoas e RH e contábil e fiscal (LAC-13, seções 17 e 18) e marketing (LAC-20, seção 19). Nenhum item aberto nesta seção.
 
-| Código | Pendência | Documento |
-|---|---|---|
-| LAC-13 | DDL de recursos humanos e de contábil e fiscal | [18](#parte-18) |
-| LAC-20 | DDL de marketing e redes sociais | [19](#parte-19), seção 15 |
 
 ---
 
@@ -9142,7 +9138,7 @@ O texto ou o DDL já existe. Falta a revisão do owner do módulo e, no caso de 
 | DDL-01 | Revisão de cada DDL pelo owner do módulo antes da migração | [51](#parte-51) |
 | GD-08 | Revisão do DDL pelo owner de cada contexto e teste de migração | [54](#parte-54) |
 
-Itens escritos que aguardam essa revisão: LAC-05 ([51](#parte-51), seção 16), CLA-02 ([81](#parte-81)), MOD-07, MOD-08, MOD-09, ATD-04, LGPD-01, LGPD-02, CTR-01, ACC-06, ACC-08, TI-04, HCM-07, LIV-10, FRM-05, PRE-08, PAS-10, AMB-08, MAT-07, DOC-06, NOT-07, CAL-05, EST-07, TUR-05, DIA-08, BOL-10, OCO-09, PLA-07, ETC-09, PRT-06, ARQ-07, BIB-08, REL-07, IMP-06, FIN-08, CPF-04, PER-07, SIM-07, INT-07, IMP-05.
+Itens escritos que aguardam essa revisão: LAC-05, LAC-13 e LAC-20 ([51](#parte-51), seções 16 a 19), CLA-02 ([81](#parte-81)), MOD-07, MOD-08, MOD-09, ATD-04, LGPD-01, LGPD-02, CTR-01, ACC-06, ACC-08, TI-04, HCM-07, LIV-10, FRM-05, PRE-08, PAS-10, AMB-08, MAT-07, DOC-06, NOT-07, CAL-05, EST-07, TUR-05, DIA-08, BOL-10, OCO-09, PLA-07, ETC-09, PRT-06, ARQ-07, BIB-08, REL-07, IMP-06, FIN-08, CPF-04, PER-07, SIM-07, INT-07, IMP-05.
 
 ---
 
@@ -13504,6 +13500,541 @@ CREATE TABLE sup_regras_reposicao (
 ```
 
 `supply_automation_jobs` da v1 não vira tabela própria: as automações de suprimentos usam a fila de jobs da plataforma ([10](#parte-10), seção 8), com idempotência por chave de evento.
+
+---
+
+### 17. Pessoas: departamento pessoal e recursos humanos (LAC-13)
+
+Escrito em 04/11/2026 com as regras de [17](#parte-17), seção 3, [39](#parte-39), seções 3 e 4, e [22](#parte-22), seção 5. Medicina e segurança do trabalho já tem DDL em [52](#parte-52). Aguarda revisão do owner e teste de migração.
+
+Correções em relação ao DDL da v1 (especificação de pessoas, `hcm_*`):
+
+- Dado civil (CPF, RG, data de nascimento, endereço pessoal) não fica no banco da unidade. Fica no banco de identidade da entidade (D-19, [14](#parte-14), seção 3). O colaborador aponta para `pessoa_uuid`.
+- Identificação por `unidade_uuid`, não por `entity_id` e `unit_id` numéricos.
+- Salário fica em tabela própria, lida só com a permissão `pessoas.remuneracao.ler` ([22](#parte-22), seção 5: campos salariais só com permissão própria).
+- CID e resultado de exame não ficam aqui: só no módulo de medicina do trabalho ([52](#parte-52)).
+- O DDL da v1 tinha erro de sintaxe e não executava.
+- Regras de férias, 13.º e rescisão dependem do jurídico (LAC-12, HCM-03). O DDL guarda os dados; o cálculo fica na regra parametrizada.
+
+```sql
+CREATE TABLE hcm_cargos (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  unidade_uuid      CHAR(36) NOT NULL,
+  codigo            VARCHAR(30) NOT NULL,
+  nome              VARCHAR(120) NOT NULL,
+  cbo               CHAR(6) NULL,
+  nivel             VARCHAR(30) NULL,
+  descricao         TEXT NULL,
+  ativo             TINYINT(1) NOT NULL DEFAULT 1,
+  created_at        DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  deleted_at        DATETIME(3) NULL,
+  deleted_by        CHAR(36) NULL,
+  UNIQUE KEY ux_cargo (unidade_uuid, codigo)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE hcm_colaboradores (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  unidade_uuid      CHAR(36) NOT NULL,
+  pessoa_uuid       CHAR(36) NOT NULL,               -- cadastro civil no banco de identidade (D-19)
+  matricula         VARCHAR(20) NOT NULL,
+  cargo_uuid        CHAR(36) NOT NULL,
+  setor_uuid        CHAR(36) NULL,
+  gestor_uuid       CHAR(36) NULL,
+  vinculo           ENUM('clt','estagio','aprendiz','temporario','autonomo') NOT NULL,
+  jornada_semanal_min SMALLINT UNSIGNED NOT NULL,
+  admissao          DATE NOT NULL,
+  desligamento      DATE NULL,
+  estado            ENUM('ativo','afastado','desligado') NOT NULL DEFAULT 'ativo',
+  created_at        DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  updated_at        DATETIME(3) NULL,
+  deleted_at        DATETIME(3) NULL,
+  deleted_by        CHAR(36) NULL,
+  CONSTRAINT ck_colab_deslig CHECK (desligamento IS NULL OR desligamento >= admissao),
+  UNIQUE KEY ux_colab_matricula (unidade_uuid, matricula),
+  INDEX ix_colab_estado (unidade_uuid, estado)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE hcm_remuneracoes (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  colaborador_uuid  CHAR(36) NOT NULL,
+  vigencia_inicio   DATE NOT NULL,
+  salario_base_centavos BIGINT UNSIGNED NOT NULL,
+  motivo            ENUM('admissao','reajuste','promocao','acordo','correcao') NOT NULL,
+  registrado_por    CHAR(36) NOT NULL,
+  aprovado_por      CHAR(36) NULL,                  -- diferente de quem registrou (verificado no serviço)
+  created_at        DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  UNIQUE KEY ux_remun (colaborador_uuid, vigencia_inicio)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE hcm_movimentacoes (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  colaborador_uuid  CHAR(36) NOT NULL,
+  tipo              ENUM('transferencia_unidade','mudanca_cargo','mudanca_setor','mudanca_jornada') NOT NULL,
+  de_ref            VARCHAR(60) NULL,
+  para_ref          VARCHAR(60) NOT NULL,
+  vigencia          DATE NOT NULL,
+  motivo            VARCHAR(255) NOT NULL,
+  registrado_por    CHAR(36) NOT NULL,
+  created_at        DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  INDEX ix_mov_colab (colaborador_uuid, vigencia)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE hcm_ponto_marcacoes (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  colaborador_uuid  CHAR(36) NOT NULL,
+  marcado_em        DATETIME(3) NOT NULL,
+  tipo              ENUM('entrada','saida','intervalo_inicio','intervalo_fim') NOT NULL,
+  origem            ENUM('relogio','aplicativo','web','manual') NOT NULL,
+  ajuste_motivo     VARCHAR(255) NULL,               -- obrigatório quando origem = manual
+  ajustado_por      CHAR(36) NULL,
+  created_at        DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  CONSTRAINT ck_ponto_manual CHECK (origem <> 'manual' OR (ajuste_motivo IS NOT NULL AND ajustado_por IS NOT NULL)),
+  INDEX ix_ponto (colaborador_uuid, marcado_em)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE hcm_ferias (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  colaborador_uuid  CHAR(36) NOT NULL,
+  aquisitivo_inicio DATE NOT NULL,
+  aquisitivo_fim    DATE NOT NULL,
+  gozo_inicio       DATE NULL,
+  gozo_fim          DATE NULL,
+  dias              TINYINT UNSIGNED NULL,
+  abono_dias        TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  estado            ENUM('programada','aprovada','em_gozo','concluida','cancelada') NOT NULL DEFAULT 'programada',
+  aprovado_por      CHAR(36) NULL,
+  created_at        DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  CONSTRAINT ck_ferias_periodo CHECK (aquisitivo_fim > aquisitivo_inicio AND (gozo_fim IS NULL OR gozo_fim >= gozo_inicio)),
+  INDEX ix_ferias (colaborador_uuid, aquisitivo_inicio)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE hcm_afastamentos (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  colaborador_uuid  CHAR(36) NOT NULL,
+  tipo              ENUM('doenca','acidente_trabalho','maternidade','paternidade','licenca','outro') NOT NULL,
+  inicio            DATE NOT NULL,
+  fim               DATE NULL,
+  documento_uuid    CHAR(36) NULL,                   -- atestado no armazenamento, acesso restrito; sem CID aqui
+  registrado_por    CHAR(36) NOT NULL,
+  created_at        DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  CONSTRAINT ck_afast CHECK (fim IS NULL OR fim >= inicio),
+  INDEX ix_afast (colaborador_uuid, inicio)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE hcm_folhas (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  unidade_uuid      CHAR(36) NOT NULL,
+  competencia       CHAR(7) NOT NULL,                -- AAAA-MM
+  tipo              ENUM('mensal','complementar','ferias','decimo_terceiro_1','decimo_terceiro_2','rescisao') NOT NULL,
+  folha_origem_uuid CHAR(36) NULL,                   -- obrigatória na complementar: folha fechada não muda
+  estado            ENUM('em_processamento','fechada','paga') NOT NULL DEFAULT 'em_processamento',
+  processada_por    CHAR(36) NOT NULL,
+  aprovada_por      CHAR(36) NULL,                   -- diferente de quem processou (doc 39, seção 7)
+  fechada_em        DATETIME(3) NULL,
+  paga_em           DATETIME(3) NULL,
+  created_at        DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  CONSTRAINT ck_folha_aprov CHECK (aprovada_por IS NULL OR aprovada_por <> processada_por),
+  CONSTRAINT ck_folha_compl CHECK (tipo <> 'complementar' OR folha_origem_uuid IS NOT NULL),
+  INDEX ix_folha (unidade_uuid, competencia, tipo)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE hcm_folha_itens (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  folha_uuid        CHAR(36) NOT NULL,
+  colaborador_uuid  CHAR(36) NOT NULL,
+  rubrica_codigo    VARCHAR(20) NOT NULL,
+  rubrica_tipo      ENUM('provento','desconto','informativo') NOT NULL,
+  referencia        DECIMAL(10,4) NULL,              -- horas, dias ou percentual da rubrica
+  valor_centavos    BIGINT UNSIGNED NOT NULL,
+  INDEX ix_fitem (folha_uuid, colaborador_uuid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE rh_vagas (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  unidade_uuid      CHAR(36) NOT NULL,
+  cargo_uuid        CHAR(36) NOT NULL,
+  setor_uuid        CHAR(36) NULL,
+  quantidade        SMALLINT UNSIGNED NOT NULL DEFAULT 1,
+  descricao         TEXT NULL,
+  estado            ENUM('aberta','pausada','preenchida','cancelada') NOT NULL DEFAULT 'aberta',
+  aberta_por        CHAR(36) NOT NULL,
+  created_at        DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  INDEX ix_vaga (unidade_uuid, estado)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE rh_candidatos (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  vaga_uuid         CHAR(36) NOT NULL,
+  nome              VARCHAR(150) NOT NULL,
+  email             VARCHAR(254) NOT NULL,
+  telefone          VARCHAR(30) NULL,
+  curriculo_uuid    CHAR(36) NULL,                   -- arquivo no armazenamento
+  consentimento_guarda_ate DATE NULL,                -- sem consentimento, descarte ao fim do processo (doc 39, seção 4)
+  etapa             ENUM('triagem','entrevista','aprovado','oferta','contratado','reprovado','desistente') NOT NULL DEFAULT 'triagem',
+  descartar_em      DATE NULL,
+  created_at        DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  deleted_at        DATETIME(3) NULL,
+  deleted_by        CHAR(36) NULL,
+  INDEX ix_cand (vaga_uuid, etapa),
+  INDEX ix_cand_descarte (descartar_em)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE rh_entrevistas (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  candidato_uuid    CHAR(36) NOT NULL,
+  entrevistador_uuid CHAR(36) NOT NULL,
+  agendada_em       DATETIME(3) NOT NULL,
+  resultado         ENUM('pendente','favoravel','desfavoravel','ausente') NOT NULL DEFAULT 'pendente',
+  anotacoes         TEXT NULL,
+  created_at        DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  INDEX ix_entrev (candidato_uuid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE rh_onboarding_itens (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  colaborador_uuid  CHAR(36) NOT NULL,
+  item              VARCHAR(160) NOT NULL,
+  responsavel_uuid  CHAR(36) NOT NULL,
+  prazo             DATE NULL,
+  concluido_em      DATETIME(3) NULL,
+  INDEX ix_onb (colaborador_uuid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE rh_ciclos_desempenho (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  unidade_uuid      CHAR(36) NOT NULL,
+  nome              VARCHAR(120) NOT NULL,
+  inicio            DATE NOT NULL,
+  fim               DATE NOT NULL,
+  estado            ENUM('planejado','em_andamento','encerrado') NOT NULL DEFAULT 'planejado',
+  CONSTRAINT ck_ciclo CHECK (fim > inicio)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE rh_metas (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  ciclo_uuid        CHAR(36) NOT NULL,
+  colaborador_uuid  CHAR(36) NOT NULL,
+  descricao         VARCHAR(500) NOT NULL,
+  peso_pct          TINYINT UNSIGNED NOT NULL,
+  resultado_pct     TINYINT UNSIGNED NULL,
+  CONSTRAINT ck_meta_peso CHECK (peso_pct BETWEEN 1 AND 100),
+  INDEX ix_meta (ciclo_uuid, colaborador_uuid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE rh_avaliacoes (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  ciclo_uuid        CHAR(36) NOT NULL,
+  colaborador_uuid  CHAR(36) NOT NULL,
+  avaliador_uuid    CHAR(36) NOT NULL,
+  tipo              ENUM('gestor','autoavaliacao','pares') NOT NULL,
+  nota              DECIMAL(5,2) NULL,
+  comentario        TEXT NULL,
+  estado            ENUM('pendente','enviada','validada') NOT NULL DEFAULT 'pendente',
+  enviada_em        DATETIME(3) NULL,
+  UNIQUE KEY ux_aval (ciclo_uuid, colaborador_uuid, avaliador_uuid, tipo)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE rh_treinamentos (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  unidade_uuid      CHAR(36) NOT NULL,
+  titulo            VARCHAR(160) NOT NULL,
+  carga_horaria_min SMALLINT UNSIGNED NOT NULL,
+  obrigatorio_nr    VARCHAR(10) NULL,                -- quando é treinamento de norma, o registro de SST fica em doc 52
+  inicio            DATE NULL,
+  fim               DATE NULL,
+  created_at        DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE rh_treinamento_participantes (
+  treinamento_uuid  CHAR(36) NOT NULL,
+  colaborador_uuid  CHAR(36) NOT NULL,
+  presenca_pct      TINYINT UNSIGNED NULL,
+  concluido         TINYINT(1) NOT NULL DEFAULT 0,
+  certificado_uuid  CHAR(36) NULL,
+  PRIMARY KEY (treinamento_uuid, colaborador_uuid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+A pesquisa de clima usa o motor de formulários com anonimato ([41](#parte-41)), sem tabela própria. O plano de desenvolvimento individual (PDI) está no [37](#parte-37), seção 4.
+
+---
+
+### 18. Contábil e fiscal da entidade (LAC-13)
+
+Escrito em 04/11/2026 com as regras de [18](#parte-18), seção 6 (controles de período e estados), seção 2.7 (NFS-e), e [22](#parte-22), seção 5 (papéis contábil e fiscal). A v1 não tinha DDL (T-02). Aguarda revisão do owner e teste de migração.
+
+Regras que o DDL sustenta:
+
+- Lançamento em período fechado não é editado: correção é lançamento de ajuste no período aberto, com motivo.
+- Débito igual a crédito em cada lançamento: verificado no serviço antes de aprovar e em teste; o banco guarda as partidas.
+- Quem cria o lançamento não fecha o período com ele sem revisão; cancelamento de NFS-e exige aprovação do contábil.
+- Alíquota e regra tributária são **parâmetros obrigatórios** com fonte e vigência. Sem parâmetro vigente, a apuração fica bloqueada ([80](#parte-80), critério 3).
+
+```sql
+CREATE TABLE ctb_contas (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  unidade_uuid      CHAR(36) NOT NULL,
+  codigo            VARCHAR(30) NOT NULL,            -- 1.1.01.001
+  nome              VARCHAR(160) NOT NULL,
+  natureza          ENUM('ativo','passivo','patrimonio_liquido','receita','despesa','compensacao') NOT NULL,
+  tipo              ENUM('sintetica','analitica') NOT NULL,
+  conta_pai_uuid    CHAR(36) NULL,
+  ativa             TINYINT(1) NOT NULL DEFAULT 1,
+  created_at        DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  UNIQUE KEY ux_conta (unidade_uuid, codigo)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE ctb_periodos (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  unidade_uuid      CHAR(36) NOT NULL,
+  competencia       CHAR(7) NOT NULL,                -- AAAA-MM
+  estado            ENUM('aberto','em_fechamento','fechado','reaberto') NOT NULL DEFAULT 'aberto',
+  fechado_por       CHAR(36) NULL,
+  fechado_em        DATETIME(3) NULL,
+  reaberto_por      CHAR(36) NULL,
+  reabertura_motivo VARCHAR(500) NULL,               -- obrigatório ao reabrir
+  CONSTRAINT ck_reabre CHECK (estado <> 'reaberto' OR (reabertura_motivo IS NOT NULL AND reaberto_por IS NOT NULL)),
+  UNIQUE KEY ux_periodo (unidade_uuid, competencia)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE ctb_lancamentos (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  unidade_uuid      CHAR(36) NOT NULL,
+  numero            BIGINT UNSIGNED NOT NULL,
+  data_lancamento   DATE NOT NULL,
+  competencia       CHAR(7) NOT NULL,
+  historico         VARCHAR(500) NOT NULL,
+  origem            ENUM('manual','financeiro','folha','patrimonio','suprimentos','fiscal') NOT NULL,
+  origem_uuid       CHAR(36) NULL,                   -- documento de origem, quando automático
+  estado            ENUM('rascunho','em_validacao','aprovado','estornado') NOT NULL DEFAULT 'rascunho',
+  criado_por        CHAR(36) NOT NULL,
+  aprovado_por      CHAR(36) NULL,
+  estorno_de_uuid   CHAR(36) NULL,                   -- lançamento de ajuste ou estorno aponta para o original
+  ajuste_motivo     VARCHAR(500) NULL,
+  created_at        DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  CONSTRAINT ck_lanc_aprov CHECK (aprovado_por IS NULL OR aprovado_por <> criado_por),
+  CONSTRAINT ck_lanc_estorno CHECK (estorno_de_uuid IS NULL OR ajuste_motivo IS NOT NULL),
+  UNIQUE KEY ux_lanc_numero (unidade_uuid, numero),
+  INDEX ix_lanc_comp (unidade_uuid, competencia, estado)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE ctb_partidas (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  lancamento_uuid   CHAR(36) NOT NULL,
+  conta_uuid        CHAR(36) NOT NULL,               -- só conta analítica (verificado no serviço)
+  tipo              ENUM('debito','credito') NOT NULL,
+  valor_centavos    BIGINT UNSIGNED NOT NULL,
+  centro_custo_uuid CHAR(36) NULL,
+  CONSTRAINT ck_partida_valor CHECK (valor_centavos > 0),
+  INDEX ix_partida_lanc (lancamento_uuid),
+  INDEX ix_partida_conta (conta_uuid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE fis_parametros (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  unidade_uuid      CHAR(36) NOT NULL,
+  tributo           VARCHAR(20) NOT NULL,            -- ISS, IRRF, PIS, COFINS, CSLL, INSS
+  municipio_ibge    CHAR(7) NULL,                    -- para ISS
+  aliquota_bp       INT UNSIGNED NOT NULL,           -- pontos-base: 500 = 5,00%
+  vigencia_inicio   DATE NOT NULL,
+  vigencia_fim      DATE NULL,
+  fonte             VARCHAR(500) NOT NULL,           -- norma ou parecer que fundamenta o valor
+  confirmado_por    CHAR(36) NOT NULL,
+  confirmado_em     DATETIME(3) NOT NULL,
+  CONSTRAINT ck_param_vig CHECK (vigencia_fim IS NULL OR vigencia_fim > vigencia_inicio),
+  INDEX ix_param (unidade_uuid, tributo, vigencia_inicio)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE fis_apuracoes (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  unidade_uuid      CHAR(36) NOT NULL,
+  tributo           VARCHAR(20) NOT NULL,
+  competencia       CHAR(7) NOT NULL,
+  parametro_uuid    CHAR(36) NOT NULL,               -- parâmetro vigente usado no cálculo
+  base_centavos     BIGINT UNSIGNED NOT NULL,
+  valor_centavos    BIGINT UNSIGNED NOT NULL,
+  estado            ENUM('rascunho','apurada','paga','cancelada') NOT NULL DEFAULT 'rascunho',
+  apurada_por       CHAR(36) NOT NULL,
+  created_at        DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  UNIQUE KEY ux_apur (unidade_uuid, tributo, competencia)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE fis_retencoes (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  unidade_uuid      CHAR(36) NOT NULL,
+  documento_tipo    ENUM('pagamento','nota_recebida') NOT NULL,
+  documento_uuid    CHAR(36) NOT NULL,
+  tributo           VARCHAR(20) NOT NULL,
+  parametro_uuid    CHAR(36) NOT NULL,
+  base_centavos     BIGINT UNSIGNED NOT NULL,
+  valor_centavos    BIGINT UNSIGNED NOT NULL,
+  created_at        DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  INDEX ix_ret_doc (documento_tipo, documento_uuid)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE fis_obrigacoes (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  unidade_uuid      CHAR(36) NOT NULL,
+  tipo              VARCHAR(60) NOT NULL,            -- obrigação acessória (doc 26, seção 1)
+  competencia       CHAR(7) NOT NULL,
+  vence_em          DATE NOT NULL,
+  estado            ENUM('pendente','transmitida','paga') NOT NULL DEFAULT 'pendente',  -- em_atraso é calculado por data
+  responsavel_uuid  CHAR(36) NOT NULL,
+  transmitida_em    DATETIME(3) NULL,
+  recibo_uuid       CHAR(36) NULL,
+  UNIQUE KEY ux_obrig (unidade_uuid, tipo, competencia),
+  INDEX ix_obrig_venc (unidade_uuid, estado, vence_em)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE fis_nfse (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  unidade_uuid      CHAR(36) NOT NULL,
+  fatura_uuid       CHAR(36) NOT NULL,               -- só fatura paga ou parcial (doc 18, seção 2.7)
+  numero            VARCHAR(20) NULL,
+  serie             VARCHAR(5) NULL,
+  municipio_ibge    CHAR(7) NOT NULL,
+  valor_servico_centavos BIGINT UNSIGNED NOT NULL,
+  iss_centavos      BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  estado            ENUM('pending','processing','issued','rejected','cancelled') NOT NULL DEFAULT 'pending',
+  motivo_rejeicao   VARCHAR(500) NULL,
+  xml_uuid          CHAR(36) NULL,
+  pdf_uuid          CHAR(36) NULL,
+  emitida_por       CHAR(36) NOT NULL,
+  cancelamento_pedido_por   CHAR(36) NULL,
+  cancelamento_aprovado_por CHAR(36) NULL,           -- contábil, diferente de quem pediu
+  created_at        DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  CONSTRAINT ck_nfse_cancel CHECK (cancelamento_aprovado_por IS NULL OR cancelamento_aprovado_por <> cancelamento_pedido_por),
+  INDEX ix_nfse (unidade_uuid, estado, created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+---
+
+### 19. Marketing e redes sociais (LAC-20)
+
+Escrito em 04/11/2026 com as regras de [19](#parte-19), seção 15, e os campos da v1 (especificação de marketing e redes sociais). Aguarda revisão do owner e teste de migração.
+
+Correções em relação à v1:
+
+- A caixa de entrada unificada não é tabela de marketing: mensagens e comentários viram atendimento no modelo único de ticket ([51](#parte-51), seção 1, canais `instagram` e `messenger`; [32](#parte-32), seção 2).
+- Leads e conversão ficam no CRM do tenant ([22](#parte-22), seção 8); a campanha só é referenciada pela origem do lead.
+- Token de rede social não fica na tabela: fica no cofre, como conexão de integração do tenant ([16](#parte-16)).
+- Estados da publicação não estavam na v1; os desta seção são **proposta**.
+
+```sql
+CREATE TABLE mkt_campanhas (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  unidade_uuid      CHAR(36) NOT NULL,
+  nome              VARCHAR(160) NOT NULL,
+  descricao         TEXT NULL,
+  tipo              VARCHAR(40) NOT NULL,            -- captação, rematrícula, evento, institucional
+  objetivo          VARCHAR(255) NULL,
+  canal             VARCHAR(40) NULL,
+  publico           VARCHAR(255) NULL,
+  orcamento_centavos BIGINT UNSIGNED NULL,
+  gasto_centavos    BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  inicio            DATE NULL,
+  fim               DATE NULL,
+  utm_campaign      VARCHAR(100) NULL,
+  responsavel_uuid  CHAR(36) NOT NULL,
+  estado            ENUM('rascunho','em_revisao','aprovada','ativa','pausada','encerrada','arquivada') NOT NULL DEFAULT 'rascunho',
+  aprovada_por      CHAR(36) NULL,
+  created_at        DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  updated_at        DATETIME(3) NULL,
+  deleted_at        DATETIME(3) NULL,
+  deleted_by        CHAR(36) NULL,
+  CONSTRAINT ck_camp_aprov CHECK (aprovada_por IS NULL OR aprovada_por <> responsavel_uuid),
+  INDEX ix_camp (unidade_uuid, estado, inicio)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE mkt_contas_sociais (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  unidade_uuid      CHAR(36) NOT NULL,
+  rede              ENUM('instagram','facebook','linkedin','youtube','tiktok','x','whatsapp') NOT NULL,
+  nome_conta        VARCHAR(120) NOT NULL,
+  url               VARCHAR(255) NULL,
+  conexao_uuid      CHAR(36) NOT NULL,               -- conexão de integração do tenant; token no cofre
+  ultima_sincronizacao DATETIME(3) NULL,
+  estado            ENUM('conectada','expirada','revogada','erro') NOT NULL DEFAULT 'conectada',
+  created_at        DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  UNIQUE KEY ux_conta_social (unidade_uuid, rede, nome_conta)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE mkt_publicacoes (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  unidade_uuid      CHAR(36) NOT NULL,
+  campanha_uuid     CHAR(36) NULL,
+  conta_social_uuid CHAR(36) NOT NULL,
+  titulo            VARCHAR(160) NOT NULL,
+  texto             TEXT NOT NULL,
+  link              VARCHAR(2048) NULL,
+  hashtags          VARCHAR(500) NULL,
+  agendada_para     DATETIME(3) NULL,
+  autor_uuid        CHAR(36) NOT NULL,
+  aprovada_por      CHAR(36) NULL,                   -- publicação só depois da aprovação (doc 19, seção 15)
+  estado            ENUM('rascunho','em_aprovacao','aprovada','agendada','publicada','falhou','cancelada') NOT NULL DEFAULT 'rascunho',
+  publicada_em      DATETIME(3) NULL,
+  id_externo        VARCHAR(120) NULL,
+  erro              VARCHAR(500) NULL,
+  created_at        DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  CONSTRAINT ck_pub_aprov CHECK (aprovada_por IS NULL OR aprovada_por <> autor_uuid),
+  CONSTRAINT ck_pub_estado CHECK (estado NOT IN ('aprovada','agendada','publicada') OR aprovada_por IS NOT NULL),
+  INDEX ix_pub (unidade_uuid, estado, agendada_para)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE mkt_publicacao_midias (
+  publicacao_uuid   CHAR(36) NOT NULL,
+  arquivo_uuid      CHAR(36) NOT NULL,               -- imagem com aluno exige termo de imagem (doc 32, seção 3.2)
+  ordem             TINYINT UNSIGNED NOT NULL,
+  legenda           VARCHAR(500) NULL,
+  PRIMARY KEY (publicacao_uuid, ordem)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE mkt_datas_criticas (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid              CHAR(36) NOT NULL UNIQUE,
+  unidade_uuid      CHAR(36) NOT NULL,
+  inicio            DATETIME(3) NOT NULL,
+  fim               DATETIME(3) NOT NULL,
+  motivo            VARCHAR(255) NOT NULL,           -- período em que publicação fica bloqueada
+  CONSTRAINT ck_data_critica CHECK (fim > inicio),
+  INDEX ix_dc (unidade_uuid, inicio)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE mkt_palavras_bloqueadas (
+  id                BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  unidade_uuid      CHAR(36) NOT NULL,
+  termo             VARCHAR(120) NOT NULL,
+  UNIQUE KEY ux_palavra (unidade_uuid, termo)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
 
 ---
 

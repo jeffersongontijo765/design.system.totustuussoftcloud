@@ -111,7 +111,7 @@ Do [31](../../../docs/v2/31-matriz-portais-modulos.md):
 | Lançamento | `rascunho`, `em_validacao`, `aprovado`, `estornado` |
 | Obrigação fiscal | `pendente`, `transmitida`, `paga`, `em_atraso` (calculado por data) |
 
-**Defeito:** sem DDL (T-02). Não há campos, tipos de valor nem chaves definidos para validar.
+**Defeito:** sem DDL (T-02). Não há campos, tipos de valor nem chaves definidos para validar. **Resolvido em 04/11/2026:** DDL em [51](../../../docs/v2/51-ddl-modulos-novos.md), seção 18.
 
 ## 14. Conteúdo integral da v1 (absorvido)
 

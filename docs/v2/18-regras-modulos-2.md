@@ -187,7 +187,7 @@ Conforme a proposta da seção 4.1, as regras abaixo são do submódulo RH/HCM.
 | Lançamento | `rascunho`, `em_validacao`, `aprovado`, `estornado` |
 | Obrigação fiscal | `pendente`, `transmitida`, `paga`, `em_atraso` (calculado por data) |
 
-**Defeito:** sem DDL (T-02). Não há campos, tipos de valor nem chaves definidos para validar.
+**Defeito:** sem DDL (T-02). Não há campos, tipos de valor nem chaves definidos para validar. **Resolvido em 04/11/2026:** DDL em [51](51-ddl-modulos-novos.md), seção 18.
 
 ## 7. Lacunas
 
@@ -199,7 +199,7 @@ Conforme a proposta da seção 4.1, as regras abaixo são do submódulo RH/HCM.
 | LAC-10 | Regra de NFSe por município | Fiscal | Parcial: regras gerais em [34](34-pagamentos-fiscal-bancos-por-portal.md), seção 5. Regra de cada município depende do provedor (homologação) |
 | LAC-11 | Fronteira RH/Pessoas (seção 4.1) | Produto | Resolvida: um módulo HCM com submódulos ([39](39-departamento-pessoal-rh-medicina-por-portal.md), seção 2) |
 | LAC-12 | Regra CLT de férias e fracionamento | Jurídico, RH | Aberta (jurídico): HCM-03 ([39](39-departamento-pessoal-rh-medicina-por-portal.md)) |
-| LAC-13 | DDL de RH e Contábil/Fiscal | RH, Contábil | Parcial: DDL de pessoas na v1 (especificação de pessoas). DDL de RH e de contábil a escrever |
+| LAC-13 | DDL de RH e Contábil/Fiscal | RH, Contábil | Resolvida: DDL de pessoas e RH em [51](51-ddl-modulos-novos.md), seção 17, e de contábil e fiscal em [51](51-ddl-modulos-novos.md), seção 18. Aguarda revisão do owner (DDL-01) |
 
 ## 8. Critérios de aceite
 

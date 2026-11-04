@@ -241,7 +241,7 @@ Notas:
 | Palavras bloqueadas | Lista de termos que impede publicação (linha 282). |
 | Contato | Bloquear, silenciar ou priorizar contato respeita consentimento ([07](../../../docs/v2/07-privacidade-lgpd.md)). |
 
-**Defeito:** sem DDL (T-02). Sem tenant.
+**Defeito:** sem DDL (T-02). Sem tenant. **Resolvido em 04/11/2026:** DDL com `unidade_uuid` em [51](../../../docs/v2/51-ddl-modulos-novos.md), seção 19.
 
 ## 14. Conteúdo integral da v1 (absorvido)
 

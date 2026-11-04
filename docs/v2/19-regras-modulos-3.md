@@ -190,7 +190,7 @@ Categorias de ativo, ativos e demais. Valores em `DECIMAL(15,2)` e taxa em `DECI
 | Palavras bloqueadas | Lista de termos que impede publicação (linha 282). |
 | Contato | Bloquear, silenciar ou priorizar contato respeita consentimento ([07](07-privacidade-lgpd.md)). |
 
-**Defeito:** sem DDL (T-02). Sem tenant.
+**Defeito:** sem DDL (T-02). Sem tenant. **Resolvido em 04/11/2026:** DDL com `unidade_uuid` em [51](51-ddl-modulos-novos.md), seção 19.
 
 ## 16. Bancos
 
@@ -210,7 +210,7 @@ A especificação v1 (1.001 linhas) já exige Argon2id e refresh token armazenad
 | LAC-17 | Regra de revisão humana de conteúdo gerado por IA (seção 12) | Acadêmico, Jurídico | Resolvida: a IA sugere e a pessoa decide ([27](27-inteligencia-artificial-e-portais.md), princípio 2) |
 | LAC-18 | Regra de depreciação por categoria (seção 8) | Contabilidade | Resolvida por padrão: DP-02 ([80](80-decisoes-por-padrao.md)) |
 | LAC-19 | Módulo de atendimento único (seção 7) | Produto | Resolvida: modelo único de ticket ([32](32-atendimento-privacidade-por-portal.md), seção 2.1) |
-| LAC-20 | DDL de Documentos, Marketing, Atendimento, Simulados, Preceptoria, Privacidade | Owners | Parcial: DDL de documentos ([51](51-ddl-modulos-novos.md), seção 12; [54](54-gestao-de-documentos-tres-contextos.md), seção 10), atendimento ([51](51-ddl-modulos-novos.md), seção 1), simulados e preceptoria ([51](51-ddl-modulos-novos.md), seções 15 e 6) e privacidade ([51](51-ddl-modulos-novos.md), seção 2). DDL de marketing a escrever |
+| LAC-20 | DDL de Documentos, Marketing, Atendimento, Simulados, Preceptoria, Privacidade | Owners | Resolvida: DDL de documentos ([51](51-ddl-modulos-novos.md), seção 12; [54](54-gestao-de-documentos-tres-contextos.md), seção 10), atendimento ([51](51-ddl-modulos-novos.md), seção 1), privacidade ([51](51-ddl-modulos-novos.md), seção 2), preceptoria ([51](51-ddl-modulos-novos.md), seção 6), simulados ([51](51-ddl-modulos-novos.md), seção 15) e marketing ([51](51-ddl-modulos-novos.md), seção 19). Aguarda revisão do owner |
 
 ## 19. Critérios de aceite
 
