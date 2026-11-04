@@ -124,7 +124,7 @@ def main():
         indice.append(f'- [{n} — {t}](#doc-{n})')
         for arq, linhas, situacao, nums in v1_por_doc[n]:
             indice.append(f'  - [v1 `{arq}`](#v1-{ancora(arq)}) — {situacao.lower()}')
-    indice += ['', '- [Especificações v1 absorvidas no kit-starter](#v1-no-kit)',
+    indice += ['', '- [Especificações v1 absorvidas no kit-starter (texto integral)](#v1-no-kit)',
                '- [Substituídas, fora do escopo e vazias](#v1-resto)', '']
 
     corpo = []
@@ -134,9 +134,9 @@ def main():
         for arq, linhas, situacao, nums in v1_por_doc[n]:
             corpo.append(bloco_v1(arq, linhas, situacao, nums))
     corpo.append('<a id="v1-no-kit"></a>\n\n## Especificações v1 absorvidas no kit-starter\n\n'
-                 'Estas especificações viraram fichas do kit-starter. A ficha tem as regras da v2 e o texto integral da v1.\n')
+                 'Estas especificações viraram fichas do kit-starter. Aqui está o texto integral da v1; a ficha tem as regras da v2 por cima.\n')
     for arq, linhas, situacao, kit in grupos['kit']:
-        corpo.append(f'- `{arq}` ({linhas} linhas): [{kit[0]}](../{kit[0]})')
+        corpo.append(bloco_v1(arq, linhas, situacao, []) + f'\n*Ficha do kit-starter: [{kit[0]}](../{kit[0]}).*\n')
     corpo.append('\n<a id="v1-resto"></a>\n\n## Substituídas, fora do escopo e vazias\n')
     for grupo, titulo in (('fora', 'Fora do escopo'),
                           ('vazio', 'Vazias'), ('nao_classificado', 'Sem destino declarado')):
