@@ -1,84 +1,157 @@
-"""Gera docs/SDD-UNIFICADO.md: o texto integral da v2 e da v1 em um único arquivo.
+"""Gera docs/SDD-UNIFICADO.md: v2 e v1 organizadas por documento da v2.
 
 Uso: python3 inventario/gera_sdd_unificado.py
-- Parte 1: SDD v2 (docs/v2/SDD-COMPLETO.md, gerado a partir dos 81 documentos numerados).
-- Parte 2: especificações da v1 (docs/v2/anexo-v1/, 62 arquivos), uma seção por arquivo,
-  com os títulos rebaixados para ficar abaixo da seção da parte.
-- Nada é reescrito à mão: o arquivo é a concatenação dos fontes.
-Não editar à mão: regere depois de mudar a v1 ou a v2.
+
+Estrutura:
+- Índice: uma entrada por documento da v2 (00 a 80), com as especificações da v1 que ele absorveu.
+- Para cada documento da v2: o texto integral dele e, logo abaixo, o texto integral de cada
+  especificação da v1 que ele absorveu (segundo a seção 3 do documento 79).
+- Cada especificação da v1 aparece uma única vez, no primeiro documento da v2 que a absorve.
+  Nos demais, aparece um link para ela.
+- No fim: especificações absorvidas no kit-starter, substituídas em bloco, fora do escopo e vazias.
+
+Nada é reescrito à mão: o arquivo é montado a partir dos fontes e do documento 79.
+Não editar à mão: regere depois de mudar a v1, a v2 ou o documento 79.
 """
-import datetime, os, re
+import datetime, glob, os, re, unicodedata
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 V2 = os.path.join(ROOT, 'docs', 'v2')
 ANEXO = os.path.join(V2, 'anexo-v1')
-V2_COMPLETO = os.path.join(V2, 'SDD-COMPLETO.md')
+RASTREIO = os.path.join(V2, '79-rastreabilidade-v1-v2.md')
 SAIDA = os.path.join(ROOT, 'docs', 'SDD-UNIFICADO.md')
 
 
-def rebaixa(texto, niveis):
-    """Acrescenta `niveis` # aos títulos fora de blocos de código (limite de 6)."""
+def ancora(texto):
+    t = unicodedata.normalize('NFKD', texto).encode('ascii', 'ignore').decode()
+    return re.sub(r'[^a-z0-9]+', '-', t.lower()).strip('-')
+
+
+def rebaixa(texto, niveis, teto=6):
     saida, em_codigo = [], False
     for linha in texto.splitlines():
         if linha.lstrip().startswith('```'):
             em_codigo = not em_codigo
         m = re.match(r'^(#{1,6}) ', linha)
         if not em_codigo and m:
-            linha = '#' * min(6, len(m.group(1)) + niveis) + linha[len(m.group(1)):]
+            linha = '#' * min(teto, len(m.group(1)) + niveis) + linha[len(m.group(1)):]
         saida.append(linha)
     return '\n'.join(saida)
 
 
-def sem_cabecalho(texto):
-    """Remove a primeira linha de título (é repetida pelo cabeçalho da parte)."""
+def sem_titulo(texto):
     linhas = texto.splitlines()
     if linhas and linhas[0].startswith('# '):
         linhas = linhas[1:]
     return '\n'.join(linhas).strip()
 
 
+def le(caminho):
+    try:
+        return open(caminho, encoding='utf8').read()
+    except UnicodeDecodeError:
+        return open(caminho, encoding='latin-1').read()
+
+
+def docs_v2():
+    """Lista (NN, caminho, título) dos documentos numerados da v2."""
+    saida = []
+    for c in sorted(glob.glob(os.path.join(V2, '[0-9][0-9]-*.md'))):
+        n = os.path.basename(c)[:2]
+        t = le(c).splitlines()[0].lstrip('# ').strip() if le(c).strip() else n
+        t = re.sub(r'^' + n + r'\s*[—-]\s*', '', t)
+        saida.append((n, c, t))
+    return saida
+
+
+def mapeamento():
+    """Lê a seção 3 do documento 79: para cada arquivo da v1, situação e destino."""
+    itens = []  # (arquivo, linhas, situação, [NN...], [caminho do kit])
+    numeros_v2 = {os.path.basename(c)[:2] for c in glob.glob(os.path.join(V2, '[0-9][0-9]-*.md'))}
+    for linha in le(RASTREIO).splitlines():
+        m = re.match(r'^\| \[`([^`]+)`\]\(anexo-v1/[^)]+\) \| (\d+) \| ([^|]+) \| ([^|]+) \|', linha)
+        if not m:
+            continue
+        arq, linhas, situacao, destino = m.group(1), int(m.group(2)), m.group(3).strip(), m.group(4).strip()
+        nums = [n for n in re.findall(r'\b(\d\d)\b', destino) if n in numeros_v2]
+        kit = re.findall(r'kit-starter/[^\s`\)]+\.md', destino)
+        itens.append((arq, linhas, situacao, nums, kit))
+    return itens
+
+
 def main():
-    v2 = sem_cabecalho(open(V2_COMPLETO, encoding='utf8').read())
-    anexos = sorted(f for f in os.listdir(ANEXO) if os.path.isfile(os.path.join(ANEXO, f)))
-    partes_v1 = []
-    for nome in anexos:
-        caminho = os.path.join(ANEXO, nome)
-        try:
-            texto = open(caminho, encoding='utf8').read()
-        except UnicodeDecodeError:
-            texto = open(caminho, encoding='latin-1').read()
-        titulo = nome
-        partes_v1.append((nome, len(texto.splitlines()), rebaixa(texto.strip(), 2)))
+    docs = docs_v2()
+    itens = mapeamento()
+    v1_por_doc = {n: [] for n, _, _ in docs}
+    colocado = set()
+    grupos = {'kit': [], 'substituido': [], 'fora': [], 'vazio': [], 'nao_classificado': []}
+    for arq, linhas, situacao, nums, kit in itens:
+        if kit:
+            grupos['kit'].append((arq, linhas, situacao, kit))
+            continue
+        if 'Fora do escopo' in situacao or 'Removido' in situacao:
+            grupos['fora'].append((arq, linhas, situacao, []))
+            continue
+        if 'vazio' in situacao.lower():
+            grupos['vazio'].append((arq, linhas, situacao, []))
+            continue
+        if not nums:
+            grupos['nao_classificado'].append((arq, linhas, situacao, []))
+            continue
+        alvo = nums[0]
+        v1_por_doc[alvo].append((arq, linhas, situacao, nums))
+        colocado.add(arq)
+
+    def bloco_v1(arq, linhas, situacao, outros):
+        caminho = os.path.join(ANEXO, arq)
+        texto = rebaixa(le(caminho).strip(), 3) if os.path.isfile(caminho) else '_Arquivo ausente._'
+        return (f'<a id="v1-{ancora(arq)}"></a>\n\n#### v1 — `{arq}` ({linhas} linhas)\n\n'
+                f'*Situação na v2: {situacao}.*\n\n{texto}\n')
+
     hoje = datetime.date.today().isoformat()
-    cab = [
+    indice = [
         '# SDD unificado: v1 e v2',
         '',
         f'Gerado em {hoje} por `inventario/gera_sdd_unificado.py`. Não editar à mão.',
         '',
-        f'- Parte 1: SDD v2, {v2.count(chr(10) + "## ") + 1 if v2 else 0} seções de nível 2, a partir dos 81 documentos numerados.',
-        f'- Parte 2: especificações da v1, {len(partes_v1)} arquivos de `docs/v2/anexo-v1/`.',
-        '- Para a situação de cada arquivo da v1 na v2, ver a seção 2 do documento 79 (dentro da parte 1).',
+        'Cada documento da v2 vem com as especificações da v1 que ele absorveu, logo abaixo do texto dele. '
+        'A situação de cada arquivo da v1 está na seção 3 do [79](#doc-79).',
         '',
         '## Índice',
         '',
-        '### Parte 1 — SDD v2',
-        '',
-        '- [SDD v2 completo](#parte-1-sdd-v2)',
-        '',
-        '### Parte 2 — Especificações da v1',
-        '',
     ]
-    for nome, linhas, _ in partes_v1:
-        ancora = re.sub(r'[^a-z0-9]+', '-', nome.lower()).strip('-')
-        cab.append(f'- [{nome}](#v1-{ancora}) ({linhas} linhas)')
-    cab += ['', '---', '', '# Parte 1 — SDD v2', '', v2, '', '---', '', '# Parte 2 — Especificações da v1', '']
+    for n, _, t in docs:
+        indice.append(f'- [{n} — {t}](#doc-{n})')
+        for arq, linhas, situacao, nums in v1_por_doc[n]:
+            indice.append(f'  - [v1 `{arq}`](#v1-{ancora(arq)}) — {situacao.lower()}')
+    indice += ['', '- [Especificações v1 absorvidas no kit-starter](#v1-no-kit)',
+               '- [Substituídas, fora do escopo e vazias](#v1-resto)', '']
+
     corpo = []
-    for nome, linhas, texto in partes_v1:
-        ancora = re.sub(r'[^a-z0-9]+', '-', nome.lower()).strip('-')
-        corpo.append(f'<a id="v1-{ancora}"></a>\n\n## v1 — `{nome}`\n\n{texto}\n')
-    saida = '\n'.join(cab) + '\n' + '\n'.join(corpo)
+    for n, caminho, t in docs:
+        texto = rebaixa(sem_titulo(le(caminho)), 2)
+        corpo.append(f'<a id="doc-{n}"></a>\n\n## {n} — {t}\n\n{texto}\n')
+        for arq, linhas, situacao, nums in v1_por_doc[n]:
+            corpo.append(bloco_v1(arq, linhas, situacao, nums))
+    corpo.append('<a id="v1-no-kit"></a>\n\n## Especificações v1 absorvidas no kit-starter\n\n'
+                 'Estas especificações viraram fichas do kit-starter. A ficha tem as regras da v2 e o texto integral da v1.\n')
+    for arq, linhas, situacao, kit in grupos['kit']:
+        corpo.append(f'- `{arq}` ({linhas} linhas): [{kit[0]}](../{kit[0]})')
+    corpo.append('\n<a id="v1-resto"></a>\n\n## Substituídas, fora do escopo e vazias\n')
+    for grupo, titulo in (('fora', 'Fora do escopo'),
+                          ('vazio', 'Vazias'), ('nao_classificado', 'Sem destino declarado')):
+        if not grupos[grupo]:
+            continue
+        corpo.append(f'### {titulo}\n')
+        for arq, linhas, situacao, nums in grupos[grupo]:
+            corpo.append(bloco_v1(arq, linhas, situacao, nums))
+
+    saida = '\n'.join(indice) + '\n' + '\n'.join(corpo)
     open(SAIDA, 'w', encoding='utf8').write(saida)
-    print('gerado:', os.path.relpath(SAIDA, ROOT), len(saida.splitlines()), 'linhas,', len(saida.encode('utf8')) // 1024, 'KB')
+    print('gerado:', os.path.relpath(SAIDA, ROOT), len(saida.splitlines()), 'linhas,',
+          len(saida.encode('utf8')) // 1024, 'KB |', sum(len(v) for v in v1_por_doc.values()), 'v1 por documento |',
+          len(grupos['kit']), 'no kit |', len(grupos['substituido']), 'substituídas |',
+          len(grupos['fora']), 'fora |', len(grupos['vazio']), 'vazias |', len(grupos['nao_classificado']), 'sem destino')
 
 
 if __name__ == '__main__':
