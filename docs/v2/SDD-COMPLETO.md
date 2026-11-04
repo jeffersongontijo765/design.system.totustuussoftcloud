@@ -17239,8 +17239,8 @@ Foto é opcional. Aparece para pessoas com vínculo na mesma unidade. **Decidido
 
 | # | Regra | Origem |
 |---|---|---|
-| L-01 | Cada plano tem um **limite de alunos**, definido pelo desenvolvedor da plataforma. | Autor, 03/11/2026 |
-| L-02 | Criar entidade e criar unidade é **exclusivo do papel de desenvolvedor** (`platform.developer`). Nenhum outro papel cria entidade ou unidade. | Autor, 03/11/2026 |
+| L-01 | Cada plano tem um **limite de alunos**, definido pelo desenvolvedor da plataforma. | Autor, 04/11/2026 |
+| L-02 | Criar entidade e criar unidade é **exclusivo do papel de desenvolvedor** (`platform.developer`). Nenhum outro papel cria entidade ou unidade. | Autor, 04/11/2026 |
 
 ### 2. Modelo de plano
 
@@ -17314,8 +17314,8 @@ Prazo de carência: **15 dias**, ajustável pelo desenvolvedor por plano (D-28, 
 
 | # | Regra | Origem |
 |---|---|---|
-| L-02 | Criar entidade e criar unidade é **exclusivo do papel `platform.developer`**. | Autor, 03/11/2026 |
-| P-01 | O sistema de permissões é completo: papéis em níveis, com escopo, para todos os portais. | Autor, 03/11/2026 |
+| L-02 | Criar entidade e criar unidade é **exclusivo do papel `platform.developer`**. | Autor, 04/11/2026 |
+| P-01 | O sistema de permissões é completo: papéis em níveis, com escopo, para todos os portais. | Autor, 04/11/2026 |
 
 ### 2. Modelo
 

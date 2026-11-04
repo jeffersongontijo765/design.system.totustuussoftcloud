@@ -9,8 +9,8 @@
 
 | # | Regra | Origem |
 |---|---|---|
-| L-02 | Criar entidade e criar unidade é **exclusivo do papel `platform.developer`**. | Autor, 03/11/2026 |
-| P-01 | O sistema de permissões é completo: papéis em níveis, com escopo, para todos os portais. | Autor, 03/11/2026 |
+| L-02 | Criar entidade e criar unidade é **exclusivo do papel `platform.developer`**. | Autor, 04/11/2026 |
+| P-01 | O sistema de permissões é completo: papéis em níveis, com escopo, para todos os portais. | Autor, 04/11/2026 |
 
 ## 2. Modelo
 
