@@ -36,6 +36,13 @@ Decisões tomadas por padrão (sem pergunta ao autor, com o critério mais segur
 
 Ordem ao mudar o SDD: matriz → `gera_inventario.py` → `gera_kit.py` → completar o arquivo `dados_*.py` ou `absorve_v1.py` → `fichas_portais.py` e `absorve_v1.py` → `gera_rastreabilidade.py` → `gera_sdd_completo.py`.
 
+## Leitura obrigatória antes de começar
+
+- [00](../docs/v2/00-README.md) (índice) e [01](../docs/v2/01-visao-escopo.md) (visão e escopo).
+- [13](../docs/v2/13-achados-v1.md): achados da v1 que não podem se repetir (por exemplo ACH-01, JavaScript inline).
+- [26](../docs/v2/26-sdd-juridico-regulatorio.md) e [73](../docs/v2/73-resumo-juridico-academico.md): obrigações legais e resumo jurídico acadêmico.
+- [80](../docs/v2/80-decisoes-por-padrao.md): decisões tomadas por padrão.
+
 ## Ordem de construção recomendada
 
 1. Transversais: tenancy ([03](../docs/v2/03-dominio-tenancy.md)), identidade e acesso ([acesso](desenvolvedor/seguranca-e-operacao/acesso.md)), permissões ([78](../docs/v2/78-permissoes-e-papeis.md)), auditoria ([auditoria](desenvolvedor/seguranca-e-operacao/auditoria.md)), [exclusão lógica](transversal/exclusao-logica.md), privacidade.
