@@ -23,13 +23,13 @@ Legenda de origem: **P** = plataforma (banco master); **E** = entidade/unidade (
 | Área | Módulos | Contexto | Observação |
 |---|---|---|---|
 | Plataforma e clientes | Clientes (tenants), licenciamento, assinaturas, faturamento de clientes, limites e consumo, domínios, provisionamento | P | Ciclo de vida da seção 5 de [23](23-dominios-provisionamento-ciclo-de-vida.md) |
-| Editor de portais | Páginas, rotas, layouts, blocos, publicação e rollback | P | D-23. Chamado de "builder de portais" na v1. **Não é o editor de modelos do Gerador de documentos** (ver seção 3.4) |
+| Editor de portais | Páginas, rotas, layouts, blocos, publicação e rollback | P | D-23. Chamado de "builder de portais" na v1. **Não é o editor de modelos do Gerador de documentos** (ver seção 3.4) Especificação: [23](23-dominios-provisionamento-ciclo-de-vida.md), seção 3 (D-23) |
 | Comercial da plataforma | CRM da plataforma, leads, propostas, comissões | P | [22](22-crm-canais-e-papeis.md), seção 6.1. Não se mistura com o protocolo de atendimento (seção 3.2) |
-| Financeiro da plataforma | Contas a pagar e a receber **da própria empresa** | P | **Decidido** em 03/11/2026: mantido para a gestão da própria empresa desenvolvedora |
-| Contábil da plataforma | Plano de contas, razão, fechamento da empresa, tributos e obrigações fiscais da empresa | P | Mesma decisão do financeiro. Tributos da empresa: seção 3.3, confirmado pelo autor em 04/11/2026 |
-| Operações internas | Patrimônio, frotas, suprimentos da empresa | P | **Decidido** em 03/11/2026: mantidos, como instâncias separadas dos módulos das entidades |
+| Financeiro da plataforma | Contas a pagar e a receber **da própria empresa** | P | **Decidido** em 03/11/2026: mantido para a gestão da própria empresa desenvolvedora. Especificação: [31](31-matriz-portais-modulos.md), seção 3.3; [34](34-pagamentos-fiscal-bancos-por-portal.md), seção 3 (taxas de split) |
+| Contábil da plataforma | Plano de contas, razão, fechamento da empresa, tributos e obrigações fiscais da empresa | P | Mesma decisão do financeiro. Tributos da empresa: seção 3.3, confirmado pelo autor em 04/11/2026. Especificação: [31](31-matriz-portais-modulos.md), seção 3.3; [22](22-crm-canais-e-papeis.md), seção 5 (papéis contábil e fiscal) |
+| Operações internas | Patrimônio, frotas, suprimentos da empresa | P | **Decidido** em 03/11/2026: mantidos, como instâncias separadas dos módulos das entidades. Especificação: [19](19-regras-modulos-3.md), seções 8 e 9; [80](80-decisoes-por-padrao.md), DP-01 a DP-03 |
 | Pessoas da plataforma | Departamento pessoal, recursos humanos, medicina e segurança do trabalho da empresa | P | Mesma decisão. O HCM das entidades não é o da plataforma. Três módulos separados, conforme HCM-01 e HCM-10 do [39](39-departamento-pessoal-rh-medicina-por-portal.md), seção 11 |
-| Suporte | Chamados dos clientes, base de conhecimento, SLA | P | Seção 3.2 |
+| Suporte | Chamados dos clientes, base de conhecimento, SLA | P | Seção 3.2. Especificação: [32](32-atendimento-privacidade-por-portal.md), seção 2 |
 | Segurança e operação | Acesso, MFA, auditoria, privacidade (DPO), TI, configurações do sistema, integrações globais, painel de bancos de dados | P | [05](05-seguranca.md), [07](07-privacidade-lgpd.md), [10](10-implantacao-operacao.md). Painel de bancos de dados: substitui o módulo Bancos (PAG-03, [34](34-pagamentos-fiscal-bancos-por-portal.md), seção 4) |
 
 ### 2.2 Portal de Gestão (`gestao.`) — equipe administrativa da entidade
@@ -39,10 +39,10 @@ Legenda de origem: **P** = plataforma (banco master); **E** = entidade/unidade (
 | Acadêmico | Administração escolar (estrutura acadêmica), pedagógico (coordenação e diário), calendário e eventos, séries e turmas (grade de horários), regras de aprovação (sistemas avaliativos, boletim e conselho de classe), ocorrências disciplinares, planos de aula e de ensino, estágio e TCC, prontuário e portfólio do aluno, livros digitais e arquivo morto, preceptoria, gestão pastoral, aulas online, agendamento de ambientes e equipamentos, formulários e pesquisas, relatórios acadêmicos e censo | E | [17](17-regras-modulos.md), seção 4; [55](55-academico-verificacao-e-lacunas.md); [58](58-calendario-e-eventos-por-portal.md) a [69](69-relatorios-e-censo-por-portal.md); [40](40-aulas-online-por-portal.md) a [44](44-agendamento-ambientes-equipamentos.md). Itens explicitados em 04/11/2026 a partir da seção 7 e dos documentos por portal |
 | Secretaria | Matrículas, rematrículas, transferências, enturmação, ficha cadastral, protocolo de atendimento, emissão de documentos, processo seletivo e lista de espera | E | Sub-área do acadêmico. Ver seções 3.2 e 3.5; [46](46-matricula-e-rematricula-por-portal.md), [48](48-gerador-de-documentos-por-portal.md) |
 | Gestão de documentos | Documentos recebidos (validação), documentos administrativos (tramitação), documentos emitidos (modelos e emissão), serviços comuns (assinatura, protocolo e armazenamento) | E | [54](54-gestao-de-documentos-tres-contextos.md). Ver também seções 3.1 e 3.4 |
-| Simulados | Banco de questões, geração de provas, correção, gabarito, ranking | E | Ver seção 3.6 |
-| Biblioteca | Acervo, empréstimos, reservas, multas, biblioteca digital | E | Ver seção 3.1 |
+| Simulados | Banco de questões, geração de provas, correção, gabarito, ranking | E | Ver seção 3.6. Especificação: [47](47-simulados-por-portal.md) |
+| Biblioteca | Acervo, empréstimos, reservas, multas, biblioteca digital | E | Ver seção 3.1. Especificação: [68](68-biblioteca-por-portal.md) |
 | Financeiro da entidade | Mensalidades, títulos, cobrança, régua, conciliação, centros de custo, contas a pagar, cheques, caixa físico, fluxo de caixa e DRE, gateways e split | E | [17](17-regras-modulos.md), [18](18-regras-modulos-2.md), [20](20-pagamentos-seguranca.md), [34](34-pagamentos-fiscal-bancos-por-portal.md), [71](71-financeiro-completo-por-portal.md) |
-| Contábil e fiscal da entidade | Plano de contas da entidade, tributos, retenções, obrigações, NFSe | E | Ver seção 3.3 |
+| Contábil e fiscal da entidade | Plano de contas da entidade, tributos, retenções, obrigações, NFSe | E | Ver seção 3.3. Especificação: [31](31-matriz-portais-modulos.md), seção 3.3; [34](34-pagamentos-fiscal-bancos-por-portal.md), seção 5; [26](26-sdd-juridico-regulatorio.md), seção 11 |
 | Comercial e admissões | CRM do tenant (captação, pré-cadastro, inscrição) | E | [22](22-crm-canais-e-papeis.md), seção 6.2 |
 | Pessoas e RH | HCM, folha, ponto, férias, avaliação de desempenho, SST | E | [18](18-regras-modulos-2.md), seção 3; [39](39-departamento-pessoal-rh-medicina-por-portal.md); [52](52-medicina-do-trabalho-especificacao.md) |
 | Suprimentos e compras | Requisição, cotação, pedido, almoxarifado, merenda | E | [19](19-regras-modulos-3.md), seção 2 |
@@ -59,13 +59,13 @@ Legenda de origem: **P** = plataforma (banco master); **E** = entidade/unidade (
 
 | Área | Módulos | Escopo |
 |---|---|---|
-| Classe | Turmas e disciplinas do próprio docente, mural, materiais, tarefas | Só turmas vinculadas |
+| Classe | Turmas e disciplinas do próprio docente, mural, materiais, tarefas | Só turmas vinculadas. Especificação: [80](80-decisoes-por-padrao.md), DP-06 (mural, materiais e tarefas) |
 | Diário | Frequência, conteúdo, notas, plano de aula | Só turmas vinculadas. Nota só pelo professor da turma ([22](22-crm-canais-e-papeis.md), seção 5) |
-| Simulados | Elaboração de questões, agendamento, resultados da turma | Questão passa por revisão antes de publicar (seção 3.6) |
-| Biblioteca | Consulta de acervo, indicação de leitura | Somente leitura |
-| Protocolos e pedidos | Solicitação de material, reserva de laboratório, justificativa | Usa o serviço de protocolo (seção 3.2) |
-| Documentos e pessoal | Declarações, contrato de trabalho, holerite, ponto | Só dados do próprio docente |
-| Relatórios | Rendimento da turma, ficha individual | Só turmas vinculadas |
+| Simulados | Elaboração de questões, agendamento, resultados da turma | Questão passa por revisão antes de publicar (seção 3.6) Especificação: [47](47-simulados-por-portal.md), seção 7 |
+| Biblioteca | Consulta de acervo, indicação de leitura | Somente leitura. Especificação: [68](68-biblioteca-por-portal.md), seção 11 |
+| Protocolos e pedidos | Solicitação de material, reserva de laboratório, justificativa | Usa o serviço de protocolo (seção 3.2) Especificação: [31](31-matriz-portais-modulos.md), seção 3.2; [44](44-agendamento-ambientes-equipamentos.md) |
+| Documentos e pessoal | Declarações, contrato de trabalho, holerite, ponto | Só dados do próprio docente. Especificação: [39](39-departamento-pessoal-rh-medicina-por-portal.md), seção 6; [34](34-pagamentos-fiscal-bancos-por-portal.md), seção 8 |
+| Relatórios | Rendimento da turma, ficha individual | Só turmas vinculadas. Especificação: [69](69-relatorios-e-censo-por-portal.md), seção 6 |
 | Agenda e comunicação | Horário e calendário das turmas, aulas online, notificações, meu perfil | Só turmas vinculadas. [58](58-calendario-e-eventos-por-portal.md), [60](60-turmas-e-grade-de-horarios-por-portal.md), [40](40-aulas-online-por-portal.md), [57](57-notificacoes-por-portal.md), [76](76-meu-perfil-por-portal.md) (explicitado em 04/11/2026) |
 | Acompanhamento pedagógico | Ocorrências da turma, orientação de estágio e TCC, preceptoria, portfólio dos alunos, formulários e pesquisas, pastoral | Só turmas e orientandos vinculados. [63](63-ocorrencias-disciplinares-por-portal.md), [65](65-estagio-e-tcc-por-portal.md), [42](42-preceptoria-por-portal.md), [66](66-prontuario-e-portfolio-do-aluno-por-portal.md), [41](41-formularios-e-pesquisas.md), [43](43-pastoral-por-portal.md) (explicitado em 04/11/2026) |
 
@@ -73,13 +73,13 @@ Legenda de origem: **P** = plataforma (banco master); **E** = entidade/unidade (
 
 | Área | Módulos | Escopo |
 |---|---|---|
-| Classe e diário | Disciplinas, materiais, entregas, boletim, presença | Só o próprio aluno |
-| Simulados | Simulados agendados, realização de prova, gabarito e comentários | Só simulados do próprio aluno |
-| Biblioteca | Empréstimos, prazos, renovação, pesquisa de acervo | Só os próprios empréstimos |
-| Protocolos online | Requerimento de segunda chamada, declaração de matrícula | Usa o serviço de protocolo |
+| Classe e diário | Disciplinas, materiais, entregas, boletim, presença | Só o próprio aluno. Especificação: [61](61-diario-escolar-por-portal.md), seção 7; [62](62-boletim-e-conselho-de-classe-por-portal.md), seção 7; [80](80-decisoes-por-padrao.md), DP-06 |
+| Simulados | Simulados agendados, realização de prova, gabarito e comentários | Só simulados do próprio aluno. Especificação: [47](47-simulados-por-portal.md), seção 7 |
+| Biblioteca | Empréstimos, prazos, renovação, pesquisa de acervo | Só os próprios empréstimos. Especificação: [68](68-biblioteca-por-portal.md), seção 11 |
+| Protocolos online | Requerimento de segunda chamada, declaração de matrícula | Usa o serviço de protocolo. Especificação: [31](31-matriz-portais-modulos.md), seção 3.2 |
 | Documentos | Boletim oficial, histórico, declarações | Emissão pelo aluno conforme regra de [21](21-busca-e-armazenamento.md) e seção 3.5 |
-| Matrícula | Confirmação para o ano seguinte, eletivas, rematrícula | Seção 3.5 |
-| Financeiro | Mensalidades, boleto, PIX, comprovantes | Só títulos do próprio aluno |
+| Matrícula | Confirmação para o ano seguinte, eletivas, rematrícula | Seção 3.5. Especificação: [46](46-matricula-e-rematricula-por-portal.md), seção 6 |
+| Financeiro | Mensalidades, boleto, PIX, comprovantes | Só títulos do próprio aluno. Especificação: [34](34-pagamentos-fiscal-bancos-por-portal.md), seção 8; [20](20-pagamentos-seguranca.md) |
 | Privacidade | Dados cadastrais, solicitações LGPD | [07](07-privacidade-lgpd.md) |
 | Agenda e comunicação | Horário da turma, calendário e eventos, aulas online, notificações, meu perfil | Só o próprio aluno. [58](58-calendario-e-eventos-por-portal.md), [60](60-turmas-e-grade-de-horarios-por-portal.md), [40](40-aulas-online-por-portal.md), [57](57-notificacoes-por-portal.md), [76](76-meu-perfil-por-portal.md) (explicitado em 04/11/2026) |
 | Vida acadêmica | Ocorrências próprias, estágio e TCC, portfólio, preceptoria, formulários e pesquisas, pastoral | Só o próprio aluno. [63](63-ocorrencias-disciplinares-por-portal.md), [65](65-estagio-e-tcc-por-portal.md), [66](66-prontuario-e-portfolio-do-aluno-por-portal.md), [42](42-preceptoria-por-portal.md), [41](41-formularios-e-pesquisas.md), [43](43-pastoral-por-portal.md) (explicitado em 04/11/2026) |
@@ -88,9 +88,9 @@ Legenda de origem: **P** = plataforma (banco master); **E** = entidade/unidade (
 
 | Área | Módulos | Escopo |
 |---|---|---|
-| Acompanhamento | Notas, faltas, ocorrências, comunicados, entradas e saídas da portaria | Só dependentes com vínculo ativo de responsabilidade |
-| Biblioteca e simulados | Empréstimos e desempenho dos filhos | Somente leitura |
-| Protocolos da família | Mudança de turno, saída antecipada, documentos | Usa o serviço de protocolo |
+| Acompanhamento | Notas, faltas, ocorrências, comunicados, entradas e saídas da portaria | Só dependentes com vínculo ativo de responsabilidade. Especificação: [61](61-diario-escolar-por-portal.md), [62](62-boletim-e-conselho-de-classe-por-portal.md), [63](63-ocorrencias-disciplinares-por-portal.md), [35](35-acesso-e-seguranca-fisica-por-portal.md), seção 4, [57](57-notificacoes-por-portal.md) |
+| Biblioteca e simulados | Empréstimos e desempenho dos filhos | Somente leitura. Especificação: [68](68-biblioteca-por-portal.md), seção 11; [47](47-simulados-por-portal.md), seção 7 |
+| Protocolos da família | Mudança de turno, saída antecipada, documentos | Usa o serviço de protocolo. Especificação: [31](31-matriz-portais-modulos.md), seção 3.2 |
 | Financeiro e matrícula | Faturas dos filhos, PIX, rematrícula online, assinatura do contrato | Seção 3.5. Bloqueio parcial por inadimplência ([26](26-sdd-juridico-regulatorio.md), seção 3) |
 | Privacidade e menores | Consentimento de imagem, dados dos filhos | Regra de menor de idade em [07](07-privacidade-lgpd.md) |
 | Agenda e comunicação | Horário e calendário dos dependentes, eventos e autorizações, notificações, meu perfil | Só dependentes com vínculo ativo. [58](58-calendario-e-eventos-por-portal.md), [60](60-turmas-e-grade-de-horarios-por-portal.md), [43](43-pastoral-por-portal.md), [57](57-notificacoes-por-portal.md), [76](76-meu-perfil-por-portal.md) (explicitado em 04/11/2026) |
@@ -99,12 +99,12 @@ Legenda de origem: **P** = plataforma (banco master); **E** = entidade/unidade (
 
 | Área | Módulos | Escopo |
 |---|---|---|
-| Faturamento de serviços | Emissão e envio de NF-e de serviço, acompanhamento de pagamento, extrato | Só o próprio fornecedor |
-| Pedidos e contratos | Pedidos de compra pendentes, contratos em vigor | Só o próprio fornecedor |
-| Documentos da empresa | Certidões, contrato social, alvarás, seguro | Só o próprio fornecedor. Validade com alerta |
-| Prestação de serviço | Ordens de serviço, relatórios de execução, cronograma | Só ordens do próprio fornecedor |
-| Chamados | Abertura de chamado de manutenção, solicitação de acesso à unidade | Usa o módulo de atendimento (seção 3.7) |
-| Configurações e integrações | Dados da empresa, responsáveis técnicos, dados bancários, integrações via API | Dados bancários exigem confirmação por MFA |
+| Faturamento de serviços | Emissão e envio de NF-e de serviço, acompanhamento de pagamento, extrato | Só o próprio fornecedor. Especificação: [38](38-portal-de-terceiros-prestadores.md); [34](34-pagamentos-fiscal-bancos-por-portal.md), seções 5 e 8 |
+| Pedidos e contratos | Pedidos de compra pendentes, contratos em vigor | Só o próprio fornecedor. Especificação: [38](38-portal-de-terceiros-prestadores.md), seção 4; [33](33-contratos-por-portal.md), seção 9 |
+| Documentos da empresa | Certidões, contrato social, alvarás, seguro | Só o próprio fornecedor. Validade com alerta. Especificação: [38](38-portal-de-terceiros-prestadores.md), seção 5 |
+| Prestação de serviço | Ordens de serviço, relatórios de execução, cronograma | Só ordens do próprio fornecedor. Especificação: [38](38-portal-de-terceiros-prestadores.md), seção 3 |
+| Chamados | Abertura de chamado de manutenção, solicitação de acesso à unidade | Usa o módulo de atendimento (seção 3.7) Especificação: [32](32-atendimento-privacidade-por-portal.md), seção 2.8; [35](35-acesso-e-seguranca-fisica-por-portal.md), seção 4 |
+| Configurações e integrações | Dados da empresa, responsáveis técnicos, dados bancários, integrações via API | Dados bancários exigem confirmação por MFA. Especificação: [38](38-portal-de-terceiros-prestadores.md), seção 6; [06](06-identidade-acesso.md), seção 8 |
 | Habilitação e acesso | Cadastro e habilitação do prestador, pessoas e papéis do prestador, tipo de prestador, meu perfil | [38](38-portal-de-terceiros-prestadores.md), seções 2 a 6; [76](76-meu-perfil-por-portal.md) (explicitado em 04/11/2026) |
 
 **Regra:** o portal de terceiros nunca mostra financeiro interno, contábil, folha ou dado de aluno.

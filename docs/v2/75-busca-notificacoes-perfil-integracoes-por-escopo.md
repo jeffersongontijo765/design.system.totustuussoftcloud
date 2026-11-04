@@ -8,6 +8,8 @@
 
 ## 1. Resposta direta
 
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
+
 | Tema | Veredito |
 |---|---|
 | Busca | **Parcial.** O motor, a permissão e o isolamento estão em [21](21-busca-e-armazenamento.md), seção 6. Não há especificação da busca global por portal nem do que cada perfil pode buscar |

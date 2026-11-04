@@ -21,7 +21,7 @@ Escopo: Ciclo de vida da seção 5 de [23](../docs/v2/23-dominios-provisionament
 
 ### Editor de portais
 
-Escopo: D-23. Chamado de "builder de portais" na v1. **Não é o editor de modelos do Gerador de documentos** (ver seção 3.4)
+Escopo: D-23. Chamado de "builder de portais" na v1. **Não é o editor de modelos do Gerador de documentos** (ver seção 3.4) Especificação: [23](../docs/v2/23-dominios-provisionamento-ciclo-de-vida.md), seção 3 (D-23)
 
 - [ ] Páginas
 - [ ] rotas
@@ -40,13 +40,13 @@ Escopo: [22](../docs/v2/22-crm-canais-e-papeis.md), seção 6.1. Não se mistura
 
 ### Financeiro da plataforma
 
-Escopo: **Decidido** em 03/11/2026: mantido para a gestão da própria empresa desenvolvedora
+Escopo: **Decidido** em 03/11/2026: mantido para a gestão da própria empresa desenvolvedora. Especificação: [31](../docs/v2/31-matriz-portais-modulos.md), seção 3.3; [34](../docs/v2/34-pagamentos-fiscal-bancos-por-portal.md), seção 3 (taxas de split)
 
 - [ ] Contas a pagar e a receber **da própria empresa**
 
 ### Contábil da plataforma
 
-Escopo: Mesma decisão do financeiro. Tributos da empresa: seção 3.3, confirmado pelo autor em 04/11/2026
+Escopo: Mesma decisão do financeiro. Tributos da empresa: seção 3.3, confirmado pelo autor em 04/11/2026. Especificação: [31](../docs/v2/31-matriz-portais-modulos.md), seção 3.3; [22](../docs/v2/22-crm-canais-e-papeis.md), seção 5 (papéis contábil e fiscal)
 
 - [ ] Plano de contas
 - [ ] razão
@@ -55,7 +55,7 @@ Escopo: Mesma decisão do financeiro. Tributos da empresa: seção 3.3, confirma
 
 ### Operações internas
 
-Escopo: **Decidido** em 03/11/2026: mantidos, como instâncias separadas dos módulos das entidades
+Escopo: **Decidido** em 03/11/2026: mantidos, como instâncias separadas dos módulos das entidades. Especificação: [19](../docs/v2/19-regras-modulos-3.md), seções 8 e 9; [80](../docs/v2/80-decisoes-por-padrao.md), DP-01 a DP-03
 
 - [ ] Patrimônio
 - [ ] frotas
@@ -71,7 +71,7 @@ Escopo: Mesma decisão. O HCM das entidades não é o da plataforma. Três módu
 
 ### Suporte
 
-Escopo: Seção 3.2
+Escopo: Seção 3.2. Especificação: [32](../docs/v2/32-atendimento-privacidade-por-portal.md), seção 2
 
 - [ ] Chamados dos clientes
 - [ ] base de conhecimento
@@ -137,7 +137,7 @@ Escopo: [54](../docs/v2/54-gestao-de-documentos-tres-contextos.md). Ver também 
 
 ### Simulados
 
-Escopo: Ver seção 3.6
+Escopo: Ver seção 3.6. Especificação: [47](../docs/v2/47-simulados-por-portal.md)
 
 - [ ] Banco de questões
 - [ ] geração de provas
@@ -147,7 +147,7 @@ Escopo: Ver seção 3.6
 
 ### Biblioteca
 
-Escopo: Ver seção 3.1
+Escopo: Ver seção 3.1. Especificação: [68](../docs/v2/68-biblioteca-por-portal.md)
 
 - [ ] Acervo
 - [ ] empréstimos
@@ -173,7 +173,7 @@ Escopo: [17](../docs/v2/17-regras-modulos.md), [18](../docs/v2/18-regras-modulos
 
 ### Contábil e fiscal da entidade
 
-Escopo: Ver seção 3.3
+Escopo: Ver seção 3.3. Especificação: [31](../docs/v2/31-matriz-portais-modulos.md), seção 3.3; [34](../docs/v2/34-pagamentos-fiscal-bancos-por-portal.md), seção 5; [26](../docs/v2/26-sdd-juridico-regulatorio.md), seção 11
 
 - [ ] Plano de contas da entidade
 - [ ] tributos
@@ -283,7 +283,7 @@ Escopo: [37](../docs/v2/37-planejamento-e-empenho.md), seção 5 (especificado e
 
 ### Classe
 
-Escopo: Só turmas vinculadas
+Escopo: Só turmas vinculadas. Especificação: [80](../docs/v2/80-decisoes-por-padrao.md), DP-06 (mural, materiais e tarefas)
 
 - [ ] Turmas e disciplinas do próprio docente
 - [ ] mural
@@ -301,7 +301,7 @@ Escopo: Só turmas vinculadas. Nota só pelo professor da turma ([22](../docs/v2
 
 ### Simulados
 
-Escopo: Questão passa por revisão antes de publicar (seção 3.6)
+Escopo: Questão passa por revisão antes de publicar (seção 3.6) Especificação: [47](../docs/v2/47-simulados-por-portal.md), seção 7
 
 - [ ] Elaboração de questões
 - [ ] agendamento
@@ -309,14 +309,14 @@ Escopo: Questão passa por revisão antes de publicar (seção 3.6)
 
 ### Biblioteca
 
-Escopo: Somente leitura
+Escopo: Somente leitura. Especificação: [68](../docs/v2/68-biblioteca-por-portal.md), seção 11
 
 - [ ] Consulta de acervo
 - [ ] indicação de leitura
 
 ### Protocolos e pedidos
 
-Escopo: Usa o serviço de protocolo (seção 3.2)
+Escopo: Usa o serviço de protocolo (seção 3.2) Especificação: [31](../docs/v2/31-matriz-portais-modulos.md), seção 3.2; [44](../docs/v2/44-agendamento-ambientes-equipamentos.md)
 
 - [ ] Solicitação de material
 - [ ] reserva de laboratório
@@ -324,7 +324,7 @@ Escopo: Usa o serviço de protocolo (seção 3.2)
 
 ### Documentos e pessoal
 
-Escopo: Só dados do próprio docente
+Escopo: Só dados do próprio docente. Especificação: [39](../docs/v2/39-departamento-pessoal-rh-medicina-por-portal.md), seção 6; [34](../docs/v2/34-pagamentos-fiscal-bancos-por-portal.md), seção 8
 
 - [ ] Declarações
 - [ ] contrato de trabalho
@@ -333,7 +333,7 @@ Escopo: Só dados do próprio docente
 
 ### Relatórios
 
-Escopo: Só turmas vinculadas
+Escopo: Só turmas vinculadas. Especificação: [69](../docs/v2/69-relatorios-e-censo-por-portal.md), seção 6
 
 - [ ] Rendimento da turma
 - [ ] ficha individual
@@ -362,7 +362,7 @@ Escopo: Só turmas e orientandos vinculados. [63](../docs/v2/63-ocorrencias-disc
 
 ### Classe e diário
 
-Escopo: Só o próprio aluno
+Escopo: Só o próprio aluno. Especificação: [61](../docs/v2/61-diario-escolar-por-portal.md), seção 7; [62](../docs/v2/62-boletim-e-conselho-de-classe-por-portal.md), seção 7; [80](../docs/v2/80-decisoes-por-padrao.md), DP-06
 
 - [ ] Disciplinas
 - [ ] materiais
@@ -372,7 +372,7 @@ Escopo: Só o próprio aluno
 
 ### Simulados
 
-Escopo: Só simulados do próprio aluno
+Escopo: Só simulados do próprio aluno. Especificação: [47](../docs/v2/47-simulados-por-portal.md), seção 7
 
 - [ ] Simulados agendados
 - [ ] realização de prova
@@ -380,7 +380,7 @@ Escopo: Só simulados do próprio aluno
 
 ### Biblioteca
 
-Escopo: Só os próprios empréstimos
+Escopo: Só os próprios empréstimos. Especificação: [68](../docs/v2/68-biblioteca-por-portal.md), seção 11
 
 - [ ] Empréstimos
 - [ ] prazos
@@ -389,7 +389,7 @@ Escopo: Só os próprios empréstimos
 
 ### Protocolos online
 
-Escopo: Usa o serviço de protocolo
+Escopo: Usa o serviço de protocolo. Especificação: [31](../docs/v2/31-matriz-portais-modulos.md), seção 3.2
 
 - [ ] Requerimento de segunda chamada
 - [ ] declaração de matrícula
@@ -404,7 +404,7 @@ Escopo: Emissão pelo aluno conforme regra de [21](../docs/v2/21-busca-e-armazen
 
 ### Matrícula
 
-Escopo: Seção 3.5
+Escopo: Seção 3.5. Especificação: [46](../docs/v2/46-matricula-e-rematricula-por-portal.md), seção 6
 
 - [ ] Confirmação para o ano seguinte
 - [ ] eletivas
@@ -412,7 +412,7 @@ Escopo: Seção 3.5
 
 ### Financeiro
 
-Escopo: Só títulos do próprio aluno
+Escopo: Só títulos do próprio aluno. Especificação: [34](../docs/v2/34-pagamentos-fiscal-bancos-por-portal.md), seção 8; [20](../docs/v2/20-pagamentos-seguranca.md)
 
 - [ ] Mensalidades
 - [ ] boleto
@@ -451,7 +451,7 @@ Escopo: Só o próprio aluno. [63](../docs/v2/63-ocorrencias-disciplinares-por-p
 
 ### Acompanhamento
 
-Escopo: Só dependentes com vínculo ativo de responsabilidade
+Escopo: Só dependentes com vínculo ativo de responsabilidade. Especificação: [61](../docs/v2/61-diario-escolar-por-portal.md), [62](../docs/v2/62-boletim-e-conselho-de-classe-por-portal.md), [63](../docs/v2/63-ocorrencias-disciplinares-por-portal.md), [35](../docs/v2/35-acesso-e-seguranca-fisica-por-portal.md), seção 4, [57](../docs/v2/57-notificacoes-por-portal.md)
 
 - [ ] Notas
 - [ ] faltas
@@ -461,13 +461,13 @@ Escopo: Só dependentes com vínculo ativo de responsabilidade
 
 ### Biblioteca e simulados
 
-Escopo: Somente leitura
+Escopo: Somente leitura. Especificação: [68](../docs/v2/68-biblioteca-por-portal.md), seção 11; [47](../docs/v2/47-simulados-por-portal.md), seção 7
 
 - [ ] Empréstimos e desempenho dos filhos
 
 ### Protocolos da família
 
-Escopo: Usa o serviço de protocolo
+Escopo: Usa o serviço de protocolo. Especificação: [31](../docs/v2/31-matriz-portais-modulos.md), seção 3.2
 
 - [ ] Mudança de turno
 - [ ] saída antecipada
@@ -502,7 +502,7 @@ Escopo: Só dependentes com vínculo ativo. [58](../docs/v2/58-calendario-e-even
 
 ### Faturamento de serviços
 
-Escopo: Só o próprio fornecedor
+Escopo: Só o próprio fornecedor. Especificação: [38](../docs/v2/38-portal-de-terceiros-prestadores.md); [34](../docs/v2/34-pagamentos-fiscal-bancos-por-portal.md), seções 5 e 8
 
 - [ ] Emissão e envio de NF-e de serviço
 - [ ] acompanhamento de pagamento
@@ -510,14 +510,14 @@ Escopo: Só o próprio fornecedor
 
 ### Pedidos e contratos
 
-Escopo: Só o próprio fornecedor
+Escopo: Só o próprio fornecedor. Especificação: [38](../docs/v2/38-portal-de-terceiros-prestadores.md), seção 4; [33](../docs/v2/33-contratos-por-portal.md), seção 9
 
 - [ ] Pedidos de compra pendentes
 - [ ] contratos em vigor
 
 ### Documentos da empresa
 
-Escopo: Só o próprio fornecedor. Validade com alerta
+Escopo: Só o próprio fornecedor. Validade com alerta. Especificação: [38](../docs/v2/38-portal-de-terceiros-prestadores.md), seção 5
 
 - [ ] Certidões
 - [ ] contrato social
@@ -526,7 +526,7 @@ Escopo: Só o próprio fornecedor. Validade com alerta
 
 ### Prestação de serviço
 
-Escopo: Só ordens do próprio fornecedor
+Escopo: Só ordens do próprio fornecedor. Especificação: [38](../docs/v2/38-portal-de-terceiros-prestadores.md), seção 3
 
 - [ ] Ordens de serviço
 - [ ] relatórios de execução
@@ -534,14 +534,14 @@ Escopo: Só ordens do próprio fornecedor
 
 ### Chamados
 
-Escopo: Usa o módulo de atendimento (seção 3.7)
+Escopo: Usa o módulo de atendimento (seção 3.7) Especificação: [32](../docs/v2/32-atendimento-privacidade-por-portal.md), seção 2.8; [35](../docs/v2/35-acesso-e-seguranca-fisica-por-portal.md), seção 4
 
 - [ ] Abertura de chamado de manutenção
 - [ ] solicitação de acesso à unidade
 
 ### Configurações e integrações
 
-Escopo: Dados bancários exigem confirmação por MFA
+Escopo: Dados bancários exigem confirmação por MFA. Especificação: [38](../docs/v2/38-portal-de-terceiros-prestadores.md), seção 6; [06](../docs/v2/06-identidade-acesso.md), seção 8
 
 - [ ] Dados da empresa
 - [ ] responsáveis técnicos

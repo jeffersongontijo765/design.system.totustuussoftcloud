@@ -5691,13 +5691,13 @@ Legenda de origem: **P** = plataforma (banco master); **E** = entidade/unidade (
 | Área | Módulos | Contexto | Observação |
 |---|---|---|---|
 | Plataforma e clientes | Clientes (tenants), licenciamento, assinaturas, faturamento de clientes, limites e consumo, domínios, provisionamento | P | Ciclo de vida da seção 5 de [23](#parte-23) |
-| Editor de portais | Páginas, rotas, layouts, blocos, publicação e rollback | P | D-23. Chamado de "builder de portais" na v1. **Não é o editor de modelos do Gerador de documentos** (ver seção 3.4) |
+| Editor de portais | Páginas, rotas, layouts, blocos, publicação e rollback | P | D-23. Chamado de "builder de portais" na v1. **Não é o editor de modelos do Gerador de documentos** (ver seção 3.4) Especificação: [23](#parte-23), seção 3 (D-23) |
 | Comercial da plataforma | CRM da plataforma, leads, propostas, comissões | P | [22](#parte-22), seção 6.1. Não se mistura com o protocolo de atendimento (seção 3.2) |
-| Financeiro da plataforma | Contas a pagar e a receber **da própria empresa** | P | **Decidido** em 03/11/2026: mantido para a gestão da própria empresa desenvolvedora |
-| Contábil da plataforma | Plano de contas, razão, fechamento da empresa, tributos e obrigações fiscais da empresa | P | Mesma decisão do financeiro. Tributos da empresa: seção 3.3, confirmado pelo autor em 04/11/2026 |
-| Operações internas | Patrimônio, frotas, suprimentos da empresa | P | **Decidido** em 03/11/2026: mantidos, como instâncias separadas dos módulos das entidades |
+| Financeiro da plataforma | Contas a pagar e a receber **da própria empresa** | P | **Decidido** em 03/11/2026: mantido para a gestão da própria empresa desenvolvedora. Especificação: [31](#parte-31), seção 3.3; [34](#parte-34), seção 3 (taxas de split) |
+| Contábil da plataforma | Plano de contas, razão, fechamento da empresa, tributos e obrigações fiscais da empresa | P | Mesma decisão do financeiro. Tributos da empresa: seção 3.3, confirmado pelo autor em 04/11/2026. Especificação: [31](#parte-31), seção 3.3; [22](#parte-22), seção 5 (papéis contábil e fiscal) |
+| Operações internas | Patrimônio, frotas, suprimentos da empresa | P | **Decidido** em 03/11/2026: mantidos, como instâncias separadas dos módulos das entidades. Especificação: [19](#parte-19), seções 8 e 9; [80](#parte-80), DP-01 a DP-03 |
 | Pessoas da plataforma | Departamento pessoal, recursos humanos, medicina e segurança do trabalho da empresa | P | Mesma decisão. O HCM das entidades não é o da plataforma. Três módulos separados, conforme HCM-01 e HCM-10 do [39](#parte-39), seção 11 |
-| Suporte | Chamados dos clientes, base de conhecimento, SLA | P | Seção 3.2 |
+| Suporte | Chamados dos clientes, base de conhecimento, SLA | P | Seção 3.2. Especificação: [32](#parte-32), seção 2 |
 | Segurança e operação | Acesso, MFA, auditoria, privacidade (DPO), TI, configurações do sistema, integrações globais, painel de bancos de dados | P | [05](#parte-05), [07](#parte-07), [10](#parte-10). Painel de bancos de dados: substitui o módulo Bancos (PAG-03, [34](#parte-34), seção 4) |
 
 #### 2.2 Portal de Gestão (`gestao.`) — equipe administrativa da entidade
@@ -5707,10 +5707,10 @@ Legenda de origem: **P** = plataforma (banco master); **E** = entidade/unidade (
 | Acadêmico | Administração escolar (estrutura acadêmica), pedagógico (coordenação e diário), calendário e eventos, séries e turmas (grade de horários), regras de aprovação (sistemas avaliativos, boletim e conselho de classe), ocorrências disciplinares, planos de aula e de ensino, estágio e TCC, prontuário e portfólio do aluno, livros digitais e arquivo morto, preceptoria, gestão pastoral, aulas online, agendamento de ambientes e equipamentos, formulários e pesquisas, relatórios acadêmicos e censo | E | [17](#parte-17), seção 4; [55](#parte-55); [58](#parte-58) a [69](#parte-69); [40](#parte-40) a [44](#parte-44). Itens explicitados em 04/11/2026 a partir da seção 7 e dos documentos por portal |
 | Secretaria | Matrículas, rematrículas, transferências, enturmação, ficha cadastral, protocolo de atendimento, emissão de documentos, processo seletivo e lista de espera | E | Sub-área do acadêmico. Ver seções 3.2 e 3.5; [46](#parte-46), [48](#parte-48) |
 | Gestão de documentos | Documentos recebidos (validação), documentos administrativos (tramitação), documentos emitidos (modelos e emissão), serviços comuns (assinatura, protocolo e armazenamento) | E | [54](#parte-54). Ver também seções 3.1 e 3.4 |
-| Simulados | Banco de questões, geração de provas, correção, gabarito, ranking | E | Ver seção 3.6 |
-| Biblioteca | Acervo, empréstimos, reservas, multas, biblioteca digital | E | Ver seção 3.1 |
+| Simulados | Banco de questões, geração de provas, correção, gabarito, ranking | E | Ver seção 3.6. Especificação: [47](#parte-47) |
+| Biblioteca | Acervo, empréstimos, reservas, multas, biblioteca digital | E | Ver seção 3.1. Especificação: [68](#parte-68) |
 | Financeiro da entidade | Mensalidades, títulos, cobrança, régua, conciliação, centros de custo, contas a pagar, cheques, caixa físico, fluxo de caixa e DRE, gateways e split | E | [17](#parte-17), [18](#parte-18), [20](#parte-20), [34](#parte-34), [71](#parte-71) |
-| Contábil e fiscal da entidade | Plano de contas da entidade, tributos, retenções, obrigações, NFSe | E | Ver seção 3.3 |
+| Contábil e fiscal da entidade | Plano de contas da entidade, tributos, retenções, obrigações, NFSe | E | Ver seção 3.3. Especificação: [31](#parte-31), seção 3.3; [34](#parte-34), seção 5; [26](#parte-26), seção 11 |
 | Comercial e admissões | CRM do tenant (captação, pré-cadastro, inscrição) | E | [22](#parte-22), seção 6.2 |
 | Pessoas e RH | HCM, folha, ponto, férias, avaliação de desempenho, SST | E | [18](#parte-18), seção 3; [39](#parte-39); [52](#parte-52) |
 | Suprimentos e compras | Requisição, cotação, pedido, almoxarifado, merenda | E | [19](#parte-19), seção 2 |
@@ -5727,13 +5727,13 @@ Legenda de origem: **P** = plataforma (banco master); **E** = entidade/unidade (
 
 | Área | Módulos | Escopo |
 |---|---|---|
-| Classe | Turmas e disciplinas do próprio docente, mural, materiais, tarefas | Só turmas vinculadas |
+| Classe | Turmas e disciplinas do próprio docente, mural, materiais, tarefas | Só turmas vinculadas. Especificação: [80](#parte-80), DP-06 (mural, materiais e tarefas) |
 | Diário | Frequência, conteúdo, notas, plano de aula | Só turmas vinculadas. Nota só pelo professor da turma ([22](#parte-22), seção 5) |
-| Simulados | Elaboração de questões, agendamento, resultados da turma | Questão passa por revisão antes de publicar (seção 3.6) |
-| Biblioteca | Consulta de acervo, indicação de leitura | Somente leitura |
-| Protocolos e pedidos | Solicitação de material, reserva de laboratório, justificativa | Usa o serviço de protocolo (seção 3.2) |
-| Documentos e pessoal | Declarações, contrato de trabalho, holerite, ponto | Só dados do próprio docente |
-| Relatórios | Rendimento da turma, ficha individual | Só turmas vinculadas |
+| Simulados | Elaboração de questões, agendamento, resultados da turma | Questão passa por revisão antes de publicar (seção 3.6) Especificação: [47](#parte-47), seção 7 |
+| Biblioteca | Consulta de acervo, indicação de leitura | Somente leitura. Especificação: [68](#parte-68), seção 11 |
+| Protocolos e pedidos | Solicitação de material, reserva de laboratório, justificativa | Usa o serviço de protocolo (seção 3.2) Especificação: [31](#parte-31), seção 3.2; [44](#parte-44) |
+| Documentos e pessoal | Declarações, contrato de trabalho, holerite, ponto | Só dados do próprio docente. Especificação: [39](#parte-39), seção 6; [34](#parte-34), seção 8 |
+| Relatórios | Rendimento da turma, ficha individual | Só turmas vinculadas. Especificação: [69](#parte-69), seção 6 |
 | Agenda e comunicação | Horário e calendário das turmas, aulas online, notificações, meu perfil | Só turmas vinculadas. [58](#parte-58), [60](#parte-60), [40](#parte-40), [57](#parte-57), [76](#parte-76) (explicitado em 04/11/2026) |
 | Acompanhamento pedagógico | Ocorrências da turma, orientação de estágio e TCC, preceptoria, portfólio dos alunos, formulários e pesquisas, pastoral | Só turmas e orientandos vinculados. [63](#parte-63), [65](#parte-65), [42](#parte-42), [66](#parte-66), [41](#parte-41), [43](#parte-43) (explicitado em 04/11/2026) |
 
@@ -5741,13 +5741,13 @@ Legenda de origem: **P** = plataforma (banco master); **E** = entidade/unidade (
 
 | Área | Módulos | Escopo |
 |---|---|---|
-| Classe e diário | Disciplinas, materiais, entregas, boletim, presença | Só o próprio aluno |
-| Simulados | Simulados agendados, realização de prova, gabarito e comentários | Só simulados do próprio aluno |
-| Biblioteca | Empréstimos, prazos, renovação, pesquisa de acervo | Só os próprios empréstimos |
-| Protocolos online | Requerimento de segunda chamada, declaração de matrícula | Usa o serviço de protocolo |
+| Classe e diário | Disciplinas, materiais, entregas, boletim, presença | Só o próprio aluno. Especificação: [61](#parte-61), seção 7; [62](#parte-62), seção 7; [80](#parte-80), DP-06 |
+| Simulados | Simulados agendados, realização de prova, gabarito e comentários | Só simulados do próprio aluno. Especificação: [47](#parte-47), seção 7 |
+| Biblioteca | Empréstimos, prazos, renovação, pesquisa de acervo | Só os próprios empréstimos. Especificação: [68](#parte-68), seção 11 |
+| Protocolos online | Requerimento de segunda chamada, declaração de matrícula | Usa o serviço de protocolo. Especificação: [31](#parte-31), seção 3.2 |
 | Documentos | Boletim oficial, histórico, declarações | Emissão pelo aluno conforme regra de [21](#parte-21) e seção 3.5 |
-| Matrícula | Confirmação para o ano seguinte, eletivas, rematrícula | Seção 3.5 |
-| Financeiro | Mensalidades, boleto, PIX, comprovantes | Só títulos do próprio aluno |
+| Matrícula | Confirmação para o ano seguinte, eletivas, rematrícula | Seção 3.5. Especificação: [46](#parte-46), seção 6 |
+| Financeiro | Mensalidades, boleto, PIX, comprovantes | Só títulos do próprio aluno. Especificação: [34](#parte-34), seção 8; [20](#parte-20) |
 | Privacidade | Dados cadastrais, solicitações LGPD | [07](#parte-07) |
 | Agenda e comunicação | Horário da turma, calendário e eventos, aulas online, notificações, meu perfil | Só o próprio aluno. [58](#parte-58), [60](#parte-60), [40](#parte-40), [57](#parte-57), [76](#parte-76) (explicitado em 04/11/2026) |
 | Vida acadêmica | Ocorrências próprias, estágio e TCC, portfólio, preceptoria, formulários e pesquisas, pastoral | Só o próprio aluno. [63](#parte-63), [65](#parte-65), [66](#parte-66), [42](#parte-42), [41](#parte-41), [43](#parte-43) (explicitado em 04/11/2026) |
@@ -5756,9 +5756,9 @@ Legenda de origem: **P** = plataforma (banco master); **E** = entidade/unidade (
 
 | Área | Módulos | Escopo |
 |---|---|---|
-| Acompanhamento | Notas, faltas, ocorrências, comunicados, entradas e saídas da portaria | Só dependentes com vínculo ativo de responsabilidade |
-| Biblioteca e simulados | Empréstimos e desempenho dos filhos | Somente leitura |
-| Protocolos da família | Mudança de turno, saída antecipada, documentos | Usa o serviço de protocolo |
+| Acompanhamento | Notas, faltas, ocorrências, comunicados, entradas e saídas da portaria | Só dependentes com vínculo ativo de responsabilidade. Especificação: [61](#parte-61), [62](#parte-62), [63](#parte-63), [35](#parte-35), seção 4, [57](#parte-57) |
+| Biblioteca e simulados | Empréstimos e desempenho dos filhos | Somente leitura. Especificação: [68](#parte-68), seção 11; [47](#parte-47), seção 7 |
+| Protocolos da família | Mudança de turno, saída antecipada, documentos | Usa o serviço de protocolo. Especificação: [31](#parte-31), seção 3.2 |
 | Financeiro e matrícula | Faturas dos filhos, PIX, rematrícula online, assinatura do contrato | Seção 3.5. Bloqueio parcial por inadimplência ([26](#parte-26), seção 3) |
 | Privacidade e menores | Consentimento de imagem, dados dos filhos | Regra de menor de idade em [07](#parte-07) |
 | Agenda e comunicação | Horário e calendário dos dependentes, eventos e autorizações, notificações, meu perfil | Só dependentes com vínculo ativo. [58](#parte-58), [60](#parte-60), [43](#parte-43), [57](#parte-57), [76](#parte-76) (explicitado em 04/11/2026) |
@@ -5767,12 +5767,12 @@ Legenda de origem: **P** = plataforma (banco master); **E** = entidade/unidade (
 
 | Área | Módulos | Escopo |
 |---|---|---|
-| Faturamento de serviços | Emissão e envio de NF-e de serviço, acompanhamento de pagamento, extrato | Só o próprio fornecedor |
-| Pedidos e contratos | Pedidos de compra pendentes, contratos em vigor | Só o próprio fornecedor |
-| Documentos da empresa | Certidões, contrato social, alvarás, seguro | Só o próprio fornecedor. Validade com alerta |
-| Prestação de serviço | Ordens de serviço, relatórios de execução, cronograma | Só ordens do próprio fornecedor |
-| Chamados | Abertura de chamado de manutenção, solicitação de acesso à unidade | Usa o módulo de atendimento (seção 3.7) |
-| Configurações e integrações | Dados da empresa, responsáveis técnicos, dados bancários, integrações via API | Dados bancários exigem confirmação por MFA |
+| Faturamento de serviços | Emissão e envio de NF-e de serviço, acompanhamento de pagamento, extrato | Só o próprio fornecedor. Especificação: [38](#parte-38); [34](#parte-34), seções 5 e 8 |
+| Pedidos e contratos | Pedidos de compra pendentes, contratos em vigor | Só o próprio fornecedor. Especificação: [38](#parte-38), seção 4; [33](#parte-33), seção 9 |
+| Documentos da empresa | Certidões, contrato social, alvarás, seguro | Só o próprio fornecedor. Validade com alerta. Especificação: [38](#parte-38), seção 5 |
+| Prestação de serviço | Ordens de serviço, relatórios de execução, cronograma | Só ordens do próprio fornecedor. Especificação: [38](#parte-38), seção 3 |
+| Chamados | Abertura de chamado de manutenção, solicitação de acesso à unidade | Usa o módulo de atendimento (seção 3.7) Especificação: [32](#parte-32), seção 2.8; [35](#parte-35), seção 4 |
+| Configurações e integrações | Dados da empresa, responsáveis técnicos, dados bancários, integrações via API | Dados bancários exigem confirmação por MFA. Especificação: [38](#parte-38), seção 6; [06](#parte-06), seção 8 |
 | Habilitação e acesso | Cadastro e habilitação do prestador, pessoas e papéis do prestador, tipo de prestador, meu perfil | [38](#parte-38), seções 2 a 6; [76](#parte-76) (explicitado em 04/11/2026) |
 
 **Regra:** o portal de terceiros nunca mostra financeiro interno, contábil, folha ou dado de aluno.
@@ -6776,6 +6776,8 @@ Motivo: um console SQL acessível sem controle reduz o isolamento entre clientes
 
 ### 1. Resposta direta
 
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
+
 | Pergunta | Veredito |
 |---|---|
 | O módulo de acesso físico está completo? | **Não.** Não há especificação. A v1 cita "Portaria & Acesso" (desenvolvedor), "Portaria Escolar" (gestão), "Entradas e Saídas" (aluno e responsáveis) e "Gestão de Integração: Catracas" (terceiros), sem regra, DDL, estados ou teste |
@@ -6968,6 +6970,8 @@ Registro de entrada é dado de acesso. Retenção conforme seção 6.
 ---
 
 ### 1. Resposta direta
+
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
 
 | Pergunta | Veredito |
 |---|---|
@@ -7707,6 +7711,8 @@ Todo acesso de prestador grava evento com `portal = terceiros`, `prestador_uuid`
 
 ### 1. Resposta direta
 
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
+
 | Área | Completa? | Principal falha |
 |---|---|---|
 | Departamento pessoal (admissão, folha, férias, rescisão, benefícios, ponto) | **Não** | Sem regras de folha, rescisão e admissão. eSocial só cobre SST (S-2220, S-2230, S-2240), não cobre admissão, remuneração, pagamento e desligamento |
@@ -7970,6 +7976,8 @@ A permissão de cada papel aparece na matriz de permissões do portal onde ela �
 
 ### 1. Resposta direta
 
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
+
 | Pergunta | Veredito |
 |---|---|
 | Aula online está especificada como módulo? | **Não.** A v1 não tem módulo de aula online. O único texto é a especificação genérica de reunião ao vivo, com um caso de uso "Live class" (seção 5.2) |
@@ -8173,6 +8181,8 @@ Correções abaixo. A de [12](#parte-12) já foi aplicada. As demais são propos
 ---
 
 ### 1. Resposta direta
+
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
 
 | Pergunta | Veredito |
 |---|---|
@@ -8390,6 +8400,8 @@ Formulário não envia resposta a módulo consumidor. O consumidor lê a respost
 
 ### 1. Resposta direta
 
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
+
 | Pergunta | Veredito |
 |---|---|
 | A preceptoria está especificada? | **Em parte.** A v1 tem especificação de avaliação e autoavaliação. Não tem DDL (T-02), não tem regra de portal além de telas, e a navegação usa o mesmo nome para outra coisa |
@@ -8555,6 +8567,8 @@ Arquivo ou link anexado a uma resposta ou meta (certificado, registro de procedi
 ---
 
 ### 1. Resposta direta
+
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
 
 | Pergunta | Veredito |
 |---|---|
@@ -8746,6 +8760,8 @@ Campos de `pastoral_acompanhamento` e `pastoral_beneficiario` são cifrados na a
 ---
 
 ### 1. Resposta direta
+
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
 
 | Pergunta | Veredito |
 |---|---|
@@ -9340,6 +9356,8 @@ Textos lidos no Planalto: LDB (arts. 36 a 47, texto literal), Decreto 11.901/202
 
 ### 1. Resposta direta
 
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
+
 | Pergunta | Veredito |
 |---|---|
 | A matrícula está completa na v1? | **Em parte.** Tem telas (lista, wizard de 6 etapas, portal online, processo seletivo, lista de espera, trancamento, reopção, aproveitamento e atividades complementares). Não tem estados, regra de transição nem DDL completo |
@@ -9527,6 +9545,8 @@ Regra: `vagas_reserva` é o que impede concorrência. A confirmação de matríc
 
 ### 1. Resposta direta
 
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
+
 | Pergunta | Veredito |
 |---|---|
 | O simulado está completo? | **Em parte.** A v1 tem escopo, perfis (ENEM, MEC, Harvard, custom), fluxo, OCR, correção por IA, rubricas, kanban e relatórios. Não tem estados, DDL, nem regra de quem publica e de quem confirma a nota |
@@ -9689,6 +9709,8 @@ Histórico do aluno não é enviado. A comparação com o histórico é feita pe
 ---
 
 ### 1. Resposta direta
+
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
 
 | Pergunta | Veredito |
 |---|---|
@@ -9973,6 +9995,8 @@ As tabelas do módulo estão em [51](#parte-51), seção 12 (tipos, modelos, ver
 ---
 
 ### 1. Resposta direta
+
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
 
 | Pergunta | Veredito |
 |---|---|
@@ -14136,6 +14160,8 @@ Os relatórios dependem dos módulos. Por isso, a ordem é a mesma de [55](#part
 
 ### 1. Resposta direta
 
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
+
 | Pergunta | Veredito |
 |---|---|
 | Existe especificação de notificações na v2? | **Não.** O catálogo marca "Revisar", com duas versões na v1 |
@@ -14324,6 +14350,8 @@ Gráficos: volume por dia, itens por estado, distribuição por canal, sucesso e
 
 ### 1. Resposta direta
 
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
+
 | Pergunta | Veredito |
 |---|---|
 | Existe especificação de calendário na v2? | **Não.** Só citado em [44](#parte-44) e [51](#parte-51) |
@@ -14473,6 +14501,8 @@ Não entram:
 ---
 
 ### 1. Resposta direta
+
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
 
 | Pergunta | Veredito |
 |---|---|
@@ -14632,6 +14662,8 @@ Cada curso usa um sistema avaliativo. Um sistema define:
 ---
 
 ### 1. Resposta direta
+
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
 
 | Pergunta | Veredito |
 |---|---|
@@ -14814,6 +14846,8 @@ A grade não é salva com conflito. As regras são:
 
 ### 1. Resposta direta
 
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
+
 | Pergunta | Veredito |
 |---|---|
 | Chamada tem regra? | **Parcial.** QR Code e manual em [17](#parte-17). Falta regra de registro por aula |
@@ -14969,6 +15003,8 @@ Lançamento de nota e de chamada só com período `aberto` ([59](#parte-59), se�
 ---
 
 ### 1. Resposta direta
+
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
 
 | Pergunta | Veredito |
 |---|---|
@@ -15158,6 +15194,8 @@ O resultado do período combina as disciplinas conforme a regra do sistema avali
 ---
 
 ### 1. Resposta direta
+
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
 
 | Pergunta | Veredito |
 |---|---|
@@ -15368,6 +15406,8 @@ Medida educativa é a resposta pedagógica: conversa, orientação, plano de con
 
 ### 1. Resposta direta
 
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
+
 | Pergunta | Veredito |
 |---|---|
 | Plano de ensino tem regra? | **Não.** A v1 tem campos e DDL, sem regra de vigência, versão nem alinhamento com avaliação |
@@ -15538,6 +15578,8 @@ Plano de ensino (disciplina + turma + período)
 ---
 
 ### 1. Resposta direta
+
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
 
 | Pergunta | Veredito |
 |---|---|
@@ -15723,6 +15765,8 @@ Supervisor da empresa e membro externo de banca têm conta no portal de terceiro
 
 ### 1. Resposta direta
 
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
+
 | Pergunta | Veredito |
 |---|---|
 | Prontuário tem regra? | **Parcial.** Documentos com versão, validade, responsável e hash em [17](#parte-17) e [54](#parte-54). Falta a visão do prontuário e as seções de dado de saúde |
@@ -15872,6 +15916,8 @@ Esta seção é restrita. Inclui:
 
 ### 1. Resposta direta
 
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
+
 | Pergunta | Veredito |
 |---|---|
 | Livro de registro tem regra? | **Parcial.** A v1 tem campos, numeração e travamento. Faltam regra de correção, de separação de funções e de exportação |
@@ -16009,6 +16055,8 @@ Acervo de documentos de alunos que já saíram ou de documentos sem uso corrente
 ---
 
 ### 1. Resposta direta
+
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
 
 | Pergunta | Veredito |
 |---|---|
@@ -16196,6 +16244,8 @@ Não entra:
 
 ### 1. Resposta direta
 
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
+
 | Pergunta | Veredito |
 |---|---|
 | Modelo comum de relatório? | **Parcial.** A regra geral está em [56](#parte-56), seção 3. Faltam ciclo de geração, arquivo e formatos |
@@ -16360,6 +16410,8 @@ Levantamento anual de dados da escola, com alunos, turmas, professores, unidade 
 
 ### 1. Resposta direta
 
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
+
 | Pergunta | Veredito |
 |---|---|
 | Importação tem regra? | **Parcial.** A regra geral de [15](#parte-15) existe. Falta ordem por tipo, regra de domínio e tratamento do histórico |
@@ -16506,6 +16558,8 @@ A importação entra pelos mesmos caminhos de regra que a tela. Por isso:
 ---
 
 ### 1. Resposta direta
+
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
 
 | Pergunta | Veredito |
 |---|---|
@@ -16709,6 +16763,8 @@ Regras já definidas em [17](#parte-17), seção 2.5, e [20](#parte-20), seção
 ---
 
 ### 1. Resposta direta
+
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
 
 | Pergunta | Veredito |
 |---|---|
@@ -17033,6 +17089,8 @@ Estes itens têm parte de norma (que a equipe confere) e parte de texto legal (q
 
 ### 1. Resposta direta
 
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
+
 | Tema | Veredito |
 |---|---|
 | Busca | **Parcial.** O motor, a permissão e o isolamento estão em [21](#parte-21), seção 6. Não há especificação da busca global por portal nem do que cada perfil pode buscar |
@@ -17178,6 +17236,8 @@ Catálogo atual: RH, SMT, suprimentos, financeiro e contratos ([14](#parte-14), 
 ---
 
 ### 1. Resposta direta
+
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
 
 | Pergunta | Veredito |
 |---|---|

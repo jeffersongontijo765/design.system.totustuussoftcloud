@@ -104,6 +104,31 @@ def mapeamento():
     return itens
 
 
+
+def mapa_portais():
+    """Mapa por portal: área, módulos e documentos que especificam cada área (da matriz, documento 31, seção 2)."""
+    texto = le(glob.glob(os.path.join(V2, '31-*.md'))[0])
+    ini, fim = texto.index('\n## 2.'), texto.index('\n## 3.')
+    saida, portal = [], None
+    for linha in texto[ini:fim].splitlines():
+        m = re.match(r'^### (2\.\d) (.+)$', linha)
+        if m:
+            portal = m.group(2).strip()
+            saida += ['', f'### {portal}', '', '| Área | Módulos | Onde está especificado |', '|---|---|---|']
+            continue
+        if portal and linha.startswith('| ') and not linha.startswith('| Área') and not re.match(r'^\|\s*-', linha):
+            cels = [c.strip() for c in linha.strip().strip('|').split('|')]
+            refs = []
+            for n in re.findall(r'\]\((\d\d)-[^)]*\.md', linha):
+                if n in NUMEROS_V2 and n not in refs:
+                    refs.append(n)
+            if re.search(r'[Ss]eção 3\.\d', linha) and '31' not in refs:
+                refs.append('31')
+            modulos = re.sub(r'\[([^\]]+)\]\([^)]*\)', r'\1', cels[1]).replace('*', '')
+            saida.append(f'| {cels[0]} | {modulos} | ' + (', '.join(f'[{n}](#doc-{n})' for n in refs) or '—') + ' |')
+    return '\n'.join(saida).strip()
+
+
 NUMEROS_V2 = set()
 
 
@@ -134,7 +159,7 @@ def main():
 
     def bloco_v1(arq, linhas, situacao, nota):
         caminho = os.path.join(ANEXO, arq)
-        texto = rebaixa(desvincula(le(caminho).strip()), 3) if os.path.isfile(caminho) else '_Arquivo ausente._'
+        texto = rebaixa(desvincula(sem_titulo(le(caminho))), 2) if os.path.isfile(caminho) else '_Arquivo ausente._'
         extra = f' Destino: {nota}.' if nota else ''
         return (f'<a id="v1-{ancora(arq)}"></a>\n\n### v1 — `{arq}` ({linhas} linhas)\n\n'
                 f'> Situação na v2: {situacao}.{extra} Quando este texto diverge da v2, vale a v2.\n\n{texto}\n')
@@ -153,6 +178,12 @@ def main():
         '- No fim de cada parte estão as especificações da v1 que viraram fichas do kit-starter.',
         '- Quando a v1 e a v2 divergem, vale a v2. Nenhum link aponta para fora deste arquivo.',
         '',
+        '## Mapa por portal e módulo',
+        '',
+        'Para cada portal: as áreas, os módulos e os documentos deste SDD que os especificam (da matriz do documento 31).',
+        '',
+        mapa_portais(),
+        '',
         '## Índice',
         '',
     ]
@@ -170,7 +201,7 @@ def main():
                 f'## Visão geral da parte {P["n"]}', '', P['abertura'].strip(), '']
         for d in P['docs']:
             caminho, t = docs[d]
-            out.append(f'<a id="doc-{d}"></a>\n\n## {d} — {t}\n\n{rebaixa(desvincula(sem_titulo(le(caminho))), 2)}\n')
+            out.append(f'<a id="doc-{d}"></a>\n\n## {d} — {t}\n\n{rebaixa(desvincula(sem_titulo(le(caminho))), 1)}\n')
             for item in v1_apos_doc[d]:
                 out.append(bloco_v1(*item))
         if v1_fim_parte[P['n']]:

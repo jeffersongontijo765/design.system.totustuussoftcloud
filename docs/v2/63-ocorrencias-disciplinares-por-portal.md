@@ -7,6 +7,8 @@
 
 ## 1. Resposta direta
 
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
+
 | Pergunta | Veredito |
 |---|---|
 | Ocorrência disciplinar tem regra? | **Não.** Só aparece como lacuna em [55](55-academico-verificacao-e-lacunas.md) e em [56](56-configuracoes-e-relatorios-lacunas.md) |

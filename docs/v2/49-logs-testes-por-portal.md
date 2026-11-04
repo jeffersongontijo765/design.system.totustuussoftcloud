@@ -7,6 +7,8 @@
 
 ## 1. Resposta direta
 
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
+
 | Pergunta | Veredito |
 |---|---|
 | Logs de integração estão especificados? | **Não.** A [31](31-matriz-portais-modulos.md) marca "sem especificação". Existe só o log técnico geral da [10](10-implantacao-operacao.md) |

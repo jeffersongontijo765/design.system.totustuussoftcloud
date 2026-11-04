@@ -7,6 +7,8 @@
 
 ## 1. Resposta direta
 
+> **Leitura (04/11/2026):** esta tabela registra o que existia no SDD antes deste documento ser escrito. Os itens marcados como **Não** ou **Parcial** são especificados nas seções seguintes deste documento, exceto o que estiver listado na seção de pendências.
+
 | Pergunta | Veredito |
 |---|---|
 | Prontuário tem regra? | **Parcial.** Documentos com versão, validade, responsável e hash em [17](17-regras-modulos.md) e [54](54-gestao-de-documentos-tres-contextos.md). Falta a visão do prontuário e as seções de dado de saúde |
