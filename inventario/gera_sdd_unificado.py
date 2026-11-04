@@ -143,6 +143,51 @@ def mapa_portais():
     return '\n'.join(saida).strip()
 
 
+def dividir(texto, partes):
+    """Gera docs/sdd/: README.md (cabeçalho, glossário, mapa e índice) e um arquivo por parte.
+
+    O GitHub não exibe arquivo de texto acima de cerca de 1 MB; cada parte fica bem abaixo disso.
+    Links internos (#doc-NN, #parte-N, #v1-...) passam a apontar para o arquivo onde a âncora está.
+    """
+    pasta = os.path.join(ROOT, 'docs', 'sdd')
+    os.makedirs(pasta, exist_ok=True)
+    for velho in glob.glob(os.path.join(pasta, '*.md')):
+        os.remove(velho)
+    blocos = re.split(r'(?=<a id="parte-\d+"></a>)', texto)
+    nomes = {P['n']: f"parte-{P['n']:02d}-{ancora(P['titulo'])}.md" for P in partes}
+    arquivos = [('README.md', blocos[0])]
+    for b in blocos[1:]:
+        n = int(re.match(r'<a id="parte-(\d+)">', b).group(1))
+        arquivos.append((nomes[n], b.lstrip('-\n')))
+    onde = {}
+    for nome, conteudo in arquivos:
+        for a in re.findall(r'<a id="([^"]+)"></a>', conteudo):
+            onde[a] = nome
+    for nome, conteudo in arquivos:
+        def troca(m):
+            alvo = m.group(2)
+            dono = onde.get(alvo)
+            if not dono or dono == nome:
+                return m.group(0)
+            if alvo.startswith('parte-'):
+                return f'{m.group(1)}({dono})'
+            return f'{m.group(1)}({dono}#{alvo})'
+        conteudo = re.sub(r'(\[[^\]]*\])\(#([^)\s]+)\)', troca, conteudo)
+        if nome != 'README.md':
+            n = int(re.search(r'parte-(\d+)-', nome).group(1))
+            ant = nomes.get(n - 1)
+            prox = nomes.get(n + 1)
+            nav = '[Índice](README.md)' + (f' · [Parte anterior]({ant})' if ant else '') + (f' · [Próxima parte]({prox})' if prox else '')
+            conteudo = nav + '\n\n' + conteudo.strip() + '\n\n---\n\n' + nav + '\n'
+        else:
+            conteudo = conteudo.replace('# SDD TotusTuus SoftCloud — documento único (v1 + v2)',
+                                        '# SDD TotusTuus SoftCloud — documento único (v1 + v2), por partes', 1)
+            conteudo += ('\n\nO mesmo conteúdo, num arquivo só, está em `docs/SDD-UNIFICADO.md` '
+                         '(grande demais para o GitHub exibir na tela; abre pelo botão "Raw" ou num editor).\n')
+        open(os.path.join(pasta, nome), 'w', encoding='utf8').write(conteudo)
+    return [(n, len(open(os.path.join(pasta, n), encoding='utf8').read().encode()) // 1024) for n, _ in arquivos]
+
+
 NUMEROS_V2 = set()
 
 
@@ -240,6 +285,8 @@ def main():
                 out.append(bloco_v1(*item))
     saida = '\n'.join(out) + '\n'
     open(SAIDA, 'w', encoding='utf8').write(saida)
+    tamanhos = dividir(saida, PARTES)
+    print('docs/sdd/:', len(tamanhos), 'arquivos, maior', max(k for _, k in tamanhos), 'KB')
     n_v1 = sum(len(v) for v in v1_apos_doc.values()) + sum(len(v) for v in v1_fim_parte.values())
     print('gerado:', os.path.relpath(SAIDA, ROOT), len(saida.splitlines()), 'linhas,', len(saida.encode('utf8')) // 1024,
           'KB |', len(PARTES), 'partes |', len(docs), 'documentos v2 |', n_v1, 'especificações v1')
