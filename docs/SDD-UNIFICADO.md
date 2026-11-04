@@ -548,7 +548,9 @@ A coleção v1 está em anexo-v1/ (62 arquivos, sem alteração de conteúdo). C
 
 ### v1 — `sdd-mestre-php8-mvc-saas.md` (535 linhas)
 
-> Situação na v2: Substituído. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Substituído por 00 e 02. Quando este texto diverge da v2, vale a v2.
+
+> Esta especificação foi substituída por inteiro pelo documento indicado acima. O texto fica como histórico; para implementar, vale o documento da v2.
 
 #### Visão do documento
 
@@ -1151,7 +1153,9 @@ As métricas da v1 (número de controllers, rotas, models, testes) **[Declaradas
 
 ### v1 — `01-vision-scope.md` (62 linhas)
 
-> Situação na v2: Substituído. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Substituído por 01. Quando este texto diverge da v2, vale a v2.
+
+> Esta especificação foi substituída por inteiro pelo documento indicado acima. O texto fica como histórico; para implementar, vale o documento da v2.
 
 > **Documento derivado do SDD mestre** (`docs/sdd-mestre-php8-mvc-saas.md`)
 > **Data:** 04/08/2026 · **Status:** vigente
@@ -1523,7 +1527,9 @@ Data: 02/11/2026. Autor: responsável técnico (a nomear, ver [11](#doc-11), se�
 
 ### v1 — `02-solution-architecture.md` (92 linhas)
 
-> Situação na v2: Substituído. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Substituído por 02. Quando este texto diverge da v2, vale a v2.
+
+> Esta especificação foi substituída por inteiro pelo documento indicado acima. O texto fica como histórico; para implementar, vale o documento da v2.
 
 > **Documento derivado do SDD mestre** · **Data:** 04/08/2026
 
@@ -1742,7 +1748,9 @@ Regras obrigatórias:
 
 ### v1 — `03-domain-model.md` (55 linhas)
 
-> Situação na v2: Substituído. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Substituído por 03. Quando este texto diverge da v2, vale a v2.
+
+> Esta especificação foi substituída por inteiro pelo documento indicado acima. O texto fica como histórico; para implementar, vale o documento da v2.
 
 > **Documento derivado do SDD mestre** · **Data:** 04/08/2026
 
@@ -1802,7 +1810,9 @@ Cada model referenciado nos specs `docs/Nova pasta/spec_gestao_*_completo.md`. O
 
 ### v1 — `06-tenancy.md` (95 linhas)
 
-> Situação na v2: Substituído. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Substituído por 03. Quando este texto diverge da v2, vale a v2.
+
+> Esta especificação foi substituída por inteiro pelo documento indicado acima. O texto fica como histórico; para implementar, vale o documento da v2.
 
 > **Documento derivado do SDD mestre** · **Data:** 04/08/2026
 
@@ -2031,7 +2041,9 @@ Regras:
 
 ### v1 — `04-api-standards.md` (78 linhas)
 
-> Situação na v2: Substituído. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Substituído por 04. Quando este texto diverge da v2, vale a v2.
+
+> Esta especificação foi substituída por inteiro pelo documento indicado acima. O texto fica como histórico; para implementar, vale o documento da v2.
 
 > **Documento derivado do SDD mestre** · **Data:** 04/08/2026
 
@@ -2506,7 +2518,19 @@ Regras adicionais:
 
 ### v1 — `spec_education_saas_architecture.md` (729 linhas)
 
-> Situação na v2: Revisar. Destino: ficha do kit-starter: `kit-starter/transversal/arquitetura-da-plataforma.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/transversal/arquitetura-da-plataforma.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- **Arquitetura, camadas, middleware e ADRs:** o [02](#doc-02) prevalece.
+- **Tenant, unidade e bancos:** o [03](#doc-03) prevalece (banco por unidade, master da plataforma, banco de identidade da entidade).
+- **Identidade:** o [06](#doc-06) prevalece (conta global, vínculos e contexto, seção 12).
+- **Portais e módulos:** a matriz [31](#doc-31) prevalece; papéis no [78](#doc-78).
+- **API:** o [04](#doc-04) prevalece.
+
+#### Texto integral da v1
 
 - Language Standard: Global English
 - Architecture: Multi-entity | Multi-unit | Multi-user
@@ -3489,7 +3513,9 @@ A conta é única por e-mail verificado em toda a plataforma. A mesma pessoa em 
 
 ### v1 — `07-identity-auth.md` (75 linhas)
 
-> Situação na v2: Substituído. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Substituído por 06. Quando este texto diverge da v2, vale a v2.
+
+> Esta especificação foi substituída por inteiro pelo documento indicado acima. O texto fica como histórico; para implementar, vale o documento da v2.
 
 > **Documento derivado do SDD mestre** · **Data:** 04/08/2026
 > **Auditado:** 10-11/07/2026 (34/36 fixados) · **Detalhes:** `docs/security/audit-2026-07-10.md`
@@ -3970,7 +3996,15 @@ Registro de entrada é dado de acesso. Retenção conforme seção 6.
 
 ### v1 — `client-migration-module-spec-completo.md` (1207 linhas)
 
-> Situação na v2: Especificado. Destino: ficha do kit-starter: `kit-starter/gestao/configuracao-e-acesso/importacao-de-dados.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/gestao/configuracao-e-acesso/importacao-de-dados.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- [70](#doc-70); migração de clientes ([19](#doc-19), seção 13).
+
+#### Texto integral da v1
 
 #### 1. Document Control
 
@@ -5182,7 +5216,20 @@ This module should be treated as a controlled migration orchestration system, no
 
 ### v1 — `spec_gestao_autenticacao_completo.md` (1001 linhas)
 
-> Situação na v2: Revisar. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/seguranca-e-operacao/acesso.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/seguranca-e-operacao/acesso.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- **O [06](#doc-06) prevalece em tudo** que as especificações da v1 duplicam ([19](#doc-19), seção 2): tipos de identidade, autenticação, senhas, recuperação de conta, limites de tentativa, sessão, tokens de API, RBAC com contexto, contas de plataforma (break-glass) e conta global com vínculos (seção 12). A v1 fica só com o que é específico de tela.
+- **Cookies e sessões** ficam no [06](#doc-06); a especificação de cookies da v1 é aproveitada só no que não contradiz o 06.
+- **Conta global por e-mail verificado** (D-21) e **token só com o contexto ativo** (D-20) ([06](#doc-06), seção 12).
+- **Login só no domínio de autenticação**, com OIDC e PKCE (D-22, [23](#doc-23), seção 2).
+- **Papéis e níveis** conforme o [78](#doc-78); criação de entidade e unidade só por `platform.developer` (L-02).
+- **Contas de plataforma:** no máximo 5 ativas, passkey obrigatória, alerta em tempo real a cada uso; break-glass com credencial offline em dois cofres ([06](#doc-06), seção 10).
+
+#### Texto integral da v1
 
 - Language Standard: Global English
 - Architecture: Multi-entity | Multi-unit | Multi-user
@@ -6188,7 +6235,20 @@ This specification is complete enough to serve as the master implementation docu
 
 ### v1 — `spec_gestao_cookies_sessions.md` (474 linhas)
 
-> Situação na v2: Revisar. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/seguranca-e-operacao/acesso.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/seguranca-e-operacao/acesso.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- **O [06](#doc-06) prevalece em tudo** que as especificações da v1 duplicam ([19](#doc-19), seção 2): tipos de identidade, autenticação, senhas, recuperação de conta, limites de tentativa, sessão, tokens de API, RBAC com contexto, contas de plataforma (break-glass) e conta global com vínculos (seção 12). A v1 fica só com o que é específico de tela.
+- **Cookies e sessões** ficam no [06](#doc-06); a especificação de cookies da v1 é aproveitada só no que não contradiz o 06.
+- **Conta global por e-mail verificado** (D-21) e **token só com o contexto ativo** (D-20) ([06](#doc-06), seção 12).
+- **Login só no domínio de autenticação**, com OIDC e PKCE (D-22, [23](#doc-23), seção 2).
+- **Papéis e níveis** conforme o [78](#doc-78); criação de entidade e unidade só por `platform.developer` (L-02).
+- **Contas de plataforma:** no máximo 5 ativas, passkey obrigatória, alerta em tempo real a cada uso; break-glass com credencial offline em dois cofres ([06](#doc-06), seção 10).
+
+#### Texto integral da v1
 
 - Language Standard: Global English
 #### Visão geral
@@ -6667,7 +6727,15 @@ Cada card deve exibir:
 
 ### v1 — `spec_gestao_notificacoes.md` (378 linhas)
 
-> Situação na v2: Revisar. Destino: ficha do kit-starter: `kit-starter/gestao/configuracao-e-acesso/notificacoes.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/gestao/configuracao-e-acesso/notificacoes.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- [57](#doc-57); estados e validações ([18](#doc-18), seção 3); consentimento por canal ([26](#doc-26), seção 5).
+
+#### Texto integral da v1
 
 - Language Standard: Global English
 #### 1. Objetivo
@@ -7050,7 +7118,15 @@ O módulo deve ser projetado para operação intensiva, com foco em governança,
 
 ### v1 — `spec_gestao_notificacoes_revisada.md` (642 linhas)
 
-> Situação na v2: Revisar. Destino: ficha do kit-starter: `kit-starter/gestao/configuracao-e-acesso/notificacoes.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/gestao/configuracao-e-acesso/notificacoes.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- [57](#doc-57); estados e validações ([18](#doc-18), seção 3); consentimento por canal ([26](#doc-26), seção 5).
+
+#### Texto integral da v1
 
 #### 1. Objetivo
 A Gestão de Notificações centraliza a criação, segmentação, distribuição, acompanhamento e automação de notificações da plataforma multi-entity/multi-unit. O módulo deve suportar notificações operacionais, transacionais, informativas, críticas e automatizadas, com visão por entidade, unidade, canal, status, prioridade e origem do evento.
@@ -7811,7 +7887,9 @@ Ameaças adicionais que a v2 inclui: **SSRF** em webhooks e integrações (bloqu
 
 ### v1 — `05-security-architecture.md` (69 linhas)
 
-> Situação na v2: Substituído. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Substituído por 05. Quando este texto diverge da v2, vale a v2.
+
+> Esta especificação foi substituída por inteiro pelo documento indicado acima. O texto fica como histórico; para implementar, vale o documento da v2.
 
 > **Documento derivado do SDD mestre** · **Data:** 04/08/2026
 > **Detalhes completos:** `docs/security/control-matrix.md`, `docs/security/findings-register.md`, `docs/threat-model-STRIDE.md`, `docs/MASTER_AUDIT_REPORT_2026-07-11.md`, `docs/security/audit-2026-07-10.md`
@@ -7988,7 +8066,9 @@ Itens que a v1 listava como lacuna e que continuam abertos: ROPA completo por ta
 
 ### v1 — `08-privacy-lgpd.md` (66 linhas)
 
-> Situação na v2: Substituído. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Substituído por 07. Quando este texto diverge da v2, vale a v2.
+
+> Esta especificação foi substituída por inteiro pelo documento indicado acima. O texto fica como histórico; para implementar, vale o documento da v2.
 
 > **Documento derivado do SDD mestre** · **Data:** 04/08/2026
 
@@ -8497,7 +8577,19 @@ Fechamento automático 3 dias úteis após `resolvido`, sem resposta do solicita
 
 ### v1 — `spec-sub-sidebar-privacidade-lgpd.md` (321 linhas)
 
-> Situação na v2: Revisar. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/seguranca-e-operacao/privacidade-dpo.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/seguranca-e-operacao/privacidade-dpo.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- **O [07](#doc-07) e o [32](#doc-32), seções 3 a 5, prevalecem** ([19](#doc-19), seção 2: privacidade global consolidada no 07; cookies e sessões no 06).
+- **DPO da plataforma** (LGPD-07, [32](#doc-32), seção 7): a empresa desenvolvedora, por encarregado indicado por ela, com painel no portal do desenvolvedor. Cada entidade designa o próprio DPO.
+- **Painel do DPO** ([32](#doc-32), seção 3.7); **pedido do titular** (seção 3.3); **ROPA** (seção 3.4); **incidentes e comunicação à ANPD** ([07](#doc-07), seção 8).
+- **Operadora:** a plataforma não usa dado de entidade fora do contrato de tratamento ([07](#doc-07), seção 7).
+- **Separação de funções:** o DPO não opera o módulo que audita ([22](#doc-22), seção 5).
+
+#### Texto integral da v1
 
 **Projeto:** TotusTuusSoftCloud  
 **Módulo:** Privacy Compliance  
@@ -8822,7 +8914,18 @@ export function PrivacySidebarMenu({ currentPath }) {
 
 ### v1 — `spec_gestao_auditoria_completo.md` (731 linhas)
 
-> Situação na v2: Especificado. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/seguranca-e-operacao/auditoria.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/seguranca-e-operacao/auditoria.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- **O [29](#doc-29) prevalece:** categorias, formato do evento, onde fica (ações da plataforma no master; ações de unidade no banco da unidade), integridade por cadeia de hash com verificação horária e ancoragem diária, imutabilidade (a aplicação só faz `INSERT` e `SELECT`), acesso por papel, mascaramento, retenção e alertas.
+- **Auditoria × Logger** ([19](#doc-19), seção 2): a Auditoria é dona da trilha de negócio e de segurança ([18](#doc-18), seção 4); o logger técnico fica no [10](#doc-10), seção 7. A especificação do Logger da v1 é absorvida só como referência técnica, sem dado pessoal nos logs ([07](#doc-07), seção 6).
+- **Toda leitura gera evento** (`audit.read`); exportação exige MFA recente e motivo; auditoria de outra entidade é impossível pela aplicação ([29](#doc-29), seção 5).
+- **Suporte da plataforma** vê eventos técnicos e de sessão do chamado, sem dado de aluno sem vínculo.
+
+#### Texto integral da v1
 
 - Language Standard: Global English
 #### 1. Visão geral
@@ -9558,7 +9661,18 @@ Campos:
 
 ### v1 — `spec_gestao_logger_completo.md` (1038 linhas)
 
-> Situação na v2: Revisar. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/seguranca-e-operacao/auditoria.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/seguranca-e-operacao/auditoria.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- **O [29](#doc-29) prevalece:** categorias, formato do evento, onde fica (ações da plataforma no master; ações de unidade no banco da unidade), integridade por cadeia de hash com verificação horária e ancoragem diária, imutabilidade (a aplicação só faz `INSERT` e `SELECT`), acesso por papel, mascaramento, retenção e alertas.
+- **Auditoria × Logger** ([19](#doc-19), seção 2): a Auditoria é dona da trilha de negócio e de segurança ([18](#doc-18), seção 4); o logger técnico fica no [10](#doc-10), seção 7. A especificação do Logger da v1 é absorvida só como referência técnica, sem dado pessoal nos logs ([07](#doc-07), seção 6).
+- **Toda leitura gera evento** (`audit.read`); exportação exige MFA recente e motivo; auditoria de outra entidade é impossível pela aplicação ([29](#doc-29), seção 5).
+- **Suporte da plataforma** vê eventos técnicos e de sessão do chamado, sem dado de aluno sem vínculo.
+
+#### Texto integral da v1
 
 > **Projeto:** TotusTuusSoftCloud Premium V2  
 > **Stack:** PHP 8 puro · Tailwind CSS 4.2 · Supabase · amCharts 5 · FontAwesome 7.2  
@@ -10602,7 +10716,19 @@ $this->fetch('drawers/drawer/admin/logger/drawer-create-cron.php');
 
 ### v1 — `spec_gestao_privacy_global_completo.md` (345 linhas)
 
-> Situação na v2: Revisar. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/seguranca-e-operacao/privacidade-dpo.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/seguranca-e-operacao/privacidade-dpo.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- **O [07](#doc-07) e o [32](#doc-32), seções 3 a 5, prevalecem** ([19](#doc-19), seção 2: privacidade global consolidada no 07; cookies e sessões no 06).
+- **DPO da plataforma** (LGPD-07, [32](#doc-32), seção 7): a empresa desenvolvedora, por encarregado indicado por ela, com painel no portal do desenvolvedor. Cada entidade designa o próprio DPO.
+- **Painel do DPO** ([32](#doc-32), seção 3.7); **pedido do titular** (seção 3.3); **ROPA** (seção 3.4); **incidentes e comunicação à ANPD** ([07](#doc-07), seção 8).
+- **Operadora:** a plataforma não usa dado de entidade fora do contrato de tratamento ([07](#doc-07), seção 7).
+- **Separação de funções:** o DPO não opera o módulo que audita ([22](#doc-22), seção 5).
+
+#### Texto integral da v1
 
 - Language Standard: Global English
 #### 1. Objetivo
@@ -11473,7 +11599,9 @@ Decidido em 03/11/2026 ([40](#doc-40), seção 4.4). A sala usa o template do po
 
 ### v1 — `11-frontend-design-system-master-model.md` (260 linhas)
 
-> Situação na v2: Substituído. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Substituído por 08. Quando este texto diverge da v2, vale a v2.
+
+> Esta especificação foi substituída por inteiro pelo documento indicado acima. O texto fica como histórico; para implementar, vale o documento da v2.
 
 > **Documento derivado do SDD Mestre** · **Data:** 05/09/2026 (atualizado)  
 > **Página de Referência / Gold Standard:** `https://localhost/totustuussoftcloud/developer/commercial`  
@@ -12022,7 +12150,19 @@ Foto é opcional. Aparece para pessoas com vínculo na mesma unidade. **Decidido
 
 ### v1 — `12-portals-navigation-sidebar-pages-spec.md` (279 linhas)
 
-> Situação na v2: Revisar. Destino: ficha do kit-starter: `kit-starter/transversal/navegacao-dos-portais.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/transversal/navegacao-dos-portais.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- **Matriz de portais, áreas e módulos:** a [31](#doc-31) prevalece; itens da v1 fora da matriz não entram no menu sem passar pela matriz.
+- **Layout, componentes e acessibilidade:** o [08](#doc-08) prevalece; o checklist de 21 itens da v1 (seção 13) vale onde não contradiz o 08.
+- **Menu por permissão:** item sem permissão não aparece e a rota responde 404 ou 403 (default-deny, [78](#doc-78), seção 5).
+- **Itens só citados na v1** (mural, materiais, tarefas) ganharam regra no DP-06 ([80](#doc-80)).
+- **`sub_sidebar_itsm.php`** é código de view com `onclick=` (ACH-01) e não é especificação ([12](#doc-12), seção 3).
+
+#### Texto integral da v1
 
 > **Documento Derivado do SDD Mestre** · **Data:** 05/09/2026  
 > **Status:** Aprovado / Normativo  
@@ -12796,7 +12936,15 @@ Notas:
 
 ### v1 — `spec_crm_funil_comercial.md` (244 linhas)
 
-> Situação na v2: Especificado. Destino: ficha do kit-starter: `kit-starter/gestao/comercial-e-admissoes/crm-do-tenant-captacao-pre-cadastro-inscricao.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/gestao/comercial-e-admissoes/crm-do-tenant-captacao-pre-cadastro-inscricao.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- Dois CRMs, não um ([22](#doc-22), seção 1); consentimento por canal ([26](#doc-26), seção 5).
+
+#### Texto integral da v1
 
 **Projeto:** TotusTuusSoftCloud — SaaS Multi-Entidade · Multi-Unidade · Multi-Usuário
 **Módulo:** CRM / Sales Pipeline / Admissions
@@ -13046,7 +13194,15 @@ CREATE TABLE crm_goals (
 
 ### v1 — `spec_gestao_marketing_redes_sociais.md` (350 linhas)
 
-> Situação na v2: Especificado. Destino: ficha do kit-starter: `kit-starter/gestao/comercial-e-admissoes/crm-do-tenant-captacao-pre-cadastro-inscricao.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/gestao/comercial-e-admissoes/crm-do-tenant-captacao-pre-cadastro-inscricao.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- Dois CRMs, não um ([22](#doc-22), seção 1); consentimento por canal ([26](#doc-26), seção 5).
+
+#### Texto integral da v1
 
 - Language Standard: Global English
 #### Objetivo
@@ -18078,7 +18234,16 @@ Notas:
 
 ### v1 — `global_meeting_spec_v2_complete.md` (620 linhas)
 
-> Situação na v2: Especificado em v2. Destino: ficha do kit-starter: `kit-starter/gestao/academico/aulas-online.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/gestao/academico/aulas-online.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- Gravação só com aviso e consentimento conforme a seção 13 (5).
+- Presença online segue a regra da seção 13 (6) e alimenta o diário ([61](#doc-61)).
+
+#### Texto integral da v1
 
 **Product:** TotusTuusSoftCloud  
 **Template:** Supabase-style UI/UX  
@@ -18703,7 +18868,16 @@ All errors must return structured English messages and machine-readable codes.
 
 ### v1 — `spec-gestao-preceptoria-autoavaliacao.md` (409 linhas)
 
-> Situação na v2: Especificação parcial, reclassificada. Destino: ficha do kit-starter: `kit-starter/gestao/academico/preceptoria.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/gestao/academico/preceptoria.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- Avaliação do preceptor é anônima para o residente (seção 13, 5).
+- Campo de estágio (terceiro) vê só o mínimo para supervisionar (seção 13, 5; [38](#doc-38)).
+
+#### Texto integral da v1
 
 - Language Standard: Global English
 #### Visão geral
@@ -19117,7 +19291,18 @@ Campos importantes:
 
 ### v1 — `spec_gestao_academica_completo.md` (1382 linhas)
 
-> Situação na v2: Especificado. Destino: ficha do kit-starter: `kit-starter/gestao/academico/administracao-escolar-estrutura-academica.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/gestao/academico/administracao-escolar-estrutura-academica.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- Turma aponta sempre para curso, grade e **versão** da grade ([60](#doc-60), seção 6).
+- Grade publicada não é editada: mudança gera nova versão; alunos ficam na versão em que entraram.
+- Período letivo depende do calendário da unidade ([58](#doc-58)); nota só é lançada dentro do período aberto ([17](#doc-17), seção 4.2).
+- Sistemas avaliativos ficam na ficha regras de aprovação.
+
+#### Texto integral da v1
 
 **Produto:** TotusTuus SoftCloud Education
 **Módulo:** Academic Management (ACM)
@@ -20505,7 +20690,15 @@ Todas as rotas seguem o padrão:
 
 ### v1 — `spec_gestao_biblioteca_academica.md` (275 linhas)
 
-> Situação na v2: Revisar. Destino: ficha do kit-starter: `kit-starter/gestao/biblioteca/acervo.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/gestao/biblioteca/acervo.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- Fronteira com gestão de documentos ([31](#doc-31), seção 3.1).
+
+#### Texto integral da v1
 
 **Projeto:** TotusTuusSoftCloud — SaaS Multi-Entidade · Multi-Unidade · Multi-Usuário
 **Módulo:** Academic Library / Circulation Management
@@ -20786,7 +20979,15 @@ CREATE TABLE lib_fines (
 
 ### v1 — `spec_gestao_biblioteca_completo.md` (1182 linhas)
 
-> Situação na v2: Revisar. Destino: ficha do kit-starter: `kit-starter/gestao/biblioteca/acervo.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/gestao/biblioteca/acervo.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- Fronteira com gestão de documentos ([31](#doc-31), seção 3.1).
+
+#### Texto integral da v1
 
 - Language Standard: Global English
 Documento de especificação funcional e estrutural para uma biblioteca de páginas, blocos e componentes reutilizáveis voltada a sistemas SaaS administrativos, operacionais e analíticos. O escopo cobre DataTables, widgets, charts, CRUD em drawers, Kanban, automações, controles e páginas de gerenciamento completas, com foco em consistência de design system, acessibilidade, segurança operacional e alta reutilização entre módulos.[cite:1]
@@ -21973,7 +22174,16 @@ A biblioteca só deve ser considerada pronta quando uma equipe conseguir montar 
 
 ### v1 — `spec_gestao_simulados_ia.md` (683 linhas)
 
-> Situação na v2: Especificado em v2. Destino: ficha do kit-starter: `kit-starter/gestao/simulados/banco-de-questoes.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/gestao/simulados/banco-de-questoes.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- Questão passa por revisão antes de publicar ([31](#doc-31), seção 3.6).
+- IA só sugere; nota final nunca é só da IA ([27](#doc-27)).
+
+#### Texto integral da v1
 
 - Language Standard: Global English
 #### Visão geral
@@ -23476,7 +23686,16 @@ CREATE TABLE assinaturas_signatarios (
 
 ### v1 — `spec-builder-documentos-academicos.md` (896 linhas)
 
-> Situação na v2: Revisar. Destino: ficha do kit-starter: `kit-starter/gestao/secretaria/emissao-de-documentos.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/gestao/secretaria/emissao-de-documentos.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- Modelo só é usado depois de aprovado; documento emitido é imutável e só é revogado com motivo (seção 13, 12 e 15).
+- Editor de modelos do gerador **não é** o Editor de portais ([31](#doc-31), seção 3.4).
+
+#### Texto integral da v1
 
 Documento funcional e técnico para criação, configuração, versionamento, renderização, emissão e validação de qualquer documento acadêmico, administrativo, financeiro ou contratual, com suporte a builder visual, layout de impressão avançado, múltiplos tamanhos de papel, cabeçalho, rodapé, margens, identação, paginação e regras de negócio.
 
@@ -24377,7 +24596,15 @@ O grande diferencial do módulo deve ser unir três camadas no mesmo produto: go
 
 ### v1 — `spec_gestao_documentos_completo.md` (546 linhas)
 
-> Situação na v2: Revisar. Destino: ficha do kit-starter: `kit-starter/gestao/gestao-de-documentos/servicos-comuns-assinatura-protocolo-e-armazenamento.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/gestao/gestao-de-documentos/servicos-comuns-assinatura-protocolo-e-armazenamento.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- Serviços comuns e DDL dos contextos ([54](#doc-54), seções 5 e 10); o que muda nos documentos existentes (seção 8).
+
+#### Texto integral da v1
 
 - Language Standard: Global English
 #### 1. Objetivo do módulo
@@ -25689,7 +25916,17 @@ Regras já definidas em [17](#doc-17), seção 2.5, e [20](#doc-20), seção 12.
 
 ### v1 — `spec_gestao_billing_cobranca_mensalidades.md` (1433 linhas)
 
-> Situação na v2: Especificado. Destino: ficha do kit-starter: `kit-starter/gestao/financeiro-da-entidade/mensalidades.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/gestao/financeiro-da-entidade/mensalidades.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- Estados da fatura ([18](#doc-18), seção 2.3); valor em centavos inteiros ([20](#doc-20), seção 4).
+- Multa, juros e reajuste dentro do limite legal ([26](#doc-26), seção 4.3).
+- Geração idempotente: reprocessar não duplica fatura ([17](#doc-17), seção 2.6).
+
+#### Texto integral da v1
 
 **Versão:** 1.0  
 **Status:** Draft Funcional Completo  
@@ -27128,7 +27365,15 @@ CREATE TABLE billing_collection_rule_steps (
 
 ### v1 — `spec_gestao_contabil_fiscal_completo.md` (294 linhas)
 
-> Situação na v2: Especificado. Destino: ficha do kit-starter: `kit-starter/gestao/contabil-e-fiscal-da-entidade/plano-de-contas-da-entidade.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/gestao/contabil-e-fiscal-da-entidade/plano-de-contas-da-entidade.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- Fronteira plataforma × entidade ([31](#doc-31), seção 3.3); controles de período ([18](#doc-18), seção 6).
+
+#### Texto integral da v1
 
 - Language Standard: Global English
 #### 1. Objetivo do módulo
@@ -27427,7 +27672,16 @@ O resultado final deve permitir que o usuário trabalhe o ciclo completo: cadast
 
 ### v1 — `spec_gestao_financeiro_completo.md` (1532 linhas)
 
-> Situação na v2: Especificado. Destino: ficha do kit-starter: `kit-starter/gestao/financeiro-da-entidade/titulos.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/gestao/financeiro-da-entidade/titulos.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- Estados do título ([17](#doc-17), seção 2.3); ninguém cria e aprova o mesmo objeto financeiro ([22](#doc-22), seção 5).
+- Ledger de partidas dobradas para todo movimento ([20](#doc-20), seção 5).
+
+#### Texto integral da v1
 
 **Projeto:** TotusTuusSoftCloud  
 **Stack:** PHP 8 (puro) · JavaScript · Tailwind CSS 4.2 · Supabase · amCharts 5 · MariaDB/InnoDB  
@@ -29489,7 +29743,21 @@ CREATE TABLE smt_ergonomia_analises (
 
 ### v1 — `spec_gestao_pessoas_completo.md` (1257 linhas)
 
-> Situação na v2: Especificado. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/pessoas-da-plataforma/departamento-pessoal.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/pessoas-da-plataforma/departamento-pessoal.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- **Módulo separado do RH** (HCM-01 do [39](#doc-39), seção 11): Pessoas é dono de cadastro funcional, folha, férias, rescisão, eSocial e ponto; não é dono de processo seletivo, avaliação e clima. O cadastro funcional nasce aqui, quando o RH passa o candidato contratado por referência.
+- **Dados civis** ficam no banco de identidade; o HCM referencia `person_id` (D-19; [14](#doc-14), seção 3). Para a empresa, o banco é o master.
+- **Regras do [39](#doc-39), seção 3** prevalecem sobre a v1: admissão, folha (folha fechada não é alterada), férias e afastamentos, ponto e jornada (ajuste manual só com motivo), rescisão (desligamento com afastamento ativo fica bloqueado) e benefícios.
+- **Folha:** quem processa não aprova ([22](#doc-22), seção 5; [39](#doc-39), seção 7).
+- **Medicina do trabalho:** não aparece aqui com CID nem prontuário; Pessoas recebe só apto, inapto ou restrição sem motivo clínico, validade do ASO e afastamento sem CID ([39](#doc-39), seção 5.1).
+- **Perfis da v1:** a matriz de permissões da v1 é aproveitada com as correções da seção 7 do [39](#doc-39); papéis na seção 6 desta ficha.
+- **Instância da empresa:** sem filtro de unidade ou entidade; o portal do desenvolvedor não vê o HCM de nenhuma entidade.
+
+#### Texto integral da v1
 
 **Plataforma:** TotusTuusSoftCloud SaaS  
 **Stack:** PHP 8 puro · JavaScript Vanilla · Fetch API · Tailwind CSS 4.2 · Supabase · amCharts 5  
@@ -30752,7 +31020,20 @@ CREATE TABLE hcm_audit_logs (
 
 ### v1 — `spec_gestao_rh_completo.md` (1319 linhas)
 
-> Situação na v2: Revisar. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/pessoas-da-plataforma/recursos-humanos.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/pessoas-da-plataforma/recursos-humanos.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- **Módulo separado de Pessoas** (HCM-01 do [39](#doc-39), seção 11): RH é dono de recrutamento, onboarding, avaliação, clima e movimentação interna; não é dono de folha, admissão no eSocial nem cadastro civil. Candidato contratado passa para Pessoas por referência, sem cópia de dado.
+- **Currículo de candidato não contratado** (HCM-09): guardado por prazo fixo e depois excluído; o candidato é informado no envio; nenhum uso fora do processo em que se candidatou.
+- **Sem acesso a dado de saúde:** o RH não vê CID, diagnóstico nem prontuário em nenhuma tela ou API ([39](#doc-39), seção 5.1).
+- **Avaliação e clima:** formulários pelo motor de formulários e pesquisas ([41](#doc-41)).
+- **Perfis da v1:** substituídos pelos papéis da seção 6 desta ficha.
+- **Instância da empresa:** sem filtro de unidade ou entidade.
+
+#### Texto integral da v1
 
 Versão: 1.0  
 Status: Draft funcional completo  
@@ -32077,7 +32358,20 @@ Todos os eventos críticos do módulo RH devem ser auditáveis, principalmente v
 
 ### v1 — `spec_gestao_seguranca_medicina_trabalho_completo.md` (1581 linhas)
 
-> Situação na v2: Especificado. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/pessoas-da-plataforma/medicina-e-seguranca-do-trabalho-da-empresa.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/pessoas-da-plataforma/medicina-e-seguranca-do-trabalho-da-empresa.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- **Regra central de privacidade** ([39](#doc-39), seção 5.1, e HCM-06): RH e gestão **nunca** veem CID, diagnóstico ou prontuário; veem apenas apto, inapto ou apto com restrição, validade do ASO, restrição funcional sem motivo clínico e afastamento sem CID. A permissão "SST — Gerenciar" da v1 **não existe**: cada papel tem permissão própria.
+- **PCMSO, PGR, LTCAT, CIPA e ergonomia:** seguem o [52](#doc-52), que prevalece sobre a v1, inclusive o DDL proposto da seção 9.
+- **Guarda do prontuário e do ASO:** no mínimo 20 anos após o desligamento (HCM-08; NR-7, 7.6.1.1).
+- **Regras do [17](#doc-17), seção 5** (ASO, CAT, EPI, NR, afastamento) prevalecem sobre a v1.
+- **Resultado de exame:** registrado só pelo profissional responsável ([22](#doc-22), seção 5).
+- **Instância da empresa:** sem filtro de unidade; dados no banco master, com acesso restrito.
+
+#### Texto integral da v1
 
 > **Versão:** 1.0 | **Status:** Draft Funcional Completo
 > **Plataforma:** TotusTuusSoftCloud — SaaS multi-entidade · multi-unidade · multi-usuário
@@ -34303,7 +34597,15 @@ Todo acesso de prestador grava evento com `portal = terceiros`, `prestador_uuid`
 
 ### v1 — `spec_gestao_armazenamento_completo.md` (1380 linhas)
 
-> Situação na v2: Revisar. Destino: ficha do kit-starter: `kit-starter/gestao/suprimentos-e-compras/almoxarifado.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/gestao/suprimentos-e-compras/almoxarifado.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- Saldo nunca negativo; lote e validade para item controlado ([19](#doc-19), seção 5).
+
+#### Texto integral da v1
 
 **Versão:** 1.0  
 **Status:** Draft Funcional Completo  
@@ -35689,7 +35991,15 @@ CREATE TABLE stg_automations (
 
 ### v1 — `spec_gestao_contratos_completo.md` (1377 linhas)
 
-> Situação na v2: Especificado. Destino: ficha do kit-starter: `kit-starter/gestao/contratos/contratos-de-fornecedor.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/gestao/contratos/contratos-de-fornecedor.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- Contratos ([33](#doc-33)); validação de datas ([17](#doc-17), seção 7.4).
+
+#### Texto integral da v1
 
 Versão: 1.0  
 Status: Draft funcional completo  
@@ -37071,7 +37381,20 @@ Ao final da implementação, o módulo deve permitir controlar ponta a ponta o c
 
 ### v1 — `spec_gestao_frotas_completo.md` (1558 linhas)
 
-> Situação na v2: Especificado. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/operacoes-internas/frotas.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/operacoes-internas/frotas.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- **DP-01:** Frotas entra nesta versão ([80](#doc-80)).
+- **T-01:** as 13 tabelas recebem `tenant_id` NOT NULL e índice composto ([19](#doc-19), seção 1).
+- **Regras** ([19](#doc-19), seção 9): CNH vencida bloqueia a reserva e mostra alerta; conflito de horário bloqueia a reserva; veículo em manutenção bloqueia e sugere alternativo; validade do tacógrafo obrigatória quando aplicável; consumo é calculado (litros e quilometragem) e **nunca** campo de entrada, inclusive na tela que a v1 mostra como editável; abastecimento com litros maior que zero.
+- **Instância da empresa:** sem filtro de unidade, entidade ou filial; dados no banco master; o portal do desenvolvedor não vê o módulo de nenhuma entidade.
+- **Perfis da v1 (seção 2 da v1):** substituídos pelos papéis da seção 6 desta ficha.
+- **Mapa (v1, "Painel de Mapa", opcional):** só com provedor de mapas aprovado como integração ([16](#doc-16)); sem provedor, o painel não aparece.
+
+#### Texto integral da v1
 
 **Projeto:** TotusTuusSoftCloud SaaS Platform  
 **Módulo:** Frotas / Fleet Management  
@@ -38635,7 +38958,21 @@ CREATE TABLE flt_audit_logs (
 
 ### v1 — `spec_gestao_suprimentos_v3_consolidado.md` (1271 linhas)
 
-> Situação na v2: Especificado. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/operacoes-internas/suprimentos-da-empresa.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/operacoes-internas/suprimentos-da-empresa.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- **Dono do estoque** ([19](#doc-19), seção 2, decidido em 03/11/2026): Suprimentos é dono de estoque e movimento. O antigo "Armazenamento" é sistema de arquivos, sem estoque.
+- **Movimento de estoque** ([19](#doc-19), seção 5; [15](#doc-15)): saldo nunca negativo, salvo item marcado como consumo sob encomenda; quantidade maior que zero; lote, série ou validade obrigatório para item controlado; item bloqueado não movimenta, com motivo.
+- **Contratos e atas:** consumo de saldo é movimento no módulo de Contratos, disparado pelo Suprimentos ([14](#doc-14)).
+- **Nota do fornecedor:** recebida e validada pelo portal de terceiros, não emitida aqui ([34](#doc-34), seção 5.3).
+- **Instância da empresa:** sem filtro de unidade, entidade ou filial; dados no banco master; o portal do desenvolvedor não vê o módulo de nenhuma entidade.
+- **Perfis da v1 (seção 5 da v1):** substituídos pelos papéis da seção 6 desta ficha.
+- **Merenda:** é do portal de gestão das entidades, não da empresa.
+
+#### Texto integral da v1
 
 **Versão:** 3.0 — Consolidado
 **Status:** Completo
@@ -39912,7 +40249,20 @@ O módulo será aceito quando:
 
 ### v1 — `spec_patrimonio_completo.md` (1309 linhas)
 
-> Situação na v2: Especificado. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/operacoes-internas/patrimonio.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/operacoes-internas/patrimonio.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- **T-01:** todas as 12 tabelas recebem `tenant_id` NOT NULL e índice composto ([19](#doc-19), seção 1; [03](#doc-03)).
+- **T-04:** `current_value` é calculado, não editável. Guardar o último cálculo com data e método; recalcular, não sobrescrever.
+- **Regras de campo** ([19](#doc-19), seção 8.2): `acquisition_value` maior que zero e só alterável por correção com motivo; `residual_value` não negativo e não maior que `acquisition_value`; `dep_method` em `linear`, `accelerated`, `degressive`, `unit`; `dep_rate` entre 0 e 100%; ativo baixado não recebe depreciação nem movimento.
+- **Instância da empresa:** sem filtro de unidade, entidade ou filial; dados no banco master; o portal do desenvolvedor não vê o módulo de nenhuma entidade.
+- **Perfis da v1 (seção 2 da v1):** substituídos pelos papéis da seção 6 desta ficha.
+- **Contabilização automática de depreciação:** gera lançamento no razão da empresa (razao.md), não no contábil de entidade.
+
+#### Texto integral da v1
 
 **Versão:** 1.0.0  
 **Status:** Draft Funcional Completo  
@@ -41453,7 +41803,23 @@ Gráficos: volume por dia, itens por estado, distribuição por canal, sucesso e
 
 ### v1 — `SPEC-HELPDESK.md` (929 linhas)
 
-> Situação na v2: Revisar. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/suporte/chamados-dos-clientes.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/suporte/chamados-dos-clientes.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- **Modelo único** ([32](#doc-32), seção 2.1; [19](#doc-19), seção 7): Helpdesk é a base; SAC e chat rápido são canais ou tipos do mesmo registro. As três especificações da v1 da seção 13 descrevem partes desse mesmo módulo.
+- **Protocolo** (ATD-01): todo pedido com responsável e prazo recebe número de protocolo; pergunta resolvida pelo bot ou pela base de conhecimento, sem fila, não recebe.
+- **Estados e transições** ([32](#doc-32), seção 2.2): `novo`, `aberto`, `em_triagem`, `em_atendimento`, `aguardando_cliente`, `aguardando_terceiro`, `aguardando_aprovacao`, `em_pausa`, `resolvido`, `fechado`, `reaberto`, `escalonado`, `cancelado`. Transição inválida é recusada pela aplicação. Cancelar, escalonar e reabrir gravam motivo.
+- **Prioridade, categoria e fila** (seção 2.4): baixa, média, alta e urgente; urgente só em categoria que permita; atribuição automática por fila.
+- **Canais** (seção 2.5; [22](#doc-22), seções 2 e 3): opção "Abrir ticket" sem IA em todo ponto de atendimento (D-18); texto do solicitante guardado literal; campos obrigatórios por tipo e lista fixa de campos padrão.
+- **Portal do cliente** (seção 2.6): nota interna nunca aparece para o solicitante; respostas públicas por padrão; avaliação do atendimento.
+- **Visibilidade no portal do desenvolvedor** (seção 2.8): chamados das entidades; nenhum dado de aluno sem chamado vinculado ([29](#doc-29), seção 8).
+- **Bots** (seção 2.9): categoria sensível (saúde, denúncia, conflito) vai para humano (ATD-05).
+- **Perfis da v1:** substituídos pelos papéis da seção 6.
+
+#### Texto integral da v1
 
 - Language Standard: Global English
 #### 1. Visão Geral
@@ -42387,7 +42753,23 @@ A prioridade pode ser determinada por combinação de impacto e urgência, com o
 
 ### v1 — `SPEC-LAYOUT-TICKET.md` (350 linhas)
 
-> Situação na v2: Especificado. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/suporte/chamados-dos-clientes.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/suporte/chamados-dos-clientes.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- **Modelo único** ([32](#doc-32), seção 2.1; [19](#doc-19), seção 7): Helpdesk é a base; SAC e chat rápido são canais ou tipos do mesmo registro. As três especificações da v1 da seção 13 descrevem partes desse mesmo módulo.
+- **Protocolo** (ATD-01): todo pedido com responsável e prazo recebe número de protocolo; pergunta resolvida pelo bot ou pela base de conhecimento, sem fila, não recebe.
+- **Estados e transições** ([32](#doc-32), seção 2.2): `novo`, `aberto`, `em_triagem`, `em_atendimento`, `aguardando_cliente`, `aguardando_terceiro`, `aguardando_aprovacao`, `em_pausa`, `resolvido`, `fechado`, `reaberto`, `escalonado`, `cancelado`. Transição inválida é recusada pela aplicação. Cancelar, escalonar e reabrir gravam motivo.
+- **Prioridade, categoria e fila** (seção 2.4): baixa, média, alta e urgente; urgente só em categoria que permita; atribuição automática por fila.
+- **Canais** (seção 2.5; [22](#doc-22), seções 2 e 3): opção "Abrir ticket" sem IA em todo ponto de atendimento (D-18); texto do solicitante guardado literal; campos obrigatórios por tipo e lista fixa de campos padrão.
+- **Portal do cliente** (seção 2.6): nota interna nunca aparece para o solicitante; respostas públicas por padrão; avaliação do atendimento.
+- **Visibilidade no portal do desenvolvedor** (seção 2.8): chamados das entidades; nenhum dado de aluno sem chamado vinculado ([29](#doc-29), seção 8).
+- **Bots** (seção 2.9): categoria sensível (saúde, denúncia, conflito) vai para humano (ATD-05).
+- **Perfis da v1:** substituídos pelos papéis da seção 6.
+
+#### Texto integral da v1
 
 #### 1. Objetivo
 
@@ -42742,7 +43124,23 @@ Registrar em audit_logs:
 
 ### v1 — `spec_chat_rapido_sac.md` (294 linhas)
 
-> Situação na v2: Revisar. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/suporte/chamados-dos-clientes.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/suporte/chamados-dos-clientes.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- **Modelo único** ([32](#doc-32), seção 2.1; [19](#doc-19), seção 7): Helpdesk é a base; SAC e chat rápido são canais ou tipos do mesmo registro. As três especificações da v1 da seção 13 descrevem partes desse mesmo módulo.
+- **Protocolo** (ATD-01): todo pedido com responsável e prazo recebe número de protocolo; pergunta resolvida pelo bot ou pela base de conhecimento, sem fila, não recebe.
+- **Estados e transições** ([32](#doc-32), seção 2.2): `novo`, `aberto`, `em_triagem`, `em_atendimento`, `aguardando_cliente`, `aguardando_terceiro`, `aguardando_aprovacao`, `em_pausa`, `resolvido`, `fechado`, `reaberto`, `escalonado`, `cancelado`. Transição inválida é recusada pela aplicação. Cancelar, escalonar e reabrir gravam motivo.
+- **Prioridade, categoria e fila** (seção 2.4): baixa, média, alta e urgente; urgente só em categoria que permita; atribuição automática por fila.
+- **Canais** (seção 2.5; [22](#doc-22), seções 2 e 3): opção "Abrir ticket" sem IA em todo ponto de atendimento (D-18); texto do solicitante guardado literal; campos obrigatórios por tipo e lista fixa de campos padrão.
+- **Portal do cliente** (seção 2.6): nota interna nunca aparece para o solicitante; respostas públicas por padrão; avaliação do atendimento.
+- **Visibilidade no portal do desenvolvedor** (seção 2.8): chamados das entidades; nenhum dado de aluno sem chamado vinculado ([29](#doc-29), seção 8).
+- **Bots** (seção 2.9): categoria sensível (saúde, denúncia, conflito) vai para humano (ATD-05).
+- **Perfis da v1:** substituídos pelos papéis da seção 6.
+
+#### Texto integral da v1
 
 - Language Standard: Global English
 #### 1. Visão geral
@@ -43040,7 +43438,18 @@ O cliente deve poder abrir demanda por WhatsApp. Conversas recebidas devem gerar
 
 ### v1 — `spec_gestao_sac_base_conhecimento.md` (443 linhas)
 
-> Situação na v2: Revisar. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/suporte/base-de-conhecimento.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/suporte/base-de-conhecimento.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- **Artigo** ([32](#doc-32), seção 2.7): autor, revisor, versão, data de revisão e público (interno, portal ou público). Artigo com dado pessoal não é publicado.
+- **Sugestão por IA:** só a partir de fonte cadastrada ([27](#doc-27); D-18 do [22](#doc-22)).
+- **Bot:** responde só com artigos publicados para o público do canal; fora da base, encaminha para humano.
+- **Perfis da v1:** substituídos pelos papéis da seção 6.
+
+#### Texto integral da v1
 
 - Language Standard: Global English
 #### Objetivo
@@ -43937,7 +44346,18 @@ A importação entra pelos mesmos caminhos de regra que a tela. Por isso:
 
 ### v1 — `spec_complementar_integracoes_governanca.md` (307 linhas)
 
-> Situação na v2: Especificado. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/seguranca-e-operacao/integracoes-globais.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/seguranca-e-operacao/integracoes-globais.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- **Dois níveis** ([16](#doc-16), seção 1): plataforma (credencial no cofre da plataforma, permissão `plataforma.integracao.*`) e tenant (cofre com chave por tenant).
+- **Credencial de tenant** nunca visível em texto claro para a equipe da plataforma; ver o segredo exige step-up, motivo e alerta ao canal de segurança.
+- **Catálogo da plataforma** ([16](#doc-16), seção 2): e-mail transacional (obrigatório), SMS (não é MFA, desligado por padrão), armazenamento de objetos, antivírus de upload, captcha, cobrança da assinatura do SaaS, backup externo, monitoramento sem PII, verificação de documento opcional.
+- **Ciclo de vida, segurança das chamadas, auditoria e testes** ([16](#doc-16), seções 5, 7, 9 e 10); governança da v1 ligada ao [04](#doc-04), seção 7.
+
+#### Texto integral da v1
 
 - Language Standard: Global English
 #### 1. Objetivo
@@ -49457,7 +49877,18 @@ Regras da auditoria:
 
 ### v1 — `06-i18n-l10n.md` (223 linhas)
 
-> Situação na v2: Revisar. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/seguranca-e-operacao/configuracoes-do-sistema.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/seguranca-e-operacao/configuracoes-do-sistema.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- **Idiomas e locale:** o [09](#doc-09) prevalece; as especificações da v1 de idioma e seletor de locale estão consolidadas nele ([12](#doc-12)).
+- **Grupos de configuração** (DP-04): idiomas e formatos ([09](#doc-09)); senha, sessão e MFA ([06](#doc-06)); limites de API ([04](#doc-04)); e-mail e integrações ([16](#doc-16)); cache ([30](#doc-30)); manutenção ([24](#doc-24)); tokens e webhooks ([04](#doc-04), [16](#doc-16)).
+- **Valor fora do limite** do documento de origem é recusado (por exemplo, sessão mais longa que o máximo do 06).
+- Configurações de entidade (feriados, fuso, campos personalizados) ficam no portal de gestão ([56](#doc-56), seção 2).
+
+#### Texto integral da v1
 
 > **Derived from:** `sdd-mestre-php8-mvc-saas.md` (Section: Artefatos derivados obrigatórios)
 > **Spec reference:** `docs/language_locale_selector_spec.md`
@@ -49685,7 +50116,15 @@ See `docs/i18n-LANGUAGE_SELECTOR_IMPLEMENTATION.md` for the complete to-do list.
 
 ### v1 — `chart-builder-spec-complete.md` (1499 linhas)
 
-> Situação na v2: Especificado. Destino: ficha do kit-starter: `kit-starter/gestao/relatorios-e-graficos/graficos-salvos.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/gestao/relatorios-e-graficos/graficos-salvos.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- [31](#doc-31), seção 3.8.
+
+#### Texto integral da v1
 
 #### TotusTuusSoftCloud — Módulo de Visualização de Dados
 
@@ -51190,7 +51629,18 @@ A arquitetura adapter-based permite que novas bibliotecas sejam adicionadas no f
 
 ### v1 — `language_locale_selector_spec.md` (387 linhas)
 
-> Situação na v2: Revisar. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/seguranca-e-operacao/configuracoes-do-sistema.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/seguranca-e-operacao/configuracoes-do-sistema.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- **Idiomas e locale:** o [09](#doc-09) prevalece; as especificações da v1 de idioma e seletor de locale estão consolidadas nele ([12](#doc-12)).
+- **Grupos de configuração** (DP-04): idiomas e formatos ([09](#doc-09)); senha, sessão e MFA ([06](#doc-06)); limites de API ([04](#doc-04)); e-mail e integrações ([16](#doc-16)); cache ([30](#doc-30)); manutenção ([24](#doc-24)); tokens e webhooks ([04](#doc-04), [16](#doc-16)).
+- **Valor fora do limite** do documento de origem é recusado (por exemplo, sessão mais longa que o máximo do 06).
+- Configurações de entidade (feriados, fuso, campos personalizados) ficam no portal de gestão ([56](#doc-56), seção 2).
+
+#### Texto integral da v1
 
 #### 1. Overview
 
@@ -51582,7 +52032,19 @@ phase_4:
 
 ### v1 — `spec-soft-delete-totustuus.md` (248 linhas)
 
-> Situação na v2: Especificado. Destino: ficha do kit-starter: `kit-starter/transversal/exclusao-logica.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/transversal/exclusao-logica.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- **Exclusão é lógica por padrão** (`deleted_at`); física só pelo processo de retenção ou pedido do titular ([03](#doc-03), seção 6).
+- **Colunas** `deleted_at` e `deleted_by` em toda tabela que aceita exclusão ([19](#doc-19), seção 14).
+- **Exclusão bloqueada se houver dependente ativo**; a resposta lista só os tipos de dependentes, sem dados ([15](#doc-15), seções 4 e 5). Motivo obrigatório para registros financeiros e de saúde.
+- **Auditoria nunca é expurgada por soft delete** ([19](#doc-19), seção 14; [29](#doc-29)).
+- **IA não executa nem sugere exclusão** ([28](#doc-28)).
+
+#### Texto integral da v1
 
 - Language Standard: Global English
 #### 1. Objetivo
@@ -51835,7 +52297,15 @@ await Aluno.findAll({ paranoid: false }); // inclui excluídos
 
 ### v1 — `spec_object_storage_digital_assets.md` (237 linhas)
 
-> Situação na v2: Revisar. Destino: ficha do kit-starter: `kit-starter/gestao/arquivos/armazenamento-de-arquivos.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/gestao/arquivos/armazenamento-de-arquivos.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- Busca e armazenamento ([21](#doc-21)).
+
+#### Texto integral da v1
 
 **Projeto:** TotusTuusSoftCloud — SaaS Multi-Entidade · Multi-Unidade · Multi-Usuário
 **Módulo:** File Storage Infrastructure / Digital Asset Management
@@ -52327,7 +52797,9 @@ Logs de mídia não contêm conteúdo, nomes de participantes nem trecho de áud
 
 ### v1 — `09-deployment-ops.md` (72 linhas)
 
-> Situação na v2: Substituído. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Substituído por 10. Quando este texto diverge da v2, vale a v2.
+
+> Esta especificação foi substituída por inteiro pelo documento indicado acima. O texto fica como histórico; para implementar, vale o documento da v2.
 
 > **Documento derivado do SDD mestre** · **Data:** 04/08/2026
 
@@ -52504,7 +52976,9 @@ Nomes das pessoas ficam no registro de responsáveis privado, não neste SDD. A 
 
 ### v1 — `10-governance-delivery.md` (75 linhas)
 
-> Situação na v2: Substituído. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Substituído por 11. Quando este texto diverge da v2, vale a v2.
+
+> Esta especificação foi substituída por inteiro pelo documento indicado acima. O texto fica como histórico; para implementar, vale o documento da v2.
 
 > **Documento derivado do SDD mestre** · **Data:** 04/08/2026
 
@@ -53088,7 +53562,7 @@ As demais tabelas de TI (ativo, licença, incidente, problema e mudança) estão
 
 ### v1 — `sub_sidebar_itsm.php` (151 linhas)
 
-> Situação na v2: Revisar. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido em parte em: 36. Quando este texto diverge da v2, vale a v2.
 
 <?php
 $uri = $_SERVER['REQUEST_URI'] ?? '';
@@ -53248,7 +53722,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
 ### v1 — `penetration-test-spec-v2.md` (529 linhas)
 
-> Situação na v2: Especificado. Destino: ficha do kit-starter: `kit-starter/transversal/teste-de-intrusao.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/transversal/teste-de-intrusao.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- **Estratégia de testes e pentest externo:** o [24](#doc-24), seção 5, prevalece; escopo definido por esta ficha.
+- **Divulgação de vulnerabilidade:** [24](#doc-24), seção 6.
+- **Testes de tenancy e de identidade** são critério de aceite obrigatório ([03](#doc-03), seção 7; [06](#doc-06), seção 11).
+
+#### Texto integral da v1
 
 > **Framework:** OWASP WSTG v4.2 · OWASP Top 10 2021 · OWASP API Top 10 2023 · NIST SP 800-115
 > **Alvo:** PHP 8.2 · MariaDB · XAMPP · Multi-tenant DB-per-unit
@@ -53782,7 +54266,18 @@ echo "==========================================="
 
 ### v1 — `slsa-build-spec.md` (356 linhas)
 
-> Situação na v2: Especificado. Destino: ficha do kit-starter: `kit-starter/transversal/build-e-procedencia-slsa.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/transversal/build-e-procedencia-slsa.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- **Pipeline e ambientes:** o [10](#doc-10), seções 2 a 4, prevalece; gates de entrega no [11](#doc-11), seção 3.
+- **SBOM CycloneDX, assinatura e procedência SLSA** estão marcados como **[Planejado]** no [05](#doc-05); esta ficha é o roteiro de implementação.
+- **Segredos:** cofre e nenhum segredo em repositório ou log ([10](#doc-10), seção 3; [05](#doc-05), seção 2).
+- **IA:** só explica falha de build; não aprova release ([28](#doc-28)).
+
+#### Texto integral da v1
 
 > **Nível alvo:** SLSA L3 (garantia de integridade do artefato de build)
 > **Stack:** PHP 8.2 · Node.js 20 · MariaDB · XAMPP · Git
@@ -54143,7 +54638,19 @@ build/logs/
 
 ### v1 — `spec_gestao_ti_completa.md` (882 linhas)
 
-> Situação na v2: Revisar. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/seguranca-e-operacao/ti.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/desenvolvedor/seguranca-e-operacao/ti.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- **Dois assuntos com o mesmo nome** ([36](#doc-36), seção 2): esta ficha é a TI **da plataforma** (seção 3 do 36). A TI **da entidade** (ativos, chamados, licenças da escola) fica no portal de gestão.
+- **Recursos** ([36](#doc-36), seção 3): backup e restauração ([24](#doc-24), seção 1), certificados com alerta a 14 dias ([10](#doc-10), seção 7), monitoramento, filas e workers ([14](#doc-14)), cache ([30](#doc-30)), manutenção programada ([24](#doc-24), seção 3), inventário de segredos ([05](#doc-05), seção 2).
+- **Toda ação de infraestrutura** é registrada na auditoria, categoria "processo", com `portal = desenvolvedor`.
+- **Mudança sem plano de volta não é aprovada** ([36](#doc-36)).
+- **`sub_sidebar_itsm.php`** da v1 é código de view com `onclick=` (ACH-01) e não faz parte desta ficha ([12](#doc-12), seção 3).
+
+#### Texto integral da v1
 
 - Language Standard: Global English
 #### 1. Objetivo
@@ -55030,7 +55537,17 @@ A implementação deve priorizar consistência, rastreabilidade, controle e prod
 
 ### v1 — `TASKS_SPECS.md` (821 linhas)
 
-> Situação na v2: Revisar. Destino: ficha do kit-starter: `kit-starter/transversal/plano-de-implementacao-v1.md`. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Absorvido integralmente no kit-starter. Destino: ficha do kit-starter: `kit-starter/transversal/plano-de-implementacao-v1.md`. Quando este texto diverge da v2, vale a v2.
+
+#### O que a v2 muda nesta especificação
+
+Estas regras prevalecem sobre o texto da v1 que vem a seguir.
+
+- **Ordem de construção da v2:** fundações transversais (tenancy [03](#doc-03), identidade [06](#doc-06), auditoria [29](#doc-29), exclusão lógica, privacidade [07](#doc-07)), depois o acadêmico na ordem do [55](#doc-55), seção 3, e os demais módulos pela matriz [31](#doc-31).
+- **Definition of Done e gates:** [11](#doc-11), seções 2 e 3.
+- **Caminho `C:\Xampp\htdocs\ttscdoc\` e o progresso de 10/07/2026** são da v1 e não valem para a v2.
+
+#### Texto integral da v1
 
 > **Base path:** `C:\Xampp\htdocs\ttscdoc\`
 > **Stack:** PHP 8 puro · MariaDB · Tailwind 4.2 · Supabase · amCharts 5 · Multi-tenant DB-per-unit
@@ -57157,7 +57674,7 @@ Textos lidos no Planalto: LDB (arts. 36 a 47, texto literal), Decreto 11.901/202
 
 ### v1 — `spec_gestao_bancos.md` (305 linhas)
 
-> Situação na v2: Removido do escopo. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Fora do escopo do produto. Quando este texto diverge da v2, vale a v2.
 
 - Language Standard: Global English
 #### 1. Objetivo
@@ -57467,7 +57984,7 @@ O módulo deve ser pensado como um sistema de governança e operação, não ape
 
 ### v1 — `spec_gestao_bancos_completo.md` (305 linhas)
 
-> Situação na v2: Removido do escopo. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Fora do escopo do produto. Quando este texto diverge da v2, vale a v2.
 
 #### 1. Objetivo
 Construir um módulo enterprise para gestão completa de bancos de dados, cobrindo inventário, conexão, modelagem, visualização, operações, segurança, auditoria, backup, restore, migração, replicação, observabilidade e automação, com suporte a múltiplos engines.
@@ -57777,7 +58294,7 @@ Este spec já contempla o conceito de DDL como parte explícita do pipeline de m
 
 ### v1 — `teste` (1 linhas)
 
-> Situação na v2: Vazio. Quando este texto diverge da v2, vale a v2.
+> Situação na v2: Arquivo vazio (placeholder), sem conteúdo a absorver. Quando este texto diverge da v2, vale a v2.
 
 
 

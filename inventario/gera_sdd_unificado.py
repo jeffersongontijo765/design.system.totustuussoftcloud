@@ -100,9 +100,23 @@ def mapeamento():
         arq, linhas, situacao, destino = m.group(1), int(m.group(2)), m.group(3).strip(), m.group(4).strip()
         nums = [n for n in re.findall(r'\b(\d\d)\b', destino) if n in numeros_v2]
         kit = re.findall(r'kit-starter/[^\s`\)]+\.md', destino)
+        situacao = destino.split(':')[0].strip() if kit else destino  # destino real na v2, não o status do catálogo
         itens.append((arq, linhas, situacao, nums, kit))
     return itens
 
+
+
+def correcoes_da_ficha(caminho_kit):
+    """Seção da ficha do kit-starter que diz o que a v2 muda na especificação da v1 (texto, sem links para fora)."""
+    caminho = os.path.join(ROOT, caminho_kit)
+    if not os.path.isfile(caminho):
+        return ''
+    t = le(caminho)
+    m = re.search(r'^## \d+\. (Correções da v2 que prevalecem|Regras de negócio essenciais)\n(.*?)(?=^## )', t, re.S | re.M)
+    if not m:
+        return ''
+    corpo = desvincula(m.group(2).strip())
+    return rebaixa(corpo, 3)
 
 
 def mapa_portais():
@@ -162,8 +176,19 @@ def main():
         caminho = os.path.join(ANEXO, arq)
         texto = rebaixa(desvincula(sem_titulo(le(caminho))), 2) if os.path.isfile(caminho) else '_Arquivo ausente._'
         extra = f' Destino: {nota}.' if nota else ''
+        muda = ''
+        mk = re.search(r'`(kit-starter/[^`]+\.md)`', nota or '')
+        if mk:
+            c = correcoes_da_ficha(mk.group(1))
+            if c:
+                muda = ('#### O que a v2 muda nesta especificação\n\n'
+                        'Estas regras prevalecem sobre o texto da v1 que vem a seguir.\n\n' + c + '\n\n'
+                        '#### Texto integral da v1\n\n')
+        elif 'Substitu' in situacao:
+            muda = ('> Esta especificação foi substituída por inteiro pelo documento indicado acima. '
+                    'O texto fica como histórico; para implementar, vale o documento da v2.\n\n')
         return (f'<a id="v1-{ancora(arq)}"></a>\n\n### v1 — `{arq}` ({linhas} linhas)\n\n'
-                f'> Situação na v2: {situacao}.{extra} Quando este texto diverge da v2, vale a v2.\n\n{texto}\n')
+                f'> Situação na v2: {situacao}.{extra} Quando este texto diverge da v2, vale a v2.\n\n{muda}{texto}\n')
 
     hoje = datetime.date.today().isoformat()
     out = [
