@@ -8940,7 +8940,7 @@ Nenhum item de tabela aberto. OCO-01, BIB-04, IA-01, IA-07 e NOT-01, e o prazo d
 
 Continuam com o autor, no texto corrido: Frotas nesta versão e lista de jurisdições (seções 8.5 e 8.2).
 
-**Licenciamento e permissões:** todas as propostas dos documentos [77](#parte-77) e [78](#parte-78) foram aprovadas em 04/11/2026 (seção 9.1). Em aberto: **D-41**, códigos dos papéis comerciais da plataforma ([78](#parte-78), seção 6).
+**Licenciamento e permissões:** todas as propostas dos documentos [77](#parte-77) e [78](#parte-78) foram aprovadas em 04/11/2026 (seção 9.1).
 
 ---
 
@@ -9223,6 +9223,7 @@ Status atualizado no documento de origem, porque a pendência já tinha sido res
 | D-38 | Oito níveis de papel, de 0 (próprio) a 7 (desenvolvedor). **Aprovada em 04/11/2026** ([78](#parte-78), seção 2.1) |
 | D-39 | Separação de funções nas ações da seção 2.2. **Aprovada em 04/11/2026** ([78](#parte-78)) |
 | D-40 | Seis regras transversais de permissão. **Aprovada em 04/11/2026** ([78](#parte-78), seção 5) |
+| D-41 | Códigos dos papéis comerciais da plataforma: `platform.sales.sdr`, `platform.sales.ae`, `platform.sales.manager`, `platform.chatbot.operator` e `platform.customer_success`. **Aprovada em 04/11/2026** ([78](#parte-78), seção 4.1) |
 
 #### 9.2 Documentos escritos depois da auditoria
 
@@ -17313,7 +17314,7 @@ Prazo de carência: **15 dias**, ajustável pelo desenvolvedor por plano (D-28, 
 ## 78 — Permissões, papéis e níveis de acesso por portal
 
 > Parte do [SDD v2](#parte-00). Estende [06](#parte-06), seção 9 (RBAC com contexto) e a seção 10 (contas de plataforma). Escopo de portais em [23](#parte-23) e [31](#parte-31).
-> **Status:** aprovado pelo autor em 04/11/2026 (L-02, P-01, D-30 a D-33 e D-38 a D-40). Proposta em aberto: D-41 (códigos dos papéis comerciais).
+> **Status:** aprovado pelo autor em 04/11/2026 (L-02, P-01, D-30 a D-33 e D-38 a D-41). Não há proposta em aberto neste documento.
 
 ---
 
@@ -17450,7 +17451,7 @@ Papéis listados por portal, com o nível máximo previsto. Permissões detalhad
 | D-38 | Níveis de papel | Oito níveis, de 0 (próprio) a 7 (desenvolvedor), com as regras da seção 2.1. **Aprovada pelo autor em 04/11/2026.** | Menos níveis, por exemplo 0, 1, 3, 4 e 7 |
 | D-39 | Separação de funções | As cinco ações da seção 2.2. **Aprovada pelo autor em 04/11/2026.** | Lista definida por módulo |
 | D-40 | Regras transversais | As seis regras da seção 5. **Aprovada pelo autor em 04/11/2026.** | Regras definidas por portal |
-| D-41 | Códigos dos papéis comerciais da plataforma (SDD 22, seção 4.1) | Os cinco códigos `platform.sales.*`, `platform.chatbot.operator` e `platform.customer_success` da seção 4.1 | Outros nomes, mantidos os níveis |
+| D-41 | Códigos dos papéis comerciais da plataforma (SDD 22, seção 4.1) | Os cinco códigos `platform.sales.*`, `platform.chatbot.operator` e `platform.customer_success` da seção 4.1. **Aprovada pelo autor em 04/11/2026.** | Outros nomes, mantidos os níveis |
 
 ### 7. Critérios de aceite
 

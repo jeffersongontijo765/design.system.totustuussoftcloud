@@ -70,4 +70,4 @@ Papéis do CRM da plataforma (SDD 22, seção 4.1; códigos em SDD 78, seção 4
 - SLA de primeiro atendimento e N dias para perda automática: **[Sem detalhamento]**.
 - Limite de mensagens proativas por canal (lacuna L-22 do SDD 22).
 - Retenção de transcrição e gravação de ligação (lacuna L-24 do SDD 22).
-- Códigos dos papéis comerciais: pendência D-41 no [78](../../../docs/v2/78-permissoes-e-papeis.md).
+- Códigos dos papéis comerciais: D-41, aprovada ([78](../../../docs/v2/78-permissoes-e-papeis.md), seção 4.1).

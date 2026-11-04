@@ -42,7 +42,7 @@ Nenhum item de tabela aberto. OCO-01, BIB-04, IA-01, IA-07 e NOT-01, e o prazo d
 
 Continuam com o autor, no texto corrido: Frotas nesta versão e lista de jurisdições (seções 8.5 e 8.2).
 
-**Licenciamento e permissões:** todas as propostas dos documentos [77](77-licenciamento-planos-e-limites.md) e [78](78-permissoes-e-papeis.md) foram aprovadas em 04/11/2026 (seção 9.1). Em aberto: **D-41**, códigos dos papéis comerciais da plataforma ([78](78-permissoes-e-papeis.md), seção 6).
+**Licenciamento e permissões:** todas as propostas dos documentos [77](77-licenciamento-planos-e-limites.md) e [78](78-permissoes-e-papeis.md) foram aprovadas em 04/11/2026 (seção 9.1).
 
 ---
 
@@ -325,6 +325,7 @@ Status atualizado no documento de origem, porque a pendência já tinha sido res
 | D-38 | Oito níveis de papel, de 0 (próprio) a 7 (desenvolvedor). **Aprovada em 04/11/2026** ([78](78-permissoes-e-papeis.md), seção 2.1) |
 | D-39 | Separação de funções nas ações da seção 2.2. **Aprovada em 04/11/2026** ([78](78-permissoes-e-papeis.md)) |
 | D-40 | Seis regras transversais de permissão. **Aprovada em 04/11/2026** ([78](78-permissoes-e-papeis.md), seção 5) |
+| D-41 | Códigos dos papéis comerciais da plataforma: `platform.sales.sdr`, `platform.sales.ae`, `platform.sales.manager`, `platform.chatbot.operator` e `platform.customer_success`. **Aprovada em 04/11/2026** ([78](78-permissoes-e-papeis.md), seção 4.1) |
 
 ### 9.2 Documentos escritos depois da auditoria
 
