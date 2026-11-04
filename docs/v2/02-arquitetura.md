@@ -70,9 +70,9 @@ Data: 02/11/2026. Autor: responsável técnico (a nomear, ver [11](11-governanca
 |---|---|---|---|
 | ADR-01 | Monólito modular, não microsserviços | Menos superfície operacional; fronteiras preservam a extração futura | Aceita |
 | ADR-02 | Namespaces PSR-4 `App\` e `TotusTuus\` | Bibliotecas internas testáveis e substituíveis | Aceita |
-| ADR-03 | JWT só para clientes de API. Navegador usa sessão opaca no servidor | Revogação imediata e menos segredo exposto no cliente. A v1 usava JWT também no navegador com refresh rotativo | **Proposta (revisar)** |
+| ADR-03 | JWT só para clientes de API. Navegador usa sessão opaca no servidor | Revogação imediata e menos segredo exposto no cliente. A v1 usava JWT também no navegador com refresh rotativo | **Aceita por padrão (DP-10, [80](80-decisoes-por-padrao.md)), 04/11/2026** |
 | ADR-04 | Algoritmo de JWT fixo em RS256 (rejeitar HS256 e `none`) | Evita confusão de algoritmo | Aceita |
-| ADR-05 | Biblioteca própria de cofre (`TotusTuus\Vault`), com a chave-mestra fora do host da aplicação em produção. `FileVault` só em desenvolvimento. | Segredo em arquivo no mesmo host anula a proteção. Biblioteca própria dá controle, mas exige revisão de criptografia (ver [05](05-seguranca.md), seção 2) | **Aceita (D-02). Pendente: onde a chave-mestra fica** |
+| ADR-05 | Biblioteca própria de cofre (`TotusTuus\Vault`), com a chave-mestra fora do host da aplicação em produção. `FileVault` só em desenvolvimento. | Segredo em arquivo no mesmo host anula a proteção. Biblioteca própria dá controle, mas exige revisão de criptografia (ver [05](05-seguranca.md), seção 2) | **Aceita (D-02). Onde a chave-mestra fica: regra no DP-11 ([80](80-decisoes-por-padrao.md)); o produto concreto sai com a escolha do provedor de nuvem** |
 | ADR-06 | Inglês canônico + locales traduzidos | Ver [09](09-internacionalizacao.md) | Aceita |
 | ADR-07 | Sem JavaScript inline e sem atributos `on*=` em HTML | Compatível com CSP estrita | Aceita |
 | ADR-08 | Um banco master e um banco por unidade (entidade + unidade). Conexão escolhida pela unidade autorizada na requisição. | Isolamento físico de dados entre unidades e entre entidades. Custo: operação de muitos bancos e consolidação por evento | Aceita (D-16, 02/11/2026) |

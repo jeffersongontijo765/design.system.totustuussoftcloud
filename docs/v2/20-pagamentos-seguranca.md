@@ -17,7 +17,7 @@
 
 ## 2. Fluxo de recursos
 
-**[Decisão pendente D-10]** Quem recebe o dinheiro?
+**[Decidida D-10, seção 19]** Quem recebe o dinheiro?
 
 | Opção | Mecanismo | Vantagem | Risco e condição de falha |
 |---|---|---|---|
@@ -48,7 +48,7 @@ Objetivo: manter a plataforma no menor escopo possível (SAQ A ou equivalente).
 
 | Regra | Detalhe |
 |---|---|
-| Representação | **[Decisão pendente D-11]** Proposta: inteiros em centavos (`BIGINT`, por exemplo `1234` = R$ 12,34). A v1 usa `DECIMAL(12,2)`, que é aceitável para exibição, mas arredondamento em cálculo de juros e multa pode gerar diferença de centavo. Converter para centavos antes de qualquer cálculo. |
+| Representação | **[Decidida D-11, seção 19]** Inteiros em centavos (`BIGINT`, por exemplo `1234` = R$ 12,34). A v1 usa `DECIMAL(12,2)`, que é aceitável para exibição, mas arredondamento em cálculo de juros e multa pode gerar diferença de centavo. Converter para centavos antes de qualquer cálculo. |
 | Cálculo | Juros, multa e desconto calculados no servidor, com regra de arredondamento única do tenant ([15](15-validacoes.md), seção 4.2). |
 | Comparação | Valor cobrado deve ser igual ao valor da fatura calculado no momento da cobrança. Diferença é recusada. |
 | Moeda | Só a moeda da conta do tenant. Moeda diferente é `422`. |

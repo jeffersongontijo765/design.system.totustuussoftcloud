@@ -439,9 +439,9 @@ Data: 02/11/2026. Autor: responsável técnico (a nomear, ver [11](#parte-11), s
 |---|---|---|---|
 | ADR-01 | Monólito modular, não microsserviços | Menos superfície operacional; fronteiras preservam a extração futura | Aceita |
 | ADR-02 | Namespaces PSR-4 `App\` e `TotusTuus\` | Bibliotecas internas testáveis e substituíveis | Aceita |
-| ADR-03 | JWT só para clientes de API. Navegador usa sessão opaca no servidor | Revogação imediata e menos segredo exposto no cliente. A v1 usava JWT também no navegador com refresh rotativo | **Proposta (revisar)** |
+| ADR-03 | JWT só para clientes de API. Navegador usa sessão opaca no servidor | Revogação imediata e menos segredo exposto no cliente. A v1 usava JWT também no navegador com refresh rotativo | **Aceita por padrão (DP-10, [80](#parte-80)), 04/11/2026** |
 | ADR-04 | Algoritmo de JWT fixo em RS256 (rejeitar HS256 e `none`) | Evita confusão de algoritmo | Aceita |
-| ADR-05 | Biblioteca própria de cofre (`TotusTuus\Vault`), com a chave-mestra fora do host da aplicação em produção. `FileVault` só em desenvolvimento. | Segredo em arquivo no mesmo host anula a proteção. Biblioteca própria dá controle, mas exige revisão de criptografia (ver [05](#parte-05), seção 2) | **Aceita (D-02). Pendente: onde a chave-mestra fica** |
+| ADR-05 | Biblioteca própria de cofre (`TotusTuus\Vault`), com a chave-mestra fora do host da aplicação em produção. `FileVault` só em desenvolvimento. | Segredo em arquivo no mesmo host anula a proteção. Biblioteca própria dá controle, mas exige revisão de criptografia (ver [05](#parte-05), seção 2) | **Aceita (D-02). Onde a chave-mestra fica: regra no DP-11 ([80](#parte-80)); o produto concreto sai com a escolha do provedor de nuvem** |
 | ADR-06 | Inglês canônico + locales traduzidos | Ver [09](#parte-09) | Aceita |
 | ADR-07 | Sem JavaScript inline e sem atributos `on*=` em HTML | Compatível com CSP estrita | Aceita |
 | ADR-08 | Um banco master e um banco por unidade (entidade + unidade). Conexão escolhida pela unidade autorizada na requisição. | Isolamento físico de dados entre unidades e entre entidades. Custo: operação de muitos bancos e consolidação por evento | Aceita (D-16, 02/11/2026) |
@@ -915,7 +915,7 @@ Step-up: exige MFA recente (até 5 min) para exportação de dados pessoais, alt
 - Access token JWT RS256, `exp` ≤ 15 min. Claims e regras na seção 12.
 - Refresh token somente para clientes técnicos. Rotação a cada uso; reutilização de refresh revogado encerra a família de tokens. Endpoint de emissão e grant ainda não definidos: pendentes de ADR.
 - Revogação por `jti` em lista com TTL igual ao `exp`.
-- Navegador não recebe JWT (ADR-03, pendente de aceite).
+- Navegador não recebe JWT (ADR-03, aceita por padrão no DP-10 do [80](#parte-80)).
 
 ### 9. Autorização (RBAC com contexto)
 
@@ -3165,7 +3165,7 @@ A especificação v1 (1.001 linhas) já exige Argon2id e refresh token armazenad
 
 ### 2. Fluxo de recursos
 
-**[Decisão pendente D-10]** Quem recebe o dinheiro?
+**[Decidida D-10, seção 19]** Quem recebe o dinheiro?
 
 | Opção | Mecanismo | Vantagem | Risco e condição de falha |
 |---|---|---|---|
@@ -3196,7 +3196,7 @@ Objetivo: manter a plataforma no menor escopo possível (SAQ A ou equivalente).
 
 | Regra | Detalhe |
 |---|---|
-| Representação | **[Decisão pendente D-11]** Proposta: inteiros em centavos (`BIGINT`, por exemplo `1234` = R$ 12,34). A v1 usa `DECIMAL(12,2)`, que é aceitável para exibição, mas arredondamento em cálculo de juros e multa pode gerar diferença de centavo. Converter para centavos antes de qualquer cálculo. |
+| Representação | **[Decidida D-11, seção 19]** Inteiros em centavos (`BIGINT`, por exemplo `1234` = R$ 12,34). A v1 usa `DECIMAL(12,2)`, que é aceitável para exibição, mas arredondamento em cálculo de juros e multa pode gerar diferença de centavo. Converter para centavos antes de qualquer cálculo. |
 | Cálculo | Juros, multa e desconto calculados no servidor, com regra de arredondamento única do tenant ([15](#parte-15), seção 4.2). |
 | Comparação | Valor cobrado deve ser igual ao valor da fatura calculado no momento da cobrança. Diferença é recusada. |
 | Moeda | Só a moeda da conta do tenant. Moeda diferente é `422`. |
@@ -18586,6 +18586,8 @@ Os papéis acima vêm dos papéis nomeados no [22](#parte-22), seção 5, e nos 
 | DP-07 | Alçada de desconto: no CRM da plataforma (LAC-23, [22](#parte-22)) e na entidade (parte em aberto da LAC-08, [18](#parte-18)). A v2 cita alçada, mas não define valores | A alçada é **parâmetro** com faixas configuradas: pelo desenvolvedor na plataforma e pelo administrador da entidade na entidade. Até haver faixa configurada, **todo desconto fora da regra do plano passa por aprovação**: do gerente comercial (`platform.sales.manager`) na plataforma e do aprovador financeiro (`unit.finance.approver`) na entidade. Quem propõe não aprova o próprio desconto. Toda aprovação tem motivo e auditoria. | Critérios 1, 3 e 4: nenhum valor inventado; sem configuração, o caminho é o mais restrito | Fixar percentuais padrão (por exemplo, 10% e 20%) sem dado do negócio | CRM da plataforma; financeiro da entidade |
 | DP-08 | Mensagem proativa por canal (LAC-22, [22](#parte-22)): limite não definido; o jurídico ainda precisa opinar | Até o parecer: mensagem proativa só para quem deu consentimento para aquele canal e finalidade ([32](#parte-32), seção 3.2); respeita o horário de silêncio de 21h às 7h ([57](#parte-57), seção 3.3); o limite de envios por pessoa e canal é **parâmetro** sem valor padrão, e sem parâmetro configurado o envio proativo em lote fica bloqueado. Mensagem de resposta a contato iniciado pela pessoa não é proativa | Critérios 1 e 3: o mais seguro até o parecer, sem inventar número | Liberar envio sem limite até o parecer | CRM da plataforma e do tenant |
 | DP-09 | Exclusão em tabela sem `deleted_at`: a regra é "exclusão lógica por padrão" ([03](#parte-03), seção 6; [19](#parte-19), seção 14), mas 138 tabelas principais do DDL não têm a coluna (verificação de 04/11/2026, `inventario/lint_ddl.py`) | Tabela sem `deleted_at` **não aceita exclusão** pela aplicação: o repositório recusa `DELETE` e o registro é encerrado pelo estado da própria tabela (cancelado, encerrado, arquivado, revogado). Tabela que precisar de exclusão pelo usuário ganha `deleted_at` e `deleted_by` na revisão do owner. Expurgo físico só pelo job de retenção ou por pedido do titular, como já diz o [03](#parte-03) | Critérios 1 e 2: nenhum dado some sem rastro, e a regra vale sem mudar 138 tabelas sem revisão | Acrescentar `deleted_at` a todas as tabelas sem revisão | Todo o DDL |
+| DP-10 | Sessão no navegador (ADR-03, [02](#parte-02), seção 6): estava como proposta | **Aceita a ADR-03:** o navegador usa sessão opaca no servidor, em cookie `HttpOnly`, `Secure` e `SameSite`; JWT só para clientes de API. Cada portal cria a própria sessão depois da troca do código OIDC (D-22, [23](#parte-23), seção 2). Revogação de vínculo e de sessão vale na próxima requisição ([06](#parte-06), seção 12.4) | Critério 1: revogação imediata e nenhum token de longa duração exposto ao JavaScript | JWT no navegador com refresh rotativo, como na v1 | Identidade e acesso |
+| DP-11 | Onde fica a chave-mestra do cofre (ADR-05, D-02): estava em aberto | Em produção e homologação, a chave-mestra fica num serviço gerenciado de chaves (KMS) ou HSM do provedor de nuvem, fora do host da aplicação, com acesso só pela identidade de serviço da aplicação, rotação anual e registro de uso. A aplicação nunca lê a chave-mestra em claro: pede ao KMS para cifrar e decifrar a chave de dados (envelope). `FileVault` só em desenvolvimento ([10](#parte-10), seção 3). O produto concreto é escolhido junto com o provedor de nuvem | Critério 1: mesmo com acesso ao host, a chave não sai; é a forma recomendada para envelope de chaves | Arquivo de chave no servidor da aplicação, ou num segundo servidor próprio | Segurança e operação |
 
 ---
 

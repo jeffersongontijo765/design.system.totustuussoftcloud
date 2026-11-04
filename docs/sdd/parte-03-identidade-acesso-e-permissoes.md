@@ -139,7 +139,7 @@ Step-up: exige MFA recente (até 5 min) para exportação de dados pessoais, alt
 - Access token JWT RS256, `exp` ≤ 15 min. Claims e regras na seção 12.
 - Refresh token somente para clientes técnicos. Rotação a cada uso; reutilização de refresh revogado encerra a família de tokens. Endpoint de emissão e grant ainda não definidos: pendentes de ADR.
 - Revogação por `jti` em lista com TTL igual ao `exp`.
-- Navegador não recebe JWT (ADR-03, pendente de aceite).
+- Navegador não recebe JWT (ADR-03, aceita por padrão no DP-10 do [80](parte-19-pendencias-decisoes-e-rastreabilidade.md#doc-80)).
 
 ### 9. Autorização (RBAC com contexto)
 
