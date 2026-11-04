@@ -532,6 +532,48 @@ def pagina_estatica(nome, spec, portal, modulo, rota, arq, ficha_rel, sdd_rel, t
 """
 
 
+def aba_inicial(arq):
+    return {'painel': 'kpi', 'kanban': 'kanban'}.get(arq, 'table')
+
+
+def pagina(nome, spec, portal, modulo, rota, arq, ficha_rel, sdd_rel, tok, bun, js, papeis=(), regras=()):
+    dados = json.dumps(spec, ensure_ascii=False).replace('</', '<\\/')
+    return f'''<!doctype html>
+<html lang="pt-BR" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{html.escape(nome)} · {html.escape(modulo)}</title>
+<link rel="stylesheet" href="{tok}">
+<link rel="stylesheet" href="{bun}">
+<script src="{js}"></script>
+<style>html,body{{margin:0}} #main-viewport{{padding:14px 16px 24px}} .pg-fonte{{font:12px/1.5 Inter,system-ui,sans-serif;color:var(--ttsc-text-muted);padding:0 16px 24px}} .pg-fonte a{{color:var(--ttsc-accent-text)}}</style>
+</head>
+<body>
+<main id="main-viewport" class="bg-slate-50">
+  <div id="model-page" class="space-y-3.5" aria-live="polite"></div>
+  <section class="ttsc-card" style="margin:0 16px 16px"><div class="ttsc-card-content" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
+    <div><h3 style="font-size:13px;margin:0 0 6px">Quem acessa</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)">{''.join(f'<li>{html.escape(x)}</li>' for x in papeis) or '<li>Ver a ficha da tela.</li>'}</ul></div>
+    <div><h3 style="font-size:13px;margin:0 0 6px">Regras essenciais</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)">{''.join(f'<li>{html.escape(x)}</li>' for x in regras) or '<li>Ver a ficha da tela.</li>'}</ul></div>
+  </div></section>
+  <p class="pg-fonte">Tela gerada a partir de <a href="{ficha_rel}">{html.escape(modulo)}</a> (SDD v2: <a href="{sdd_rel}">índice</a>). Registros de exemplo.</p>
+</main>
+<script>
+  (function () {{
+    var SPEC = {dados};
+    TTSCModelKit.syncTheme();
+    TTSCModelKit.render(
+      {{ portal: {{ label: {json.dumps(portal, ensure_ascii=False)} }}, module: {{ label: {json.dumps(modulo, ensure_ascii=False)} }}, page: {{ label: {json.dumps(nome, ensure_ascii=False)}, route: {json.dumps(rota, ensure_ascii=False)} }} }},
+      SPEC, {{}}
+    );
+    TTSCModelKit.switchTab({json.dumps(aba_inicial(arq))});
+  }})();
+</script>
+</body>
+</html>
+'''
+
+
 def main():
     fichas = []
     for caminho in sorted(glob.glob(os.path.join(KIT, '**', '*.md'), recursive=True)):
@@ -557,8 +599,8 @@ def main():
             d = os.path.dirname(fn)
             rel_ = lambda alvo: os.path.relpath(alvo, d).replace(os.sep, '/')
             rota = '/' + '/'.join(slug(x) for x in rel[:-3].split('/'))
-            src = pagina_estatica(nome, spec, portal, modulo, rota, arq, rel_(caminho), rel_(os.path.join(ROOT, 'docs', 'v2', '00-README.md')),
-                                  rel_(TOKENS), rel_(BUNDLE_CSS), papeis, regras, slug(nome) + modulo)
+            src = pagina(nome, spec, portal, modulo, rota, arq, rel_(caminho), rel_(os.path.join(ROOT, 'docs', 'v2', '00-README.md')),
+                         rel_(TOKENS), rel_(BUNDLE_CSS), rel_(BUNDLE_JS), papeis, regras)
             open(fn, 'w', encoding='utf8').write(src)
             total += 1
             indice.append((portal, modulo, nome, arq, dom, rel_(fn) if False else os.path.relpath(fn, OUT).replace(os.sep, '/')))
