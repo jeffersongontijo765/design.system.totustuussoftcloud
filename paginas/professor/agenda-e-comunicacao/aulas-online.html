@@ -6,78 +6,24 @@
 <title>Aulas online · Agenda e comunicação</title>
 <link rel="stylesheet" href="../../../components/__tokens.css">
 <link rel="stylesheet" href="../../../components/bundle.css">
-<style>
-:root{color-scheme:light dark}
-body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font:13px/1.5 Inter,system-ui,sans-serif}
-.pg{padding:16px;max-width:1280px;margin:0 auto}
-@media(min-width:640px){.pg{padding:20px}}
-.pg-cabeca{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin:8px 0 16px}
-.pg-titulo{font-size:20px;line-height:28px;font-weight:700;letter-spacing:-.01em;margin:0}
-.pg-layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
-@media(max-width:900px){.pg-layout{grid-template-columns:1fr}}
-.pg-principal{display:flex;flex-direction:column;gap:16px;min-width:0}
-.pg-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
-.pg-kpis .ttsc-kpi-value{font-size:28px;font-weight:600}
-.pg-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
-.pg-toolbar .ttsc-input{flex:1 1 220px}
-.pg-paginacao{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:12px;color:var(--ttsc-text-muted);font-size:12px}
-.pg-grafico{display:flex;align-items:flex-end;gap:10px;height:180px;padding:8px 0}
-.pg-grafico span{flex:1;background:var(--ttsc-accent-soft);border-top:3px solid var(--ttsc-accent);border-radius:6px 6px 0 0}
-.pg-lista{margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:8px}
-.pg-kanban{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
-.pg-coluna{background:var(--ttsc-canvas-2);border:1px solid var(--ttsc-border-soft);border-radius:var(--ttsc-radius-surface);padding:10px;display:flex;flex-direction:column;gap:8px;min-height:160px}
-.pg-coluna-titulo{font-weight:600;font-size:12px;color:var(--ttsc-text-2)}
-.pg-cartao{background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-sm);padding:8px;font-size:12px}
-.pg-cartao small{color:var(--ttsc-text-muted)}
-.pg-etapas{display:flex;flex-wrap:wrap;gap:12px;list-style:none;padding:0;margin:0 0 16px;color:var(--ttsc-text-muted)}
-.pg-etapas li{display:flex;align-items:center;gap:6px}
-.pg-etapas li span{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:999px;border:1px solid var(--ttsc-border-strong);font-size:11px}
-.pg-etapas li.is-ativo{color:var(--ttsc-text);font-weight:600}
-.pg-etapas li.is-ativo span{background:var(--ttsc-accent);color:var(--ttsc-accent-on);border-color:transparent}
-.pg-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
-.pg-campo{display:flex;flex-direction:column;gap:6px}
-.pg-campo textarea,.pg-form textarea{grid-column:1/-1}
-.pg-acoes{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;flex-wrap:wrap}
-.pg-kv{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--ttsc-border-soft)}
-.pg-kv span{color:var(--ttsc-text-muted)}
-.pg-lateral .ttsc-card-content{display:flex;flex-direction:column;gap:10px}
-.pg-lateral h3{font-size:13px;margin:0;color:var(--ttsc-text)}
-.pg-lateral ul{margin:0;padding-left:16px;color:var(--ttsc-text-2);font-size:12px}
-.pg-lateral a{color:var(--ttsc-accent-text);font-size:12px}
-.pg-aviso{font-size:12px;color:var(--ttsc-text-muted);margin:0}
-</style>
+<script src="../../../components/bundle.js"></script>
+<style>html,body{margin:0} #main-viewport{padding:14px 16px 24px} .pg-fonte{font:12px/1.5 Inter,system-ui,sans-serif;color:var(--ttsc-text-muted);padding:0 16px 24px} .pg-fonte a{color:var(--ttsc-accent-text)}</style>
 </head>
 <body>
-<main class="pg" data-arquetipo="lista">
-  <nav aria-label="Trilha de navegação"><ol class="ttsc-breadcrumb"><li class="ttsc-breadcrumb-item"><a class="ttsc-breadcrumb-link" href="#">Professor</a></li><li class="ttsc-breadcrumb-separator" aria-hidden="true"><i class="fa-light fa-chevron-right"></i></li><li class="ttsc-breadcrumb-item"><a class="ttsc-breadcrumb-link" href="#">Agenda e comunicação</a></li><li class="ttsc-breadcrumb-separator" aria-hidden="true"><i class="fa-light fa-chevron-right"></i></li><li class="ttsc-breadcrumb-item"><span class="ttsc-breadcrumb-page" aria-current="page">Aulas online</span></li></ol></nav>
-  <div class="pg-cabeca">
-    <h1 class="pg-titulo">Aulas online</h1>
-    <div class="pg-botoes" style="display:flex;gap:8px"><button class="ttsc-btn ttsc-btn-outline ttsc-btn-sm" type="button"><i class="fa-light fa-download"></i> Exportar</button><button class="ttsc-btn ttsc-btn-primary" type="button"><i class="fa-light fa-plus"></i> Novo registro</button></div>
-  </div>
-  <div class="pg-layout">
-    <div class="pg-principal">
-<section class="ttsc-card" aria-labelledby="lst">
-  <div class="ttsc-card-header"><div class="ttsc-card-heading">
-    <h2 class="ttsc-card-title" id="lst">Aulas online</h2>
-    <p class="ttsc-card-description">Lista com busca, filtros e exportação. Dados ilustrativos.</p></div></div>
-  <div class="ttsc-card-content">
-    <div class="pg-toolbar">
-      <input class="ttsc-input" type="search" placeholder="Buscar registros..." aria-label="Buscar registros">
-      <select class="ttsc-select" aria-label="Situação"><option>Todas as situações</option><option>Em andamento</option><option>Concluído</option><option>Pendente</option></select>
-    </div>
-    <div class="ttsc-table-wrapper"><table class="ttsc-table ttsc-table-zebra">
-      <thead><tr><th>Registro</th><th>Situação</th><th>Responsável</th><th>Atualizado em</th></tr></thead><tbody><tr><td>REG-0001</td><td><span class="ttsc-badge ttsc-badge-info ttsc-badge-light ttsc-badge-sm">Em andamento</span></td><td>Equipe da unidade</td><td>12/11/2026</td></tr><tr><td>REG-0002</td><td><span class="ttsc-badge ttsc-badge-success ttsc-badge-light ttsc-badge-sm">Concluído</span></td><td>Coordenação</td><td>11/11/2026</td></tr><tr><td>REG-0003</td><td><span class="ttsc-badge ttsc-badge-warning ttsc-badge-light ttsc-badge-sm">Pendente</span></td><td>Secretaria</td><td>10/11/2026</td></tr></tbody></table></div>
-    <nav class="pg-paginacao" aria-label="Paginação"><span>1 a 3 de 3</span><span>Estados: carregando, vazio, sem resultado, erro e acesso negado.</span></nav>
-  </div>
-</section></div>
-    <aside class="pg-lateral">
-      <section class="ttsc-card"><div class="ttsc-card-content">
-        <h3>Quem acessa</h3><ul><li>teacher (nível 1, escopo turma): ações das próprias turmas.</li><li>teacher.coordinator (nível 2, unidade): aprova planos e lançamentos de nível 1 da unidade (78, seção 4.3).</li><li>Regras transversais: default-deny, separação de funções, step-up para ação sensível e revisão de acesso (78, seções 2 e 5).</li></ul>
-        <h3>Regras essenciais</h3><ul><li>Não vê horário de outro professor (60, seção 5).</li></ul>
-        <p class="pg-aviso">Ficha de origem: <a href="../../../kit-starter/professor/agenda-e-comunicacao.md">Agenda e comunicação</a> · <a href="../../../docs/v2/00-README.md">SDD v2</a></p>
-      </div></section>
-    </aside>
-  </div>
+<main id="main-viewport" class="bg-slate-50">
+  <div id="model-page" class="space-y-3.5" aria-live="polite"></div>
+  <p class="pg-fonte">Tela gerada a partir de <a href="../../../kit-starter/professor/agenda-e-comunicacao.md">Agenda e comunicação</a> (SDD v2: <a href="../../../docs/v2/00-README.md">índice</a>). Registros de exemplo.</p>
 </main>
+<script>
+  (function () {
+    var SPEC = {"title": "Aulas online", "icon": "fa-graduation-cap", "currency": "BRL", "create": true, "entity": {"singular": "Aulas online", "plural": "Aulas online", "icon": "fa-graduation-cap", "newLabel": "Novo registro"}, "banner": {"icon": "fa-graduation-cap", "title": "Aulas online", "desc": "criar e entrar na sessão; gravação com consentimento).", "pill": "{count} registros"}, "titleField": "name", "codeField": "code", "subField": "curso", "statusField": "status", "stageField": "status", "count": 24, "fields": [{"key": "name", "label": "Registro", "type": "title", "samples": ["1ª série A", "Matemática II", "Diário de Biologia", "Conselho de classe 1º bimestre", "Plano de aula semana 12"]}, {"key": "person", "label": "Aluno", "type": "person"}, {"key": "code", "label": "Registro nº", "type": "code", "prefix": "ACA"}, {"key": "curso", "label": "Curso", "type": "enum", "values": [{"id": "Ensino Médio", "label": "Ensino Médio", "tone": "blue", "weight": 4}, {"id": "Fundamental II", "label": "Fundamental II", "tone": "emerald", "weight": 3}, {"id": "Técnico em Informática", "label": "Técnico em Informática", "tone": "amber", "weight": 2}]}, {"key": "turno", "label": "Turno", "type": "enum", "values": [{"id": "manhã", "label": "manhã", "tone": "blue", "weight": 4}, {"id": "tarde", "label": "tarde", "tone": "emerald", "weight": 3}, {"id": "noite", "label": "noite", "tone": "amber", "weight": 2}]}, {"key": "frequencia", "label": "Frequência", "type": "pct", "min": 62, "max": 100}, {"key": "data", "label": "Data", "type": "date", "from": -200, "to": 30}, {"key": "status", "label": "Situação", "type": "status"}], "statuses": [{"id": "ativo", "label": "Ativo", "tone": "emerald", "weight": 2}, {"id": "pendente", "label": "Pendente", "tone": "amber", "weight": 2}, {"id": "concluido", "label": "Concluído", "tone": "blue", "weight": 2}, {"id": "cancelado", "label": "Cancelado", "tone": "slate", "weight": 2}], "stages": [{"id": "ativo", "label": "Ativo", "tone": "emerald", "weight": 2}, {"id": "pendente", "label": "Pendente", "tone": "amber", "weight": 2}, {"id": "concluido", "label": "Concluído", "tone": "blue", "weight": 2}, {"id": "cancelado", "label": "Cancelado", "tone": "slate", "weight": 2}], "kpis": [{"label": "Ativos", "sub": "Em andamento", "icon": "fa-circle-check", "tone": "blue", "value": {"agg": "count", "where": {"status": "ativo"}}, "unitLabel": "Registros", "unit": "count"}, {"label": "Pendentes", "sub": "Aguardam ação", "icon": "fa-hourglass-half", "tone": "blue", "value": {"agg": "count", "where": {"status": "pendente"}}, "unitLabel": "Registros", "unit": "count"}, {"label": "Concluídos", "sub": "Encerrados no período", "icon": "fa-flag-checkered", "tone": "blue", "value": {"agg": "count", "where": {"status": "concluido"}}, "unitLabel": "Registros", "unit": "count"}], "breakdown": {"by": "curso", "title": "Distribuição", "desc": "Distribuição atual", "icon": "fa-layer-group"}, "cardFields": ["person", "curso"], "cardLine": "curso", "kanbanTitle": "Aulas online", "kanbanDesc": "criar e entrar na sessão; gravação com consentimento).", "kanbanValue": null, "kanbanDate": "data", "drawer": {"metrics": ["data"], "sections": [{"title": "Registro", "icon": "fa-id-card", "fields": ["person", "code", "curso", "turno", "frequencia", "data", "status"]}]}, "form": ["name", "person", "curso", "turno", "frequencia", "data"], "analytics": [{"title": "Por curso", "desc": "Situação atual", "by": "curso", "type": "bar", "measure": {"agg": "count", "unit": "count"}}, {"title": "Por situação", "desc": "Distribuição por status", "by": "status", "type": "doughnut", "measure": {"agg": "count", "unit": "count"}}]};
+    TTSCModelKit.syncTheme();
+    TTSCModelKit.render(
+      { portal: { label: "Professor (portal-do-professor.)" }, module: { label: "Agenda e comunicação" }, page: { label: "Aulas online", route: "/professor/agenda-e-comunicacao" } },
+      SPEC, {}
+    );
+    TTSCModelKit.switchTab("table");
+  })();
+</script>
 </body>
 </html>

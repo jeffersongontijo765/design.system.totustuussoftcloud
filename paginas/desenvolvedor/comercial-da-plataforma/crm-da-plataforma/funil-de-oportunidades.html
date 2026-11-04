@@ -6,73 +6,24 @@
 <title>Funil de oportunidades · CRM da plataforma</title>
 <link rel="stylesheet" href="../../../../components/__tokens.css">
 <link rel="stylesheet" href="../../../../components/bundle.css">
-<style>
-:root{color-scheme:light dark}
-body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font:13px/1.5 Inter,system-ui,sans-serif}
-.pg{padding:16px;max-width:1280px;margin:0 auto}
-@media(min-width:640px){.pg{padding:20px}}
-.pg-cabeca{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin:8px 0 16px}
-.pg-titulo{font-size:20px;line-height:28px;font-weight:700;letter-spacing:-.01em;margin:0}
-.pg-layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
-@media(max-width:900px){.pg-layout{grid-template-columns:1fr}}
-.pg-principal{display:flex;flex-direction:column;gap:16px;min-width:0}
-.pg-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
-.pg-kpis .ttsc-kpi-value{font-size:28px;font-weight:600}
-.pg-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
-.pg-toolbar .ttsc-input{flex:1 1 220px}
-.pg-paginacao{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:12px;color:var(--ttsc-text-muted);font-size:12px}
-.pg-grafico{display:flex;align-items:flex-end;gap:10px;height:180px;padding:8px 0}
-.pg-grafico span{flex:1;background:var(--ttsc-accent-soft);border-top:3px solid var(--ttsc-accent);border-radius:6px 6px 0 0}
-.pg-lista{margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:8px}
-.pg-kanban{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
-.pg-coluna{background:var(--ttsc-canvas-2);border:1px solid var(--ttsc-border-soft);border-radius:var(--ttsc-radius-surface);padding:10px;display:flex;flex-direction:column;gap:8px;min-height:160px}
-.pg-coluna-titulo{font-weight:600;font-size:12px;color:var(--ttsc-text-2)}
-.pg-cartao{background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-sm);padding:8px;font-size:12px}
-.pg-cartao small{color:var(--ttsc-text-muted)}
-.pg-etapas{display:flex;flex-wrap:wrap;gap:12px;list-style:none;padding:0;margin:0 0 16px;color:var(--ttsc-text-muted)}
-.pg-etapas li{display:flex;align-items:center;gap:6px}
-.pg-etapas li span{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:999px;border:1px solid var(--ttsc-border-strong);font-size:11px}
-.pg-etapas li.is-ativo{color:var(--ttsc-text);font-weight:600}
-.pg-etapas li.is-ativo span{background:var(--ttsc-accent);color:var(--ttsc-accent-on);border-color:transparent}
-.pg-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
-.pg-campo{display:flex;flex-direction:column;gap:6px}
-.pg-campo textarea,.pg-form textarea{grid-column:1/-1}
-.pg-acoes{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;flex-wrap:wrap}
-.pg-kv{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--ttsc-border-soft)}
-.pg-kv span{color:var(--ttsc-text-muted)}
-.pg-lateral .ttsc-card-content{display:flex;flex-direction:column;gap:10px}
-.pg-lateral h3{font-size:13px;margin:0;color:var(--ttsc-text)}
-.pg-lateral ul{margin:0;padding-left:16px;color:var(--ttsc-text-2);font-size:12px}
-.pg-lateral a{color:var(--ttsc-accent-text);font-size:12px}
-.pg-aviso{font-size:12px;color:var(--ttsc-text-muted);margin:0}
-</style>
+<script src="../../../../components/bundle.js"></script>
+<style>html,body{margin:0} #main-viewport{padding:14px 16px 24px} .pg-fonte{font:12px/1.5 Inter,system-ui,sans-serif;color:var(--ttsc-text-muted);padding:0 16px 24px} .pg-fonte a{color:var(--ttsc-accent-text)}</style>
 </head>
 <body>
-<main class="pg" data-arquetipo="kanban">
-  <nav aria-label="Trilha de navegação"><ol class="ttsc-breadcrumb"><li class="ttsc-breadcrumb-item"><a class="ttsc-breadcrumb-link" href="#">Desenvolvedor</a></li><li class="ttsc-breadcrumb-separator" aria-hidden="true"><i class="fa-light fa-chevron-right"></i></li><li class="ttsc-breadcrumb-item"><a class="ttsc-breadcrumb-link" href="#">Comercial da plataforma</a></li><li class="ttsc-breadcrumb-separator" aria-hidden="true"><i class="fa-light fa-chevron-right"></i></li><li class="ttsc-breadcrumb-item"><a class="ttsc-breadcrumb-link" href="#">CRM da plataforma</a></li><li class="ttsc-breadcrumb-separator" aria-hidden="true"><i class="fa-light fa-chevron-right"></i></li><li class="ttsc-breadcrumb-item"><span class="ttsc-breadcrumb-page" aria-current="page">Funil de oportunidades</span></li></ol></nav>
-  <div class="pg-cabeca">
-    <h1 class="pg-titulo">Funil de oportunidades</h1>
-    <div class="pg-botoes" style="display:flex;gap:8px"><button class="ttsc-btn ttsc-btn-outline ttsc-btn-sm" type="button"><i class="fa-light fa-download"></i> Exportar</button><button class="ttsc-btn ttsc-btn-primary" type="button"><i class="fa-light fa-plus"></i> Novo registro</button></div>
-  </div>
-  <div class="pg-layout">
-    <div class="pg-principal">
-<section class="ttsc-card" aria-labelledby="kb">
-  <div class="ttsc-card-header"><div class="ttsc-card-heading"><h2 class="ttsc-card-title" id="kb">Funil de oportunidades</h2>
-    <p class="ttsc-card-description">Arraste um cartão para mudar de etapa. Mudança é registrada na auditoria.</p></div></div>
-  <div class="ttsc-card-content"><div class="pg-kanban"><div class="pg-coluna"><div class="pg-coluna-titulo">Novo <span class="ttsc-badge ttsc-badge-light ttsc-badge-xs">3</span></div>
-      <div class="pg-cartao">REG-001<br><small>Responsável: equipe da unidade</small></div><div class="pg-cartao">REG-002<br><small>Responsável: equipe da unidade</small></div><div class="pg-cartao">REG-003<br><small>Responsável: equipe da unidade</small></div></div><div class="pg-coluna"><div class="pg-coluna-titulo">Em análise <span class="ttsc-badge ttsc-badge-light ttsc-badge-xs">2</span></div>
-      <div class="pg-cartao">REG-001<br><small>Responsável: equipe da unidade</small></div><div class="pg-cartao">REG-002<br><small>Responsável: equipe da unidade</small></div></div><div class="pg-coluna"><div class="pg-coluna-titulo">Aprovado <span class="ttsc-badge ttsc-badge-light ttsc-badge-xs">4</span></div>
-      <div class="pg-cartao">REG-001<br><small>Responsável: equipe da unidade</small></div><div class="pg-cartao">REG-002<br><small>Responsável: equipe da unidade</small></div><div class="pg-cartao">REG-003<br><small>Responsável: equipe da unidade</small></div><div class="pg-cartao">REG-004<br><small>Responsável: equipe da unidade</small></div></div><div class="pg-coluna"><div class="pg-coluna-titulo">Concluído <span class="ttsc-badge ttsc-badge-light ttsc-badge-xs">1</span></div>
-      <div class="pg-cartao">REG-001<br><small>Responsável: equipe da unidade</small></div></div></div></div>
-</section></div>
-    <aside class="pg-lateral">
-      <section class="ttsc-card"><div class="ttsc-card-content">
-        <h3>Quem acessa</h3><ul><li>Separação de funções: quem cria a proposta não a aprova (SDD 78, seção 2.2).</li></ul>
-        <h3>Regras essenciais</h3><ul><li>Ver a ficha da tela.</li></ul>
-        <p class="pg-aviso">Ficha de origem: <a href="../../../../kit-starter/desenvolvedor/comercial-da-plataforma/crm-da-plataforma.md">CRM da plataforma</a> · <a href="../../../../docs/v2/00-README.md">SDD v2</a></p>
-      </div></section>
-    </aside>
-  </div>
+<main id="main-viewport" class="bg-slate-50">
+  <div id="model-page" class="space-y-3.5" aria-live="polite"></div>
+  <p class="pg-fonte">Tela gerada a partir de <a href="../../../../kit-starter/desenvolvedor/comercial-da-plataforma/crm-da-plataforma.md">CRM da plataforma</a> (SDD v2: <a href="../../../../docs/v2/00-README.md">índice</a>). Registros de exemplo.</p>
 </main>
+<script>
+  (function () {
+    var SPEC = {"title": "Funil de oportunidades", "icon": "fa-table-list", "currency": "BRL", "create": true, "entity": {"singular": "Funil de oportunidades", "plural": "Funil de oportunidades", "icon": "fa-table-list", "newLabel": "Novo registro"}, "banner": {"icon": "fa-table-list", "title": "Funil de oportunidades", "desc": "/crm/pipeline, kanban): colunas do funil da plataforma (seção 4). Card com instituição, valor estimado, responsável, próxima atividade, dias na etapa e prioridade (v1, seção 7). Ar", "pill": "{count} registros"}, "titleField": "name", "codeField": "code", "subField": "unidade", "statusField": "status", "stageField": "status", "count": 24, "fields": [{"key": "name", "label": "Nome", "type": "title", "samples": ["Registro 1", "Registro 2", "Registro 3", "Registro 4", "Registro 5"]}, {"key": "person", "label": "Responsável", "type": "person"}, {"key": "code", "label": "Referência", "type": "code", "prefix": "REF"}, {"key": "unidade", "label": "Unidade", "type": "enum", "values": [{"id": "Centro", "label": "Centro", "tone": "blue", "weight": 4}, {"id": "Norte", "label": "Norte", "tone": "emerald", "weight": 3}, {"id": "Sul", "label": "Sul", "tone": "amber", "weight": 2}]}, {"key": "atualizado", "label": "Atualizado em", "type": "date", "from": -60, "to": 0}, {"key": "status", "label": "Situação", "type": "status"}], "statuses": [{"id": "ativo", "label": "Ativo", "tone": "emerald", "weight": 2}, {"id": "pendente", "label": "Pendente", "tone": "amber", "weight": 2}, {"id": "inativo", "label": "Inativo", "tone": "slate", "weight": 2}], "stages": [{"id": "ativo", "label": "Ativo", "tone": "emerald", "weight": 2}, {"id": "pendente", "label": "Pendente", "tone": "amber", "weight": 2}, {"id": "inativo", "label": "Inativo", "tone": "slate", "weight": 2}], "kpis": [{"label": "Ativos", "sub": "Em vigor", "icon": "fa-circle-check", "tone": "blue", "value": {"agg": "count", "where": {"status": "ativo"}}, "unitLabel": "Registros", "unit": "count"}, {"label": "Pendentes", "sub": "Aguardam ação", "icon": "fa-hourglass-half", "tone": "blue", "value": {"agg": "count", "where": {"status": "pendente"}}, "unitLabel": "Registros", "unit": "count"}, {"label": "Inativos", "sub": "Fora de uso", "icon": "fa-box-archive", "tone": "blue", "value": {"agg": "count", "where": {"status": "inativo"}}, "unitLabel": "Registros", "unit": "count"}], "breakdown": {"by": "unidade", "title": "Distribuição", "desc": "Distribuição atual", "icon": "fa-layer-group"}, "cardFields": ["person", "unidade"], "cardLine": "unidade", "kanbanTitle": "Funil de oportunidades", "kanbanDesc": "/crm/pipeline, kanban): colunas do funil da plataforma (seção 4). Card com instituição, valor estimado, responsável, próxima atividade, dias na etapa e prioridade (v1, seção 7). Ar", "kanbanValue": null, "kanbanDate": "atualizado", "drawer": {"metrics": ["atualizado"], "sections": [{"title": "Registro", "icon": "fa-id-card", "fields": ["person", "code", "unidade", "atualizado", "status"]}]}, "form": ["name", "person", "unidade", "atualizado"], "analytics": [{"title": "Por unidade", "desc": "Situação atual", "by": "unidade", "type": "bar", "measure": {"agg": "count", "unit": "count"}}, {"title": "Por situação", "desc": "Distribuição por status", "by": "status", "type": "doughnut", "measure": {"agg": "count", "unit": "count"}}]};
+    TTSCModelKit.syncTheme();
+    TTSCModelKit.render(
+      { portal: { label: "Desenvolvedor (desenvolvedor.)" }, module: { label: "CRM da plataforma" }, page: { label: "Funil de oportunidades", route: "/desenvolvedor/comercial-da-plataforma/crm-da-plataforma" } },
+      SPEC, {}
+    );
+    TTSCModelKit.switchTab("kanban");
+  })();
+</script>
 </body>
 </html>

@@ -6,71 +6,24 @@
 <title>Colaboradores da empresa · Departamento pessoal da empresa (Pessoas)</title>
 <link rel="stylesheet" href="../../../../components/__tokens.css">
 <link rel="stylesheet" href="../../../../components/bundle.css">
-<style>
-:root{color-scheme:light dark}
-body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font:13px/1.5 Inter,system-ui,sans-serif}
-.pg{padding:16px;max-width:1280px;margin:0 auto}
-@media(min-width:640px){.pg{padding:20px}}
-.pg-cabeca{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin:8px 0 16px}
-.pg-titulo{font-size:20px;line-height:28px;font-weight:700;letter-spacing:-.01em;margin:0}
-.pg-layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
-@media(max-width:900px){.pg-layout{grid-template-columns:1fr}}
-.pg-principal{display:flex;flex-direction:column;gap:16px;min-width:0}
-.pg-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
-.pg-kpis .ttsc-kpi-value{font-size:28px;font-weight:600}
-.pg-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
-.pg-toolbar .ttsc-input{flex:1 1 220px}
-.pg-paginacao{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:12px;color:var(--ttsc-text-muted);font-size:12px}
-.pg-grafico{display:flex;align-items:flex-end;gap:10px;height:180px;padding:8px 0}
-.pg-grafico span{flex:1;background:var(--ttsc-accent-soft);border-top:3px solid var(--ttsc-accent);border-radius:6px 6px 0 0}
-.pg-lista{margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:8px}
-.pg-kanban{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
-.pg-coluna{background:var(--ttsc-canvas-2);border:1px solid var(--ttsc-border-soft);border-radius:var(--ttsc-radius-surface);padding:10px;display:flex;flex-direction:column;gap:8px;min-height:160px}
-.pg-coluna-titulo{font-weight:600;font-size:12px;color:var(--ttsc-text-2)}
-.pg-cartao{background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-sm);padding:8px;font-size:12px}
-.pg-cartao small{color:var(--ttsc-text-muted)}
-.pg-etapas{display:flex;flex-wrap:wrap;gap:12px;list-style:none;padding:0;margin:0 0 16px;color:var(--ttsc-text-muted)}
-.pg-etapas li{display:flex;align-items:center;gap:6px}
-.pg-etapas li span{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:999px;border:1px solid var(--ttsc-border-strong);font-size:11px}
-.pg-etapas li.is-ativo{color:var(--ttsc-text);font-weight:600}
-.pg-etapas li.is-ativo span{background:var(--ttsc-accent);color:var(--ttsc-accent-on);border-color:transparent}
-.pg-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
-.pg-campo{display:flex;flex-direction:column;gap:6px}
-.pg-campo textarea,.pg-form textarea{grid-column:1/-1}
-.pg-acoes{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;flex-wrap:wrap}
-.pg-kv{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--ttsc-border-soft)}
-.pg-kv span{color:var(--ttsc-text-muted)}
-.pg-lateral .ttsc-card-content{display:flex;flex-direction:column;gap:10px}
-.pg-lateral h3{font-size:13px;margin:0;color:var(--ttsc-text)}
-.pg-lateral ul{margin:0;padding-left:16px;color:var(--ttsc-text-2);font-size:12px}
-.pg-lateral a{color:var(--ttsc-accent-text);font-size:12px}
-.pg-aviso{font-size:12px;color:var(--ttsc-text-muted);margin:0}
-</style>
+<script src="../../../../components/bundle.js"></script>
+<style>html,body{margin:0} #main-viewport{padding:14px 16px 24px} .pg-fonte{font:12px/1.5 Inter,system-ui,sans-serif;color:var(--ttsc-text-muted);padding:0 16px 24px} .pg-fonte a{color:var(--ttsc-accent-text)}</style>
 </head>
 <body>
-<main class="pg" data-arquetipo="formulario">
-  <nav aria-label="Trilha de navegação"><ol class="ttsc-breadcrumb"><li class="ttsc-breadcrumb-item"><a class="ttsc-breadcrumb-link" href="#">Desenvolvedor</a></li><li class="ttsc-breadcrumb-separator" aria-hidden="true"><i class="fa-light fa-chevron-right"></i></li><li class="ttsc-breadcrumb-item"><a class="ttsc-breadcrumb-link" href="#">Pessoas da plataforma</a></li><li class="ttsc-breadcrumb-separator" aria-hidden="true"><i class="fa-light fa-chevron-right"></i></li><li class="ttsc-breadcrumb-item"><a class="ttsc-breadcrumb-link" href="#">Departamento pessoal da empresa (Pessoas)</a></li><li class="ttsc-breadcrumb-separator" aria-hidden="true"><i class="fa-light fa-chevron-right"></i></li><li class="ttsc-breadcrumb-item"><span class="ttsc-breadcrumb-page" aria-current="page">Colaboradores da empresa</span></li></ol></nav>
-  <div class="pg-cabeca">
-    <h1 class="pg-titulo">Colaboradores da empresa</h1>
-    <div class="pg-botoes" style="display:flex;gap:8px"><button class="ttsc-btn ttsc-btn-outline ttsc-btn-sm" type="button"><i class="fa-light fa-download"></i> Exportar</button><button class="ttsc-btn ttsc-btn-primary" type="button"><i class="fa-light fa-plus"></i> Salvar</button></div>
-  </div>
-  <div class="pg-layout">
-    <div class="pg-principal">
-<section class="ttsc-card" aria-labelledby="fm">
-  <div class="ttsc-card-header"><div class="ttsc-card-heading"><h2 class="ttsc-card-title" id="fm">Colaboradores da empresa</h2>
-    <p class="ttsc-card-description">Campos obrigatórios marcados com *. Alterações ficam na auditoria.</p></div></div>
-  <div class="ttsc-card-content"><form class="pg-form" novalidate><div class="pg-campo"><label class="ttsc-form-label" for="nome-completo">Nome completo <span class="ttsc-form-required" aria-hidden="true">*</span></label><input class="ttsc-input" id="nome-completo" type="text" required></div><div class="pg-campo"><label class="ttsc-form-label" for="cpf">CPF <span class="ttsc-form-required" aria-hidden="true">*</span></label><input class="ttsc-input" id="cpf" type="text" required></div><div class="pg-campo"><label class="ttsc-form-label" for="unidade">Unidade <span class="ttsc-form-required" aria-hidden="true">*</span></label><select class="ttsc-select" id="unidade"><option>Selecione</option><option>Unidade Centro</option></select></div><div class="pg-campo"><label class="ttsc-form-label" for="data-de-referencia">Data de referência</label><input class="ttsc-input" id="data-de-referencia" type="date"></div><div class="pg-campo"><label class="ttsc-form-label" for="observacoes">Observações</label><textarea class="ttsc-textarea" id="observacoes" rows="3"></textarea></div></form>
-    <div class="pg-acoes"><button class="ttsc-btn ttsc-btn-outline" type="button">Cancelar</button><button class="ttsc-btn ttsc-btn-primary" type="button">Salvar</button></div>
-  </div>
-</section></div>
-    <aside class="pg-lateral">
-      <section class="ttsc-card"><div class="ttsc-card-content">
-        <h3>Quem acessa</h3><ul><li>platform.people (nível 1): cadastro funcional, férias, afastamentos, ponto (ajuste com motivo), rescisão, benefícios.</li><li>platform.payroll (Folha, nível 1): processar a folha. Folha fechada não muda.</li><li>platform.payroll.approver (nível 2): aprovar a folha; não aprova a folha que processou.</li><li>Todo funcionário: o próprio holerite, férias, ponto e documentos.</li></ul>
-        <h3>Regras essenciais</h3><ul><li>Módulo separado do RH (HCM-01 do 39, seção 11): Pessoas é dono de cadastro funcional, folha, férias, rescisão, eSocial e ponto; não é dono de processo seletivo, avaliação e clima. O cadastro funcional nasce aqui, quando o RH passa o candidato contratado por referência.</li><li>Dados civis ficam no banco de identidade; o HCM referencia person_id (D-19; 14, seção 3). Para a empresa, o banco é o master.</li><li>Regras do 39, seção 3 prevalecem sobre a v1: admissão, folha (folha fechada não é alterada), férias e afastamentos, ponto e jornada (ajuste manual só com motivo), rescisão (desligamento com afastamento ativo fica bloqueado) e benefícios.</li><li>Folha: quem processa não aprova (22, seção 5; 39, seção 7).</li></ul>
-        <p class="pg-aviso">Ficha de origem: <a href="../../../../kit-starter/desenvolvedor/pessoas-da-plataforma/departamento-pessoal.md">Departamento pessoal da empresa (Pessoas)</a> · <a href="../../../../docs/v2/00-README.md">SDD v2</a></p>
-      </div></section>
-    </aside>
-  </div>
+<main id="main-viewport" class="bg-slate-50">
+  <div id="model-page" class="space-y-3.5" aria-live="polite"></div>
+  <p class="pg-fonte">Tela gerada a partir de <a href="../../../../kit-starter/desenvolvedor/pessoas-da-plataforma/departamento-pessoal.md">Departamento pessoal da empresa (Pessoas)</a> (SDD v2: <a href="../../../../docs/v2/00-README.md">índice</a>). Registros de exemplo.</p>
 </main>
+<script>
+  (function () {
+    var SPEC = {"title": "Colaboradores da empresa", "icon": "fa-users", "currency": "BRL", "create": true, "entity": {"singular": "Colaboradores da empresa", "plural": "Colaboradores da empresa", "icon": "fa-users", "newLabel": "Novo registro"}, "banner": {"icon": "fa-users", "title": "Colaboradores da empresa", "desc": "datatable): cadastro funcional, situação, unidade de lotação.", "pill": "{count} registros"}, "titleField": "name", "codeField": "code", "subField": "setor", "statusField": "status", "stageField": "status", "count": 24, "fields": [{"key": "name", "label": "Cargo", "type": "title", "samples": ["Auxiliar de secretaria", "Professora de Matemática", "Coordenador pedagógico", "Técnico de laboratório", "Assistente financeiro"]}, {"key": "person", "label": "Colaborador", "type": "person"}, {"key": "code", "label": "Matrícula funcional", "type": "code", "prefix": "COL"}, {"key": "setor", "label": "Setor", "type": "enum", "values": [{"id": "Administrativo", "label": "Administrativo", "tone": "blue", "weight": 4}, {"id": "Pedagógico", "label": "Pedagógico", "tone": "emerald", "weight": 3}, {"id": "Financeiro", "label": "Financeiro", "tone": "amber", "weight": 2}, {"id": "Manutenção", "label": "Manutenção", "tone": "purple", "weight": 1}]}, {"key": "salario", "label": "Salário", "type": "money", "min": 2100, "max": 9800}, {"key": "admissao", "label": "Admissão", "type": "date", "from": -2000, "to": -30}, {"key": "status", "label": "Situação", "type": "status"}], "statuses": [{"id": "ativo", "label": "Ativo", "tone": "emerald", "weight": 2}, {"id": "ferias", "label": "Em férias", "tone": "blue", "weight": 2}, {"id": "afastado", "label": "Afastado", "tone": "amber", "weight": 2}, {"id": "desligado", "label": "Desligado", "tone": "slate", "weight": 2}], "stages": [{"id": "ativo", "label": "Ativo", "tone": "emerald", "weight": 2}, {"id": "ferias", "label": "Em férias", "tone": "blue", "weight": 2}, {"id": "afastado", "label": "Afastado", "tone": "amber", "weight": 2}, {"id": "desligado", "label": "Desligado", "tone": "slate", "weight": 2}], "kpis": [{"label": "Ativos", "sub": "Colaboradores em atividade", "icon": "fa-users", "tone": "blue", "value": {"agg": "count", "where": {"status": "ativo"}}, "unitLabel": "Registros", "unit": "count"}, {"label": "Afastados", "sub": "Afastamentos em curso", "icon": "fa-user-clock", "tone": "blue", "value": {"agg": "count", "where": {"status": "afastado"}}, "unitLabel": "Registros", "unit": "count"}, {"label": "Folha bruta", "sub": "Soma dos salários ativos", "icon": "fa-sack-dollar", "tone": "blue", "value": {"agg": "sum", "field": "salario", "where": {"status": "ativo"}}, "unitLabel": "Registros", "unit": "money"}], "breakdown": {"by": "setor", "title": "Distribuição", "desc": "Distribuição atual", "icon": "fa-layer-group"}, "cardFields": ["person", "setor"], "cardLine": "setor", "kanbanTitle": "Colaboradores da empresa", "kanbanDesc": "datatable): cadastro funcional, situação, unidade de lotação.", "kanbanValue": "salario", "kanbanDate": "admissao", "drawer": {"metrics": ["salario", "admissao"], "sections": [{"title": "Registro", "icon": "fa-id-card", "fields": ["person", "code", "setor", "salario", "admissao", "status"]}]}, "form": ["name", "person", "setor", "salario", "admissao"], "analytics": [{"title": "Por setor", "desc": "Situação atual", "by": "setor", "type": "bar", "measure": {"agg": "count", "unit": "count"}}, {"title": "Por situação", "desc": "Distribuição por status", "by": "status", "type": "doughnut", "measure": {"agg": "count", "unit": "count"}}]};
+    TTSCModelKit.syncTheme();
+    TTSCModelKit.render(
+      { portal: { label: "Desenvolvedor (desenvolvedor.)" }, module: { label: "Departamento pessoal da empresa (Pessoas)" }, page: { label: "Colaboradores da empresa", route: "/desenvolvedor/pessoas-da-plataforma/departamento-pessoal" } },
+      SPEC, {}
+    );
+    TTSCModelKit.switchTab("table");
+  })();
+</script>
 </body>
 </html>

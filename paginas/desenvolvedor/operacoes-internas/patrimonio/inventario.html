@@ -6,78 +6,24 @@
 <title>Inventário · Patrimônio da empresa</title>
 <link rel="stylesheet" href="../../../../components/__tokens.css">
 <link rel="stylesheet" href="../../../../components/bundle.css">
-<style>
-:root{color-scheme:light dark}
-body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font:13px/1.5 Inter,system-ui,sans-serif}
-.pg{padding:16px;max-width:1280px;margin:0 auto}
-@media(min-width:640px){.pg{padding:20px}}
-.pg-cabeca{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin:8px 0 16px}
-.pg-titulo{font-size:20px;line-height:28px;font-weight:700;letter-spacing:-.01em;margin:0}
-.pg-layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
-@media(max-width:900px){.pg-layout{grid-template-columns:1fr}}
-.pg-principal{display:flex;flex-direction:column;gap:16px;min-width:0}
-.pg-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
-.pg-kpis .ttsc-kpi-value{font-size:28px;font-weight:600}
-.pg-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
-.pg-toolbar .ttsc-input{flex:1 1 220px}
-.pg-paginacao{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:12px;color:var(--ttsc-text-muted);font-size:12px}
-.pg-grafico{display:flex;align-items:flex-end;gap:10px;height:180px;padding:8px 0}
-.pg-grafico span{flex:1;background:var(--ttsc-accent-soft);border-top:3px solid var(--ttsc-accent);border-radius:6px 6px 0 0}
-.pg-lista{margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:8px}
-.pg-kanban{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
-.pg-coluna{background:var(--ttsc-canvas-2);border:1px solid var(--ttsc-border-soft);border-radius:var(--ttsc-radius-surface);padding:10px;display:flex;flex-direction:column;gap:8px;min-height:160px}
-.pg-coluna-titulo{font-weight:600;font-size:12px;color:var(--ttsc-text-2)}
-.pg-cartao{background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-sm);padding:8px;font-size:12px}
-.pg-cartao small{color:var(--ttsc-text-muted)}
-.pg-etapas{display:flex;flex-wrap:wrap;gap:12px;list-style:none;padding:0;margin:0 0 16px;color:var(--ttsc-text-muted)}
-.pg-etapas li{display:flex;align-items:center;gap:6px}
-.pg-etapas li span{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:999px;border:1px solid var(--ttsc-border-strong);font-size:11px}
-.pg-etapas li.is-ativo{color:var(--ttsc-text);font-weight:600}
-.pg-etapas li.is-ativo span{background:var(--ttsc-accent);color:var(--ttsc-accent-on);border-color:transparent}
-.pg-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
-.pg-campo{display:flex;flex-direction:column;gap:6px}
-.pg-campo textarea,.pg-form textarea{grid-column:1/-1}
-.pg-acoes{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;flex-wrap:wrap}
-.pg-kv{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--ttsc-border-soft)}
-.pg-kv span{color:var(--ttsc-text-muted)}
-.pg-lateral .ttsc-card-content{display:flex;flex-direction:column;gap:10px}
-.pg-lateral h3{font-size:13px;margin:0;color:var(--ttsc-text)}
-.pg-lateral ul{margin:0;padding-left:16px;color:var(--ttsc-text-2);font-size:12px}
-.pg-lateral a{color:var(--ttsc-accent-text);font-size:12px}
-.pg-aviso{font-size:12px;color:var(--ttsc-text-muted);margin:0}
-</style>
+<script src="../../../../components/bundle.js"></script>
+<style>html,body{margin:0} #main-viewport{padding:14px 16px 24px} .pg-fonte{font:12px/1.5 Inter,system-ui,sans-serif;color:var(--ttsc-text-muted);padding:0 16px 24px} .pg-fonte a{color:var(--ttsc-accent-text)}</style>
 </head>
 <body>
-<main class="pg" data-arquetipo="lista">
-  <nav aria-label="Trilha de navegação"><ol class="ttsc-breadcrumb"><li class="ttsc-breadcrumb-item"><a class="ttsc-breadcrumb-link" href="#">Desenvolvedor</a></li><li class="ttsc-breadcrumb-separator" aria-hidden="true"><i class="fa-light fa-chevron-right"></i></li><li class="ttsc-breadcrumb-item"><a class="ttsc-breadcrumb-link" href="#">Operações internas</a></li><li class="ttsc-breadcrumb-separator" aria-hidden="true"><i class="fa-light fa-chevron-right"></i></li><li class="ttsc-breadcrumb-item"><a class="ttsc-breadcrumb-link" href="#">Patrimônio da empresa</a></li><li class="ttsc-breadcrumb-separator" aria-hidden="true"><i class="fa-light fa-chevron-right"></i></li><li class="ttsc-breadcrumb-item"><span class="ttsc-breadcrumb-page" aria-current="page">Inventário</span></li></ol></nav>
-  <div class="pg-cabeca">
-    <h1 class="pg-titulo">Inventário</h1>
-    <div class="pg-botoes" style="display:flex;gap:8px"><button class="ttsc-btn ttsc-btn-outline ttsc-btn-sm" type="button"><i class="fa-light fa-download"></i> Exportar</button><button class="ttsc-btn ttsc-btn-primary" type="button"><i class="fa-light fa-plus"></i> Novo registro</button></div>
-  </div>
-  <div class="pg-layout">
-    <div class="pg-principal">
-<section class="ttsc-card" aria-labelledby="lst">
-  <div class="ttsc-card-header"><div class="ttsc-card-heading">
-    <h2 class="ttsc-card-title" id="lst">Inventário</h2>
-    <p class="ttsc-card-description">Lista com busca, filtros e exportação. Dados ilustrativos.</p></div></div>
-  <div class="ttsc-card-content">
-    <div class="pg-toolbar">
-      <input class="ttsc-input" type="search" placeholder="Buscar registros..." aria-label="Buscar registros">
-      <select class="ttsc-select" aria-label="Situação"><option>Todas as situações</option><option>Em andamento</option><option>Concluído</option><option>Pendente</option></select>
-    </div>
-    <div class="ttsc-table-wrapper"><table class="ttsc-table ttsc-table-zebra">
-      <thead><tr><th>Registro</th><th>Situação</th><th>Responsável</th><th>Atualizado em</th></tr></thead><tbody><tr><td>REG-0001</td><td><span class="ttsc-badge ttsc-badge-info ttsc-badge-light ttsc-badge-sm">Em andamento</span></td><td>Equipe da unidade</td><td>12/11/2026</td></tr><tr><td>REG-0002</td><td><span class="ttsc-badge ttsc-badge-success ttsc-badge-light ttsc-badge-sm">Concluído</span></td><td>Coordenação</td><td>11/11/2026</td></tr><tr><td>REG-0003</td><td><span class="ttsc-badge ttsc-badge-warning ttsc-badge-light ttsc-badge-sm">Pendente</span></td><td>Secretaria</td><td>10/11/2026</td></tr></tbody></table></div>
-    <nav class="pg-paginacao" aria-label="Paginação"><span>1 a 3 de 3</span><span>Estados: carregando, vazio, sem resultado, erro e acesso negado.</span></nav>
-  </div>
-</section></div>
-    <aside class="pg-lateral">
-      <section class="ttsc-card"><div class="ttsc-card-content">
-        <h3>Quem acessa</h3><ul><li>platform.assets (nível 1): cadastrar e movimentar bens, registrar manutenção, inventário e seguro.</li><li>platform.assets.approver (nível 2): aprovar transferência, descarte e manutenção acima do limite; não aprova o que ele mesmo registrou (DP-03; 78, seção 4.1).</li></ul>
-        <h3>Regras essenciais</h3><ul><li>T-01: todas as 12 tabelas recebem tenant_id NOT NULL e índice composto (19, seção 1; 03).</li><li>T-04: current_value é calculado, não editável. Guardar o último cálculo com data e método; recalcular, não sobrescrever.</li><li>Regras de campo (19, seção 8.2): acquisition_value maior que zero e só alterável por correção com motivo; residual_value não negativo e não maior que acquisition_value; dep_method em linear, accelerated, degressive, unit; dep_rate entre 0 e 100%; ativo baixado não recebe depreciação nem movimento.</li><li>Instância da empresa: sem filtro de unidade, entidade ou filial; dados no banco master; o portal do desenvolvedor não vê o módulo de nenhuma entidade.</li></ul>
-        <p class="pg-aviso">Ficha de origem: <a href="../../../../kit-starter/desenvolvedor/operacoes-internas/patrimonio.md">Patrimônio da empresa</a> · <a href="../../../../docs/v2/00-README.md">SDD v2</a></p>
-      </div></section>
-    </aside>
-  </div>
+<main id="main-viewport" class="bg-slate-50">
+  <div id="model-page" class="space-y-3.5" aria-live="polite"></div>
+  <p class="pg-fonte">Tela gerada a partir de <a href="../../../../kit-starter/desenvolvedor/operacoes-internas/patrimonio.md">Patrimônio da empresa</a> (SDD v2: <a href="../../../../docs/v2/00-README.md">índice</a>). Registros de exemplo.</p>
 </main>
+<script>
+  (function () {
+    var SPEC = {"title": "Inventário", "icon": "fa-boxes-stacked", "currency": "BRL", "create": true, "entity": {"singular": "Inventário", "plural": "Inventário", "icon": "fa-boxes-stacked", "newLabel": "Novo registro"}, "banner": {"icon": "fa-boxes-stacked", "title": "Inventário", "desc": "datatable): contagem por localização, divergências.", "pill": "{count} registros"}, "titleField": "name", "codeField": "code", "subField": "categoria", "statusField": "status", "stageField": "status", "count": 24, "fields": [{"key": "name", "label": "Bem", "type": "title", "samples": ["Notebook administrativo", "Veículo de transporte escolar", "Projetor multimídia", "Bebedouro industrial", "Rota Norte"]}, {"key": "person", "label": "Responsável", "type": "person"}, {"key": "code", "label": "Plaqueta", "type": "code", "prefix": "BEM"}, {"key": "categoria", "label": "Categoria", "type": "enum", "values": [{"id": "informática", "label": "informática", "tone": "blue", "weight": 4}, {"id": "veículo", "label": "veículo", "tone": "emerald", "weight": 3}, {"id": "mobiliário", "label": "mobiliário", "tone": "amber", "weight": 2}, {"id": "equipamento", "label": "equipamento", "tone": "purple", "weight": 1}]}, {"key": "valor", "label": "Valor de aquisição", "type": "money", "min": 300, "max": 180000}, {"key": "aquisicao", "label": "Aquisição", "type": "date", "from": -2000, "to": -10}, {"key": "status", "label": "Situação", "type": "status"}], "statuses": [{"id": "em_uso", "label": "Em uso", "tone": "emerald", "weight": 2}, {"id": "em_manutencao", "label": "Em manutenção", "tone": "amber", "weight": 2}, {"id": "disponivel", "label": "Disponível", "tone": "blue", "weight": 2}, {"id": "baixado", "label": "Baixado", "tone": "slate", "weight": 2}], "stages": [{"id": "em_uso", "label": "Em uso", "tone": "emerald", "weight": 2}, {"id": "em_manutencao", "label": "Em manutenção", "tone": "amber", "weight": 2}, {"id": "disponivel", "label": "Disponível", "tone": "blue", "weight": 2}, {"id": "baixado", "label": "Baixado", "tone": "slate", "weight": 2}], "kpis": [{"label": "Em uso", "sub": "Bens alocados", "icon": "fa-check", "tone": "blue", "value": {"agg": "count", "where": {"status": "em_uso"}}, "unitLabel": "Registros", "unit": "count"}, {"label": "Em manutenção", "sub": "Ordens abertas", "icon": "fa-wrench", "tone": "blue", "value": {"agg": "count", "where": {"status": "em_manutencao"}}, "unitLabel": "Registros", "unit": "count"}, {"label": "Valor em uso", "sub": "Soma de aquisição", "icon": "fa-sack-dollar", "tone": "blue", "value": {"agg": "sum", "field": "valor", "where": {"status": "em_uso"}}, "unitLabel": "Registros", "unit": "money"}], "breakdown": {"by": "categoria", "title": "Distribuição", "desc": "Distribuição atual", "icon": "fa-layer-group"}, "cardFields": ["person", "categoria"], "cardLine": "categoria", "kanbanTitle": "Inventário", "kanbanDesc": "datatable): contagem por localização, divergências.", "kanbanValue": "valor", "kanbanDate": "aquisicao", "drawer": {"metrics": ["valor", "aquisicao"], "sections": [{"title": "Registro", "icon": "fa-id-card", "fields": ["person", "code", "categoria", "valor", "aquisicao", "status"]}]}, "form": ["name", "person", "categoria", "valor", "aquisicao"], "analytics": [{"title": "Por categoria", "desc": "Situação atual", "by": "categoria", "type": "bar", "measure": {"agg": "count", "unit": "count"}}, {"title": "Por situação", "desc": "Distribuição por status", "by": "status", "type": "doughnut", "measure": {"agg": "count", "unit": "count"}}]};
+    TTSCModelKit.syncTheme();
+    TTSCModelKit.render(
+      { portal: { label: "Desenvolvedor (desenvolvedor.)" }, module: { label: "Patrimônio da empresa" }, page: { label: "Inventário", route: "/desenvolvedor/operacoes-internas/patrimonio" } },
+      SPEC, {}
+    );
+    TTSCModelKit.switchTab("table");
+  })();
+</script>
 </body>
 </html>

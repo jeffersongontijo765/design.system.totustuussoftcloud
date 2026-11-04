@@ -6,71 +6,24 @@
 <title>Acesso técnico de emergência · Painel de bancos de dados</title>
 <link rel="stylesheet" href="../../../../components/__tokens.css">
 <link rel="stylesheet" href="../../../../components/bundle.css">
-<style>
-:root{color-scheme:light dark}
-body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font:13px/1.5 Inter,system-ui,sans-serif}
-.pg{padding:16px;max-width:1280px;margin:0 auto}
-@media(min-width:640px){.pg{padding:20px}}
-.pg-cabeca{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin:8px 0 16px}
-.pg-titulo{font-size:20px;line-height:28px;font-weight:700;letter-spacing:-.01em;margin:0}
-.pg-layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
-@media(max-width:900px){.pg-layout{grid-template-columns:1fr}}
-.pg-principal{display:flex;flex-direction:column;gap:16px;min-width:0}
-.pg-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
-.pg-kpis .ttsc-kpi-value{font-size:28px;font-weight:600}
-.pg-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
-.pg-toolbar .ttsc-input{flex:1 1 220px}
-.pg-paginacao{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:12px;color:var(--ttsc-text-muted);font-size:12px}
-.pg-grafico{display:flex;align-items:flex-end;gap:10px;height:180px;padding:8px 0}
-.pg-grafico span{flex:1;background:var(--ttsc-accent-soft);border-top:3px solid var(--ttsc-accent);border-radius:6px 6px 0 0}
-.pg-lista{margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:8px}
-.pg-kanban{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
-.pg-coluna{background:var(--ttsc-canvas-2);border:1px solid var(--ttsc-border-soft);border-radius:var(--ttsc-radius-surface);padding:10px;display:flex;flex-direction:column;gap:8px;min-height:160px}
-.pg-coluna-titulo{font-weight:600;font-size:12px;color:var(--ttsc-text-2)}
-.pg-cartao{background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-sm);padding:8px;font-size:12px}
-.pg-cartao small{color:var(--ttsc-text-muted)}
-.pg-etapas{display:flex;flex-wrap:wrap;gap:12px;list-style:none;padding:0;margin:0 0 16px;color:var(--ttsc-text-muted)}
-.pg-etapas li{display:flex;align-items:center;gap:6px}
-.pg-etapas li span{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:999px;border:1px solid var(--ttsc-border-strong);font-size:11px}
-.pg-etapas li.is-ativo{color:var(--ttsc-text);font-weight:600}
-.pg-etapas li.is-ativo span{background:var(--ttsc-accent);color:var(--ttsc-accent-on);border-color:transparent}
-.pg-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
-.pg-campo{display:flex;flex-direction:column;gap:6px}
-.pg-campo textarea,.pg-form textarea{grid-column:1/-1}
-.pg-acoes{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;flex-wrap:wrap}
-.pg-kv{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--ttsc-border-soft)}
-.pg-kv span{color:var(--ttsc-text-muted)}
-.pg-lateral .ttsc-card-content{display:flex;flex-direction:column;gap:10px}
-.pg-lateral h3{font-size:13px;margin:0;color:var(--ttsc-text)}
-.pg-lateral ul{margin:0;padding-left:16px;color:var(--ttsc-text-2);font-size:12px}
-.pg-lateral a{color:var(--ttsc-accent-text);font-size:12px}
-.pg-aviso{font-size:12px;color:var(--ttsc-text-muted);margin:0}
-</style>
+<script src="../../../../components/bundle.js"></script>
+<style>html,body{margin:0} #main-viewport{padding:14px 16px 24px} .pg-fonte{font:12px/1.5 Inter,system-ui,sans-serif;color:var(--ttsc-text-muted);padding:0 16px 24px} .pg-fonte a{color:var(--ttsc-accent-text)}</style>
 </head>
 <body>
-<main class="pg" data-arquetipo="formulario">
-  <nav aria-label="Trilha de navegação"><ol class="ttsc-breadcrumb"><li class="ttsc-breadcrumb-item"><a class="ttsc-breadcrumb-link" href="#">Desenvolvedor</a></li><li class="ttsc-breadcrumb-separator" aria-hidden="true"><i class="fa-light fa-chevron-right"></i></li><li class="ttsc-breadcrumb-item"><a class="ttsc-breadcrumb-link" href="#">Segurança e operação</a></li><li class="ttsc-breadcrumb-separator" aria-hidden="true"><i class="fa-light fa-chevron-right"></i></li><li class="ttsc-breadcrumb-item"><a class="ttsc-breadcrumb-link" href="#">Painel de bancos de dados</a></li><li class="ttsc-breadcrumb-separator" aria-hidden="true"><i class="fa-light fa-chevron-right"></i></li><li class="ttsc-breadcrumb-item"><span class="ttsc-breadcrumb-page" aria-current="page">Acesso técnico de emergência</span></li></ol></nav>
-  <div class="pg-cabeca">
-    <h1 class="pg-titulo">Acesso técnico de emergência</h1>
-    <div class="pg-botoes" style="display:flex;gap:8px"><button class="ttsc-btn ttsc-btn-outline ttsc-btn-sm" type="button"><i class="fa-light fa-download"></i> Exportar</button><button class="ttsc-btn ttsc-btn-primary" type="button"><i class="fa-light fa-plus"></i> Salvar</button></div>
-  </div>
-  <div class="pg-layout">
-    <div class="pg-principal">
-<section class="ttsc-card" aria-labelledby="fm">
-  <div class="ttsc-card-header"><div class="ttsc-card-heading"><h2 class="ttsc-card-title" id="fm">Acesso técnico de emergência</h2>
-    <p class="ttsc-card-description">Campos obrigatórios marcados com *. Alterações ficam na auditoria.</p></div></div>
-  <div class="ttsc-card-content"><form class="pg-form" novalidate><div class="pg-campo"><label class="ttsc-form-label" for="nome-completo">Nome completo <span class="ttsc-form-required" aria-hidden="true">*</span></label><input class="ttsc-input" id="nome-completo" type="text" required></div><div class="pg-campo"><label class="ttsc-form-label" for="cpf">CPF <span class="ttsc-form-required" aria-hidden="true">*</span></label><input class="ttsc-input" id="cpf" type="text" required></div><div class="pg-campo"><label class="ttsc-form-label" for="unidade">Unidade <span class="ttsc-form-required" aria-hidden="true">*</span></label><select class="ttsc-select" id="unidade"><option>Selecione</option><option>Unidade Centro</option></select></div><div class="pg-campo"><label class="ttsc-form-label" for="data-de-referencia">Data de referência</label><input class="ttsc-input" id="data-de-referencia" type="date"></div><div class="pg-campo"><label class="ttsc-form-label" for="observacoes">Observações</label><textarea class="ttsc-textarea" id="observacoes" rows="3"></textarea></div></form>
-    <div class="pg-acoes"><button class="ttsc-btn ttsc-btn-outline" type="button">Cancelar</button><button class="ttsc-btn ttsc-btn-primary" type="button">Salvar</button></div>
-  </div>
-</section></div>
-    <aside class="pg-lateral">
-      <section class="ttsc-card"><div class="ttsc-card-content">
-        <h3>Quem acessa</h3><ul><li>platform.ops: consultar inventário, acompanhar migrações e backups, pedir restauração e acesso de emergência.</li><li>platform.developer: aprovar migração em lote, restauração e escrita de emergência (segundo papel); a dupla aprovação exige duas pessoas diferentes de quem pediu.</li></ul>
-        <h3>Regras essenciais</h3><ul><li>Regras do 34, seção 4 (PAG-03):</li><li>Especificações &quot;Bancos&quot; da v1 (spec_gestao_bancos.md e spec_gestao_bancos_completo.md): fora do escopo e não absorvidas, porque expõem console SQL a todos os clientes (03).</li></ul>
-        <p class="pg-aviso">Ficha de origem: <a href="../../../../kit-starter/desenvolvedor/seguranca-e-operacao/painel-de-bancos-de-dados.md">Painel de bancos de dados</a> · <a href="../../../../docs/v2/00-README.md">SDD v2</a></p>
-      </div></section>
-    </aside>
-  </div>
+<main id="main-viewport" class="bg-slate-50">
+  <div id="model-page" class="space-y-3.5" aria-live="polite"></div>
+  <p class="pg-fonte">Tela gerada a partir de <a href="../../../../kit-starter/desenvolvedor/seguranca-e-operacao/painel-de-bancos-de-dados.md">Painel de bancos de dados</a> (SDD v2: <a href="../../../../docs/v2/00-README.md">índice</a>). Registros de exemplo.</p>
 </main>
+<script>
+  (function () {
+    var SPEC = {"title": "Acesso técnico de emergência", "icon": "fa-headset", "currency": "BRL", "create": true, "entity": {"singular": "Acesso técnico de emergência", "plural": "Acesso técnico de emergência", "icon": "fa-headset", "newLabel": "Novo registro"}, "banner": {"icon": "fa-headset", "title": "Acesso técnico de emergência", "desc": "página de pedido): motivo, chamado vinculado, tempo da sessão, leitura ou escrita.", "pill": "{count} registros"}, "titleField": "name", "codeField": "code", "subField": "prioridade", "statusField": "status", "stageField": "status", "count": 24, "fields": [{"key": "name", "label": "Assunto", "type": "title", "samples": ["Não recebi o boleto", "Alteração de dados cadastrais", "Problema de acesso ao portal", "Segunda via de documento", "Dúvida sobre bolsa"]}, {"key": "person", "label": "Solicitante", "type": "person"}, {"key": "code", "label": "Ticket", "type": "code", "prefix": "TKT"}, {"key": "prioridade", "label": "Prioridade", "type": "enum", "values": [{"id": "baixa", "label": "baixa", "tone": "blue", "weight": 4}, {"id": "média", "label": "média", "tone": "emerald", "weight": 3}, {"id": "alta", "label": "alta", "tone": "amber", "weight": 2}]}, {"key": "fila", "label": "Fila", "type": "enum", "values": [{"id": "SAC", "label": "SAC", "tone": "blue", "weight": 4}, {"id": "helpdesk", "label": "helpdesk", "tone": "emerald", "weight": 3}, {"id": "chat", "label": "chat", "tone": "amber", "weight": 2}]}, {"key": "aberto", "label": "Aberto em", "type": "datetime", "from": -30, "to": 0}, {"key": "status", "label": "Situação", "type": "status"}], "statuses": [{"id": "aberto", "label": "Aberto", "tone": "blue", "weight": 2}, {"id": "em_atendimento", "label": "Em atendimento", "tone": "amber", "weight": 2}, {"id": "aguardando_cliente", "label": "Aguardando cliente", "tone": "purple", "weight": 2}, {"id": "resolvido", "label": "Resolvido", "tone": "emerald", "weight": 2}], "stages": [{"id": "aberto", "label": "Aberto", "tone": "blue", "weight": 2}, {"id": "em_atendimento", "label": "Em atendimento", "tone": "amber", "weight": 2}, {"id": "aguardando_cliente", "label": "Aguardando cliente", "tone": "purple", "weight": 2}, {"id": "resolvido", "label": "Resolvido", "tone": "emerald", "weight": 2}], "kpis": [{"label": "Abertos", "sub": "Sem resposta", "icon": "fa-envelope-open", "tone": "blue", "value": {"agg": "count", "where": {"status": "aberto"}}, "unitLabel": "Registros", "unit": "count"}, {"label": "Em atendimento", "sub": "Com responsável", "icon": "fa-user-headset", "tone": "blue", "value": {"agg": "count", "where": {"status": "em_atendimento"}}, "unitLabel": "Registros", "unit": "count"}, {"label": "Resolvidos", "sub": "Encerrados", "icon": "fa-circle-check", "tone": "blue", "value": {"agg": "count", "where": {"status": "resolvido"}}, "unitLabel": "Registros", "unit": "count"}], "breakdown": {"by": "prioridade", "title": "Distribuição", "desc": "Distribuição atual", "icon": "fa-layer-group"}, "cardFields": ["person", "prioridade"], "cardLine": "prioridade", "kanbanTitle": "Acesso técnico de emergência", "kanbanDesc": "página de pedido): motivo, chamado vinculado, tempo da sessão, leitura ou escrita.", "kanbanValue": null, "kanbanDate": "aberto", "drawer": {"metrics": ["aberto"], "sections": [{"title": "Registro", "icon": "fa-id-card", "fields": ["person", "code", "prioridade", "fila", "aberto", "status"]}]}, "form": ["name", "person", "prioridade", "fila", "aberto"], "analytics": [{"title": "Por prioridade", "desc": "Situação atual", "by": "prioridade", "type": "bar", "measure": {"agg": "count", "unit": "count"}}, {"title": "Por situação", "desc": "Distribuição por status", "by": "status", "type": "doughnut", "measure": {"agg": "count", "unit": "count"}}]};
+    TTSCModelKit.syncTheme();
+    TTSCModelKit.render(
+      { portal: { label: "Desenvolvedor (desenvolvedor.)" }, module: { label: "Painel de bancos de dados" }, page: { label: "Acesso técnico de emergência", route: "/desenvolvedor/seguranca-e-operacao/painel-de-bancos-de-dados" } },
+      SPEC, {}
+    );
+    TTSCModelKit.switchTab("table");
+  })();
+</script>
 </body>
 </html>

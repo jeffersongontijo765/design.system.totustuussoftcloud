@@ -6,71 +6,24 @@
 <title>Histórico de alterações · Configurações do sistema</title>
 <link rel="stylesheet" href="../../../../components/__tokens.css">
 <link rel="stylesheet" href="../../../../components/bundle.css">
-<style>
-:root{color-scheme:light dark}
-body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font:13px/1.5 Inter,system-ui,sans-serif}
-.pg{padding:16px;max-width:1280px;margin:0 auto}
-@media(min-width:640px){.pg{padding:20px}}
-.pg-cabeca{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin:8px 0 16px}
-.pg-titulo{font-size:20px;line-height:28px;font-weight:700;letter-spacing:-.01em;margin:0}
-.pg-layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
-@media(max-width:900px){.pg-layout{grid-template-columns:1fr}}
-.pg-principal{display:flex;flex-direction:column;gap:16px;min-width:0}
-.pg-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
-.pg-kpis .ttsc-kpi-value{font-size:28px;font-weight:600}
-.pg-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
-.pg-toolbar .ttsc-input{flex:1 1 220px}
-.pg-paginacao{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:12px;color:var(--ttsc-text-muted);font-size:12px}
-.pg-grafico{display:flex;align-items:flex-end;gap:10px;height:180px;padding:8px 0}
-.pg-grafico span{flex:1;background:var(--ttsc-accent-soft);border-top:3px solid var(--ttsc-accent);border-radius:6px 6px 0 0}
-.pg-lista{margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:8px}
-.pg-kanban{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
-.pg-coluna{background:var(--ttsc-canvas-2);border:1px solid var(--ttsc-border-soft);border-radius:var(--ttsc-radius-surface);padding:10px;display:flex;flex-direction:column;gap:8px;min-height:160px}
-.pg-coluna-titulo{font-weight:600;font-size:12px;color:var(--ttsc-text-2)}
-.pg-cartao{background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-sm);padding:8px;font-size:12px}
-.pg-cartao small{color:var(--ttsc-text-muted)}
-.pg-etapas{display:flex;flex-wrap:wrap;gap:12px;list-style:none;padding:0;margin:0 0 16px;color:var(--ttsc-text-muted)}
-.pg-etapas li{display:flex;align-items:center;gap:6px}
-.pg-etapas li span{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:999px;border:1px solid var(--ttsc-border-strong);font-size:11px}
-.pg-etapas li.is-ativo{color:var(--ttsc-text);font-weight:600}
-.pg-etapas li.is-ativo span{background:var(--ttsc-accent);color:var(--ttsc-accent-on);border-color:transparent}
-.pg-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
-.pg-campo{display:flex;flex-direction:column;gap:6px}
-.pg-campo textarea,.pg-form textarea{grid-column:1/-1}
-.pg-acoes{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;flex-wrap:wrap}
-.pg-kv{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--ttsc-border-soft)}
-.pg-kv span{color:var(--ttsc-text-muted)}
-.pg-lateral .ttsc-card-content{display:flex;flex-direction:column;gap:10px}
-.pg-lateral h3{font-size:13px;margin:0;color:var(--ttsc-text)}
-.pg-lateral ul{margin:0;padding-left:16px;color:var(--ttsc-text-2);font-size:12px}
-.pg-lateral a{color:var(--ttsc-accent-text);font-size:12px}
-.pg-aviso{font-size:12px;color:var(--ttsc-text-muted);margin:0}
-</style>
+<script src="../../../../components/bundle.js"></script>
+<style>html,body{margin:0} #main-viewport{padding:14px 16px 24px} .pg-fonte{font:12px/1.5 Inter,system-ui,sans-serif;color:var(--ttsc-text-muted);padding:0 16px 24px} .pg-fonte a{color:var(--ttsc-accent-text)}</style>
 </head>
 <body>
-<main class="pg" data-arquetipo="formulario">
-  <nav aria-label="Trilha de navegação"><ol class="ttsc-breadcrumb"><li class="ttsc-breadcrumb-item"><a class="ttsc-breadcrumb-link" href="#">Desenvolvedor</a></li><li class="ttsc-breadcrumb-separator" aria-hidden="true"><i class="fa-light fa-chevron-right"></i></li><li class="ttsc-breadcrumb-item"><a class="ttsc-breadcrumb-link" href="#">Segurança e operação</a></li><li class="ttsc-breadcrumb-separator" aria-hidden="true"><i class="fa-light fa-chevron-right"></i></li><li class="ttsc-breadcrumb-item"><a class="ttsc-breadcrumb-link" href="#">Configurações do sistema</a></li><li class="ttsc-breadcrumb-separator" aria-hidden="true"><i class="fa-light fa-chevron-right"></i></li><li class="ttsc-breadcrumb-item"><span class="ttsc-breadcrumb-page" aria-current="page">Histórico de alterações</span></li></ol></nav>
-  <div class="pg-cabeca">
-    <h1 class="pg-titulo">Histórico de alterações</h1>
-    <div class="pg-botoes" style="display:flex;gap:8px"><button class="ttsc-btn ttsc-btn-outline ttsc-btn-sm" type="button"><i class="fa-light fa-download"></i> Exportar</button><button class="ttsc-btn ttsc-btn-primary" type="button"><i class="fa-light fa-plus"></i> Salvar</button></div>
-  </div>
-  <div class="pg-layout">
-    <div class="pg-principal">
-<section class="ttsc-card" aria-labelledby="fm">
-  <div class="ttsc-card-header"><div class="ttsc-card-heading"><h2 class="ttsc-card-title" id="fm">Histórico de alterações</h2>
-    <p class="ttsc-card-description">Campos obrigatórios marcados com *. Alterações ficam na auditoria.</p></div></div>
-  <div class="ttsc-card-content"><form class="pg-form" novalidate><div class="pg-campo"><label class="ttsc-form-label" for="nome-completo">Nome completo <span class="ttsc-form-required" aria-hidden="true">*</span></label><input class="ttsc-input" id="nome-completo" type="text" required></div><div class="pg-campo"><label class="ttsc-form-label" for="cpf">CPF <span class="ttsc-form-required" aria-hidden="true">*</span></label><input class="ttsc-input" id="cpf" type="text" required></div><div class="pg-campo"><label class="ttsc-form-label" for="unidade">Unidade <span class="ttsc-form-required" aria-hidden="true">*</span></label><select class="ttsc-select" id="unidade"><option>Selecione</option><option>Unidade Centro</option></select></div><div class="pg-campo"><label class="ttsc-form-label" for="data-de-referencia">Data de referência</label><input class="ttsc-input" id="data-de-referencia" type="date"></div><div class="pg-campo"><label class="ttsc-form-label" for="observacoes">Observações</label><textarea class="ttsc-textarea" id="observacoes" rows="3"></textarea></div></form>
-    <div class="pg-acoes"><button class="ttsc-btn ttsc-btn-outline" type="button">Cancelar</button><button class="ttsc-btn ttsc-btn-primary" type="button">Salvar</button></div>
-  </div>
-</section></div>
-    <aside class="pg-lateral">
-      <section class="ttsc-card"><div class="ttsc-card-content">
-        <h3>Quem acessa</h3><ul><li>platform.developer: alterar configurações de segurança e de limites.</li><li>platform.ops: alterar configurações operacionais (cache, manutenção).</li><li>Toda mudança vista por platform.auditor.</li></ul>
-        <h3>Regras essenciais</h3><ul><li>Idiomas e locale: o 09 prevalece; as especificações da v1 de idioma e seletor de locale estão consolidadas nele (12).</li><li>Grupos de configuração (DP-04): idiomas e formatos (09); senha, sessão e MFA (06); limites de API (04); e-mail e integrações (16); cache (30); manutenção (24); tokens e webhooks (04, 16).</li><li>Valor fora do limite do documento de origem é recusado (por exemplo, sessão mais longa que o máximo do 06).</li><li>Configurações de entidade (feriados, fuso, campos personalizados) ficam no portal de gestão (56, seção 2).</li></ul>
-        <p class="pg-aviso">Ficha de origem: <a href="../../../../kit-starter/desenvolvedor/seguranca-e-operacao/configuracoes-do-sistema.md">Configurações do sistema</a> · <a href="../../../../docs/v2/00-README.md">SDD v2</a></p>
-      </div></section>
-    </aside>
-  </div>
+<main id="main-viewport" class="bg-slate-50">
+  <div id="model-page" class="space-y-3.5" aria-live="polite"></div>
+  <p class="pg-fonte">Tela gerada a partir de <a href="../../../../kit-starter/desenvolvedor/seguranca-e-operacao/configuracoes-do-sistema.md">Configurações do sistema</a> (SDD v2: <a href="../../../../docs/v2/00-README.md">índice</a>). Registros de exemplo.</p>
 </main>
+<script>
+  (function () {
+    var SPEC = {"title": "Histórico de alterações", "icon": "fa-clipboard-check", "currency": "BRL", "create": true, "entity": {"singular": "Histórico de alterações", "plural": "Histórico de alterações", "icon": "fa-clipboard-check", "newLabel": "Novo registro"}, "banner": {"icon": "fa-clipboard-check", "title": "Histórico de alterações", "desc": "datatable): valor anterior, novo valor, autor, motivo, versão; reverter com aprovação.", "pill": "{count} registros"}, "titleField": "name", "codeField": "code", "subField": "perfil", "statusField": "status", "stageField": "status", "count": 24, "fields": [{"key": "name", "label": "Prova", "type": "title", "samples": ["Simulado ENEM 1", "Prova de Matemática 2º bimestre", "Avaliação diagnóstica", "Vestibular interno", "Banco de questões de Física"]}, {"key": "person", "label": "Autor", "type": "person"}, {"key": "code", "label": "Prova nº", "type": "code", "prefix": "PRV"}, {"key": "perfil", "label": "Perfil", "type": "enum", "values": [{"id": "ENEM", "label": "ENEM", "tone": "blue", "weight": 4}, {"id": "vestibular", "label": "vestibular", "tone": "emerald", "weight": 3}, {"id": "interna", "label": "interna", "tone": "amber", "weight": 2}]}, {"key": "questoes", "label": "Questões", "type": "int", "min": 10, "max": 90}, {"key": "acerto", "label": "Acerto médio", "type": "pct", "min": 30, "max": 95}, {"key": "aplicacao", "label": "Aplicação", "type": "date", "from": -30, "to": 60}, {"key": "status", "label": "Situação", "type": "status"}], "statuses": [{"id": "rascunho", "label": "Rascunho", "tone": "slate", "weight": 2}, {"id": "revisada", "label": "Revisada", "tone": "blue", "weight": 2}, {"id": "publicada", "label": "Publicada", "tone": "emerald", "weight": 2}, {"id": "arquivada", "label": "Arquivada", "tone": "amber", "weight": 2}], "stages": [{"id": "rascunho", "label": "Rascunho", "tone": "slate", "weight": 2}, {"id": "revisada", "label": "Revisada", "tone": "blue", "weight": 2}, {"id": "publicada", "label": "Publicada", "tone": "emerald", "weight": 2}, {"id": "arquivada", "label": "Arquivada", "tone": "amber", "weight": 2}], "kpis": [{"label": "Publicadas", "sub": "Disponíveis aos alunos", "icon": "fa-eye", "tone": "blue", "value": {"agg": "count", "where": {"status": "publicada"}}, "unitLabel": "Registros", "unit": "count"}, {"label": "Em revisão", "sub": "Aguardam revisão", "icon": "fa-glasses", "tone": "blue", "value": {"agg": "count", "where": {"status": "revisada"}}, "unitLabel": "Registros", "unit": "count"}, {"label": "Rascunhos", "sub": "Em elaboração", "icon": "fa-pen", "tone": "blue", "value": {"agg": "count", "where": {"status": "rascunho"}}, "unitLabel": "Registros", "unit": "count"}], "breakdown": {"by": "perfil", "title": "Distribuição", "desc": "Distribuição atual", "icon": "fa-layer-group"}, "cardFields": ["person", "perfil"], "cardLine": "perfil", "kanbanTitle": "Histórico de alterações", "kanbanDesc": "datatable): valor anterior, novo valor, autor, motivo, versão; reverter com aprovação.", "kanbanValue": null, "kanbanDate": "aplicacao", "drawer": {"metrics": ["aplicacao"], "sections": [{"title": "Registro", "icon": "fa-id-card", "fields": ["person", "code", "perfil", "questoes", "acerto", "aplicacao", "status"]}]}, "form": ["name", "person", "perfil", "questoes", "acerto", "aplicacao"], "analytics": [{"title": "Por perfil", "desc": "Situação atual", "by": "perfil", "type": "bar", "measure": {"agg": "count", "unit": "count"}}, {"title": "Por situação", "desc": "Distribuição por status", "by": "status", "type": "doughnut", "measure": {"agg": "count", "unit": "count"}}]};
+    TTSCModelKit.syncTheme();
+    TTSCModelKit.render(
+      { portal: { label: "Desenvolvedor (desenvolvedor.)" }, module: { label: "Configurações do sistema" }, page: { label: "Histórico de alterações", route: "/desenvolvedor/seguranca-e-operacao/configuracoes-do-sistema" } },
+      SPEC, {}
+    );
+    TTSCModelKit.switchTab("table");
+  })();
+</script>
 </body>
 </html>
