@@ -29,7 +29,15 @@ for l in linhas[inicio:fim]:
         modulos = celulas[1]
         escopo = celulas[-1] if len(celulas) >= 3 else ''
         escopo = re.sub(r'\]\((\d\d-[^)#\s]+\.md)', r'](../docs/v2/\1', escopo)  # links válidos a partir de inventario/
-        itens = [x.strip() for x in modulos.split(', ') if x.strip()]
+        itens, prof, atual = [], 0, ''
+        for ch in modulos:  # divide por vírgula fora de parênteses
+            prof += (ch == '(') - (ch == ')')
+            if ch == ',' and prof == 0:
+                itens.append(atual.strip()); atual = ''
+            else:
+                atual += ch
+        itens.append(atual.strip())
+        itens = [x for x in itens if x]
         total += len(itens)
         saida += [f'### {area}', '', f'Escopo: {escopo}', '']
         saida += [f'- [ ] {x}' for x in itens]

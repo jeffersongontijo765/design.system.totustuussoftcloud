@@ -36,24 +36,24 @@ Legenda de origem: **P** = plataforma (banco master); **E** = entidade/unidade (
 
 | Área | Módulos | Contexto | Observação |
 |---|---|---|---|
-| Acadêmico | Administração escolar, pedagógico, calendário, séries e turmas, regras de aprovação, relatórios acadêmicos | E | [17](17-regras-modulos.md) |
-| Secretaria | Matrículas, rematrículas, transferências, enturmação, ficha cadastral, protocolo de atendimento, emissão de documentos | E | Sub-área do acadêmico. Ver seções 3.2 e 3.5 |
-| Gestão de documentos | Três contextos: documentos recebidos (validação), documentos administrativos (tramitação) e documentos emitidos (modelos e emissão). Serviços comuns de assinatura, protocolo e armazenamento | E | [54](54-gestao-de-documentos-tres-contextos.md). Ver também seções 3.1 e 3.4 |
+| Acadêmico | Administração escolar (estrutura acadêmica), pedagógico (coordenação e diário), calendário e eventos, séries e turmas (grade de horários), regras de aprovação (sistemas avaliativos, boletim e conselho de classe), ocorrências disciplinares, planos de aula e de ensino, estágio e TCC, prontuário e portfólio do aluno, livros digitais e arquivo morto, preceptoria, gestão pastoral, aulas online, agendamento de ambientes e equipamentos, formulários e pesquisas, relatórios acadêmicos e censo | E | [17](17-regras-modulos.md), seção 4; [55](55-academico-verificacao-e-lacunas.md); [58](58-calendario-e-eventos-por-portal.md) a [69](69-relatorios-e-censo-por-portal.md); [40](40-aulas-online-por-portal.md) a [44](44-agendamento-ambientes-equipamentos.md). Itens explicitados em 04/11/2026 a partir da seção 7 e dos documentos por portal |
+| Secretaria | Matrículas, rematrículas, transferências, enturmação, ficha cadastral, protocolo de atendimento, emissão de documentos, processo seletivo e lista de espera | E | Sub-área do acadêmico. Ver seções 3.2 e 3.5; [46](46-matricula-e-rematricula-por-portal.md), [48](48-gerador-de-documentos-por-portal.md) |
+| Gestão de documentos | Documentos recebidos (validação), documentos administrativos (tramitação), documentos emitidos (modelos e emissão), serviços comuns (assinatura, protocolo e armazenamento) | E | [54](54-gestao-de-documentos-tres-contextos.md). Ver também seções 3.1 e 3.4 |
 | Simulados | Banco de questões, geração de provas, correção, gabarito, ranking | E | Ver seção 3.6 |
 | Biblioteca | Acervo, empréstimos, reservas, multas, biblioteca digital | E | Ver seção 3.1 |
-| Financeiro da entidade | Mensalidades, títulos, cobrança, régua, conciliação, centros de custo | E | [17](17-regras-modulos.md), [18](18-regras-modulos-2.md), [20](20-pagamentos-seguranca.md) |
+| Financeiro da entidade | Mensalidades, títulos, cobrança, régua, conciliação, centros de custo, contas a pagar, cheques, caixa físico, fluxo de caixa e DRE, gateways e split | E | [17](17-regras-modulos.md), [18](18-regras-modulos-2.md), [20](20-pagamentos-seguranca.md), [34](34-pagamentos-fiscal-bancos-por-portal.md), [71](71-financeiro-completo-por-portal.md) |
 | Contábil e fiscal da entidade | Plano de contas da entidade, tributos, retenções, obrigações, NFSe | E | Ver seção 3.3 |
 | Comercial e admissões | CRM do tenant (captação, pré-cadastro, inscrição) | E | [22](22-crm-canais-e-papeis.md), seção 6.2 |
-| Pessoas e RH | HCM, folha, ponto, férias, avaliação de desempenho, SST | E | [18](18-regras-modulos-2.md), seção 3 |
+| Pessoas e RH | HCM, folha, ponto, férias, avaliação de desempenho, SST | E | [18](18-regras-modulos-2.md), seção 3; [39](39-departamento-pessoal-rh-medicina-por-portal.md); [52](52-medicina-do-trabalho-especificacao.md) |
 | Suprimentos e compras | Requisição, cotação, pedido, almoxarifado, merenda | E | [19](19-regras-modulos-3.md), seção 2 |
 | Patrimônio e frotas | Bens, depreciação, veículos, manutenção, rotas | E | [19](19-regras-modulos-3.md), seções 8 e 9 |
-| Contratos | Contratos de fornecedor, de aluno e de pessoal | E | [17](17-regras-modulos.md) |
-| Atendimento | SAC, helpdesk, chat, tickets | E | Seção 3.7 |
+| Contratos | Contratos de fornecedor, contratos de aluno, contratos de pessoal | E | [17](17-regras-modulos.md), seção 7; [33](33-contratos-por-portal.md); [53](53-pacote-documentos-e-contratos.md) |
+| Atendimento | SAC, helpdesk, chat, tickets | E | Seção 3.7; [32](32-atendimento-privacidade-por-portal.md), seção 2 |
 | Arquivos | Armazenamento de arquivos | E | [21](21-busca-e-armazenamento.md) |
-| Relatórios e gráficos | Painéis, gráficos salvos | E | Seção 3.8 |
-| Configuração e acesso | Unidades, usuários, vínculos, privacidade da entidade | E | [06](06-identidade-acesso.md) |
-| Planejamento acadêmico, institucional e de desenvolvimento | **[Sem especificação]** | E | Ver seção 3.9 |
-| Empenho | **[Sem especificação]** | E | Ver seção 3.9 |
+| Relatórios e gráficos | Painéis, gráficos salvos | E | Seção 3.8; [56](56-configuracoes-e-relatorios-lacunas.md), seção 3; [69](69-relatorios-e-censo-por-portal.md) |
+| Configuração e acesso | Unidades, usuários, vínculos, privacidade da entidade, configurações da entidade, campos personalizados, notificações, integrações educacionais oficiais, importação de dados, acesso físico e portaria, TI da entidade | E | [06](06-identidade-acesso.md); [32](32-atendimento-privacidade-por-portal.md), seção 3; [35](35-acesso-e-seguranca-fisica-por-portal.md); [36](36-tecnologia-da-informacao-por-portal.md), seção 4; [56](56-configuracoes-e-relatorios-lacunas.md), seção 2; [57](57-notificacoes-por-portal.md); [70](70-importacao-de-dados-por-portal.md); [72](72-campos-personalizados-por-portal.md); [74](74-integracoes-educacionais-oficiais.md). Unidade só é criada por `platform.developer` (L-02); a gestão edita a unidade existente |
+| Planejamento acadêmico, institucional e de desenvolvimento | Planejamento acadêmico, planejamento institucional, planejamento de desenvolvimento de pessoas | E | [37](37-planejamento-e-empenho.md), seções 2 a 4 (especificado em 03/11/2026, seção 3.9) |
+| Empenho | Empenho, liquidação e pagamento (só entidade pública) | E | [37](37-planejamento-e-empenho.md), seção 5 (especificado em 03/11/2026, seção 3.9) |
 
 ### 2.3 Portal do Professor (`portal-do-professor.`)
 

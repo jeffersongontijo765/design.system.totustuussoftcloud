@@ -5704,24 +5704,24 @@ Legenda de origem: **P** = plataforma (banco master); **E** = entidade/unidade (
 
 | Área | Módulos | Contexto | Observação |
 |---|---|---|---|
-| Acadêmico | Administração escolar, pedagógico, calendário, séries e turmas, regras de aprovação, relatórios acadêmicos | E | [17](#parte-17) |
-| Secretaria | Matrículas, rematrículas, transferências, enturmação, ficha cadastral, protocolo de atendimento, emissão de documentos | E | Sub-área do acadêmico. Ver seções 3.2 e 3.5 |
-| Gestão de documentos | Três contextos: documentos recebidos (validação), documentos administrativos (tramitação) e documentos emitidos (modelos e emissão). Serviços comuns de assinatura, protocolo e armazenamento | E | [54](#parte-54). Ver também seções 3.1 e 3.4 |
+| Acadêmico | Administração escolar (estrutura acadêmica), pedagógico (coordenação e diário), calendário e eventos, séries e turmas (grade de horários), regras de aprovação (sistemas avaliativos, boletim e conselho de classe), ocorrências disciplinares, planos de aula e de ensino, estágio e TCC, prontuário e portfólio do aluno, livros digitais e arquivo morto, preceptoria, gestão pastoral, aulas online, agendamento de ambientes e equipamentos, formulários e pesquisas, relatórios acadêmicos e censo | E | [17](#parte-17), seção 4; [55](#parte-55); [58](#parte-58) a [69](#parte-69); [40](#parte-40) a [44](#parte-44). Itens explicitados em 04/11/2026 a partir da seção 7 e dos documentos por portal |
+| Secretaria | Matrículas, rematrículas, transferências, enturmação, ficha cadastral, protocolo de atendimento, emissão de documentos, processo seletivo e lista de espera | E | Sub-área do acadêmico. Ver seções 3.2 e 3.5; [46](#parte-46), [48](#parte-48) |
+| Gestão de documentos | Documentos recebidos (validação), documentos administrativos (tramitação), documentos emitidos (modelos e emissão), serviços comuns (assinatura, protocolo e armazenamento) | E | [54](#parte-54). Ver também seções 3.1 e 3.4 |
 | Simulados | Banco de questões, geração de provas, correção, gabarito, ranking | E | Ver seção 3.6 |
 | Biblioteca | Acervo, empréstimos, reservas, multas, biblioteca digital | E | Ver seção 3.1 |
-| Financeiro da entidade | Mensalidades, títulos, cobrança, régua, conciliação, centros de custo | E | [17](#parte-17), [18](#parte-18), [20](#parte-20) |
+| Financeiro da entidade | Mensalidades, títulos, cobrança, régua, conciliação, centros de custo, contas a pagar, cheques, caixa físico, fluxo de caixa e DRE, gateways e split | E | [17](#parte-17), [18](#parte-18), [20](#parte-20), [34](#parte-34), [71](#parte-71) |
 | Contábil e fiscal da entidade | Plano de contas da entidade, tributos, retenções, obrigações, NFSe | E | Ver seção 3.3 |
 | Comercial e admissões | CRM do tenant (captação, pré-cadastro, inscrição) | E | [22](#parte-22), seção 6.2 |
-| Pessoas e RH | HCM, folha, ponto, férias, avaliação de desempenho, SST | E | [18](#parte-18), seção 3 |
+| Pessoas e RH | HCM, folha, ponto, férias, avaliação de desempenho, SST | E | [18](#parte-18), seção 3; [39](#parte-39); [52](#parte-52) |
 | Suprimentos e compras | Requisição, cotação, pedido, almoxarifado, merenda | E | [19](#parte-19), seção 2 |
 | Patrimônio e frotas | Bens, depreciação, veículos, manutenção, rotas | E | [19](#parte-19), seções 8 e 9 |
-| Contratos | Contratos de fornecedor, de aluno e de pessoal | E | [17](#parte-17) |
-| Atendimento | SAC, helpdesk, chat, tickets | E | Seção 3.7 |
+| Contratos | Contratos de fornecedor, contratos de aluno, contratos de pessoal | E | [17](#parte-17), seção 7; [33](#parte-33); [53](#parte-53) |
+| Atendimento | SAC, helpdesk, chat, tickets | E | Seção 3.7; [32](#parte-32), seção 2 |
 | Arquivos | Armazenamento de arquivos | E | [21](#parte-21) |
-| Relatórios e gráficos | Painéis, gráficos salvos | E | Seção 3.8 |
-| Configuração e acesso | Unidades, usuários, vínculos, privacidade da entidade | E | [06](#parte-06) |
-| Planejamento acadêmico, institucional e de desenvolvimento | **[Sem especificação]** | E | Ver seção 3.9 |
-| Empenho | **[Sem especificação]** | E | Ver seção 3.9 |
+| Relatórios e gráficos | Painéis, gráficos salvos | E | Seção 3.8; [56](#parte-56), seção 3; [69](#parte-69) |
+| Configuração e acesso | Unidades, usuários, vínculos, privacidade da entidade, configurações da entidade, campos personalizados, notificações, integrações educacionais oficiais, importação de dados, acesso físico e portaria, TI da entidade | E | [06](#parte-06); [32](#parte-32), seção 3; [35](#parte-35); [36](#parte-36), seção 4; [56](#parte-56), seção 2; [57](#parte-57); [70](#parte-70); [72](#parte-72); [74](#parte-74). Unidade só é criada por `platform.developer` (L-02); a gestão edita a unidade existente |
+| Planejamento acadêmico, institucional e de desenvolvimento | Planejamento acadêmico, planejamento institucional, planejamento de desenvolvimento de pessoas | E | [37](#parte-37), seções 2 a 4 (especificado em 03/11/2026, seção 3.9) |
+| Empenho | Empenho, liquidação e pagamento (só entidade pública) | E | [37](#parte-37), seção 5 (especificado em 03/11/2026, seção 3.9) |
 
 #### 2.3 Portal do Professor (`portal-do-professor.`)
 
@@ -17435,6 +17435,32 @@ Aprovação técnica: migração em lote, restauração de backup e escrita em a
 | `unit.librarian` | 1 | unidade | Acervo, empréstimos |
 | `unit.support` | 1 | unidade | Atendimento, SAC, tickets |
 | `unit.auditor` | 2 | unidade | Leitura de auditoria da unidade |
+| `unit.accounting` | 1 | unidade | Papel **Contábil** do [22](#parte-22), seção 5: lançar, fechar período, exportar; não fecha período com lançamento que criou sem revisão |
+| `unit.fiscal` | 1 | unidade | Papel **Fiscal** do [22](#parte-22), seção 5: emitir e cancelar NFS-e, apurar tributos e retenções; cancelamento exige aprovação do contábil |
+| `unit.finance.approver` | 2 | unidade | Aprovar despesa, estorno e baixa manual na alçada; não aprova o que lançou ([17](#parte-17), seção 2.4) |
+| `unit.commercial` | 1 | unidade | Papel **Comercial** do [22](#parte-22), seção 5, no CRM do tenant (seção 4.2): captação, pré-cadastro, proposta; não aprova desconto acima da alçada |
+| `unit.purchasing` | 1 | unidade | Papel **Compras**: cotação, pedido, cadastro de fornecedor; não aprova a própria requisição nem recebe a própria compra |
+| `unit.warehouse` | 1 | unidade | Papel **Almoxarifado**: recebimento e movimento; ajuste de estoque só com motivo e aprovação |
+| `unit.purchasing.approver` | 2 | unidade | Papel **Aprovador de compras**: aprova requisição na alçada; não é o solicitante |
+| `unit.assets` | 1 | unidade | Patrimônio da entidade: cadastro, movimentação, inventário ([19](#parte-19), seção 8) |
+| `unit.assets.approver` | 2 | unidade | Aprovar transferência, baixa e manutenção acima do limite; não aprova o que registrou (DP-05) |
+| `unit.fleet` | 1 | unidade | Frotas e rotas da entidade ([19](#parte-19), seção 9) |
+| `unit.fleet.approver` | 2 | unidade | Aprovar reserva e ordem de manutenção de veículo; não aprova a própria (DP-05) |
+| `unit.payroll` | 1 | unidade | Papel **Folha**: processar a folha; folha fechada não muda |
+| `unit.payroll.approver` | 2 | unidade | Aprovar a folha; quem processa não aprova ([39](#parte-39), seção 7) |
+| `unit.sst.doctor` | 1 | unidade | Médico do trabalho: ASO, prontuário ocupacional, CID ([39](#parte-39), seção 7; [52](#parte-52)) |
+| `unit.sst.technician` | 1 | unidade | SESMT: CAT, EPI, NR, PGR, ocorrências; sem diagnóstico |
+| `unit.legal` | 2 | entidade | Papel **Jurídico**: parecer, bloqueio legal; leitura de contratos, documentos e auditoria; não altera contrato assinado |
+| `entity.dpo` | 2 | entidade | Papel **Encarregado (DPO)** da entidade ([32](#parte-32), seção 7): ROPA, pedidos de titular, incidentes, relatório de impacto; não opera o módulo que audita |
+| `entity.security` | 3 | entidade | Papel **Segurança** da entidade: investigar, bloquear conta, política de MFA da entidade; não concede permissão a si mesmo |
+| `unit.it.admin` | 2 | unidade | Administrador de TI da entidade ([36](#parte-36), seção 6): ativos, licenças, chamados e mudanças; não aprova a própria mudança |
+| `unit.it.technician` | 1 | unidade | Técnico de TI: atender chamados e incidentes; não altera contrato nem exclui ativo |
+| `unit.it.change_approver` | 2 | unidade | Comitê de mudança: aprova ou recusa; não executa a mudança que aprovou |
+| `unit.preceptoria.manager` | 2 | unidade | Gestão de preceptoria ([42](#parte-42), seção 5): instrumentos, ciclos, programas, pesos, relatório agregado; não vê resposta individual nem anotação de tutoria |
+| `unit.pastoral` | 1 | unidade | Equipe pastoral ([43](#parte-43), seção 5): agenda, escala, evento, campanha e beneficiário da campanha; não vê anotação de acompanhamento alheia |
+| `unit.reception` | 1 | unidade | Portaria e acesso físico ([35](#parte-35), seção 4): entradas e saídas, visitantes, autorizações de retirada |
+
+Os papéis acima vêm dos papéis nomeados no [22](#parte-22), seção 5, e nos documentos por portal; os códigos seguem a convenção desta seção (DP-05, [80](#parte-80)). A coordenação pedagógica usa `unit.coordinator`; a secretaria, `unit.secretary`.
 
 #### 4.3 Portal do Professor
 
@@ -17521,9 +17547,9 @@ Aprovação técnica: migração em lote, restauração de backup e escrita em a
 
 | Situação | Arquivos |
 |---|---|
-| Absorvido integralmente no kit-starter | 20 |
-| Absorvido em parte em | 20 |
+| Absorvido integralmente no kit-starter | 28 |
 | Substituído | 12 |
+| Absorvido em parte em | 12 |
 | Só catalogado | 7 |
 | Fora do escopo do produto | 2 |
 | Arquivo vazio (placeholder), sem conteúdo a absorver | 1 |
@@ -17547,13 +17573,13 @@ Aprovação técnica: migração em lote, restauração de backup e escrita em a
 | [`12-portals-navigation-sidebar-pages-spec.md`](anexo-v1/12-portals-navigation-sidebar-pages-spec.md) | 279 | Revisar | Absorvido em parte em: 31, 34, 36, 40, 42, 43, 44 |
 | [`chart-builder-spec-complete.md`](anexo-v1/chart-builder-spec-complete.md) | 1499 | Especificado | Absorvido em parte em: 31 |
 | [`client-migration-module-spec-completo.md`](anexo-v1/client-migration-module-spec-completo.md) | 1207 | Especificado | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
-| [`global_meeting_spec_v2_complete.md`](anexo-v1/global_meeting_spec_v2_complete.md) | 620 | Especificado em v2 | Absorvido em parte em: 31, 40 |
+| [`global_meeting_spec_v2_complete.md`](anexo-v1/global_meeting_spec_v2_complete.md) | 620 | Especificado em v2 | Absorvido integralmente no kit-starter: kit-starter/gestao/academico/aulas-online.md |
 | [`language_locale_selector_spec.md`](anexo-v1/language_locale_selector_spec.md) | 387 | Revisar | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/seguranca-e-operacao/configuracoes-do-sistema.md |
 | [`penetration-test-spec-v2.md`](anexo-v1/penetration-test-spec-v2.md) | 529 | Especificado | Absorvido em parte em: 24 |
 | [`sdd-mestre-php8-mvc-saas.md`](anexo-v1/sdd-mestre-php8-mvc-saas.md) | 535 | Substituído | Substituído por 00 e 02 |
 | [`slsa-build-spec.md`](anexo-v1/slsa-build-spec.md) | 356 | Especificado | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
-| [`spec-builder-documentos-academicos.md`](anexo-v1/spec-builder-documentos-academicos.md) | 896 | Revisar | Absorvido em parte em: 31, 48 |
-| [`spec-gestao-preceptoria-autoavaliacao.md`](anexo-v1/spec-gestao-preceptoria-autoavaliacao.md) | 409 | Especificação parcial, reclassificada | Absorvido em parte em: 42 |
+| [`spec-builder-documentos-academicos.md`](anexo-v1/spec-builder-documentos-academicos.md) | 896 | Revisar | Absorvido integralmente no kit-starter: kit-starter/gestao/secretaria/emissao-de-documentos.md |
+| [`spec-gestao-preceptoria-autoavaliacao.md`](anexo-v1/spec-gestao-preceptoria-autoavaliacao.md) | 409 | Especificação parcial, reclassificada | Absorvido integralmente no kit-starter: kit-starter/gestao/academico/preceptoria.md |
 | [`SPEC-HELPDESK.md`](anexo-v1/SPEC-HELPDESK.md) | 929 | Revisar | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/suporte/chamados-dos-clientes.md |
 | [`SPEC-LAYOUT-TICKET.md`](anexo-v1/SPEC-LAYOUT-TICKET.md) | 350 | Especificado | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/suporte/chamados-dos-clientes.md |
 | [`spec-soft-delete-totustuus.md`](anexo-v1/spec-soft-delete-totustuus.md) | 248 | Especificado | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
@@ -17562,19 +17588,19 @@ Aprovação técnica: migração em lote, restauração de backup e escrita em a
 | [`spec_complementar_integracoes_governanca.md`](anexo-v1/spec_complementar_integracoes_governanca.md) | 307 | Especificado | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/seguranca-e-operacao/integracoes-globais.md |
 | [`spec_crm_funil_comercial.md`](anexo-v1/spec_crm_funil_comercial.md) | 244 | Especificado | Absorvido em parte em: 22 |
 | [`spec_education_saas_architecture.md`](anexo-v1/spec_education_saas_architecture.md) | 729 | Revisar | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
-| [`spec_gestao_academica_completo.md`](anexo-v1/spec_gestao_academica_completo.md) | 1382 | Especificado | Absorvido em parte em: 31, 40, 46, 55, 64, 65, 66, 67, 69, 70 |
+| [`spec_gestao_academica_completo.md`](anexo-v1/spec_gestao_academica_completo.md) | 1382 | Especificado | Absorvido integralmente no kit-starter: kit-starter/gestao/academico/administracao-escolar-estrutura-academica.md |
 | [`spec_gestao_armazenamento_completo.md`](anexo-v1/spec_gestao_armazenamento_completo.md) | 1380 | Revisar | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
 | [`spec_gestao_auditoria_completo.md`](anexo-v1/spec_gestao_auditoria_completo.md) | 731 | Especificado | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/seguranca-e-operacao/auditoria.md |
 | [`spec_gestao_autenticacao_completo.md`](anexo-v1/spec_gestao_autenticacao_completo.md) | 1001 | Revisar | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/seguranca-e-operacao/acesso.md |
 | [`spec_gestao_bancos.md`](anexo-v1/spec_gestao_bancos.md) | 305 | Removido do escopo | Fora do escopo do produto |
 | [`spec_gestao_bancos_completo.md`](anexo-v1/spec_gestao_bancos_completo.md) | 305 | Removido do escopo | Fora do escopo do produto |
-| [`spec_gestao_biblioteca_academica.md`](anexo-v1/spec_gestao_biblioteca_academica.md) | 275 | Revisar | Absorvido em parte em: 68 |
-| [`spec_gestao_biblioteca_completo.md`](anexo-v1/spec_gestao_biblioteca_completo.md) | 1182 | Revisar | Absorvido em parte em: 31, 68 |
+| [`spec_gestao_biblioteca_academica.md`](anexo-v1/spec_gestao_biblioteca_academica.md) | 275 | Revisar | Absorvido integralmente no kit-starter: kit-starter/gestao/biblioteca/acervo.md |
+| [`spec_gestao_biblioteca_completo.md`](anexo-v1/spec_gestao_biblioteca_completo.md) | 1182 | Revisar | Absorvido integralmente no kit-starter: kit-starter/gestao/biblioteca/acervo.md |
 | [`spec_gestao_billing_cobranca_mensalidades.md`](anexo-v1/spec_gestao_billing_cobranca_mensalidades.md) | 1433 | Especificado | Absorvido em parte em: 16, 18, 34 |
 | [`spec_gestao_contabil_fiscal_completo.md`](anexo-v1/spec_gestao_contabil_fiscal_completo.md) | 294 | Especificado | Absorvido em parte em: 31 |
 | [`spec_gestao_contratos_completo.md`](anexo-v1/spec_gestao_contratos_completo.md) | 1377 | Especificado | Absorvido em parte em: 33 |
 | [`spec_gestao_cookies_sessions.md`](anexo-v1/spec_gestao_cookies_sessions.md) | 474 | Revisar | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/seguranca-e-operacao/acesso.md |
-| [`spec_gestao_documentos_completo.md`](anexo-v1/spec_gestao_documentos_completo.md) | 546 | Revisar | Absorvido em parte em: 48 |
+| [`spec_gestao_documentos_completo.md`](anexo-v1/spec_gestao_documentos_completo.md) | 546 | Revisar | Absorvido integralmente no kit-starter: kit-starter/gestao/gestao-de-documentos/servicos-comuns-assinatura-protocolo-e-armazenamento.md |
 | [`spec_gestao_financeiro_completo.md`](anexo-v1/spec_gestao_financeiro_completo.md) | 1532 | Especificado | Absorvido em parte em: 71 |
 | [`spec_gestao_frotas_completo.md`](anexo-v1/spec_gestao_frotas_completo.md) | 1558 | Especificado | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/operacoes-internas/frotas.md |
 | [`spec_gestao_logger_completo.md`](anexo-v1/spec_gestao_logger_completo.md) | 1038 | Revisar | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/seguranca-e-operacao/auditoria.md |
@@ -17586,7 +17612,7 @@ Aprovação técnica: migração em lote, restauração de backup e escrita em a
 | [`spec_gestao_rh_completo.md`](anexo-v1/spec_gestao_rh_completo.md) | 1319 | Revisar | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/pessoas-da-plataforma/recursos-humanos.md |
 | [`spec_gestao_sac_base_conhecimento.md`](anexo-v1/spec_gestao_sac_base_conhecimento.md) | 443 | Revisar | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/suporte/base-de-conhecimento.md |
 | [`spec_gestao_seguranca_medicina_trabalho_completo.md`](anexo-v1/spec_gestao_seguranca_medicina_trabalho_completo.md) | 1581 | Especificado | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/pessoas-da-plataforma/medicina-e-seguranca-do-trabalho-da-empresa.md |
-| [`spec_gestao_simulados_ia.md`](anexo-v1/spec_gestao_simulados_ia.md) | 683 | Especificado em v2 | Absorvido em parte em: 31, 47 |
+| [`spec_gestao_simulados_ia.md`](anexo-v1/spec_gestao_simulados_ia.md) | 683 | Especificado em v2 | Absorvido integralmente no kit-starter: kit-starter/gestao/simulados/banco-de-questoes.md |
 | [`spec_gestao_suprimentos_v3_consolidado.md`](anexo-v1/spec_gestao_suprimentos_v3_consolidado.md) | 1271 | Especificado | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/operacoes-internas/suprimentos-da-empresa.md |
 | [`spec_gestao_ti_completa.md`](anexo-v1/spec_gestao_ti_completa.md) | 882 | Revisar | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/seguranca-e-operacao/ti.md |
 | [`spec_object_storage_digital_assets.md`](anexo-v1/spec_object_storage_digital_assets.md) | 237 | Revisar | Absorvido em parte em: 21 |
@@ -17619,3 +17645,4 @@ Aprovação técnica: migração em lote, restauração de backup e escrita em a
 | DP-02 | Regra de depreciação por categoria (lacuna L-18 do [19](#parte-19)) | Cada categoria de ativo tem método e taxa **aprovados pelo contábil**. Categoria sem regra aprovada **não deprecia** e aparece como pendência no painel | Critério 3: não inventar taxa contábil; não deixar ativo sem controle | Taxa padrão do sistema para todas as categorias | Patrimônio (empresa e entidade) |
 | DP-03 | Papéis de patrimônio e frotas (não definidos no [22](#parte-22), seção 5) | Operador (nível 1) e aprovador (nível 2) separados, para patrimônio e para frotas. Compras, almoxarifado e aprovador de compras seguem o [22](#parte-22), seção 5 | Critério 4; mesmo padrão dos papéis departamentais já aprovados | Um único papel por módulo | [78](#parte-78), seção 4.1 (plataforma) |
 | DP-04 | Conteúdo das configurações do sistema da plataforma (não definido em nenhum documento) | Configurações agrupadas pelo documento do SDD que define cada regra (idiomas [09](#parte-09); senha, sessão e MFA [06](#parte-06); limites de API [04](#parte-04); e-mail e integrações [16](#parte-16); cache [30](#parte-30); manutenção [24](#parte-24)). Toda mudança exige step-up, motivo, auditoria e gera versão com rollback. Valor fora do limite do documento de origem é recusado | Critérios 1 e 4; o sistema não aceita configuração que contrarie o SDD | Tela livre de chave e valor | Portal do desenvolvedor (segurança e operação) |
+| DP-05 | Códigos dos papéis da entidade no portal de gestão (o [22](#parte-22), seção 5, e os documentos por portal nomeiam os papéis, mas o [78](#parte-78), seção 4.2, só listava nove) | Um código `unit.*` ou `entity.*` para cada papel já nomeado no SDD (contábil, fiscal, comercial, compras, almoxarifado, aprovador de compras, folha, aprovador da folha, médico do trabalho, SESMT, jurídico, encarregado, segurança, TI, preceptoria, pastoral, portaria). Patrimônio e frotas da entidade seguem o DP-03 (operador e aprovador separados). Aprovador financeiro da unidade separado de quem lança ([17](#parte-17), seção 2.4) | Critério 4; nenhum papel novo de negócio, só o código do que já existe | Reaproveitar os nove papéis genéricos | [78](#parte-78), seção 4.2 |

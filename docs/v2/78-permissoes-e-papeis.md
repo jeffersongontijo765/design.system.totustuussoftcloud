@@ -114,6 +114,32 @@ Aprovação técnica: migração em lote, restauração de backup e escrita em a
 | `unit.librarian` | 1 | unidade | Acervo, empréstimos |
 | `unit.support` | 1 | unidade | Atendimento, SAC, tickets |
 | `unit.auditor` | 2 | unidade | Leitura de auditoria da unidade |
+| `unit.accounting` | 1 | unidade | Papel **Contábil** do [22](22-crm-canais-e-papeis.md), seção 5: lançar, fechar período, exportar; não fecha período com lançamento que criou sem revisão |
+| `unit.fiscal` | 1 | unidade | Papel **Fiscal** do [22](22-crm-canais-e-papeis.md), seção 5: emitir e cancelar NFS-e, apurar tributos e retenções; cancelamento exige aprovação do contábil |
+| `unit.finance.approver` | 2 | unidade | Aprovar despesa, estorno e baixa manual na alçada; não aprova o que lançou ([17](17-regras-modulos.md), seção 2.4) |
+| `unit.commercial` | 1 | unidade | Papel **Comercial** do [22](22-crm-canais-e-papeis.md), seção 5, no CRM do tenant (seção 4.2): captação, pré-cadastro, proposta; não aprova desconto acima da alçada |
+| `unit.purchasing` | 1 | unidade | Papel **Compras**: cotação, pedido, cadastro de fornecedor; não aprova a própria requisição nem recebe a própria compra |
+| `unit.warehouse` | 1 | unidade | Papel **Almoxarifado**: recebimento e movimento; ajuste de estoque só com motivo e aprovação |
+| `unit.purchasing.approver` | 2 | unidade | Papel **Aprovador de compras**: aprova requisição na alçada; não é o solicitante |
+| `unit.assets` | 1 | unidade | Patrimônio da entidade: cadastro, movimentação, inventário ([19](19-regras-modulos-3.md), seção 8) |
+| `unit.assets.approver` | 2 | unidade | Aprovar transferência, baixa e manutenção acima do limite; não aprova o que registrou (DP-05) |
+| `unit.fleet` | 1 | unidade | Frotas e rotas da entidade ([19](19-regras-modulos-3.md), seção 9) |
+| `unit.fleet.approver` | 2 | unidade | Aprovar reserva e ordem de manutenção de veículo; não aprova a própria (DP-05) |
+| `unit.payroll` | 1 | unidade | Papel **Folha**: processar a folha; folha fechada não muda |
+| `unit.payroll.approver` | 2 | unidade | Aprovar a folha; quem processa não aprova ([39](39-departamento-pessoal-rh-medicina-por-portal.md), seção 7) |
+| `unit.sst.doctor` | 1 | unidade | Médico do trabalho: ASO, prontuário ocupacional, CID ([39](39-departamento-pessoal-rh-medicina-por-portal.md), seção 7; [52](52-medicina-do-trabalho-especificacao.md)) |
+| `unit.sst.technician` | 1 | unidade | SESMT: CAT, EPI, NR, PGR, ocorrências; sem diagnóstico |
+| `unit.legal` | 2 | entidade | Papel **Jurídico**: parecer, bloqueio legal; leitura de contratos, documentos e auditoria; não altera contrato assinado |
+| `entity.dpo` | 2 | entidade | Papel **Encarregado (DPO)** da entidade ([32](32-atendimento-privacidade-por-portal.md), seção 7): ROPA, pedidos de titular, incidentes, relatório de impacto; não opera o módulo que audita |
+| `entity.security` | 3 | entidade | Papel **Segurança** da entidade: investigar, bloquear conta, política de MFA da entidade; não concede permissão a si mesmo |
+| `unit.it.admin` | 2 | unidade | Administrador de TI da entidade ([36](36-tecnologia-da-informacao-por-portal.md), seção 6): ativos, licenças, chamados e mudanças; não aprova a própria mudança |
+| `unit.it.technician` | 1 | unidade | Técnico de TI: atender chamados e incidentes; não altera contrato nem exclui ativo |
+| `unit.it.change_approver` | 2 | unidade | Comitê de mudança: aprova ou recusa; não executa a mudança que aprovou |
+| `unit.preceptoria.manager` | 2 | unidade | Gestão de preceptoria ([42](42-preceptoria-por-portal.md), seção 5): instrumentos, ciclos, programas, pesos, relatório agregado; não vê resposta individual nem anotação de tutoria |
+| `unit.pastoral` | 1 | unidade | Equipe pastoral ([43](43-pastoral-por-portal.md), seção 5): agenda, escala, evento, campanha e beneficiário da campanha; não vê anotação de acompanhamento alheia |
+| `unit.reception` | 1 | unidade | Portaria e acesso físico ([35](35-acesso-e-seguranca-fisica-por-portal.md), seção 4): entradas e saídas, visitantes, autorizações de retirada |
+
+Os papéis acima vêm dos papéis nomeados no [22](22-crm-canais-e-papeis.md), seção 5, e nos documentos por portal; os códigos seguem a convenção desta seção (DP-05, [80](80-decisoes-por-padrao.md)). A coordenação pedagógica usa `unit.coordinator`; a secretaria, `unit.secretary`.
 
 ### 4.3 Portal do Professor
 

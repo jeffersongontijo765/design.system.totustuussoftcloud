@@ -18,9 +18,9 @@
 
 | Situação | Arquivos |
 |---|---|
-| Absorvido integralmente no kit-starter | 20 |
-| Absorvido em parte em | 20 |
+| Absorvido integralmente no kit-starter | 28 |
 | Substituído | 12 |
+| Absorvido em parte em | 12 |
 | Só catalogado | 7 |
 | Fora do escopo do produto | 2 |
 | Arquivo vazio (placeholder), sem conteúdo a absorver | 1 |
@@ -44,13 +44,13 @@
 | [`12-portals-navigation-sidebar-pages-spec.md`](anexo-v1/12-portals-navigation-sidebar-pages-spec.md) | 279 | Revisar | Absorvido em parte em: 31, 34, 36, 40, 42, 43, 44 |
 | [`chart-builder-spec-complete.md`](anexo-v1/chart-builder-spec-complete.md) | 1499 | Especificado | Absorvido em parte em: 31 |
 | [`client-migration-module-spec-completo.md`](anexo-v1/client-migration-module-spec-completo.md) | 1207 | Especificado | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
-| [`global_meeting_spec_v2_complete.md`](anexo-v1/global_meeting_spec_v2_complete.md) | 620 | Especificado em v2 | Absorvido em parte em: 31, 40 |
+| [`global_meeting_spec_v2_complete.md`](anexo-v1/global_meeting_spec_v2_complete.md) | 620 | Especificado em v2 | Absorvido integralmente no kit-starter: kit-starter/gestao/academico/aulas-online.md |
 | [`language_locale_selector_spec.md`](anexo-v1/language_locale_selector_spec.md) | 387 | Revisar | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/seguranca-e-operacao/configuracoes-do-sistema.md |
 | [`penetration-test-spec-v2.md`](anexo-v1/penetration-test-spec-v2.md) | 529 | Especificado | Absorvido em parte em: 24 |
 | [`sdd-mestre-php8-mvc-saas.md`](anexo-v1/sdd-mestre-php8-mvc-saas.md) | 535 | Substituído | Substituído por 00 e 02 |
 | [`slsa-build-spec.md`](anexo-v1/slsa-build-spec.md) | 356 | Especificado | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
-| [`spec-builder-documentos-academicos.md`](anexo-v1/spec-builder-documentos-academicos.md) | 896 | Revisar | Absorvido em parte em: 31, 48 |
-| [`spec-gestao-preceptoria-autoavaliacao.md`](anexo-v1/spec-gestao-preceptoria-autoavaliacao.md) | 409 | Especificação parcial, reclassificada | Absorvido em parte em: 42 |
+| [`spec-builder-documentos-academicos.md`](anexo-v1/spec-builder-documentos-academicos.md) | 896 | Revisar | Absorvido integralmente no kit-starter: kit-starter/gestao/secretaria/emissao-de-documentos.md |
+| [`spec-gestao-preceptoria-autoavaliacao.md`](anexo-v1/spec-gestao-preceptoria-autoavaliacao.md) | 409 | Especificação parcial, reclassificada | Absorvido integralmente no kit-starter: kit-starter/gestao/academico/preceptoria.md |
 | [`SPEC-HELPDESK.md`](anexo-v1/SPEC-HELPDESK.md) | 929 | Revisar | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/suporte/chamados-dos-clientes.md |
 | [`SPEC-LAYOUT-TICKET.md`](anexo-v1/SPEC-LAYOUT-TICKET.md) | 350 | Especificado | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/suporte/chamados-dos-clientes.md |
 | [`spec-soft-delete-totustuus.md`](anexo-v1/spec-soft-delete-totustuus.md) | 248 | Especificado | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
@@ -59,19 +59,19 @@
 | [`spec_complementar_integracoes_governanca.md`](anexo-v1/spec_complementar_integracoes_governanca.md) | 307 | Especificado | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/seguranca-e-operacao/integracoes-globais.md |
 | [`spec_crm_funil_comercial.md`](anexo-v1/spec_crm_funil_comercial.md) | 244 | Especificado | Absorvido em parte em: 22 |
 | [`spec_education_saas_architecture.md`](anexo-v1/spec_education_saas_architecture.md) | 729 | Revisar | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
-| [`spec_gestao_academica_completo.md`](anexo-v1/spec_gestao_academica_completo.md) | 1382 | Especificado | Absorvido em parte em: 31, 40, 46, 55, 64, 65, 66, 67, 69, 70 |
+| [`spec_gestao_academica_completo.md`](anexo-v1/spec_gestao_academica_completo.md) | 1382 | Especificado | Absorvido integralmente no kit-starter: kit-starter/gestao/academico/administracao-escolar-estrutura-academica.md |
 | [`spec_gestao_armazenamento_completo.md`](anexo-v1/spec_gestao_armazenamento_completo.md) | 1380 | Revisar | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
 | [`spec_gestao_auditoria_completo.md`](anexo-v1/spec_gestao_auditoria_completo.md) | 731 | Especificado | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/seguranca-e-operacao/auditoria.md |
 | [`spec_gestao_autenticacao_completo.md`](anexo-v1/spec_gestao_autenticacao_completo.md) | 1001 | Revisar | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/seguranca-e-operacao/acesso.md |
 | [`spec_gestao_bancos.md`](anexo-v1/spec_gestao_bancos.md) | 305 | Removido do escopo | Fora do escopo do produto |
 | [`spec_gestao_bancos_completo.md`](anexo-v1/spec_gestao_bancos_completo.md) | 305 | Removido do escopo | Fora do escopo do produto |
-| [`spec_gestao_biblioteca_academica.md`](anexo-v1/spec_gestao_biblioteca_academica.md) | 275 | Revisar | Absorvido em parte em: 68 |
-| [`spec_gestao_biblioteca_completo.md`](anexo-v1/spec_gestao_biblioteca_completo.md) | 1182 | Revisar | Absorvido em parte em: 31, 68 |
+| [`spec_gestao_biblioteca_academica.md`](anexo-v1/spec_gestao_biblioteca_academica.md) | 275 | Revisar | Absorvido integralmente no kit-starter: kit-starter/gestao/biblioteca/acervo.md |
+| [`spec_gestao_biblioteca_completo.md`](anexo-v1/spec_gestao_biblioteca_completo.md) | 1182 | Revisar | Absorvido integralmente no kit-starter: kit-starter/gestao/biblioteca/acervo.md |
 | [`spec_gestao_billing_cobranca_mensalidades.md`](anexo-v1/spec_gestao_billing_cobranca_mensalidades.md) | 1433 | Especificado | Absorvido em parte em: 16, 18, 34 |
 | [`spec_gestao_contabil_fiscal_completo.md`](anexo-v1/spec_gestao_contabil_fiscal_completo.md) | 294 | Especificado | Absorvido em parte em: 31 |
 | [`spec_gestao_contratos_completo.md`](anexo-v1/spec_gestao_contratos_completo.md) | 1377 | Especificado | Absorvido em parte em: 33 |
 | [`spec_gestao_cookies_sessions.md`](anexo-v1/spec_gestao_cookies_sessions.md) | 474 | Revisar | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/seguranca-e-operacao/acesso.md |
-| [`spec_gestao_documentos_completo.md`](anexo-v1/spec_gestao_documentos_completo.md) | 546 | Revisar | Absorvido em parte em: 48 |
+| [`spec_gestao_documentos_completo.md`](anexo-v1/spec_gestao_documentos_completo.md) | 546 | Revisar | Absorvido integralmente no kit-starter: kit-starter/gestao/gestao-de-documentos/servicos-comuns-assinatura-protocolo-e-armazenamento.md |
 | [`spec_gestao_financeiro_completo.md`](anexo-v1/spec_gestao_financeiro_completo.md) | 1532 | Especificado | Absorvido em parte em: 71 |
 | [`spec_gestao_frotas_completo.md`](anexo-v1/spec_gestao_frotas_completo.md) | 1558 | Especificado | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/operacoes-internas/frotas.md |
 | [`spec_gestao_logger_completo.md`](anexo-v1/spec_gestao_logger_completo.md) | 1038 | Revisar | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/seguranca-e-operacao/auditoria.md |
@@ -83,7 +83,7 @@
 | [`spec_gestao_rh_completo.md`](anexo-v1/spec_gestao_rh_completo.md) | 1319 | Revisar | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/pessoas-da-plataforma/recursos-humanos.md |
 | [`spec_gestao_sac_base_conhecimento.md`](anexo-v1/spec_gestao_sac_base_conhecimento.md) | 443 | Revisar | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/suporte/base-de-conhecimento.md |
 | [`spec_gestao_seguranca_medicina_trabalho_completo.md`](anexo-v1/spec_gestao_seguranca_medicina_trabalho_completo.md) | 1581 | Especificado | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/pessoas-da-plataforma/medicina-e-seguranca-do-trabalho-da-empresa.md |
-| [`spec_gestao_simulados_ia.md`](anexo-v1/spec_gestao_simulados_ia.md) | 683 | Especificado em v2 | Absorvido em parte em: 31, 47 |
+| [`spec_gestao_simulados_ia.md`](anexo-v1/spec_gestao_simulados_ia.md) | 683 | Especificado em v2 | Absorvido integralmente no kit-starter: kit-starter/gestao/simulados/banco-de-questoes.md |
 | [`spec_gestao_suprimentos_v3_consolidado.md`](anexo-v1/spec_gestao_suprimentos_v3_consolidado.md) | 1271 | Especificado | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/operacoes-internas/suprimentos-da-empresa.md |
 | [`spec_gestao_ti_completa.md`](anexo-v1/spec_gestao_ti_completa.md) | 882 | Revisar | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/seguranca-e-operacao/ti.md |
 | [`spec_object_storage_digital_assets.md`](anexo-v1/spec_object_storage_digital_assets.md) | 237 | Revisar | Absorvido em parte em: 21 |
