@@ -21,16 +21,16 @@ Acompanhar o consumo de cada entidade e aplicar os limites contratados.
 - Quais recursos são medidos e como: **[Sem detalhamento]**.
 
 ## 5. Campos e validações
-- Recursos e unidades de medida: **[Sem detalhamento]**.
+- Recurso principal: alunos com matrícula ativa, com limite por plano definido pelo desenvolvedor (L-01, SDD 77, seção 4). Demais recursos: **[Sem detalhamento]**.
 
 ## 6. Indicadores e gráficos
-- Percentual de uso por recurso; entidades acima de 80%: limiar **[Sem detalhamento]**.
+- Percentual de uso do limite de alunos; aviso ao atingir 90% (SDD 77, seção 4).
 
 ## 7. Ações e confirmações
-- Ajustar limite, bloquear ao exceder: **[Sem detalhamento]** da regra.
+- Ajustar limite: `platform.developer` (L-01). Bloqueio de novas matrículas ao exceder: proposta D-27 (SDD 77, seção 4).
 
 ## 8. Permissões e papéis
-- Papel de plataforma: **[Sem detalhamento]**.
+- Limite de alunos definido por `platform.developer`; leitura por `platform.manager` (SDD 78, §4.1).
 
 ## 9. Exportação e auditoria
 - Alterações de limite auditadas (SDD 29).
@@ -43,4 +43,4 @@ Acompanhar o consumo de cada entidade e aplicar os limites contratados.
 - Exportação CSV com células neutralizadas (`=`, `+`, `@`, tab, retorno de carro).
 
 ## 12. Pendências e decisões
-Todo o módulo: recursos, limites e comportamento ao exceder **[Sem detalhamento]**. Limites de taxa de API (SDD 04) são outro assunto.
+Todo o módulo: regra de limite de alunos em SDD 77 (proposta); demais recursos **[Sem detalhamento]**. Limites de taxa de API (SDD 04) são outro assunto.

@@ -37,7 +37,8 @@ Gerir as entidades clientes (instituições) do SaaS: cadastro, status, unidades
 - Destrutivo: encerrar e expurgar exigem digitar o nome da entidade (SDD 08 §3).
 
 ## 8. Permissões e papéis
-- Editor de plataforma (`platform.*`), com passkey e sessão curta (SDD 06, seção 10). Papéis exatos de cada ação: **[Sem detalhamento]**.
+- Papéis (SDD 78, §3 e §4.1): criar entidade e criar unidade só `platform.developer`; editar dados operacionais da entidade pelo `entity.admin` (nível 4); suspensão e encerramento por `platform.developer`.
+- Passkey e sessão curta para papéis de plataforma (SDD 06, seção 10).
 
 ## 9. Exportação e auditoria
 - Eventos: criação, mudança de status, suspensão, pedido e etapas de saída. Registro de auditoria em cada etapa (SDD 29).
@@ -50,5 +51,5 @@ Gerir as entidades clientes (instituições) do SaaS: cadastro, status, unidades
 - Exportação CSV com células neutralizadas (`=`, `+`, `@`, tab, retorno de carro).
 
 ## 12. Pendências e decisões
-- Campos de cadastro e papéis por ação: **[Sem detalhamento]**.
+- Campos completos de cadastro: **[Sem detalhamento]**.
 - Limiar do painel de provisionamento pendente: **[Sem detalhamento]**.

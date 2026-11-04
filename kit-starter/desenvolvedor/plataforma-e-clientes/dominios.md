@@ -32,7 +32,7 @@ Gerir os domínios da plataforma e os domínios próprios das entidades, com ver
 - Adicionar domínio próprio, verificar, ativar, remover. Remoção de domínio ativo: confirmação digitando o nome do domínio.
 
 ## 8. Permissões e papéis
-- Papel de plataforma: **[Sem detalhamento]**.
+- Domínios: `platform.developer` (criar e ativar) e `platform.manager` (consultar e acompanhar certificados), conforme SDD 78, §4.1.
 
 ## 9. Exportação e auditoria
 - Verificação, ativação e remoção auditadas (SDD 29).

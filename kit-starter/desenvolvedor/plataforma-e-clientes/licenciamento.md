@@ -19,7 +19,7 @@ Definir quais módulos e recursos cada entidade pode usar. Serve de base para a 
 
 ## 4. Dados
 - Relação entre entidade, licença e módulo. Modelo exato: **[Sem detalhamento]**.
-- Relação com contrato comercial (SDD 33): **[Sem detalhamento]** do vínculo.
+- Plano e módulos incluídos: definidos em SDD 77, seção 2 (proposta a aprovar).
 
 ## 5. Campos e validações
 - Campos da licença: **[Sem detalhamento]**.
@@ -31,7 +31,7 @@ Definir quais módulos e recursos cada entidade pode usar. Serve de base para a 
 - Ativar e desativar módulo para a entidade: regra de efeito na navegação **[Sem detalhamento]**.
 
 ## 8. Permissões e papéis
-- Papel de plataforma: **[Sem detalhamento]**.
+- Licença e módulos do plano: `platform.developer` (SDD 77, seção 2).
 
 ## 9. Exportação e auditoria
 - Mudanças de licença auditadas (SDD 29): **[Sem detalhamento]** do evento.

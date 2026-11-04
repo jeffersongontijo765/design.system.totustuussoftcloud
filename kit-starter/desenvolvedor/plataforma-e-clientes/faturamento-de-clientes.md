@@ -31,7 +31,7 @@ Emitir e acompanhar as faturas das entidades clientes da plataforma.
 - Emitir, reenviar, registrar pagamento, estornar: **[Sem detalhamento]**.
 
 ## 8. Permissões e papéis
-- Papel de plataforma: **[Sem detalhamento]**.
+- Faturas de clientes: `platform.manager` (SDD 78, §4.1); estorno exige `platform.developer`.
 
 ## 9. Exportação e auditoria
 - Emissão e estorno auditados (SDD 29).

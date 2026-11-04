@@ -33,7 +33,7 @@ Criar uma entidade ou unidade de forma segura: cada etapa é idempotente, a enti
 - Cancelar: remove o banco criado e o registro (verificado). Confirmação digitando o código da entidade.
 
 ## 8. Permissões e papéis
-- Papel de plataforma: **[Sem detalhamento]**.
+- Só `platform.developer` cria entidade e unidade, na tela e na API (SDD 78, L-02 e §3).
 
 ## 9. Exportação e auditoria
 - Cada etapa registrada na auditoria (SDD 29). Retomada e cancelamento com registro (SDD 23 §4).
@@ -46,4 +46,4 @@ Criar uma entidade ou unidade de forma segura: cada etapa é idempotente, a enti
 - Exportação CSV com células neutralizadas (`=`, `+`, `@`, tab, retorno de carro).
 
 ## 12. Pendências e decisões
-- Papéis e tempo limite de retomada: **[Sem detalhamento]**.
+- Tempo limite de retomada: **[Sem detalhamento]**.
