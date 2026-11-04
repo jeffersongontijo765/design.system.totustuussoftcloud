@@ -2,7 +2,7 @@
 
 Gerado por `inventario/gera_inventario.py` a partir de `docs/v2/31-matriz-portais-modulos.md`, seção 2.
 Nível: portal → área → módulo. As telas de cada módulo são detalhadas antes de implementar.
-Total de módulos listados: 215. Status inicial: nenhum implementado.
+Total de módulos listados: 216. Status inicial: nenhum implementado.
 
 
 ## 2.1 Portal do Desenvolvedor (`desenvolvedor.`) — equipe da plataforma
@@ -223,7 +223,8 @@ Escopo: [19](../docs/v2/19-regras-modulos-3.md), seções 8 e 9
 Escopo: [17](../docs/v2/17-regras-modulos.md), seção 7; [33](../docs/v2/33-contratos-por-portal.md); [53](../docs/v2/53-pacote-documentos-e-contratos.md)
 
 - [ ] Contratos de fornecedor
-- [ ] de aluno e de pessoal
+- [ ] contratos de aluno
+- [ ] contratos de pessoal
 
 ### Atendimento
 

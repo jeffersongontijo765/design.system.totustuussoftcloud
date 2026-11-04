@@ -30,6 +30,18 @@ Do [47](../../../docs/v2/47-simulados-por-portal.md):
 | **Gestão** | Criar perfil custom, ver relatórios agregados, ver kanban da unidade, exportar com auditoria | Ver redação individual sem papel de correção. Alterar nota confirmada sem motivo | E |
 | **Coordenação pedagógica** | Ver relatório consolidado, confirmar nota em revisão, aprovar reprocessamento | Editar questão de simulado já publicado | E |
 
+Do [31](../../../docs/v2/31-matriz-portais-modulos.md):
+
+| Portal | Teste de isolamento | Teste de permissão | Teste de fluxo principal | Teste de acessibilidade |
+|---|---|---|---|---|
+| Gestão | Cross-tenant e cross-unidade | Papel sem permissão não vê o módulo | Matrícula, cobrança, emissão de documento | Telas principais |
+
+Do [31](../../../docs/v2/31-matriz-portais-modulos.md):
+
+| Portal | Autenticação | Sessão | Dados e restrições especiais |
+|---|---|---|---|
+| Gestão | Senha e MFA conforme política da entidade ([06](../../../docs/v2/06-identidade-acesso.md), seção 5) | Padrão | Consulta por CPF com finalidade ([21](../../../docs/v2/21-busca-e-armazenamento.md), seção 6.8) |
+
 ## 5. Papéis
 
 - `unit.coordinator`: revisar e publicar.

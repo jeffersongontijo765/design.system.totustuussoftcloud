@@ -34,6 +34,18 @@ Do [46](../../../docs/v2/46-matricula-e-rematricula-por-portal.md):
 | **Secretaria** | Analisar, condicionar, efetivar, transferir, enturmar, emitir protocolo | Efetivar sem contrato e sem documento do responsável, quando exigidos | E |
 | **Coordenação pedagógica** | Aprovar trancamento até o prazo do regimento, aprovar reopção e aproveitamento | Aprovar trancamento acima do prazo sem a secretaria | E |
 
+Do [31](../../../docs/v2/31-matriz-portais-modulos.md):
+
+| Portal | Teste de isolamento | Teste de permissão | Teste de fluxo principal | Teste de acessibilidade |
+|---|---|---|---|---|
+| Gestão | Cross-tenant e cross-unidade | Papel sem permissão não vê o módulo | Matrícula, cobrança, emissão de documento | Telas principais |
+
+Do [31](../../../docs/v2/31-matriz-portais-modulos.md):
+
+| Portal | Autenticação | Sessão | Dados e restrições especiais |
+|---|---|---|---|
+| Gestão | Senha e MFA conforme política da entidade ([06](../../../docs/v2/06-identidade-acesso.md), seção 5) | Padrão | Consulta por CPF com finalidade ([21](../../../docs/v2/21-busca-e-armazenamento.md), seção 6.8) |
+
 ## 5. Papéis
 
 - `unit.secretary`: matrícula, análise, trancamento (até a alçada), enturmação.

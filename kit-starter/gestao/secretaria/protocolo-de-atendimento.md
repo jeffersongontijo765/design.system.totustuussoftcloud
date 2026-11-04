@@ -25,6 +25,18 @@ Registrar e acompanhar requerimentos e solicitações (secretaria, pedagógico, 
 
 ## 4. Permissões por portal (extraídas do SDD)
 
+Do [31](../../../docs/v2/31-matriz-portais-modulos.md):
+
+| Portal | Teste de isolamento | Teste de permissão | Teste de fluxo principal | Teste de acessibilidade |
+|---|---|---|---|---|
+| Gestão | Cross-tenant e cross-unidade | Papel sem permissão não vê o módulo | Matrícula, cobrança, emissão de documento | Telas principais |
+
+Do [31](../../../docs/v2/31-matriz-portais-modulos.md):
+
+| Portal | Autenticação | Sessão | Dados e restrições especiais |
+|---|---|---|---|
+| Gestão | Senha e MFA conforme política da entidade ([06](../../../docs/v2/06-identidade-acesso.md), seção 5) | Padrão | Consulta por CPF com finalidade ([21](../../../docs/v2/21-busca-e-armazenamento.md), seção 6.8) |
+
 Do [54](../../../docs/v2/54-gestao-de-documentos-tres-contextos.md):
 
 | Portal | Contexto A (recebidos) | Contexto B (administrativos) | Contexto C (emitidos) |

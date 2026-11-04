@@ -105,7 +105,7 @@ def linhas_portal(nums, nomes):
         for cab, corpo in tabelas_por_portal(n):
             if not cab[0].startswith('| Portal'):
                 continue
-            sel = [c for c in corpo if any(re.search(rf'\*\*{re.escape(x)}', c.split('|')[1]) for x in nomes)]
+            sel = [c for c in corpo if any(c.split('|')[1].strip().strip('*').strip().startswith(x) for x in nomes)]
             if sel:
                 blocos.append((n, cab, sel))
     return blocos
