@@ -5696,7 +5696,7 @@ Legenda de origem: **P** = plataforma (banco master); **E** = entidade/unidade (
 | Financeiro da plataforma | Contas a pagar e a receber **da própria empresa** | P | **Decidido** em 03/11/2026: mantido para a gestão da própria empresa desenvolvedora |
 | Contábil da plataforma | Plano de contas, razão, fechamento da empresa, tributos e obrigações fiscais da empresa | P | Mesma decisão do financeiro. Tributos da empresa: seção 3.3, confirmado pelo autor em 04/11/2026 |
 | Operações internas | Patrimônio, frotas, suprimentos da empresa | P | **Decidido** em 03/11/2026: mantidos, como instâncias separadas dos módulos das entidades |
-| Pessoas da plataforma | Departamento pessoal, RH e medicina do trabalho da empresa | P | Mesma decisão. O HCM das entidades não é o da plataforma |
+| Pessoas da plataforma | Departamento pessoal, recursos humanos, medicina e segurança do trabalho da empresa | P | Mesma decisão. O HCM das entidades não é o da plataforma. Três módulos separados, conforme HCM-01 e HCM-10 do [39](#parte-39), seção 11 |
 | Suporte | Chamados dos clientes, base de conhecimento, SLA | P | Seção 3.2 |
 | Segurança e operação | Acesso, MFA, auditoria, privacidade (DPO), TI, configurações do sistema, integrações globais | P | [05](#parte-05), [07](#parte-07), [10](#parte-10) |
 
@@ -17409,6 +17409,12 @@ Papéis listados por portal, com o nível máximo previsto. Permissões detalhad
 | `platform.purchasing` | 1 | plataforma (suprimentos da empresa) | Papel **Compras** do [22](#parte-22), seção 5: cotação, pedido, cadastro de fornecedor |
 | `platform.warehouse` | 1 | plataforma (suprimentos da empresa) | Papel **Almoxarifado** do [22](#parte-22), seção 5: recebimento e movimento |
 | `platform.purchasing.approver` | 2 | plataforma (suprimentos da empresa) | Papel **Aprovador de compras** do [22](#parte-22), seção 5: aprova requisição na alçada; não é o solicitante |
+| `platform.people` | 1 | plataforma (HCM da empresa) | Pessoas (DP): cadastro funcional, férias, afastamentos, ponto com motivo, rescisão, benefícios ([39](#parte-39), HCM-01 e HCM-10) |
+| `platform.payroll` | 1 | plataforma (HCM da empresa) | Papel **Folha** do [22](#parte-22), seção 5: processar a folha; folha fechada não muda |
+| `platform.payroll.approver` | 2 | plataforma (HCM da empresa) | Aprovar a folha; quem processa não aprova ([39](#parte-39), seção 7) |
+| `platform.hr` | 1 | plataforma (HCM da empresa) | Papel **RH** do [22](#parte-22), seção 5, no escopo do HCM-01: recrutamento, onboarding, avaliação, clima, treinamento |
+| `platform.sst.doctor` | 1 | plataforma (SST da empresa) | Médico do trabalho: ASO completo, prontuário, CID ([39](#parte-39), HCM-06) |
+| `platform.sst.technician` | 1 | plataforma (SST da empresa) | Técnico de SESMT: ocorrências, EPI, NR, PGR, CAT, sem diagnóstico ([39](#parte-39), HCM-06) |
 
 #### 4.2 Portal de Gestão (SaaS da entidade)
 
@@ -17509,10 +17515,10 @@ Papéis listados por portal, com o nível máximo previsto. Permissões detalhad
 
 | Situação | Arquivos |
 |---|---|
-| Absorvido em parte em | 30 |
+| Absorvido em parte em | 27 |
 | Só catalogado | 14 |
 | Substituído | 12 |
-| Absorvido integralmente no kit-starter | 3 |
+| Absorvido integralmente no kit-starter | 6 |
 | Fora do escopo do produto | 2 |
 | Arquivo vazio (placeholder), sem conteúdo a absorver | 1 |
 
@@ -17569,11 +17575,11 @@ Papéis listados por portal, com o nível máximo previsto. Permissões detalhad
 | [`spec_gestao_marketing_redes_sociais.md`](anexo-v1/spec_gestao_marketing_redes_sociais.md) | 350 | Especificado | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
 | [`spec_gestao_notificacoes.md`](anexo-v1/spec_gestao_notificacoes.md) | 378 | Revisar | Absorvido em parte em: 57 |
 | [`spec_gestao_notificacoes_revisada.md`](anexo-v1/spec_gestao_notificacoes_revisada.md) | 642 | Revisar | Absorvido em parte em: 57 |
-| [`spec_gestao_pessoas_completo.md`](anexo-v1/spec_gestao_pessoas_completo.md) | 1257 | Especificado | Absorvido em parte em: 39 |
+| [`spec_gestao_pessoas_completo.md`](anexo-v1/spec_gestao_pessoas_completo.md) | 1257 | Especificado | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/pessoas-da-plataforma/departamento-pessoal.md |
 | [`spec_gestao_privacy_global_completo.md`](anexo-v1/spec_gestao_privacy_global_completo.md) | 345 | Revisar | Absorvido em parte em: 32 |
-| [`spec_gestao_rh_completo.md`](anexo-v1/spec_gestao_rh_completo.md) | 1319 | Revisar | Absorvido em parte em: 39 |
+| [`spec_gestao_rh_completo.md`](anexo-v1/spec_gestao_rh_completo.md) | 1319 | Revisar | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/pessoas-da-plataforma/recursos-humanos.md |
 | [`spec_gestao_sac_base_conhecimento.md`](anexo-v1/spec_gestao_sac_base_conhecimento.md) | 443 | Revisar | Absorvido em parte em: 31, 32 |
-| [`spec_gestao_seguranca_medicina_trabalho_completo.md`](anexo-v1/spec_gestao_seguranca_medicina_trabalho_completo.md) | 1581 | Especificado | Absorvido em parte em: 39 |
+| [`spec_gestao_seguranca_medicina_trabalho_completo.md`](anexo-v1/spec_gestao_seguranca_medicina_trabalho_completo.md) | 1581 | Especificado | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/pessoas-da-plataforma/medicina-e-seguranca-do-trabalho-da-empresa.md |
 | [`spec_gestao_simulados_ia.md`](anexo-v1/spec_gestao_simulados_ia.md) | 683 | Especificado em v2 | Absorvido em parte em: 31, 47 |
 | [`spec_gestao_suprimentos_v3_consolidado.md`](anexo-v1/spec_gestao_suprimentos_v3_consolidado.md) | 1271 | Especificado | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/operacoes-internas/suprimentos-da-empresa.md |
 | [`spec_gestao_ti_completa.md`](anexo-v1/spec_gestao_ti_completa.md) | 882 | Revisar | Absorvido em parte em: 36 |

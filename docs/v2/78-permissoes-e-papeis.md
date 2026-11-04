@@ -88,6 +88,12 @@ Papéis listados por portal, com o nível máximo previsto. Permissões detalhad
 | `platform.purchasing` | 1 | plataforma (suprimentos da empresa) | Papel **Compras** do [22](22-crm-canais-e-papeis.md), seção 5: cotação, pedido, cadastro de fornecedor |
 | `platform.warehouse` | 1 | plataforma (suprimentos da empresa) | Papel **Almoxarifado** do [22](22-crm-canais-e-papeis.md), seção 5: recebimento e movimento |
 | `platform.purchasing.approver` | 2 | plataforma (suprimentos da empresa) | Papel **Aprovador de compras** do [22](22-crm-canais-e-papeis.md), seção 5: aprova requisição na alçada; não é o solicitante |
+| `platform.people` | 1 | plataforma (HCM da empresa) | Pessoas (DP): cadastro funcional, férias, afastamentos, ponto com motivo, rescisão, benefícios ([39](39-departamento-pessoal-rh-medicina-por-portal.md), HCM-01 e HCM-10) |
+| `platform.payroll` | 1 | plataforma (HCM da empresa) | Papel **Folha** do [22](22-crm-canais-e-papeis.md), seção 5: processar a folha; folha fechada não muda |
+| `platform.payroll.approver` | 2 | plataforma (HCM da empresa) | Aprovar a folha; quem processa não aprova ([39](39-departamento-pessoal-rh-medicina-por-portal.md), seção 7) |
+| `platform.hr` | 1 | plataforma (HCM da empresa) | Papel **RH** do [22](22-crm-canais-e-papeis.md), seção 5, no escopo do HCM-01: recrutamento, onboarding, avaliação, clima, treinamento |
+| `platform.sst.doctor` | 1 | plataforma (SST da empresa) | Médico do trabalho: ASO completo, prontuário, CID ([39](39-departamento-pessoal-rh-medicina-por-portal.md), HCM-06) |
+| `platform.sst.technician` | 1 | plataforma (SST da empresa) | Técnico de SESMT: ocorrências, EPI, NR, PGR, CAT, sem diagnóstico ([39](39-departamento-pessoal-rh-medicina-por-portal.md), HCM-06) |
 
 ### 4.2 Portal de Gestão (SaaS da entidade)
 

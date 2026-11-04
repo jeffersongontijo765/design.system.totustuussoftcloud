@@ -2,7 +2,7 @@
 
 Gerado por `inventario/gera_inventario.py` a partir de `docs/v2/31-matriz-portais-modulos.md`, seção 2.
 Nível: portal → área → módulo. As telas de cada módulo são detalhadas antes de implementar.
-Total de módulos listados: 188. Status inicial: nenhum implementado.
+Total de módulos listados: 189. Status inicial: nenhum implementado.
 
 
 ## 2.1 Portal do Desenvolvedor (`desenvolvedor.`) — equipe da plataforma
@@ -63,10 +63,11 @@ Escopo: **Decidido** em 03/11/2026: mantidos, como instâncias separadas dos mó
 
 ### Pessoas da plataforma
 
-Escopo: Mesma decisão. O HCM das entidades não é o da plataforma
+Escopo: Mesma decisão. O HCM das entidades não é o da plataforma. Três módulos separados, conforme HCM-01 e HCM-10 do [39](../docs/v2/39-departamento-pessoal-rh-medicina-por-portal.md), seção 11
 
 - [ ] Departamento pessoal
-- [ ] RH e medicina do trabalho da empresa
+- [ ] recursos humanos
+- [ ] medicina e segurança do trabalho da empresa
 
 ### Suporte
 

@@ -28,7 +28,7 @@ Legenda de origem: **P** = plataforma (banco master); **E** = entidade/unidade (
 | Financeiro da plataforma | Contas a pagar e a receber **da própria empresa** | P | **Decidido** em 03/11/2026: mantido para a gestão da própria empresa desenvolvedora |
 | Contábil da plataforma | Plano de contas, razão, fechamento da empresa, tributos e obrigações fiscais da empresa | P | Mesma decisão do financeiro. Tributos da empresa: seção 3.3, confirmado pelo autor em 04/11/2026 |
 | Operações internas | Patrimônio, frotas, suprimentos da empresa | P | **Decidido** em 03/11/2026: mantidos, como instâncias separadas dos módulos das entidades |
-| Pessoas da plataforma | Departamento pessoal, RH e medicina do trabalho da empresa | P | Mesma decisão. O HCM das entidades não é o da plataforma |
+| Pessoas da plataforma | Departamento pessoal, recursos humanos, medicina e segurança do trabalho da empresa | P | Mesma decisão. O HCM das entidades não é o da plataforma. Três módulos separados, conforme HCM-01 e HCM-10 do [39](39-departamento-pessoal-rh-medicina-por-portal.md), seção 11 |
 | Suporte | Chamados dos clientes, base de conhecimento, SLA | P | Seção 3.2 |
 | Segurança e operação | Acesso, MFA, auditoria, privacidade (DPO), TI, configurações do sistema, integrações globais | P | [05](05-seguranca.md), [07](07-privacidade-lgpd.md), [10](10-implantacao-operacao.md) |
 

@@ -18,10 +18,10 @@
 
 | Situação | Arquivos |
 |---|---|
-| Absorvido em parte em | 30 |
+| Absorvido em parte em | 27 |
 | Só catalogado | 14 |
 | Substituído | 12 |
-| Absorvido integralmente no kit-starter | 3 |
+| Absorvido integralmente no kit-starter | 6 |
 | Fora do escopo do produto | 2 |
 | Arquivo vazio (placeholder), sem conteúdo a absorver | 1 |
 
@@ -78,11 +78,11 @@
 | [`spec_gestao_marketing_redes_sociais.md`](anexo-v1/spec_gestao_marketing_redes_sociais.md) | 350 | Especificado | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
 | [`spec_gestao_notificacoes.md`](anexo-v1/spec_gestao_notificacoes.md) | 378 | Revisar | Absorvido em parte em: 57 |
 | [`spec_gestao_notificacoes_revisada.md`](anexo-v1/spec_gestao_notificacoes_revisada.md) | 642 | Revisar | Absorvido em parte em: 57 |
-| [`spec_gestao_pessoas_completo.md`](anexo-v1/spec_gestao_pessoas_completo.md) | 1257 | Especificado | Absorvido em parte em: 39 |
+| [`spec_gestao_pessoas_completo.md`](anexo-v1/spec_gestao_pessoas_completo.md) | 1257 | Especificado | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/pessoas-da-plataforma/departamento-pessoal.md |
 | [`spec_gestao_privacy_global_completo.md`](anexo-v1/spec_gestao_privacy_global_completo.md) | 345 | Revisar | Absorvido em parte em: 32 |
-| [`spec_gestao_rh_completo.md`](anexo-v1/spec_gestao_rh_completo.md) | 1319 | Revisar | Absorvido em parte em: 39 |
+| [`spec_gestao_rh_completo.md`](anexo-v1/spec_gestao_rh_completo.md) | 1319 | Revisar | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/pessoas-da-plataforma/recursos-humanos.md |
 | [`spec_gestao_sac_base_conhecimento.md`](anexo-v1/spec_gestao_sac_base_conhecimento.md) | 443 | Revisar | Absorvido em parte em: 31, 32 |
-| [`spec_gestao_seguranca_medicina_trabalho_completo.md`](anexo-v1/spec_gestao_seguranca_medicina_trabalho_completo.md) | 1581 | Especificado | Absorvido em parte em: 39 |
+| [`spec_gestao_seguranca_medicina_trabalho_completo.md`](anexo-v1/spec_gestao_seguranca_medicina_trabalho_completo.md) | 1581 | Especificado | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/pessoas-da-plataforma/medicina-e-seguranca-do-trabalho-da-empresa.md |
 | [`spec_gestao_simulados_ia.md`](anexo-v1/spec_gestao_simulados_ia.md) | 683 | Especificado em v2 | Absorvido em parte em: 31, 47 |
 | [`spec_gestao_suprimentos_v3_consolidado.md`](anexo-v1/spec_gestao_suprimentos_v3_consolidado.md) | 1271 | Especificado | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/operacoes-internas/suprimentos-da-empresa.md |
 | [`spec_gestao_ti_completa.md`](anexo-v1/spec_gestao_ti_completa.md) | 882 | Revisar | Absorvido em parte em: 36 |
