@@ -3,6 +3,7 @@
 > Parte do [SDD v2](00-README.md). Fecha os DDL pendentes listados no [45](45-pendencias-consolidadas.md), seção 4. Convenções: MySQL 8 ou MariaDB 10.6, `utf8mb4`, horários em UTC (`DATETIME(3)`), chave interna `BIGINT UNSIGNED AUTO_INCREMENT` e `uuid CHAR(36)` para referência externa. Toda tabela de unidade tem `unidade_uuid` (regra de [03](03-dominio-tenancy.md), seção 1.1). Soft delete com `deleted_at` e `deleted_by` ([19](19-regras-modulos-3.md), seção 14). Tabelas de entidade ficam no banco da unidade. Tabelas de plataforma ficam no master.
 > **Status:** DDL proposto, criado em 03/11/2026. Não foi executado. Antes de implementar, cada DDL passa por revisão do owner do módulo e por teste de migração ([10](10-implantacao-operacao.md), seção 5). Valores de domínio marcados com (jurídico) dependem do parecer ([50](50-pacote-juridico-e-norma.md)).
 > **Coluna gerada (04/11/2026):** coluna gerada não lê coluna `CHAR`, porque no MariaDB o resultado depende do modo `PAD_CHAR_TO_FULL_LENGTH` (erro 1901). Para chave única de "registro ativo", use um indicador `TINYINT` gerado (1 ou NULL) num índice único composto; quando a expressão precisa ler o UUID, declare a coluna como `VARCHAR(36)`. Todo o DDL do SDD foi executado sem erro em MariaDB 10.11 com `utf8mb4`.
+> **Exclusão (04/11/2026, DP-09):** tabela sem `deleted_at` não aceita exclusão pela aplicação; o registro é encerrado pelo estado. Tabela que precisar de exclusão pelo usuário ganha `deleted_at` e `deleted_by` na revisão do owner ([80](80-decisoes-por-padrao.md)).
 
 ---
 
@@ -846,12 +847,16 @@ CREATE TABLE notif_preferencias (
 
 CREATE TABLE notif_provedores (
   id              BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  escopo          ENUM('plataforma','unidade') NOT NULL,   -- plataforma: no banco master (e-mail transacional, D-04); unidade: no banco da unidade
+  unidade_uuid    CHAR(36) NULL,                           -- obrigatório quando escopo = unidade
   canal           ENUM('app','email','sms','whatsapp') NOT NULL,
   nome            VARCHAR(40) NOT NULL,
+  conexao_uuid    CHAR(36) NOT NULL,                       -- conexão de integração; credencial no cofre (doc 16)
   primario        TINYINT(1) NOT NULL DEFAULT 0,
   saude           ENUM('ok','degradado','fora') NOT NULL DEFAULT 'ok',
   falhas_seguidas INT UNSIGNED NOT NULL DEFAULT 0,
-  UNIQUE KEY ux_provedor (canal, nome)
+  CONSTRAINT ck_provedor_escopo CHECK ((escopo = 'plataforma' AND unidade_uuid IS NULL) OR (escopo = 'unidade' AND unidade_uuid IS NOT NULL)),
+  UNIQUE KEY ux_provedor (escopo, unidade_uuid, canal, nome)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ```
 

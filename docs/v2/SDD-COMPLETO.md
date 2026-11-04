@@ -1456,7 +1456,7 @@ CREATE TABLE sessao_midia (
   chave_ref       VARCHAR(120) NOT NULL,
   iniciada_em     DATETIME(3) NOT NULL,
   encerrada_em    DATETIME(3) NULL,
-  created_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created_at      DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   INDEX ix_midia_unidade (unidade_uuid, estado)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -2000,7 +2000,7 @@ CREATE TABLE integration_outbox (
   payload         JSON         NOT NULL,
   status          ENUM('pending','queued','sent','processed','rejected','cancelled') NOT NULL DEFAULT 'pending',
   attempts        TINYINT UNSIGNED NOT NULL DEFAULT 0,
-  next_attempt_at DATETIME     NULL,
+  next_attempt_at DATETIME(3)     NULL,
   last_error      VARCHAR(500) NULL,
   correlation_id  CHAR(36)     NOT NULL,
   actor_id        CHAR(36)     NULL,
@@ -8298,11 +8298,11 @@ CREATE TABLE formularios (
   resposta_unica  TINYINT(1) NOT NULL DEFAULT 1,
   estado          ENUM('rascunho','publicado','encerrado','arquivado') NOT NULL,
   versao          INT UNSIGNED NOT NULL DEFAULT 1,
-  abre_em         DATETIME NULL,
-  fecha_em        DATETIME NULL,
+  abre_em         DATETIME(3) NULL,
+  fecha_em        DATETIME(3) NULL,
   created_by      CHAR(36) NOT NULL,
-  created_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  deleted_at      DATETIME NULL,
+  created_at      DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  deleted_at      DATETIME(3) NULL,
   INDEX ix_form_unidade (unidade_uuid, estado)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -8326,8 +8326,8 @@ CREATE TABLE formulario_convites (
   formulario_id   BIGINT UNSIGNED NOT NULL,
   token_hash      CHAR(64) NOT NULL UNIQUE,    -- SHA-256 do token. Nunca o token
   destinatario_uuid CHAR(36) NULL,             -- NULL em formulário anônimo
-  expira_em       DATETIME NOT NULL,
-  respondido_em   DATETIME NULL,
+  expira_em       DATETIME(3) NOT NULL,
+  respondido_em   DATETIME(3) NULL,
   CONSTRAINT fk_convite_form FOREIGN KEY (formulario_id) REFERENCES formularios (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -8336,7 +8336,7 @@ CREATE TABLE formulario_respostas (
   uuid            CHAR(36) NOT NULL UNIQUE,
   formulario_id   BIGINT UNSIGNED NOT NULL,
   versao          INT UNSIGNED NOT NULL,
-  respondido_em   DATETIME NOT NULL,
+  respondido_em   DATETIME(3) NOT NULL,
   respondente_uuid CHAR(36) NULL,              -- NULL em formulário anônimo
   respostas       JSON NOT NULL,               -- {"pergunta_uuid": valor}
   CONSTRAINT fk_resposta_form FOREIGN KEY (formulario_id) REFERENCES formularios (id)
@@ -10346,6 +10346,7 @@ Todas as citações marcadas **a confirmar** neste pacote precisam ser conferida
 > Parte do [SDD v2](#parte-00). Fecha os DDL pendentes listados no [45](#parte-45), seção 4. Convenções: MySQL 8 ou MariaDB 10.6, `utf8mb4`, horários em UTC (`DATETIME(3)`), chave interna `BIGINT UNSIGNED AUTO_INCREMENT` e `uuid CHAR(36)` para referência externa. Toda tabela de unidade tem `unidade_uuid` (regra de [03](#parte-03), seção 1.1). Soft delete com `deleted_at` e `deleted_by` ([19](#parte-19), seção 14). Tabelas de entidade ficam no banco da unidade. Tabelas de plataforma ficam no master.
 > **Status:** DDL proposto, criado em 03/11/2026. Não foi executado. Antes de implementar, cada DDL passa por revisão do owner do módulo e por teste de migração ([10](#parte-10), seção 5). Valores de domínio marcados com (jurídico) dependem do parecer ([50](#parte-50)).
 > **Coluna gerada (04/11/2026):** coluna gerada não lê coluna `CHAR`, porque no MariaDB o resultado depende do modo `PAD_CHAR_TO_FULL_LENGTH` (erro 1901). Para chave única de "registro ativo", use um indicador `TINYINT` gerado (1 ou NULL) num índice único composto; quando a expressão precisa ler o UUID, declare a coluna como `VARCHAR(36)`. Todo o DDL do SDD foi executado sem erro em MariaDB 10.11 com `utf8mb4`.
+> **Exclusão (04/11/2026, DP-09):** tabela sem `deleted_at` não aceita exclusão pela aplicação; o registro é encerrado pelo estado. Tabela que precisar de exclusão pelo usuário ganha `deleted_at` e `deleted_by` na revisão do owner ([80](#parte-80)).
 
 ---
 
@@ -11189,12 +11190,16 @@ CREATE TABLE notif_preferencias (
 
 CREATE TABLE notif_provedores (
   id              BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  escopo          ENUM('plataforma','unidade') NOT NULL,   -- plataforma: no banco master (e-mail transacional, D-04); unidade: no banco da unidade
+  unidade_uuid    CHAR(36) NULL,                           -- obrigatório quando escopo = unidade
   canal           ENUM('app','email','sms','whatsapp') NOT NULL,
   nome            VARCHAR(40) NOT NULL,
+  conexao_uuid    CHAR(36) NOT NULL,                       -- conexão de integração; credencial no cofre (doc 16)
   primario        TINYINT(1) NOT NULL DEFAULT 0,
   saude           ENUM('ok','degradado','fora') NOT NULL DEFAULT 'ok',
   falhas_seguidas INT UNSIGNED NOT NULL DEFAULT 0,
-  UNIQUE KEY ux_provedor (canal, nome)
+  CONSTRAINT ck_provedor_escopo CHECK ((escopo = 'plataforma' AND unidade_uuid IS NULL) OR (escopo = 'unidade' AND unidade_uuid IS NOT NULL)),
+  UNIQUE KEY ux_provedor (escopo, unidade_uuid, canal, nome)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ```
 
@@ -18580,6 +18585,7 @@ Os papéis acima vêm dos papéis nomeados no [22](#parte-22), seção 5, e nos 
 | DP-06 | Mural, materiais e tarefas da classe (portal do professor, do aluno e dos responsáveis): a v1 só os cita na navegação ([12-portals-navigation-sidebar-pages-spec.md](anexo-v1/12-portals-navigation-sidebar-pages-spec.md)) e a v2 não tem regra | **Mural:** aviso por turma, publicado pelo professor da turma ou pela coordenação; comentários desligados por padrão (o professor liga por aviso); sem foto de aluno sem termo de imagem ([32](#parte-32), seção 3.2). **Materiais:** arquivos pelo armazenamento ([21](#parte-21)), com antivírus e limite de tamanho; visíveis só à turma; download registrado. **Tarefas:** título, instruções, prazo, anexos, forma de entrega; entrega do aluno com data e hora, atraso marcado; nota da tarefa só pelo professor da turma e só entra no diário se a tarefa for uma avaliação do sistema avaliativo ([59](#parte-59), seção 4); IA só sugere correção ([27](#parte-27)). **Responsáveis:** veem tarefas, prazos e entregas dos dependentes com vínculo ativo, sem poder entregar. Retenção: até o fim do período letivo mais o prazo da matriz de retenção ([26](#parte-26), seção 3) | Critérios 1 e 2; mesmo escopo "só turmas vinculadas" da [31](#parte-31), seção 2.3 | Mural aberto com comentários livres | Portais do professor, do aluno e dos responsáveis. Especificado em [81](#parte-81) |
 | DP-07 | Alçada de desconto: no CRM da plataforma (LAC-23, [22](#parte-22)) e na entidade (parte em aberto da LAC-08, [18](#parte-18)). A v2 cita alçada, mas não define valores | A alçada é **parâmetro** com faixas configuradas: pelo desenvolvedor na plataforma e pelo administrador da entidade na entidade. Até haver faixa configurada, **todo desconto fora da regra do plano passa por aprovação**: do gerente comercial (`platform.sales.manager`) na plataforma e do aprovador financeiro (`unit.finance.approver`) na entidade. Quem propõe não aprova o próprio desconto. Toda aprovação tem motivo e auditoria. | Critérios 1, 3 e 4: nenhum valor inventado; sem configuração, o caminho é o mais restrito | Fixar percentuais padrão (por exemplo, 10% e 20%) sem dado do negócio | CRM da plataforma; financeiro da entidade |
 | DP-08 | Mensagem proativa por canal (LAC-22, [22](#parte-22)): limite não definido; o jurídico ainda precisa opinar | Até o parecer: mensagem proativa só para quem deu consentimento para aquele canal e finalidade ([32](#parte-32), seção 3.2); respeita o horário de silêncio de 21h às 7h ([57](#parte-57), seção 3.3); o limite de envios por pessoa e canal é **parâmetro** sem valor padrão, e sem parâmetro configurado o envio proativo em lote fica bloqueado. Mensagem de resposta a contato iniciado pela pessoa não é proativa | Critérios 1 e 3: o mais seguro até o parecer, sem inventar número | Liberar envio sem limite até o parecer | CRM da plataforma e do tenant |
+| DP-09 | Exclusão em tabela sem `deleted_at`: a regra é "exclusão lógica por padrão" ([03](#parte-03), seção 6; [19](#parte-19), seção 14), mas 138 tabelas principais do DDL não têm a coluna (verificação de 04/11/2026, `inventario/lint_ddl.py`) | Tabela sem `deleted_at` **não aceita exclusão** pela aplicação: o repositório recusa `DELETE` e o registro é encerrado pelo estado da própria tabela (cancelado, encerrado, arquivado, revogado). Tabela que precisar de exclusão pelo usuário ganha `deleted_at` e `deleted_by` na revisão do owner. Expurgo físico só pelo job de retenção ou por pedido do titular, como já diz o [03](#parte-03) | Critérios 1 e 2: nenhum dado some sem rastro, e a regra vale sem mudar 138 tabelas sem revisão | Acrescentar `deleted_at` a todas as tabelas sem revisão | Todo o DDL |
 
 ---
 

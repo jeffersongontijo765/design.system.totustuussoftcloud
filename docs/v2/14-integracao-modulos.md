@@ -200,7 +200,7 @@ CREATE TABLE integration_outbox (
   payload         JSON         NOT NULL,
   status          ENUM('pending','queued','sent','processed','rejected','cancelled') NOT NULL DEFAULT 'pending',
   attempts        TINYINT UNSIGNED NOT NULL DEFAULT 0,
-  next_attempt_at DATETIME     NULL,
+  next_attempt_at DATETIME(3)     NULL,
   last_error      VARCHAR(500) NULL,
   correlation_id  CHAR(36)     NOT NULL,
   actor_id        CHAR(36)     NULL,

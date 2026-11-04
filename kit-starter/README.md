@@ -33,6 +33,8 @@ Decisões tomadas por padrão (sem pergunta ao autor, com o critério mais segur
 | `kit-starter/fichas_portais.py` | Fichas dos portais de entidade a partir de `dados_gestao.py`, `dados_professor.py`, `dados_aluno.py`, `dados_responsaveis.py` e `dados_terceiros.py` |
 | `build/gen_paginas.py` | Gera uma página HTML por tela das fichas em `paginas/` (517 telas, com índice em `paginas/index.html`) |
 | `inventario/gera_rastreabilidade.py` | Regera o [79](../docs/v2/79-rastreabilidade-v1-v2.md) e reconhece as especificações absorvidas no kit |
+| `inventario/valida_ddl.py` | Executa todo o DDL do SDD num MariaDB ou MySQL (278 tabelas, 0 erros em 04/11/2026) |
+| `inventario/lint_ddl.py` | Confere o DDL contra as convenções da v2 (uuid, unidade, utf8mb4, centavos, DATETIME(3), exclusão) |
 | `inventario/gera_sdd_completo.py` | Regera `docs/v2/SDD-COMPLETO.md` |
 
 Ordem ao mudar o SDD: matriz → `gera_inventario.py` → `gera_kit.py` → completar o arquivo `dados_*.py` ou `absorve_v1.py` → `fichas_portais.py` e `absorve_v1.py` → `gera_rastreabilidade.py` → `gera_sdd_completo.py`.

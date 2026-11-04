@@ -146,7 +146,7 @@ CREATE TABLE sessao_midia (
   chave_ref       VARCHAR(120) NOT NULL,
   iniciada_em     DATETIME(3) NOT NULL,
   encerrada_em    DATETIME(3) NULL,
-  created_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  created_at      DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   INDEX ix_midia_unidade (unidade_uuid, estado)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

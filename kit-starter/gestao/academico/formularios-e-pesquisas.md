@@ -195,11 +195,11 @@ CREATE TABLE formularios (
   resposta_unica  TINYINT(1) NOT NULL DEFAULT 1,
   estado          ENUM('rascunho','publicado','encerrado','arquivado') NOT NULL,
   versao          INT UNSIGNED NOT NULL DEFAULT 1,
-  abre_em         DATETIME NULL,
-  fecha_em        DATETIME NULL,
+  abre_em         DATETIME(3) NULL,
+  fecha_em        DATETIME(3) NULL,
   created_by      CHAR(36) NOT NULL,
-  created_at      DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  deleted_at      DATETIME NULL,
+  created_at      DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  deleted_at      DATETIME(3) NULL,
   INDEX ix_form_unidade (unidade_uuid, estado)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -223,8 +223,8 @@ CREATE TABLE formulario_convites (
   formulario_id   BIGINT UNSIGNED NOT NULL,
   token_hash      CHAR(64) NOT NULL UNIQUE,    -- SHA-256 do token. Nunca o token
   destinatario_uuid CHAR(36) NULL,             -- NULL em formulário anônimo
-  expira_em       DATETIME NOT NULL,
-  respondido_em   DATETIME NULL,
+  expira_em       DATETIME(3) NOT NULL,
+  respondido_em   DATETIME(3) NULL,
   CONSTRAINT fk_convite_form FOREIGN KEY (formulario_id) REFERENCES formularios (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -233,7 +233,7 @@ CREATE TABLE formulario_respostas (
   uuid            CHAR(36) NOT NULL UNIQUE,
   formulario_id   BIGINT UNSIGNED NOT NULL,
   versao          INT UNSIGNED NOT NULL,
-  respondido_em   DATETIME NOT NULL,
+  respondido_em   DATETIME(3) NOT NULL,
   respondente_uuid CHAR(36) NULL,              -- NULL em formulário anônimo
   respostas       JSON NOT NULL,               -- {"pergunta_uuid": valor}
   CONSTRAINT fk_resposta_form FOREIGN KEY (formulario_id) REFERENCES formularios (id)
