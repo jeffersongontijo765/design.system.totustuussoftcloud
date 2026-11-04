@@ -1,14 +1,47 @@
-# faturamento de clientes
+# Faturamento de clientes
 
 - Portal: Desenvolvedor (`desenvolvedor.`)
 - Área: Plataforma e clientes
-- Escopo: Ciclo de vida da seção 5 de [23](23-dominios-provisionamento-ciclo-de-vida.md)
-- Status: pendente (telas por detalhar)
+- Domínio: plataforma (banco master)
+- Escopo: Cobrança das entidades clientes pela plataforma (faturas e recebimentos)
+- Status: detalhado
 
-## Telas
+## 1. Identificação
+- Especificações: `docs/v2/20-pagamentos-seguranca.md`; `docs/v2/34-pagamentos-fiscal-bancos-por-portal.md`
 
-_A definir e aprovar antes da implementação._
+## 2. Objetivo e escopo
+Emitir e acompanhar as faturas das entidades clientes da plataforma.
 
-## Referências no SDD
+## 3. Telas
+- **Faturas de clientes** (datatable): entidade, competência, valor, vencimento, situação.
+- **Detalhe da fatura** (drawer de visualização).
+- Sem telas adicionais detalhadas.
 
-- `docs/31-matriz-portais-modulos.md`, seção 2.1
+## 4. Dados
+- Fatura e recebimento: **[Sem detalhamento]** das entidades e do vínculo com a assinatura.
+- Pagamento e conciliação: SDD 20 e 34 (regras gerais da plataforma).
+
+## 5. Campos e validações
+- Campos da fatura: **[Sem detalhamento]**.
+
+## 6. Indicadores e gráficos
+- Valor em aberto, vencido e recebido no período: **[Sem detalhamento]** da fórmula.
+
+## 7. Ações e confirmações
+- Emitir, reenviar, registrar pagamento, estornar: **[Sem detalhamento]**.
+
+## 8. Permissões e papéis
+- Papel de plataforma: **[Sem detalhamento]**.
+
+## 9. Exportação e auditoria
+- Emissão e estorno auditados (SDD 29).
+
+## 10. Estados de interface
+- Padrão de estados de tela (SDD 08).
+
+## 11. Requisitos de frontend (SDD 08)
+- Sem JavaScript inline; textos por i18n; tema claro e escuro; WCAG 2.2 AA; 320 px sem rolagem horizontal.
+- Exportação CSV com células neutralizadas (`=`, `+`, `@`, tab, retorno de carro).
+
+## 12. Pendências e decisões
+Todo o módulo: regras de faturamento de clientes **[Sem detalhamento]**. Nota fiscal: SDD 34 (NFS-e).
