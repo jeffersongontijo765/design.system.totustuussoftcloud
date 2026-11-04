@@ -1,7 +1,7 @@
 # SDD v2 — TotusTuus SoftCloud
 
 > **Versão:** 2.0.0 · **Data:** 02/11/2026 · **Status:** rascunho para revisão (aguarda aprovação do autor)
-> **Substitui:** a coleção v1 na pasta raiz `sdd.totustuussoftcloud/` (documentos `01` a `12`, `SPEC-*`, `spec_*`, `*_completo`).
+> **Substitui:** a coleção v1 (documentos `01` a `12`, `SPEC-*`, `spec_*`, `*_completo`). A v1 foi incorporada a esta pasta em `anexo-v1/`, sem alteração de conteúdo, para que a v2 seja autocontida. Índice do anexo na seção 5.
 > **Método:** Elephant-Goldfish Model (EGM) — brief de conceito, rascunho com o contexto do projeto e revisão por leitores sem contexto (ver [11-governanca-qualidade.md](11-governanca-qualidade.md)).
 
 ---
@@ -196,3 +196,8 @@ Correção aplicada: o módulo "Bancos" nos documentos [12](12-catalogo-modulos.
 | Operação de mídia (LIV-11) | Gravação em fragmentos cifrados de 60 s, com índice de fragmentos, manifesto e verificação de checksum | [10](10-implantacao-operacao.md), seção 10 |
 | Coordenador em aula (LIV-07) | Pode observar aulas da unidade, com registro em auditoria | [40](40-aulas-online-por-portal.md), seção 7 |
 | Consentimento de menor (LIV-01) | Pedido por cláusula do contrato com a instituição. Texto com o jurídico | [40](40-aulas-online-por-portal.md), seção 5 |
+
+
+## 5. Anexo v1 (incorporado)
+
+A coleção v1 está em [anexo-v1/](anexo-v1/) (62 arquivos, sem alteração de conteúdo). Cada arquivo tem um status em [12-catalogo-modulos.md](12-catalogo-modulos.md) (seções 2 a 4): especificado, revisar, substituído ou removido. Não é preciso consultar a pasta original fora deste repositório.
