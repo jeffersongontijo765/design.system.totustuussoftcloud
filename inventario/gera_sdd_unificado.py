@@ -27,6 +27,31 @@ def ancora(texto):
     return re.sub(r'[^a-z0-9]+', '-', t.lower()).strip('-')
 
 
+V1_NOMES = set()
+
+
+def desvincula(texto):
+    """Nenhum link aponta para fora do arquivo: documentos viram âncoras, caminhos do repositório viram texto.
+
+    - link para documento da v2 (NN-*.md) -> âncora do documento;
+    - link para arquivo da v1 (anexo-v1/ ou nome direto) -> âncora da especificação;
+    - link para caminho do repositório (kit-starter/, docs/, ../) -> só o texto;
+    - link http(s) e âncora interna (#...) -> mantidos.
+    """
+    def troca(m):
+        rotulo, alvo = m.group(1), m.group(2).strip()
+        if alvo.startswith(('http://', 'https://', 'mailto:')) or alvo.startswith('#'):
+            return m.group(0)
+        base = os.path.basename(alvo.split('#')[0])
+        mm = re.match(r'^(\d\d)-', base)
+        if mm and base.endswith('.md') and mm.group(1) in NUMEROS_V2:
+            return f'[{rotulo}](#doc-{mm.group(1)})'
+        if base in V1_NOMES:
+            return f'[{rotulo}](#v1-{ancora(base)})'
+        return rotulo
+    return re.sub(r'\[([^\]]+)\]\(([^)\s]+)\)', troca, texto)
+
+
 def rebaixa(texto, niveis, teto=6):
     saida, em_codigo = [], False
     for linha in texto.splitlines():
@@ -79,8 +104,14 @@ def mapeamento():
     return itens
 
 
+NUMEROS_V2 = set()
+
+
 def main():
+    global NUMEROS_V2
     docs = docs_v2()
+    NUMEROS_V2 = {n for n, _, _ in docs}
+    V1_NOMES.update(os.listdir(ANEXO))
     itens = mapeamento()
     v1_por_doc = {n: [] for n, _, _ in docs}
     colocado = set()
@@ -104,7 +135,7 @@ def main():
 
     def bloco_v1(arq, linhas, situacao, outros):
         caminho = os.path.join(ANEXO, arq)
-        texto = rebaixa(le(caminho).strip(), 3) if os.path.isfile(caminho) else '_Arquivo ausente._'
+        texto = rebaixa(desvincula(le(caminho).strip()), 3) if os.path.isfile(caminho) else '_Arquivo ausente._'
         return (f'<a id="v1-{ancora(arq)}"></a>\n\n#### v1 — `{arq}` ({linhas} linhas)\n\n'
                 f'*Situação na v2: {situacao}.*\n\n{texto}\n')
 
@@ -129,14 +160,14 @@ def main():
 
     corpo = []
     for n, caminho, t in docs:
-        texto = rebaixa(sem_titulo(le(caminho)), 2)
+        texto = rebaixa(desvincula(sem_titulo(le(caminho))), 2)
         corpo.append(f'<a id="doc-{n}"></a>\n\n## {n} — {t}\n\n{texto}\n')
         for arq, linhas, situacao, nums in v1_por_doc[n]:
             corpo.append(bloco_v1(arq, linhas, situacao, nums))
     corpo.append('<a id="v1-no-kit"></a>\n\n## Especificações v1 absorvidas no kit-starter\n\n'
                  'Estas especificações viraram fichas do kit-starter. Aqui está o texto integral da v1; a ficha tem as regras da v2 por cima.\n')
     for arq, linhas, situacao, kit in grupos['kit']:
-        corpo.append(bloco_v1(arq, linhas, situacao, []) + f'\n*Ficha do kit-starter: [{kit[0]}](../{kit[0]}).*\n')
+        corpo.append(bloco_v1(arq, linhas, situacao, []) + f'\n*Ficha do kit-starter: `{kit[0]}`.*\n')
     corpo.append('\n<a id="v1-resto"></a>\n\n## Substituídas, fora do escopo e vazias\n')
     for grupo, titulo in (('fora', 'Fora do escopo'),
                           ('vazio', 'Vazias'), ('nao_classificado', 'Sem destino declarado')):
