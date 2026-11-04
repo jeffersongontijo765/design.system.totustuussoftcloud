@@ -36,7 +36,7 @@ Garantir que nenhuma mudança de portal chegue aos clientes sem revisão, com ve
 ## 8. Permissões e papéis
 - Acesso: `platform.builder` (nível 7, escopo plataforma), com passkey e sessão de curta duração, e reautenticação antes de publicar (SDD 78, §4.1; SDD 31, seção 4).
 - Editar e aprovar: não pode ser a mesma pessoa (SDD 78, §2.2).
-- Quem aprova a revisão é um papel diferente do autor. **Papel exato não definido** (pendência D-33).
+- Quem aprova a publicação é `platform.developer`, diferente de quem editou (`platform.builder`), conforme D-33 aprovada pelo desenvolvedor (SDD 78).
 
 ## 9. Exportação e auditoria
 - Cada edição, aprovação, publicação e rollback gera registro (SDD 29; SDD 23 §3). Acesso ao editor é registrado.
@@ -49,5 +49,5 @@ Garantir que nenhuma mudança de portal chegue aos clientes sem revisão, com ve
 - O editor não aceita HTML, PHP ou JavaScript livre: só definições declarativas (SDD 23, seção 3).
 
 ## 12. Pendências e decisões
-- Papel aprovador (D-33): **[Sem detalhamento]**. Proposta: `platform.developer` aprova o que o `platform.builder` edita.
+- Papel aprovador: `platform.developer` (D-33, aprovada).
 - Tempo máximo de revisão e regra de rollback automático: **[Sem detalhamento]**.

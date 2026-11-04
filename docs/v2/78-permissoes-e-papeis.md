@@ -42,7 +42,7 @@ Regras de nível:
 
 | Ação | Não pode ser feita pela mesma pessoa |
 |---|---|
-| Criar e aprovar mudança no Editor de portais | Sim ([23](23-dominios-provisionamento-ciclo-de-vida.md), seção 3) |
+| Criar e aprovar mudança no Editor de portais: quem edita é `platform.builder` e quem aprova é `platform.developer` (D-33) | Sim ([23](23-dominios-provisionamento-ciclo-de-vida.md), seção 3) |
 | Lançar nota e aprovar a nota | Sim |
 | Cadastrar fornecedor e aprovar pagamento | Sim |
 | Criar usuário e conceder papel de nível 3 ou acima | Sim |
@@ -129,7 +129,7 @@ Papéis listados por portal, com o nível máximo previsto. Permissões detalhad
 | D-30 | Nomes e códigos dos papéis de gestão | Os códigos da seção 4 | Nomes livres por entidade, mapeados para os níveis |
 | D-31 | Papel de professor que também coordena | Dois papéis, um por portal | Um papel com acúmulo de escopo |
 | D-32 | Papel do responsável com mais de um aluno | Escopo `proprio` com dependentes vinculados | Papel por aluno |
-| D-33 | Papel que aprova a publicação no Editor de portais (diferente de quem editou) | `platform.developer` aprova o que o `platform.builder` edita | Papel de revisão separado, criado só para isso |
+| D-33 | Papel que aprova a publicação no Editor de portais (diferente de quem editou) | `platform.developer` aprova o que o `platform.builder` edita. **Aprovada pelo autor (desenvolvedor), em 03/11/2026.** | Papel de revisão separado, criado só para isso |
 
 ## 7. Critérios de aceite
 
