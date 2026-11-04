@@ -13818,18 +13818,20 @@ CREATE TABLE assinaturas_signatarios (
 
 ### 1. Resposta direta
 
+Atualizado em 04/11/2026: os itens que esta verificação marcava como lacuna foram especificados nos documentos 58 a 70. A tabela abaixo aponta onde cada um está.
+
 | Pergunta | Veredito |
 |---|---|
 | Matrícula e rematrícula estão completas? | **Sim**, em [46](#parte-46), com estados, janelas, condicional e trancamento |
-| Estrutura acadêmica (cursos, grades, disciplinas, períodos, calendário) está especificada? | **Não.** Aparece só como nome de entidade em [17](#parte-17), seção 4.1 |
-| Notas, boletim e aprovação? | **Não.** Só a regra "nota dentro da faixa do método" |
-| Frequência, faltas e justificativas? | **Parcial.** QR Code e sala online estão especificados. Faltas, justificativas e cálculo de frequência não |
-| Diário, planos de aula e de ensino? | **Não** como especificação. Há estados do diário em [17](#parte-17), seção 4.3 |
-| Ocorrências disciplinares? | **Não.** Há ocorrências de SST, em outro contexto |
-| Conselho de classe, recuperação paralela, portfólio? | **Não** |
-| Estágio, TCC? | **Parcial** para estágio (campos em [17](#parte-17)). **Não** para TCC |
-| Livros digitais (registro e atas)? | **Parcial.** Atas em [53](#parte-53), DC-18. Livro de registro, não |
-| Relatórios acadêmicos e censo? | **Não** |
+| Estrutura acadêmica (cursos, grades, disciplinas, períodos, calendário) está especificada? | **Sim**, em [59](#parte-59) e [58](#parte-58) |
+| Notas, boletim e aprovação? | **Sim**, em [61](#parte-61), seção 5, e [62](#parte-62) |
+| Frequência, faltas e justificativas? | **Sim**, em [61](#parte-61), seções 3 e 4 |
+| Diário, planos de aula e de ensino? | **Sim**, em [61](#parte-61) e [64](#parte-64) |
+| Ocorrências disciplinares? | **Sim**, em [63](#parte-63) |
+| Conselho de classe, recuperação paralela, portfólio? | **Sim**, em [62](#parte-62) (conselho e recuperação) e [66](#parte-66) (portfólio) |
+| Estágio, TCC? | **Sim**, em [65](#parte-65) |
+| Livros digitais (registro e atas)? | **Sim**, em [67](#parte-67) |
+| Relatórios acadêmicos e censo? | **Sim**, em [69](#parte-69) |
 
 ---
 
@@ -13844,54 +13846,54 @@ Itens do menu de referência, na ordem em que aparecem.
 | Empresas | Empresa e unidades: [03](#parte-03) | Coberto no modelo de tenant |
 | Unidades escolares | [03](#parte-03), [44](#parte-44) | Coberto |
 | Salas de aula | [44](#parte-44) | Coberto |
-| Cursos | Só como entidade em [17](#parte-17) | **Lacuna** |
-| Grupos de horários | Não especificado | **Lacuna** |
-| Disciplinas | Só como entidade em [17](#parte-17) | **Lacuna** |
-| Grades curriculares | Só como entidade. Mapa de equivalência da v1 não especificado | **Lacuna** |
-| Períodos letivos | Não especificado | **Lacuna** |
+| Cursos | [59](#parte-59), seção 3.1 | Coberto |
+| Grupos de horários | [60](#parte-60), seção 3 | Coberto |
+| Disciplinas | [59](#parte-59), seção 3.2 | Coberto |
+| Grades curriculares | [59](#parte-59), seções 3.3 e 3.5 (equivalência) | Coberto |
+| Períodos letivos | [59](#parte-59), seção 3.6 | Coberto |
 | Funcionários | [39](#parte-39) | Coberto como RH |
 | Documentos (pendentes) | [54](#parte-54), contexto A | Coberto |
-| Sistemas avaliativos | Só "método de avaliação" em [17](#parte-17) | **Lacuna** |
-| Calendários escolares | Não especificado | **Lacuna** |
+| Sistemas avaliativos | [59](#parte-59), seção 4 | Coberto |
+| Calendários escolares | [58](#parte-58) | Coberto |
 | Planos de pagamento | [18](#parte-18) e [26](#parte-26) | Coberto no financeiro |
 
 #### 2.2 Secretaria
 
 | Item do iScholar | Cobertura no SDD | Situação |
 |---|---|---|
-| Turmas | [46](#parte-46), M-07 (enturmação) | Parcial. Sem cadastro de turma |
+| Turmas | [60](#parte-60), seção 2; enturmação em [46](#parte-46), M-07 | Coberto |
 | Responsáveis | [46](#parte-46), [07](#parte-07) | Coberto no vínculo |
-| Alunos | [17](#parte-17), seção 4.2 | Parcial. Sem prontuário detalhado |
+| Alunos | [17](#parte-17), seção 4.2; prontuário em [66](#parte-66) | Coberto |
 | Matrículas | [46](#parte-46) | Coberto |
 | Alunos potenciais | [22](#parte-22), leads | Coberto no CRM |
 | Modelos de documentos | [48](#parte-48) | Coberto |
-| Ocorrências | Não especificado | **Lacuna** |
+| Ocorrências | [63](#parte-63) | Coberto |
 | Solicitações | [32](#parte-32) e [46](#parte-46) | Coberto pelo protocolo |
-| Agenda de eventos | [40](#parte-40), [43](#parte-43), [44](#parte-44) | Parcial. Sem agenda escolar geral |
+| Agenda de eventos | [58](#parte-58), seção 5 | Coberto |
 | Processos seletivos | [46](#parte-46), seção 4 | Coberto |
-| Gabaritos | [47](#parte-47), MOD-04 | Parcial. Sem especificação do leitor |
+| Gabaritos | [47](#parte-47) e [31](#parte-31), seção 3.6 (leitor próprio ou de terceiro) | Coberto |
 | Secretaria digital (portal externo) | [46](#parte-46), [48](#parte-48) | Coberto |
-| Relatórios | Não especificado | **Lacuna** |
+| Relatórios | [69](#parte-69) e [56](#parte-56), seção 4 | Coberto |
 
 #### 2.3 Diário escolar
 
 | Item do iScholar | Cobertura no SDD | Situação |
 |---|---|---|
-| Notas | [17](#parte-17), seção 4.2 | Parcial. Sem regra de cálculo, de recuperação e de boletim |
-| Aulas (conteúdo) | [47](#parte-47) não; plano de aula só citado | **Lacuna** |
-| Faltas | [17](#parte-17), presença por QR; [40](#parte-40) | Parcial. Sem justificativa |
-| Relatórios | Não especificado | **Lacuna** |
+| Notas | [61](#parte-61), seção 5; boletim e aprovação em [62](#parte-62) | Coberto |
+| Aulas (conteúdo) | [61](#parte-61), seção 2; planos em [64](#parte-64) | Coberto |
+| Faltas | [61](#parte-61), seções 3 e 4 | Coberto |
+| Relatórios | [69](#parte-69) e [56](#parte-56), seção 5 | Coberto |
 
 #### 2.4 Outros módulos do menu
 
 | Item | Cobertura | Situação |
 |---|---|---|
 | Financeiro (parcelas, cobrança, conciliação, NF, cheques, cartões, estoque) | [18](#parte-18), [20](#parte-20), [34](#parte-34) | Coberto no financeiro. Cheques e estoque de cantina não têm especificação |
-| Centros de custo | [17](#parte-17) e [31](#parte-31) | Citado, sem especificação |
+| Centros de custo | [71](#parte-71), seções 3 e 4 (rateio por centro de custo em lançamento e despesa) | Coberto como atributo; sem cadastro próprio especificado |
 | Controle patrimonial | [19](#parte-19), seção 8 | Coberto |
 | Catraca | [35](#parte-35) | Coberto |
-| Biblioteca (bibliografias, empréstimos e reservas) | [31](#parte-31), seção 3.1 | Citado. **Sem especificação própria** |
-| Administração (usuários, grupos, integrações, importação, notificações) | [06](#parte-06), [16](#parte-16), [19](#parte-19), seção 13 | Coberto, exceto importação de dados, que é lacuna |
+| Biblioteca (bibliografias, empréstimos e reservas) | [68](#parte-68) | Coberto |
+| Administração (usuários, grupos, integrações, importação, notificações) | [06](#parte-06), [16](#parte-16), [19](#parte-19), seção 13; importação em [70](#parte-70) | Coberto |
 | Ischolar Intelligence | [27](#parte-27) e [28](#parte-28) | Coberto |
 
 ---
@@ -13900,21 +13902,21 @@ Itens do menu de referência, na ordem em que aparecem.
 
 As lacunas abaixo se apoiam umas nas outras. Por isso a ordem importa.
 
-| Ordem | Módulo a especificar | Depende de | Itens do menu que cobre |
-|---|---|---|---|
-| 1 | **Estrutura acadêmica**: cursos, disciplinas, grades curriculares, períodos letivos, calendário e tipos de curso | Nada | Cursos, disciplinas, grades, períodos, calendários |
-| 2 | **Sistemas avaliativos**: escalas, método de média, recuperação, conceitos, regra de aprovação | 1 | Sistemas avaliativos |
-| 3 | **Turmas e grade de horários**: criação de turma, grupos de horários, enturmação, quadro de aulas | 1 | Turmas, grupos de horários |
-| 4 | **Diário**: chamada, faltas, justificativa, notas por período, conteúdo da aula, fechamento | 2 e 3 | Notas, aulas, faltas, relatórios do diário |
-| 5 | **Boletim e conselho de classe**: boletim, aprovação final, recuperação paralela, ata de conselho | 4 | Boletim, conselho de classe, recuperação paralela |
-| 6 | **Ocorrências disciplinares**: registro, fluxo, notificação ao responsável, sigilo | Nada | Ocorrências |
-| 7 | **Planos de aula e de ensino**: planos por disciplina, revisão pela coordenação | 1 e 3 | Plano de aula, plano de ensino |
-| 8 | **Estágio e TCC** | 1 | Estágio, TCC |
-| 9 | **Prontuário e portfólio do aluno** | 4 e 5 | Perfil e prontuário do aluno, portfólio |
-| 10 | **Livros digitais e arquivo morto**: livro de registro, arquivo digitalizado | 54 | Livro de registro, arquivo morto |
-| 11 | **Biblioteca**: acervo, empréstimo e reserva | Nada | Bibliografias, empréstimos |
-| 12 | **Relatórios e censo** | 1 a 10 | Relatórios de cada módulo |
-| 13 | **Importação de dados** de sistema anterior | 1 a 4 | Importação |
+| Ordem | Módulo a especificar | Depende de | Itens do menu que cobre | Situação em 04/11/2026 |
+|---|---|---|---|---|
+| 1 | **Estrutura acadêmica**: cursos, disciplinas, grades curriculares, períodos letivos, calendário e tipos de curso | Nada | Cursos, disciplinas, grades, períodos, calendários | Especificado em [59](#parte-59) e [58](#parte-58) |
+| 2 | **Sistemas avaliativos**: escalas, método de média, recuperação, conceitos, regra de aprovação | 1 | Sistemas avaliativos | Especificado em [59](#parte-59), seção 4 |
+| 3 | **Turmas e grade de horários**: criação de turma, grupos de horários, enturmação, quadro de aulas | 1 | Turmas, grupos de horários | Especificado em [60](#parte-60) |
+| 4 | **Diário**: chamada, faltas, justificativa, notas por período, conteúdo da aula, fechamento | 2 e 3 | Notas, aulas, faltas, relatórios do diário | Especificado em [61](#parte-61) |
+| 5 | **Boletim e conselho de classe**: boletim, aprovação final, recuperação paralela, ata de conselho | 4 | Boletim, conselho de classe, recuperação paralela | Especificado em [62](#parte-62) |
+| 6 | **Ocorrências disciplinares**: registro, fluxo, notificação ao responsável, sigilo | Nada | Ocorrências | Especificado em [63](#parte-63) |
+| 7 | **Planos de aula e de ensino**: planos por disciplina, revisão pela coordenação | 1 e 3 | Plano de aula, plano de ensino | Especificado em [64](#parte-64) |
+| 8 | **Estágio e TCC** | 1 | Estágio, TCC | Especificado em [65](#parte-65) |
+| 9 | **Prontuário e portfólio do aluno** | 4 e 5 | Perfil e prontuário do aluno, portfólio | Especificado em [66](#parte-66) |
+| 10 | **Livros digitais e arquivo morto**: livro de registro, arquivo digitalizado | 54 | Livro de registro, arquivo morto | Especificado em [67](#parte-67) |
+| 11 | **Biblioteca**: acervo, empréstimo e reserva | Nada | Bibliografias, empréstimos | Especificado em [68](#parte-68) |
+| 12 | **Relatórios e censo** | 1 a 10 | Relatórios de cada módulo | Especificado em [69](#parte-69) |
+| 13 | **Importação de dados** de sistema anterior | 1 a 4 | Importação | Especificado em [70](#parte-70) |
 
 ---
 
@@ -13952,6 +13954,8 @@ Estas são de produto. Não as tomo sozinho.
 
 ### 1. Resposta direta
 
+Atualizado em 04/11/2026: feriados ([58](#parte-58)), campos personalizados ([72](#parte-72)) e tipos de justificativa de falta ([61](#parte-61)) passaram a coberto. A regra geral de relatórios e o catálogo por módulo estão no [69](#parte-69), seções 2 e 3. As contagens abaixo são as da verificação original e ficam como histórico.
+
 | Área | Itens no menu | Cobertos | Parciais | Lacunas | Fora do escopo |
 |---|---|---|---|---|---|
 | Configurações | 19 | 5 | 6 | 6 | 2 (rejeitado, incluindo "Outras") |
@@ -13974,8 +13978,8 @@ Contagem feita a partir das tabelas das seções 2 a 7. Financeiro é contado po
 | Financeiro (configurações gerais) | Parcial | [18](#parte-18), [34](#parte-34) |
 | Mensagens de carnê | Lacuna | Modelo de carnê não especificado. Ver [53](#parte-53), DC-25 |
 | Mensagens de NFS-e | Parcial | [34](#parte-34), seção 5 |
-| Gerenciar feriados | Lacuna | Só citado em [44](#parte-44) e [51](#parte-51). **Precisa de calendário** ([55](#parte-55), item 1) |
-| Campos personalizados | Lacuna | Não especificado em nenhum documento |
+| Gerenciar feriados | Coberto | [58](#parte-58), seções 3 e 4: dia não letivo (feriado, recesso, ponto facultativo) no calendário da unidade |
+| Campos personalizados | Coberto | [72](#parte-72) (CFG-06) |
 | Matrícula online | Coberto | [46](#parte-46), seção 3 |
 | Gerenciar tokens | Coberto | [06](#parte-06) e [04](#parte-04) |
 | Fuso horário | Parcial | Horários em UTC, com exibição no fuso da unidade ([44](#parte-44)). Configuração por unidade não especificada |
@@ -13984,13 +13988,15 @@ Contagem feita a partir das tabelas das seções 2 a 7. Financeiro é contado po
 | Preferências de comunicação | Parcial | Consentimento por finalidade em [32](#parte-32), seção 3.2. Sem tela de canal preferido |
 | Tipos de descontos | Parcial | [18](#parte-18), seção 2.6 (acumulação decidida). Tipos não listados |
 | Catraca | Coberto | [35](#parte-35) |
-| Tipos de justificativa de falta | Lacuna | Depende de frequência ([55](#parte-55), item 4) |
+| Tipos de justificativa de falta | Coberto | [61](#parte-61), seção 4.2 |
 | Integração de parceiros | Coberto | [16](#parte-16) |
 | Outras configurações | Não aplicável | Genérico |
 
 ---
 
 ### 3. Relatórios: regra geral que falta
+
+Atualizado em 04/11/2026: a regra geral foi escrita no [69](#parte-69), seção 2 (tipos, ciclo, formatos e regras), com o catálogo por módulo na seção 3. O texto abaixo é a análise original.
 
 Nenhum documento define como um relatório é gerado. Proposta, para ser validada:
 

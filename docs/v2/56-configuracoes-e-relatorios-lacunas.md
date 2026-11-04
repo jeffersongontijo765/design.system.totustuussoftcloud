@@ -7,6 +7,8 @@
 
 ## 1. Resposta direta
 
+Atualizado em 04/11/2026: feriados ([58](58-calendario-e-eventos-por-portal.md)), campos personalizados ([72](72-campos-personalizados-por-portal.md)) e tipos de justificativa de falta ([61](61-diario-escolar-por-portal.md)) passaram a coberto. A regra geral de relatórios e o catálogo por módulo estão no [69](69-relatorios-e-censo-por-portal.md), seções 2 e 3. As contagens abaixo são as da verificação original e ficam como histórico.
+
 | Área | Itens no menu | Cobertos | Parciais | Lacunas | Fora do escopo |
 |---|---|---|---|---|---|
 | Configurações | 19 | 5 | 6 | 6 | 2 (rejeitado, incluindo "Outras") |
@@ -29,8 +31,8 @@ Contagem feita a partir das tabelas das seções 2 a 7. Financeiro é contado po
 | Financeiro (configurações gerais) | Parcial | [18](18-regras-modulos-2.md), [34](34-pagamentos-fiscal-bancos-por-portal.md) |
 | Mensagens de carnê | Lacuna | Modelo de carnê não especificado. Ver [53](53-pacote-documentos-e-contratos.md), DC-25 |
 | Mensagens de NFS-e | Parcial | [34](34-pagamentos-fiscal-bancos-por-portal.md), seção 5 |
-| Gerenciar feriados | Lacuna | Só citado em [44](44-agendamento-ambientes-equipamentos.md) e [51](51-ddl-modulos-novos.md). **Precisa de calendário** ([55](55-academico-verificacao-e-lacunas.md), item 1) |
-| Campos personalizados | Lacuna | Não especificado em nenhum documento |
+| Gerenciar feriados | Coberto | [58](58-calendario-e-eventos-por-portal.md), seções 3 e 4: dia não letivo (feriado, recesso, ponto facultativo) no calendário da unidade |
+| Campos personalizados | Coberto | [72](72-campos-personalizados-por-portal.md) (CFG-06) |
 | Matrícula online | Coberto | [46](46-matricula-e-rematricula-por-portal.md), seção 3 |
 | Gerenciar tokens | Coberto | [06](06-identidade-acesso.md) e [04](04-api.md) |
 | Fuso horário | Parcial | Horários em UTC, com exibição no fuso da unidade ([44](44-agendamento-ambientes-equipamentos.md)). Configuração por unidade não especificada |
@@ -39,13 +41,15 @@ Contagem feita a partir das tabelas das seções 2 a 7. Financeiro é contado po
 | Preferências de comunicação | Parcial | Consentimento por finalidade em [32](32-atendimento-privacidade-por-portal.md), seção 3.2. Sem tela de canal preferido |
 | Tipos de descontos | Parcial | [18](18-regras-modulos-2.md), seção 2.6 (acumulação decidida). Tipos não listados |
 | Catraca | Coberto | [35](35-acesso-e-seguranca-fisica-por-portal.md) |
-| Tipos de justificativa de falta | Lacuna | Depende de frequência ([55](55-academico-verificacao-e-lacunas.md), item 4) |
+| Tipos de justificativa de falta | Coberto | [61](61-diario-escolar-por-portal.md), seção 4.2 |
 | Integração de parceiros | Coberto | [16](16-integracoes-externas.md) |
 | Outras configurações | Não aplicável | Genérico |
 
 ---
 
 ## 3. Relatórios: regra geral que falta
+
+Atualizado em 04/11/2026: a regra geral foi escrita no [69](69-relatorios-e-censo-por-portal.md), seção 2 (tipos, ciclo, formatos e regras), com o catálogo por módulo na seção 3. O texto abaixo é a análise original.
 
 Nenhum documento define como um relatório é gerado. Proposta, para ser validada:
 

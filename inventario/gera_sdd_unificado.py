@@ -109,80 +109,79 @@ NUMEROS_V2 = set()
 
 def main():
     global NUMEROS_V2
-    docs = docs_v2()
-    NUMEROS_V2 = {n for n, _, _ in docs}
+    import sys
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from sdd_partes import PARTES, KIT_PARTE
+    docs = {n: (c, t) for n, c, t in docs_v2()}
+    NUMEROS_V2 = set(docs)
     V1_NOMES.update(os.listdir(ANEXO))
-    itens = mapeamento()
-    v1_por_doc = {n: [] for n, _, _ in docs}
-    colocado = set()
-    grupos = {'kit': [], 'substituido': [], 'fora': [], 'vazio': [], 'nao_classificado': []}
-    for arq, linhas, situacao, nums, kit in itens:
-        if kit:
-            grupos['kit'].append((arq, linhas, situacao, kit))
-            continue
-        if 'Fora do escopo' in situacao or 'Removido' in situacao:
-            grupos['fora'].append((arq, linhas, situacao, []))
-            continue
-        if 'vazio' in situacao.lower():
-            grupos['vazio'].append((arq, linhas, situacao, []))
-            continue
-        if not nums:
-            grupos['nao_classificado'].append((arq, linhas, situacao, []))
-            continue
-        alvo = nums[0]
-        v1_por_doc[alvo].append((arq, linhas, situacao, nums))
-        colocado.add(arq)
+    parte_do_doc = {d: P['n'] for P in PARTES for d in P['docs']}
+    faltam = sorted(set(docs) - set(parte_do_doc))
+    if faltam:
+        raise SystemExit(f'documentos sem parte: {faltam}')
 
-    def bloco_v1(arq, linhas, situacao, outros):
+    # onde entra cada especificação da v1
+    v1_apos_doc = {n: [] for n in docs}          # logo depois do documento que a absorveu
+    v1_fim_parte = {P['n']: [] for P in PARTES}   # no fim da parte (absorvidas no kit, fora do escopo, vazias)
+    for arq, linhas, situacao, nums, kit in mapeamento():
+        if kit:
+            parte = next((pn for pref, pn in KIT_PARTE if kit[0].startswith('kit-starter/' + pref)), PARTES[-1]['n'])
+            v1_fim_parte[parte].append((arq, linhas, situacao, f'ficha do kit-starter: `{kit[0]}`'))
+        elif nums:
+            v1_apos_doc[nums[0]].append((arq, linhas, situacao, ''))
+        else:
+            v1_fim_parte[PARTES[-1]['n']].append((arq, linhas, situacao, ''))
+
+    def bloco_v1(arq, linhas, situacao, nota):
         caminho = os.path.join(ANEXO, arq)
         texto = rebaixa(desvincula(le(caminho).strip()), 3) if os.path.isfile(caminho) else '_Arquivo ausente._'
-        return (f'<a id="v1-{ancora(arq)}"></a>\n\n#### v1 — `{arq}` ({linhas} linhas)\n\n'
-                f'*Situação na v2: {situacao}.*\n\n{texto}\n')
+        extra = f' Destino: {nota}.' if nota else ''
+        return (f'<a id="v1-{ancora(arq)}"></a>\n\n### v1 — `{arq}` ({linhas} linhas)\n\n'
+                f'> Situação na v2: {situacao}.{extra} Quando este texto diverge da v2, vale a v2.\n\n{texto}\n')
 
     hoje = datetime.date.today().isoformat()
-    indice = [
-        '# SDD unificado: v1 e v2',
+    out = [
+        '# SDD TotusTuus SoftCloud — documento único (v1 + v2)',
         '',
-        f'Gerado em {hoje} por `inventario/gera_sdd_unificado.py`. Não editar à mão.',
+        f'Gerado em {hoje} por `inventario/gera_sdd_unificado.py`. Não editar à mão: a fonte são os documentos da v2, '
+        'as especificações da v1 e a estrutura em `inventario/sdd_partes.py`.',
         '',
-        'Cada documento da v2 vem com as especificações da v1 que ele absorveu, logo abaixo do texto dele. '
-        'A situação de cada arquivo da v1 está na seção 3 do [79](#doc-79).',
+        '## Como ler',
+        '',
+        '- O SDD está dividido em 19 partes, por assunto. Cada parte começa com uma visão geral: resumo, diagramas dos fluxos e estados e regras principais.',
+        '- Depois da visão geral vem o texto integral de cada documento da v2 da parte e, logo abaixo de cada um, o texto integral das especificações da v1 que ele absorveu.',
+        '- No fim de cada parte estão as especificações da v1 que viraram fichas do kit-starter.',
+        '- Quando a v1 e a v2 divergem, vale a v2. Nenhum link aponta para fora deste arquivo.',
         '',
         '## Índice',
         '',
     ]
-    for n, _, t in docs:
-        indice.append(f'- [{n} — {t}](#doc-{n})')
-        for arq, linhas, situacao, nums in v1_por_doc[n]:
-            indice.append(f'  - [v1 `{arq}`](#v1-{ancora(arq)}) — {situacao.lower()}')
-    indice += ['', '- [Especificações v1 absorvidas no kit-starter (texto integral)](#v1-no-kit)',
-               '- [Substituídas, fora do escopo e vazias](#v1-resto)', '']
-
-    corpo = []
-    for n, caminho, t in docs:
-        texto = rebaixa(desvincula(sem_titulo(le(caminho))), 2)
-        corpo.append(f'<a id="doc-{n}"></a>\n\n## {n} — {t}\n\n{texto}\n')
-        for arq, linhas, situacao, nums in v1_por_doc[n]:
-            corpo.append(bloco_v1(arq, linhas, situacao, nums))
-    corpo.append('<a id="v1-no-kit"></a>\n\n## Especificações v1 absorvidas no kit-starter\n\n'
-                 'Estas especificações viraram fichas do kit-starter. Aqui está o texto integral da v1; a ficha tem as regras da v2 por cima.\n')
-    for arq, linhas, situacao, kit in grupos['kit']:
-        corpo.append(bloco_v1(arq, linhas, situacao, []) + f'\n*Ficha do kit-starter: `{kit[0]}`.*\n')
-    corpo.append('\n<a id="v1-resto"></a>\n\n## Substituídas, fora do escopo e vazias\n')
-    for grupo, titulo in (('fora', 'Fora do escopo'),
-                          ('vazio', 'Vazias'), ('nao_classificado', 'Sem destino declarado')):
-        if not grupos[grupo]:
-            continue
-        corpo.append(f'### {titulo}\n')
-        for arq, linhas, situacao, nums in grupos[grupo]:
-            corpo.append(bloco_v1(arq, linhas, situacao, nums))
-
-    saida = '\n'.join(indice) + '\n' + '\n'.join(corpo)
+    for P in PARTES:
+        out.append(f'- [Parte {P["n"]} — {P["titulo"]}](#parte-{P["n"]})')
+        for d in P['docs']:
+            out.append(f'  - [{d} — {docs[d][1]}](#doc-{d})')
+            for arq, *_ in v1_apos_doc[d]:
+                out.append(f'    - [v1 `{arq}`](#v1-{ancora(arq)})')
+        for arq, *_ in v1_fim_parte[P['n']]:
+            out.append(f'  - [v1 `{arq}`](#v1-{ancora(arq)})')
+    out.append('')
+    for P in PARTES:
+        out += ['---', '', f'<a id="parte-{P["n"]}"></a>', '', f'# Parte {P["n"]} — {P["titulo"]}', '',
+                f'## Visão geral da parte {P["n"]}', '', P['abertura'].strip(), '']
+        for d in P['docs']:
+            caminho, t = docs[d]
+            out.append(f'<a id="doc-{d}"></a>\n\n## {d} — {t}\n\n{rebaixa(desvincula(sem_titulo(le(caminho))), 2)}\n')
+            for item in v1_apos_doc[d]:
+                out.append(bloco_v1(*item))
+        if v1_fim_parte[P['n']]:
+            out.append(f'## Especificações da v1 desta parte absorvidas no kit-starter ou sem destino\n')
+            for item in v1_fim_parte[P['n']]:
+                out.append(bloco_v1(*item))
+    saida = '\n'.join(out) + '\n'
     open(SAIDA, 'w', encoding='utf8').write(saida)
-    print('gerado:', os.path.relpath(SAIDA, ROOT), len(saida.splitlines()), 'linhas,',
-          len(saida.encode('utf8')) // 1024, 'KB |', sum(len(v) for v in v1_por_doc.values()), 'v1 por documento |',
-          len(grupos['kit']), 'no kit |', len(grupos['substituido']), 'substituídas |',
-          len(grupos['fora']), 'fora |', len(grupos['vazio']), 'vazias |', len(grupos['nao_classificado']), 'sem destino')
+    n_v1 = sum(len(v) for v in v1_apos_doc.values()) + sum(len(v) for v in v1_fim_parte.values())
+    print('gerado:', os.path.relpath(SAIDA, ROOT), len(saida.splitlines()), 'linhas,', len(saida.encode('utf8')) // 1024,
+          'KB |', len(PARTES), 'partes |', len(docs), 'documentos v2 |', n_v1, 'especificações v1')
 
 
 if __name__ == '__main__':
