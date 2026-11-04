@@ -2,7 +2,7 @@
 
 Gerado por `inventario/gera_inventario.py` a partir de `docs/v2/31-matriz-portais-modulos.md`, seção 2.
 Nível: portal → área → módulo. As telas de cada módulo são detalhadas antes de implementar.
-Total de módulos listados: 189. Status inicial: nenhum implementado.
+Total de módulos listados: 190. Status inicial: nenhum implementado.
 
 
 ## 2.1 Portal do Desenvolvedor (`desenvolvedor.`) — equipe da plataforma
@@ -79,7 +79,7 @@ Escopo: Seção 3.2
 
 ### Segurança e operação
 
-Escopo: [05](../docs/v2/05-seguranca.md), [07](../docs/v2/07-privacidade-lgpd.md), [10](../docs/v2/10-implantacao-operacao.md)
+Escopo: [05](../docs/v2/05-seguranca.md), [07](../docs/v2/07-privacidade-lgpd.md), [10](../docs/v2/10-implantacao-operacao.md). Painel de bancos de dados: substitui o módulo Bancos (PAG-03, [34](../docs/v2/34-pagamentos-fiscal-bancos-por-portal.md), seção 4)
 
 - [ ] Acesso
 - [ ] MFA
@@ -88,6 +88,7 @@ Escopo: [05](../docs/v2/05-seguranca.md), [07](../docs/v2/07-privacidade-lgpd.md
 - [ ] TI
 - [ ] configurações do sistema
 - [ ] integrações globais
+- [ ] painel de bancos de dados
 
 ## 2.2 Portal de Gestão (`gestao.`) — equipe administrativa da entidade
 

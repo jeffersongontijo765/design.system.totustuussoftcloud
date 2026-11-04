@@ -30,7 +30,7 @@ Legenda de origem: **P** = plataforma (banco master); **E** = entidade/unidade (
 | Operações internas | Patrimônio, frotas, suprimentos da empresa | P | **Decidido** em 03/11/2026: mantidos, como instâncias separadas dos módulos das entidades |
 | Pessoas da plataforma | Departamento pessoal, recursos humanos, medicina e segurança do trabalho da empresa | P | Mesma decisão. O HCM das entidades não é o da plataforma. Três módulos separados, conforme HCM-01 e HCM-10 do [39](39-departamento-pessoal-rh-medicina-por-portal.md), seção 11 |
 | Suporte | Chamados dos clientes, base de conhecimento, SLA | P | Seção 3.2 |
-| Segurança e operação | Acesso, MFA, auditoria, privacidade (DPO), TI, configurações do sistema, integrações globais | P | [05](05-seguranca.md), [07](07-privacidade-lgpd.md), [10](10-implantacao-operacao.md) |
+| Segurança e operação | Acesso, MFA, auditoria, privacidade (DPO), TI, configurações do sistema, integrações globais, painel de bancos de dados | P | [05](05-seguranca.md), [07](07-privacidade-lgpd.md), [10](10-implantacao-operacao.md). Painel de bancos de dados: substitui o módulo Bancos (PAG-03, [34](34-pagamentos-fiscal-bancos-por-portal.md), seção 4) |
 
 ### 2.2 Portal de Gestão (`gestao.`) — equipe administrativa da entidade
 

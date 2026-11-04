@@ -5698,7 +5698,7 @@ Legenda de origem: **P** = plataforma (banco master); **E** = entidade/unidade (
 | Operações internas | Patrimônio, frotas, suprimentos da empresa | P | **Decidido** em 03/11/2026: mantidos, como instâncias separadas dos módulos das entidades |
 | Pessoas da plataforma | Departamento pessoal, recursos humanos, medicina e segurança do trabalho da empresa | P | Mesma decisão. O HCM das entidades não é o da plataforma. Três módulos separados, conforme HCM-01 e HCM-10 do [39](#parte-39), seção 11 |
 | Suporte | Chamados dos clientes, base de conhecimento, SLA | P | Seção 3.2 |
-| Segurança e operação | Acesso, MFA, auditoria, privacidade (DPO), TI, configurações do sistema, integrações globais | P | [05](#parte-05), [07](#parte-07), [10](#parte-10) |
+| Segurança e operação | Acesso, MFA, auditoria, privacidade (DPO), TI, configurações do sistema, integrações globais, painel de bancos de dados | P | [05](#parte-05), [07](#parte-07), [10](#parte-10). Painel de bancos de dados: substitui o módulo Bancos (PAG-03, [34](#parte-34), seção 4) |
 
 #### 2.2 Portal de Gestão (`gestao.`) — equipe administrativa da entidade
 
@@ -8950,7 +8950,7 @@ Continua com o autor, no texto corrido: lista de jurisdições (seção 8.2). Fr
 
 #### 2.1 Especificações da v1 ainda não absorvidas na v2
 
-Dezessete arquivos de [anexo-v1/](anexo-v1/) estão no catálogo, mas nenhum documento da v2 usa o conteúdo deles (lista e situação em [79](#parte-79), seção 3, situação "Só catalogado"). **Antes de implementar o módulo correspondente, a especificação da v1 deve ser lida e as regras trazidas para a v2.** Responsável: owner de cada módulo. Ao absorver, regerar o [79](#parte-79).
+Sete arquivos (na data de 04/11/2026; a contagem viva está no [79](#parte-79)) de [anexo-v1/](anexo-v1/) estão no catálogo, mas nenhum documento da v2 usa o conteúdo deles (lista e situação em [79](#parte-79), seção 3, situação "Só catalogado"). **Antes de implementar o módulo correspondente, a especificação da v1 deve ser lida e as regras trazidas para a v2.** Responsável: owner de cada módulo. Ao absorver, regerar o [79](#parte-79).
 
 ---
 
@@ -17415,6 +17415,12 @@ Papéis listados por portal, com o nível máximo previsto. Permissões detalhad
 | `platform.hr` | 1 | plataforma (HCM da empresa) | Papel **RH** do [22](#parte-22), seção 5, no escopo do HCM-01: recrutamento, onboarding, avaliação, clima, treinamento |
 | `platform.sst.doctor` | 1 | plataforma (SST da empresa) | Médico do trabalho: ASO completo, prontuário, CID ([39](#parte-39), HCM-06) |
 | `platform.sst.technician` | 1 | plataforma (SST da empresa) | Técnico de SESMT: ocorrências, EPI, NR, PGR, CAT, sem diagnóstico ([39](#parte-39), HCM-06) |
+| `platform.security` | 5 | plataforma (segurança) | Papel **Segurança** do [22](#parte-22), seção 5: investigar, bloquear conta, política de MFA, autorizar visualização de segredo de tenant com motivo; não concede permissão a si mesmo |
+| `platform.dpo` | 5 | plataforma (privacidade) | Papel **Encarregado** do [22](#parte-22), seção 5: relatório de impacto, pedidos de titular, ROPA, incidentes, painel do DPO (LGPD-07); não opera o módulo que audita |
+| `platform.ops` | 5 | plataforma (infraestrutura) | Papel **TI / Operação** do [22](#parte-22), seção 5: serviços, filas, backup, certificados, inventário de bancos, pedido de restauração e de acesso de emergência ([34](#parte-34), seção 4); sem acesso a dado pessoal de entidade |
+| `platform.integration` | 6 | plataforma (integrações) | Configurar integrações de plataforma (`plataforma.integracao.*`, [16](#parte-16), seção 1); nunca vê segredo de tenant em texto claro |
+
+Aprovação técnica: migração em lote, restauração de backup e escrita em acesso de emergência exigem aprovação de `platform.developer` como segundo papel, por pessoa diferente de quem pediu ([34](#parte-34), seção 4).
 
 #### 4.2 Portal de Gestão (SaaS da entidade)
 
@@ -17515,10 +17521,10 @@ Papéis listados por portal, com o nível máximo previsto. Permissões detalhad
 
 | Situação | Arquivos |
 |---|---|
-| Absorvido em parte em | 24 |
-| Só catalogado | 13 |
+| Absorvido integralmente no kit-starter | 20 |
+| Absorvido em parte em | 20 |
 | Substituído | 12 |
-| Absorvido integralmente no kit-starter | 10 |
+| Só catalogado | 7 |
 | Fora do escopo do produto | 2 |
 | Arquivo vazio (placeholder), sem conteúdo a absorver | 1 |
 
@@ -17531,7 +17537,7 @@ Papéis listados por portal, com o nível máximo previsto. Permissões detalhad
 | [`03-domain-model.md`](anexo-v1/03-domain-model.md) | 55 | Substituído | Substituído por 03 |
 | [`04-api-standards.md`](anexo-v1/04-api-standards.md) | 78 | Substituído | Substituído por 04 |
 | [`05-security-architecture.md`](anexo-v1/05-security-architecture.md) | 69 | Substituído | Substituído por 05 |
-| [`06-i18n-l10n.md`](anexo-v1/06-i18n-l10n.md) | 223 | Revisar | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
+| [`06-i18n-l10n.md`](anexo-v1/06-i18n-l10n.md) | 223 | Revisar | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/seguranca-e-operacao/configuracoes-do-sistema.md |
 | [`06-tenancy.md`](anexo-v1/06-tenancy.md) | 95 | Substituído | Substituído por 03 |
 | [`07-identity-auth.md`](anexo-v1/07-identity-auth.md) | 75 | Substituído | Substituído por 06 |
 | [`08-privacy-lgpd.md`](anexo-v1/08-privacy-lgpd.md) | 66 | Substituído | Substituído por 07 |
@@ -17542,7 +17548,7 @@ Papéis listados por portal, com o nível máximo previsto. Permissões detalhad
 | [`chart-builder-spec-complete.md`](anexo-v1/chart-builder-spec-complete.md) | 1499 | Especificado | Absorvido em parte em: 31 |
 | [`client-migration-module-spec-completo.md`](anexo-v1/client-migration-module-spec-completo.md) | 1207 | Especificado | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
 | [`global_meeting_spec_v2_complete.md`](anexo-v1/global_meeting_spec_v2_complete.md) | 620 | Especificado em v2 | Absorvido em parte em: 31, 40 |
-| [`language_locale_selector_spec.md`](anexo-v1/language_locale_selector_spec.md) | 387 | Revisar | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
+| [`language_locale_selector_spec.md`](anexo-v1/language_locale_selector_spec.md) | 387 | Revisar | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/seguranca-e-operacao/configuracoes-do-sistema.md |
 | [`penetration-test-spec-v2.md`](anexo-v1/penetration-test-spec-v2.md) | 529 | Especificado | Absorvido em parte em: 24 |
 | [`sdd-mestre-php8-mvc-saas.md`](anexo-v1/sdd-mestre-php8-mvc-saas.md) | 535 | Substituído | Substituído por 00 e 02 |
 | [`slsa-build-spec.md`](anexo-v1/slsa-build-spec.md) | 356 | Especificado | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
@@ -17551,15 +17557,15 @@ Papéis listados por portal, com o nível máximo previsto. Permissões detalhad
 | [`SPEC-HELPDESK.md`](anexo-v1/SPEC-HELPDESK.md) | 929 | Revisar | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/suporte/chamados-dos-clientes.md |
 | [`SPEC-LAYOUT-TICKET.md`](anexo-v1/SPEC-LAYOUT-TICKET.md) | 350 | Especificado | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/suporte/chamados-dos-clientes.md |
 | [`spec-soft-delete-totustuus.md`](anexo-v1/spec-soft-delete-totustuus.md) | 248 | Especificado | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
-| [`spec-sub-sidebar-privacidade-lgpd.md`](anexo-v1/spec-sub-sidebar-privacidade-lgpd.md) | 321 | Revisar | Absorvido em parte em: 32 |
+| [`spec-sub-sidebar-privacidade-lgpd.md`](anexo-v1/spec-sub-sidebar-privacidade-lgpd.md) | 321 | Revisar | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/seguranca-e-operacao/privacidade-dpo.md |
 | [`spec_chat_rapido_sac.md`](anexo-v1/spec_chat_rapido_sac.md) | 294 | Revisar | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/suporte/chamados-dos-clientes.md |
-| [`spec_complementar_integracoes_governanca.md`](anexo-v1/spec_complementar_integracoes_governanca.md) | 307 | Especificado | Absorvido em parte em: 14 |
+| [`spec_complementar_integracoes_governanca.md`](anexo-v1/spec_complementar_integracoes_governanca.md) | 307 | Especificado | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/seguranca-e-operacao/integracoes-globais.md |
 | [`spec_crm_funil_comercial.md`](anexo-v1/spec_crm_funil_comercial.md) | 244 | Especificado | Absorvido em parte em: 22 |
 | [`spec_education_saas_architecture.md`](anexo-v1/spec_education_saas_architecture.md) | 729 | Revisar | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
 | [`spec_gestao_academica_completo.md`](anexo-v1/spec_gestao_academica_completo.md) | 1382 | Especificado | Absorvido em parte em: 31, 40, 46, 55, 64, 65, 66, 67, 69, 70 |
 | [`spec_gestao_armazenamento_completo.md`](anexo-v1/spec_gestao_armazenamento_completo.md) | 1380 | Revisar | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
-| [`spec_gestao_auditoria_completo.md`](anexo-v1/spec_gestao_auditoria_completo.md) | 731 | Especificado | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
-| [`spec_gestao_autenticacao_completo.md`](anexo-v1/spec_gestao_autenticacao_completo.md) | 1001 | Revisar | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
+| [`spec_gestao_auditoria_completo.md`](anexo-v1/spec_gestao_auditoria_completo.md) | 731 | Especificado | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/seguranca-e-operacao/auditoria.md |
+| [`spec_gestao_autenticacao_completo.md`](anexo-v1/spec_gestao_autenticacao_completo.md) | 1001 | Revisar | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/seguranca-e-operacao/acesso.md |
 | [`spec_gestao_bancos.md`](anexo-v1/spec_gestao_bancos.md) | 305 | Removido do escopo | Fora do escopo do produto |
 | [`spec_gestao_bancos_completo.md`](anexo-v1/spec_gestao_bancos_completo.md) | 305 | Removido do escopo | Fora do escopo do produto |
 | [`spec_gestao_biblioteca_academica.md`](anexo-v1/spec_gestao_biblioteca_academica.md) | 275 | Revisar | Absorvido em parte em: 68 |
@@ -17567,22 +17573,22 @@ Papéis listados por portal, com o nível máximo previsto. Permissões detalhad
 | [`spec_gestao_billing_cobranca_mensalidades.md`](anexo-v1/spec_gestao_billing_cobranca_mensalidades.md) | 1433 | Especificado | Absorvido em parte em: 16, 18, 34 |
 | [`spec_gestao_contabil_fiscal_completo.md`](anexo-v1/spec_gestao_contabil_fiscal_completo.md) | 294 | Especificado | Absorvido em parte em: 31 |
 | [`spec_gestao_contratos_completo.md`](anexo-v1/spec_gestao_contratos_completo.md) | 1377 | Especificado | Absorvido em parte em: 33 |
-| [`spec_gestao_cookies_sessions.md`](anexo-v1/spec_gestao_cookies_sessions.md) | 474 | Revisar | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
+| [`spec_gestao_cookies_sessions.md`](anexo-v1/spec_gestao_cookies_sessions.md) | 474 | Revisar | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/seguranca-e-operacao/acesso.md |
 | [`spec_gestao_documentos_completo.md`](anexo-v1/spec_gestao_documentos_completo.md) | 546 | Revisar | Absorvido em parte em: 48 |
 | [`spec_gestao_financeiro_completo.md`](anexo-v1/spec_gestao_financeiro_completo.md) | 1532 | Especificado | Absorvido em parte em: 71 |
 | [`spec_gestao_frotas_completo.md`](anexo-v1/spec_gestao_frotas_completo.md) | 1558 | Especificado | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/operacoes-internas/frotas.md |
-| [`spec_gestao_logger_completo.md`](anexo-v1/spec_gestao_logger_completo.md) | 1038 | Revisar | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
+| [`spec_gestao_logger_completo.md`](anexo-v1/spec_gestao_logger_completo.md) | 1038 | Revisar | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/seguranca-e-operacao/auditoria.md |
 | [`spec_gestao_marketing_redes_sociais.md`](anexo-v1/spec_gestao_marketing_redes_sociais.md) | 350 | Especificado | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
 | [`spec_gestao_notificacoes.md`](anexo-v1/spec_gestao_notificacoes.md) | 378 | Revisar | Absorvido em parte em: 57 |
 | [`spec_gestao_notificacoes_revisada.md`](anexo-v1/spec_gestao_notificacoes_revisada.md) | 642 | Revisar | Absorvido em parte em: 57 |
 | [`spec_gestao_pessoas_completo.md`](anexo-v1/spec_gestao_pessoas_completo.md) | 1257 | Especificado | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/pessoas-da-plataforma/departamento-pessoal.md |
-| [`spec_gestao_privacy_global_completo.md`](anexo-v1/spec_gestao_privacy_global_completo.md) | 345 | Revisar | Absorvido em parte em: 32 |
+| [`spec_gestao_privacy_global_completo.md`](anexo-v1/spec_gestao_privacy_global_completo.md) | 345 | Revisar | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/seguranca-e-operacao/privacidade-dpo.md |
 | [`spec_gestao_rh_completo.md`](anexo-v1/spec_gestao_rh_completo.md) | 1319 | Revisar | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/pessoas-da-plataforma/recursos-humanos.md |
 | [`spec_gestao_sac_base_conhecimento.md`](anexo-v1/spec_gestao_sac_base_conhecimento.md) | 443 | Revisar | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/suporte/base-de-conhecimento.md |
 | [`spec_gestao_seguranca_medicina_trabalho_completo.md`](anexo-v1/spec_gestao_seguranca_medicina_trabalho_completo.md) | 1581 | Especificado | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/pessoas-da-plataforma/medicina-e-seguranca-do-trabalho-da-empresa.md |
 | [`spec_gestao_simulados_ia.md`](anexo-v1/spec_gestao_simulados_ia.md) | 683 | Especificado em v2 | Absorvido em parte em: 31, 47 |
 | [`spec_gestao_suprimentos_v3_consolidado.md`](anexo-v1/spec_gestao_suprimentos_v3_consolidado.md) | 1271 | Especificado | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/operacoes-internas/suprimentos-da-empresa.md |
-| [`spec_gestao_ti_completa.md`](anexo-v1/spec_gestao_ti_completa.md) | 882 | Revisar | Absorvido em parte em: 36 |
+| [`spec_gestao_ti_completa.md`](anexo-v1/spec_gestao_ti_completa.md) | 882 | Revisar | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/seguranca-e-operacao/ti.md |
 | [`spec_object_storage_digital_assets.md`](anexo-v1/spec_object_storage_digital_assets.md) | 237 | Revisar | Absorvido em parte em: 21 |
 | [`spec_patrimonio_completo.md`](anexo-v1/spec_patrimonio_completo.md) | 1309 | Especificado | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/operacoes-internas/patrimonio.md |
 | [`sub_sidebar_itsm.php`](anexo-v1/sub_sidebar_itsm.php) | 151 | Revisar | Absorvido em parte em: 36 |
@@ -17612,3 +17618,4 @@ Papéis listados por portal, com o nível máximo previsto. Permissões detalhad
 | DP-01 | Frotas nesta versão (pendência do autor em [45](#parte-45), seção 2) | **Entra nesta versão**, para a empresa e para as entidades | Completude; a especificação da v1 é completa e o transporte escolar é uso real | Deixar para versão futura | Portal do desenvolvedor (operações internas) e portal de gestão |
 | DP-02 | Regra de depreciação por categoria (lacuna L-18 do [19](#parte-19)) | Cada categoria de ativo tem método e taxa **aprovados pelo contábil**. Categoria sem regra aprovada **não deprecia** e aparece como pendência no painel | Critério 3: não inventar taxa contábil; não deixar ativo sem controle | Taxa padrão do sistema para todas as categorias | Patrimônio (empresa e entidade) |
 | DP-03 | Papéis de patrimônio e frotas (não definidos no [22](#parte-22), seção 5) | Operador (nível 1) e aprovador (nível 2) separados, para patrimônio e para frotas. Compras, almoxarifado e aprovador de compras seguem o [22](#parte-22), seção 5 | Critério 4; mesmo padrão dos papéis departamentais já aprovados | Um único papel por módulo | [78](#parte-78), seção 4.1 (plataforma) |
+| DP-04 | Conteúdo das configurações do sistema da plataforma (não definido em nenhum documento) | Configurações agrupadas pelo documento do SDD que define cada regra (idiomas [09](#parte-09); senha, sessão e MFA [06](#parte-06); limites de API [04](#parte-04); e-mail e integrações [16](#parte-16); cache [30](#parte-30); manutenção [24](#parte-24)). Toda mudança exige step-up, motivo, auditoria e gera versão com rollback. Valor fora do limite do documento de origem é recusado | Critérios 1 e 4; o sistema não aceita configuração que contrarie o SDD | Tela livre de chave e valor | Portal do desenvolvedor (segurança e operação) |

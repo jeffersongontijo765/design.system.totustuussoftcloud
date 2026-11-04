@@ -94,6 +94,12 @@ Papéis listados por portal, com o nível máximo previsto. Permissões detalhad
 | `platform.hr` | 1 | plataforma (HCM da empresa) | Papel **RH** do [22](22-crm-canais-e-papeis.md), seção 5, no escopo do HCM-01: recrutamento, onboarding, avaliação, clima, treinamento |
 | `platform.sst.doctor` | 1 | plataforma (SST da empresa) | Médico do trabalho: ASO completo, prontuário, CID ([39](39-departamento-pessoal-rh-medicina-por-portal.md), HCM-06) |
 | `platform.sst.technician` | 1 | plataforma (SST da empresa) | Técnico de SESMT: ocorrências, EPI, NR, PGR, CAT, sem diagnóstico ([39](39-departamento-pessoal-rh-medicina-por-portal.md), HCM-06) |
+| `platform.security` | 5 | plataforma (segurança) | Papel **Segurança** do [22](22-crm-canais-e-papeis.md), seção 5: investigar, bloquear conta, política de MFA, autorizar visualização de segredo de tenant com motivo; não concede permissão a si mesmo |
+| `platform.dpo` | 5 | plataforma (privacidade) | Papel **Encarregado** do [22](22-crm-canais-e-papeis.md), seção 5: relatório de impacto, pedidos de titular, ROPA, incidentes, painel do DPO (LGPD-07); não opera o módulo que audita |
+| `platform.ops` | 5 | plataforma (infraestrutura) | Papel **TI / Operação** do [22](22-crm-canais-e-papeis.md), seção 5: serviços, filas, backup, certificados, inventário de bancos, pedido de restauração e de acesso de emergência ([34](34-pagamentos-fiscal-bancos-por-portal.md), seção 4); sem acesso a dado pessoal de entidade |
+| `platform.integration` | 6 | plataforma (integrações) | Configurar integrações de plataforma (`plataforma.integracao.*`, [16](16-integracoes-externas.md), seção 1); nunca vê segredo de tenant em texto claro |
+
+Aprovação técnica: migração em lote, restauração de backup e escrita em acesso de emergência exigem aprovação de `platform.developer` como segundo papel, por pessoa diferente de quem pediu ([34](34-pagamentos-fiscal-bancos-por-portal.md), seção 4).
 
 ### 4.2 Portal de Gestão (SaaS da entidade)
 

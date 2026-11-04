@@ -252,6 +252,119 @@ FICHAS = [
   dados="- Regras de SLA e contagem no DDL do atendimento ([51]({51-ddl-modulos-novos.md}), seção 1).",
   integracoes="- Chamados: prazo calculado na abertura e recalculado em cada mudança de estado.\n- Notificações de alerta e de estouro ([57]({57-notificacoes-por-portal.md})).\n- Contrato do cliente: limite de SLA contratado.",
   pendencias="- Nenhuma além das do atendimento ([32]({32-atendimento-privacidade-por-portal.md}), seção 2.10)."),
+ dict(arquivo='desenvolvedor/seguranca-e-operacao/acesso.md', v1=['spec_gestao_autenticacao_completo.md', 'spec_gestao_cookies_sessions.md'],
+  titulo='Acesso (identidade, autenticação, sessão e autorização)', portal='Desenvolvedor (`desenvolvedor.`)', area='Segurança e operação', dominio=PLAT,
+  objetivo='Gerir contas, vínculos, papéis, sessões e tokens de toda a plataforma: conta global única, login no domínio de autenticação, RBAC com contexto e contas de plataforma.',
+  correcoes="""- **O [06]({06-identidade-acesso.md}) prevalece em tudo** que as especificações da v1 duplicam ([19]({19-regras-modulos-3.md}), seção 2): tipos de identidade, autenticação, senhas, recuperação de conta, limites de tentativa, sessão, tokens de API, RBAC com contexto, contas de plataforma (break-glass) e conta global com vínculos (seção 12). A v1 fica só com o que é específico de tela.
+- **Cookies e sessões** ficam no [06]({06-identidade-acesso.md}); a especificação de cookies da v1 é aproveitada só no que não contradiz o 06.
+- **Conta global por e-mail verificado** (D-21) e **token só com o contexto ativo** (D-20) ([06]({06-identidade-acesso.md}), seção 12).
+- **Login só no domínio de autenticação**, com OIDC e PKCE (D-22, [23]({23-dominios-provisionamento-ciclo-de-vida.md}), seção 2).
+- **Papéis e níveis** conforme o [78]({78-permissoes-e-papeis.md}); criação de entidade e unidade só por `platform.developer` (L-02).
+- **Contas de plataforma:** no máximo 5 ativas, passkey obrigatória, alerta em tempo real a cada uso; break-glass com credencial offline em dois cofres ([06]({06-identidade-acesso.md}), seção 10).""",
+  decisoes="- Nenhuma decisão nova: regras do [06]({06-identidade-acesso.md}) e do [78]({78-permissoes-e-papeis.md}).",
+  papeis="- `platform.security` (papel **Segurança** do [22]({22-crm-canais-e-papeis.md}), seção 5): investigar, bloquear conta; não concede permissão a si mesmo.\n- `platform.manager` e `platform.developer`: conceder papéis conforme o nível ([78]({78-permissoes-e-papeis.md}), seção 2.1).\n- Toda concessão e revogação com justificativa para níveis 3 e acima; revisão trimestral.",
+  dados="- Contas e vínculos no master; dados civis no banco de identidade da entidade (D-19). Modelos da v1 (seção 13) só onde não contradizem o [06]({06-identidade-acesso.md}).",
+  integracoes="- E-mail transacional da plataforma para verificação e recuperação (D-04, [16]({16-integracoes-externas.md}), seção 2).\n- Captcha após tentativas ([06]({06-identidade-acesso.md}), seção 6).",
+  privacidade="- Login, sessão e vínculos registrados na auditoria do master ([29]({29-auditoria.md}), seção 3).",
+  pendencias="- Nenhuma além das do [06]({06-identidade-acesso.md}) e do [45]({45-pendencias-consolidadas.md})."),
+ dict(arquivo='desenvolvedor/seguranca-e-operacao/mfa.md', v1=[],
+  titulo='MFA (autenticação multifator)', portal='Desenvolvedor (`desenvolvedor.`)', area='Segurança e operação', dominio=PLAT,
+  objetivo='Configurar e acompanhar a autenticação multifator de todas as contas, com regra mais forte para contas de plataforma.',
+  telas="""- **Política de MFA** (configuração): fatores aceitos, obrigatoriedade por tipo de conta e por papel.
+- **Painel de MFA** (dashboard): contas com e sem MFA por portal, passkeys cadastradas, contas de plataforma sem passkey.
+- **Fatores da conta** (drawer em Acesso): cadastrar, revogar e recuperar fator, com step-up.""",
+  correcoes="""- **MFA** conforme o [06]({06-identidade-acesso.md}), seção 5: fatores, cadastro e recuperação. **SMS não é fator de MFA** ([16]({16-integracoes-externas.md}), seção 2).
+- **Contas de plataforma:** passkey obrigatória; conta sem passkey é desativada no primeiro login após a migração ([06]({06-identidade-acesso.md}), seção 10).
+- **Step-up:** ações sensíveis (exportação, alteração de papel, exclusão, ver segredo de integração) exigem autenticação recente ([78]({78-permissoes-e-papeis.md}), seção 5).
+- A especificação de autenticação da v1 que trata de MFA está absorvida na ficha [acesso.md](acesso.md).""",
+  decisoes="- Nenhuma decisão nova.",
+  papeis="- `platform.security`: política de MFA e painel.\n- Cada usuário: os próprios fatores.",
+  dados="- Fatores e passkeys no master, cifrados ([05]({05-seguranca.md})).",
+  integracoes="- E-mail transacional para recuperação (D-04).",
+  pendencias="- Nenhuma além das do [06]({06-identidade-acesso.md})."),
+ dict(arquivo='desenvolvedor/seguranca-e-operacao/auditoria.md', v1=['spec_gestao_auditoria_completo.md', 'spec_gestao_logger_completo.md'],
+  titulo='Auditoria', portal='Desenvolvedor (`desenvolvedor.`)', area='Segurança e operação', dominio=PLAT,
+  objetivo='Registrar, proteger e consultar a trilha de auditoria de negócio e de segurança da plataforma, com integridade por cadeia de hash e acesso controlado.',
+  correcoes="""- **O [29]({29-auditoria.md}) prevalece:** categorias, formato do evento, onde fica (ações da plataforma no master; ações de unidade no banco da unidade), integridade por cadeia de hash com verificação horária e ancoragem diária, imutabilidade (a aplicação só faz `INSERT` e `SELECT`), acesso por papel, mascaramento, retenção e alertas.
+- **Auditoria × Logger** ([19]({19-regras-modulos-3.md}), seção 2): a Auditoria é dona da trilha de negócio e de segurança ([18]({18-regras-modulos-2.md}), seção 4); o logger técnico fica no [10]({10-implantacao-operacao.md}), seção 7. A especificação do Logger da v1 é absorvida só como referência técnica, sem dado pessoal nos logs ([07]({07-privacidade-lgpd.md}), seção 6).
+- **Toda leitura gera evento** (`audit.read`); exportação exige MFA recente e motivo; auditoria de outra entidade é impossível pela aplicação ([29]({29-auditoria.md}), seção 5).
+- **Suporte da plataforma** vê eventos técnicos e de sessão do chamado, sem dado de aluno sem vínculo.""",
+  decisoes="- Nenhuma decisão nova.",
+  papeis="- `platform.auditor` (nível 2): leitura de auditoria e relatórios de conformidade, com mascaramento padrão.\n- `platform.security`: investigação e alertas.\n- `platform.dpo`: consultas por CPF, leituras de cadastro civil e pedidos de titular.\n- Ninguém altera evento: correção é novo evento que referencia o original.",
+  dados="- Esquema do evento do [29]({29-auditoria.md}), seção 2, que prevalece sobre os modelos da v1.",
+  integracoes="- Exportação diária assinada para armazenamento de longo prazo ([29]({29-auditoria.md}), seção 3).\n- Alertas para o canal de segurança ([29]({29-auditoria.md}), seção 8).",
+  pendencias="- Lacunas do [29]({29-auditoria.md}), seção 10."),
+ dict(arquivo='desenvolvedor/seguranca-e-operacao/privacidade-dpo.md', v1=['spec_gestao_privacy_global_completo.md', 'spec-sub-sidebar-privacidade-lgpd.md'],
+  titulo='Privacidade e encarregado (DPO) da plataforma', portal='Desenvolvedor (`desenvolvedor.`)', area='Segurança e operação', dominio=PLAT,
+  objetivo='Cumprir a LGPD como controladora (dados da própria plataforma) e como operadora (dados das entidades): inventário, bases legais, consentimento, pedidos de titular, ROPA, incidentes e painel do DPO.',
+  correcoes="""- **O [07]({07-privacidade-lgpd.md}) e o [32]({32-atendimento-privacidade-por-portal.md}), seções 3 a 5, prevalecem** ([19]({19-regras-modulos-3.md}), seção 2: privacidade global consolidada no 07; cookies e sessões no 06).
+- **DPO da plataforma** (LGPD-07, [32]({32-atendimento-privacidade-por-portal.md}), seção 7): a empresa desenvolvedora, por encarregado indicado por ela, com painel no portal do desenvolvedor. Cada entidade designa o próprio DPO.
+- **Painel do DPO** ([32]({32-atendimento-privacidade-por-portal.md}), seção 3.7); **pedido do titular** (seção 3.3); **ROPA** (seção 3.4); **incidentes e comunicação à ANPD** ([07]({07-privacidade-lgpd.md}), seção 8).
+- **Operadora:** a plataforma não usa dado de entidade fora do contrato de tratamento ([07]({07-privacidade-lgpd.md}), seção 7).
+- **Separação de funções:** o DPO não opera o módulo que audita ([22]({22-crm-canais-e-papeis.md}), seção 5).""",
+  decisoes="- Nenhuma decisão nova.",
+  papeis="- `platform.dpo` (papel **Encarregado** do [22]({22-crm-canais-e-papeis.md}), seção 5): relatório de impacto, relatório ao titular, aprovação de finalidade, painel do DPO.",
+  dados="- Consentimentos, pedidos de titular, ROPA e incidentes da plataforma no master. Modelos da v1 (seção 13) só onde não contradizem o [07]({07-privacidade-lgpd.md}).",
+  integracoes="- Atendimento: pedido de titular recebe protocolo (ATD-01).\n- Auditoria: consultas por CPF e leituras de cadastro civil ([29]({29-auditoria.md}), seção 5).",
+  privacidade="- Métricas de privacidade conforme [07]({07-privacidade-lgpd.md}), seção 9.",
+  pendencias="- Forma de designação e contato público do DPO (jurídico), no [32]({32-atendimento-privacidade-por-portal.md}), seção 7.\n- Lacunas do [07]({07-privacidade-lgpd.md}), seção 10."),
+ dict(arquivo='desenvolvedor/seguranca-e-operacao/ti.md', v1='spec_gestao_ti_completa.md',
+  titulo='TI da plataforma', portal='Desenvolvedor (`desenvolvedor.`)', area='Segurança e operação', dominio=PLAT,
+  objetivo='Operar a infraestrutura da plataforma: backup e restauração, certificados, monitoramento, filas, cache, manutenção programada e segredos.',
+  correcoes="""- **Dois assuntos com o mesmo nome** ([36]({36-tecnologia-da-informacao-por-portal.md}), seção 2): esta ficha é a TI **da plataforma** (seção 3 do 36). A TI **da entidade** (ativos, chamados, licenças da escola) fica no portal de gestão.
+- **Recursos** ([36]({36-tecnologia-da-informacao-por-portal.md}), seção 3): backup e restauração ([24]({24-operacao-continuidade-qualidade.md}), seção 1), certificados com alerta a 14 dias ([10]({10-implantacao-operacao.md}), seção 7), monitoramento, filas e workers ([14]({14-integracao-modulos.md})), cache ([30]({30-cache.md})), manutenção programada ([24]({24-operacao-continuidade-qualidade.md}), seção 3), inventário de segredos ([05]({05-seguranca.md}), seção 2).
+- **Toda ação de infraestrutura** é registrada na auditoria, categoria "processo", com `portal = desenvolvedor`.
+- **Mudança sem plano de volta não é aprovada** ([36]({36-tecnologia-da-informacao-por-portal.md})).
+- **`sub_sidebar_itsm.php`** da v1 é código de view com `onclick=` (ACH-01) e não faz parte desta ficha ([12]({12-catalogo-modulos.md}), seção 3).""",
+  decisoes="- Nenhuma decisão nova. Escolha de provedor de nuvem, DNS e cluster segue o [10]({10-implantacao-operacao.md}).",
+  papeis="- `platform.ops` (papel **TI / Operação** do [22]({22-crm-canais-e-papeis.md}), seção 5): operar serviços, filas, backup e certificados; sem acesso a dado pessoal de entidade.\n- `platform.developer`: aprovar mudança e manutenção programada (segundo papel).",
+  dados="- Inventário de serviços, certificados e segredos no master; segredos só por referência ao cofre.",
+  integracoes="- Monitoramento e erros, sem PII ([16]({16-integracoes-externas.md}), seção 2).\n- Backup externo cifrado, com chave fora do provedor.",
+  pendencias="- Lacunas do [36]({36-tecnologia-da-informacao-por-portal.md}), seção 3: prazo de retenção de backup (G-12), dono de cada certificado, painel por serviço e escalonamento, limite de fila por entidade, dimensionamento do cache (CAC-01), janela de manutenção e aviso, provedor de nuvem."),
+ dict(arquivo='desenvolvedor/seguranca-e-operacao/configuracoes-do-sistema.md', v1=['language_locale_selector_spec.md', '06-i18n-l10n.md'],
+  titulo='Configurações do sistema', portal='Desenvolvedor (`desenvolvedor.`)', area='Segurança e operação', dominio=PLAT,
+  objetivo='Manter as configurações globais da plataforma, agrupadas pelo documento do SDD que define cada regra, com mudança auditada e reversível.',
+  correcoes="""- **Idiomas e locale:** o [09]({09-internacionalizacao.md}) prevalece; as especificações da v1 de idioma e seletor de locale estão consolidadas nele ([12]({12-catalogo-modulos.md})).
+- **Grupos de configuração** (DP-04): idiomas e formatos ([09]({09-internacionalizacao.md})); senha, sessão e MFA ([06]({06-identidade-acesso.md})); limites de API ([04]({04-api.md})); e-mail e integrações ([16]({16-integracoes-externas.md})); cache ([30]({30-cache.md})); manutenção ([24]({24-operacao-continuidade-qualidade.md})); tokens e webhooks ([04]({04-api.md}), [16]({16-integracoes-externas.md})).
+- **Valor fora do limite** do documento de origem é recusado (por exemplo, sessão mais longa que o máximo do 06).
+- Configurações de entidade (feriados, fuso, campos personalizados) ficam no portal de gestão ([56]({56-configuracoes-e-relatorios-lacunas.md}), seção 2).""",
+  decisoes="- **DP-04** ([80]({80-decisoes-por-padrao.md})): grupos pelo documento de origem; toda mudança com step-up, motivo, auditoria e versão com rollback.",
+  papeis="- `platform.developer`: alterar configurações de segurança e de limites.\n- `platform.ops`: alterar configurações operacionais (cache, manutenção).\n- Toda mudança vista por `platform.auditor`.",
+  dados="- Configurações versionadas no master: chave, valor, versão, autor, motivo, data.",
+  integracoes="- Cache: invalidação na mudança de configuração ([30]({30-cache.md})).",
+  pendencias="- Nenhuma além das do [09]({09-internacionalizacao.md})."),
+ dict(arquivo='desenvolvedor/seguranca-e-operacao/integracoes-globais.md', v1='spec_complementar_integracoes_governanca.md',
+  titulo='Integrações globais (plataforma)', portal='Desenvolvedor (`desenvolvedor.`)', area='Segurança e operação', dominio=PLAT,
+  objetivo='Gerir as integrações contratadas e pagas pela plataforma e acompanhar, sem ver segredos, as integrações das entidades.',
+  correcoes="""- **Dois níveis** ([16]({16-integracoes-externas.md}), seção 1): plataforma (credencial no cofre da plataforma, permissão `plataforma.integracao.*`) e tenant (cofre com chave por tenant).
+- **Credencial de tenant** nunca visível em texto claro para a equipe da plataforma; ver o segredo exige step-up, motivo e alerta ao canal de segurança.
+- **Catálogo da plataforma** ([16]({16-integracoes-externas.md}), seção 2): e-mail transacional (obrigatório), SMS (não é MFA, desligado por padrão), armazenamento de objetos, antivírus de upload, captcha, cobrança da assinatura do SaaS, backup externo, monitoramento sem PII, verificação de documento opcional.
+- **Ciclo de vida, segurança das chamadas, auditoria e testes** ([16]({16-integracoes-externas.md}), seções 5, 7, 9 e 10); governança da v1 ligada ao [04]({04-api.md}), seção 7.""",
+  decisoes="- Nenhuma decisão nova (D-04 a D-08 aprovadas no [16]({16-integracoes-externas.md}), seção 6).",
+  papeis="- `platform.integration` (nível 6): configurar integrações de plataforma (`plataforma.integracao.*`).\n- `platform.security`: autorizar a visualização de segredo de tenant, com motivo.",
+  dados="- Conexões e segredos por referência ao cofre; nunca em texto claro no banco.",
+  integracoes="- Todas as do catálogo do [16]({16-integracoes-externas.md}), seção 2.",
+  pendencias="- Escolha do provedor de captcha (ADR próprio, [16]({16-integracoes-externas.md}), seção 2)."),
+ dict(arquivo='desenvolvedor/seguranca-e-operacao/painel-de-bancos-de-dados.md', v1=[],
+  titulo='Painel de bancos de dados', portal='Desenvolvedor (`desenvolvedor.`)', area='Segurança e operação', dominio=PLAT,
+  objetivo='Gerir todos os bancos da plataforma (master, bancos de unidade e bancos de identidade) sem expor o conteúdo deles. Substitui o módulo "Bancos" da v1, removido do escopo (PAG-03).',
+  telas="""- **Inventário de bancos** (datatable): master, cada banco de unidade, cada banco de identidade; versão do esquema, tamanho e última restauração testada.
+- **Migrações** (datatable por unidade e página de migração em lote com plano de volta e aprovação).
+- **Backups** (datatable): estado e prazo de cada backup; pedido de restauração com dupla aprovação.
+- **Acesso técnico de emergência** (página de pedido): motivo, chamado vinculado, tempo da sessão, leitura ou escrita.""",
+  correcoes="""- **Regras do [34]({34-pagamentos-fiscal-bancos-por-portal.md}), seção 4 (PAG-03):**
+  - Não existe console SQL no painel comum.
+  - Migração em lote só com plano de volta e aprovação de segundo papel.
+  - Restauração só por pedido com dupla aprovação, em ambiente isolado.
+  - Acesso técnico direto só por procedimento de emergência: passkey, motivo e chamado vinculado, sessão de tempo limitado, leitura por padrão, escrita só com dupla aprovação; cada comando gravado e mascarado ([29]({29-auditoria.md})).
+  - Consulta que atinja dado pessoal exige motivo e gera evento de auditoria.
+  - Nenhum portal de entidade vê este painel.
+- **Especificações "Bancos" da v1** (`spec_gestao_bancos.md` e `spec_gestao_bancos_completo.md`): fora do escopo e **não absorvidas**, porque expõem console SQL a todos os clientes ([03]({03-dominio-tenancy.md})).""",
+  decisoes="- Nenhuma decisão nova (PAG-03 decidido em 03/11/2026).",
+  papeis="- `platform.ops`: consultar inventário, acompanhar migrações e backups, pedir restauração e acesso de emergência.\n- `platform.developer`: aprovar migração em lote, restauração e escrita de emergência (segundo papel); a dupla aprovação exige duas pessoas diferentes de quem pediu.",
+  dados="- Metadados dos bancos no master (`tenant_databases`, versão de esquema, backups). Nenhum dado de cliente é lido pelo painel.",
+  integracoes="- Provisionamento ([provisionamento.md](../plataforma-e-clientes/provisionamento.md)): cria banco e registro.\n- Backup externo ([16]({16-integracoes-externas.md}), seção 2).",
+  pendencias="- Prazo de retenção de backup (G-12, [36]({36-tecnologia-da-informacao-por-portal.md}), seção 3)."),
 ]
 
 for cfg in FICHAS:
