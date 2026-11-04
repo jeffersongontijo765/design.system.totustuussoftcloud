@@ -42,7 +42,7 @@ Nenhum item de tabela aberto. OCO-01, BIB-04, IA-01, IA-07 e NOT-01, e o prazo d
 
 Continuam com o autor, no texto corrido: Frotas nesta versão e lista de jurisdições (seções 8.5 e 8.2).
 
-**Propostas de licenciamento e permissões ainda sem resposta do autor:** D-27 (bloqueio de novas matrículas ao exceder o limite de alunos), D-28 (carência de 15 dias na inadimplência), D-29 (preço e ciclo por plano), D-30 (códigos dos papéis de gestão), D-31 (professor que também coordena) e D-32 (responsável com mais de um aluno). Documentos [77](77-licenciamento-planos-e-limites.md) e [78](78-permissoes-e-papeis.md), seções 5 e 6.
+**Propostas de licenciamento e permissões ainda sem resposta do autor:** D-34 (nome e código do plano), D-35 (módulos incluídos no plano), D-36 (situação do plano), D-37 (situações da assinatura), D-38 (níveis de papel 0 a 7), D-39 (separação de funções) e D-40 (regras transversais de permissão). Documentos [77](77-licenciamento-planos-e-limites.md), seção 5, e [78](78-permissoes-e-papeis.md), seção 6.
 
 ---
 
@@ -312,6 +312,12 @@ Status atualizado no documento de origem, porque a pendência já tinha sido res
 | L-02 | Criar entidade e criar unidade é exclusivo do papel `platform.developer`. **Aprovada em 04/11/2026** ([78](78-permissoes-e-papeis.md), seção 1) |
 | P-01 | Sistema de permissões completo, com níveis de papel, para todos os portais. **Aprovada em 04/11/2026** ([78](78-permissoes-e-papeis.md)) |
 | D-33 | Quem aprova a publicação no Editor de portais é `platform.developer`, diferente de quem edita (`platform.builder`). **Aprovada em 04/11/2026** ([78](78-permissoes-e-papeis.md), seção 6) |
+| D-27 | Ao exceder o limite de alunos, bloquear novas matrículas ativas, sem alterar dados existentes. **Aprovada em 04/11/2026** ([77](77-licenciamento-planos-e-limites.md), seção 4) |
+| D-28 | Carência de 15 dias na inadimplência, ajustável por plano. **Aprovada em 04/11/2026** ([77](77-licenciamento-planos-e-limites.md), seção 3.1) |
+| D-29 | Preço e ciclo definidos pelo desenvolvedor, por plano. **Aprovada em 04/11/2026** ([77](77-licenciamento-planos-e-limites.md), seção 2) |
+| D-30 | Códigos dos papéis de gestão como na seção 4 do [78](78-permissoes-e-papeis.md). **Aprovada em 04/11/2026** |
+| D-31 | Professor que também coordena: dois papéis, um por portal. **Aprovada em 04/11/2026** ([78](78-permissoes-e-papeis.md)) |
+| D-32 | Responsável com mais de um aluno: escopo `proprio` com dependentes vinculados. **Aprovada em 04/11/2026** ([78](78-permissoes-e-papeis.md)) |
 
 ### 9.2 Documentos escritos depois da auditoria
 

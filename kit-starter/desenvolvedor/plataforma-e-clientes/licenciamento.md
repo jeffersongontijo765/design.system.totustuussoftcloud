@@ -19,7 +19,7 @@ Definir quais módulos e recursos cada entidade pode usar. Serve de base para a 
 
 ## 4. Dados
 - Relação entre entidade, licença e módulo. Modelo exato: **[Sem detalhamento]**.
-- Plano e módulos incluídos: definidos em SDD 77, seção 2 (proposta a aprovar).
+- Plano e módulos incluídos: definidos em SDD 77, seção 2 (módulos por plano: proposta D-35).
 
 ## 5. Campos e validações
 - Campos da licença: **[Sem detalhamento]**.

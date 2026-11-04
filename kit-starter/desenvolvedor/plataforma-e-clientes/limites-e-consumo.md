@@ -27,7 +27,7 @@ Acompanhar o consumo de cada entidade e aplicar os limites contratados.
 - Percentual de uso do limite de alunos; aviso ao atingir 90% (SDD 77, seção 4).
 
 ## 7. Ações e confirmações
-- Ajustar limite: `platform.developer` (L-01). Bloqueio de novas matrículas ao exceder: proposta D-27 (SDD 77, seção 4).
+- Ajustar limite: `platform.developer` (L-01). Ao exceder: bloqueio de novas matrículas ativas, sem alterar dados existentes (D-27, aprovada; SDD 77, seção 4).
 
 ## 8. Permissões e papéis
 - Limite de alunos definido por `platform.developer`; leitura por `platform.manager` (SDD 78, §4.1).
@@ -43,4 +43,4 @@ Acompanhar o consumo de cada entidade e aplicar os limites contratados.
 - Exportação CSV com células neutralizadas (`=`, `+`, `@`, tab, retorno de carro).
 
 ## 12. Pendências e decisões
-Todo o módulo: regra de limite de alunos em SDD 77 (proposta); demais recursos **[Sem detalhamento]**. Limites de taxa de API (SDD 04) são outro assunto.
+Todo o módulo: regra de limite de alunos em SDD 77 (L-01 e D-27, aprovadas); demais recursos **[Sem detalhamento]**. Limites de taxa de API (SDD 04) são outro assunto.

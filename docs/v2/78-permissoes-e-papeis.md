@@ -1,7 +1,7 @@
 # 78 — Permissões, papéis e níveis de acesso por portal
 
 > Parte do [SDD v2](00-README.md). Estende [06](06-identidade-acesso.md), seção 9 (RBAC com contexto) e a seção 10 (contas de plataforma). Escopo de portais em [23](23-dominios-provisionamento-ciclo-de-vida.md) e [31](31-matriz-portais-modulos.md).
-> **Status:** L-02, P-01 e D-33 aprovadas pelo autor em 04/11/2026. Itens marcados **[Proposta]** aguardam aprovação do autor (D-30 a D-32).
+> **Status:** L-02, P-01 e D-30 a D-33 aprovadas pelo autor em 04/11/2026. Itens ainda marcados **[Proposta]** estão numerados de D-38 a D-40 (seção 6) e aguardam o autor.
 
 ---
 
@@ -20,7 +20,7 @@
 - **Vínculo:** uma pessoa tem um ou mais vínculos (entidade, unidade, papel). Permissão efetiva é a união dos vínculos ativos, menos as negações.
 - **Negação explícita** vence concessão ([06](06-identidade-acesso.md), seção 9).
 
-### 2.1 Níveis de papel [Proposta]
+### 2.1 Níveis de papel [Proposta] D-38
 
 | Nível | Nome | O que faz | Exemplo |
 |---|---|---|---|
@@ -38,7 +38,7 @@ Regras de nível:
 - Papéis de nível 3 e acima, e todos os da plataforma, exigem **justificativa** e **revisão trimestral** ([06](06-identidade-acesso.md), seção 9).
 - Papéis de nível 0 a 2 têm revisão anual.
 
-### 2.2 Separação de funções [Proposta]
+### 2.2 Separação de funções [Proposta] D-39
 
 | Ação | Não pode ser feita pela mesma pessoa |
 |---|---|
@@ -113,7 +113,7 @@ Papéis listados por portal, com o nível máximo previsto. Permissões detalhad
 | `thirdparty` | 0 | proprio (contrato vinculado) | Ver contratos, entregas, faturas e solicitações da própria organização |
 | `thirdparty.manager` | 1 | entidade (contrato) | Gestão de entregas e faturas do contrato vinculado |
 
-## 5. Regras transversais [Proposta]
+## 5. Regras transversais [Proposta] D-40
 
 1. **Default-deny:** rota ou ação sem papel explícito é negada, como em [03](03-dominio-tenancy.md).
 2. **Escopo verificado no servidor:** o escopo `turma`, `unidade` ou `proprio` é conferido em cada consulta, não só na tela.
@@ -126,10 +126,13 @@ Papéis listados por portal, com o nível máximo previsto. Permissões detalhad
 
 | # | Decisão | Proposta | Alternativa |
 |---|---|---|---|
-| D-30 | Nomes e códigos dos papéis de gestão | Os códigos da seção 4 | Nomes livres por entidade, mapeados para os níveis |
-| D-31 | Papel de professor que também coordena | Dois papéis, um por portal | Um papel com acúmulo de escopo |
-| D-32 | Papel do responsável com mais de um aluno | Escopo `proprio` com dependentes vinculados | Papel por aluno |
-| D-33 | Papel que aprova a publicação no Editor de portais (diferente de quem editou) | `platform.developer` aprova o que o `platform.builder` edita. **Aprovada pelo autor (desenvolvedor), em 03/11/2026.** | Papel de revisão separado, criado só para isso |
+| D-30 | Nomes e códigos dos papéis de gestão | Os códigos da seção 4. **Aprovada pelo autor em 04/11/2026.** | Nomes livres por entidade, mapeados para os níveis |
+| D-31 | Papel de professor que também coordena | Dois papéis, um por portal. **Aprovada pelo autor em 04/11/2026.** | Um papel com acúmulo de escopo |
+| D-32 | Papel do responsável com mais de um aluno | Escopo `proprio` com dependentes vinculados. **Aprovada pelo autor em 04/11/2026.** | Papel por aluno |
+| D-33 | Papel que aprova a publicação no Editor de portais (diferente de quem editou) | `platform.developer` aprova o que o `platform.builder` edita. **Aprovada pelo autor em 04/11/2026.** | Papel de revisão separado, criado só para isso |
+| D-38 | Níveis de papel | Oito níveis, de 0 (próprio) a 7 (desenvolvedor), com as regras da seção 2.1 | Menos níveis, por exemplo 0, 1, 3, 4 e 7 |
+| D-39 | Separação de funções | As cinco ações da seção 2.2 | Lista definida por módulo |
+| D-40 | Regras transversais | As seis regras da seção 5 | Regras definidas por portal |
 
 ## 7. Critérios de aceite
 
