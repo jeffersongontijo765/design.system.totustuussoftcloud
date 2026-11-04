@@ -41,6 +41,16 @@ def limpa(t):
     return re.sub(r'\[`?([^\]`]+)`?\]\([^)]*\)', r'\1', t).replace('|', '/').strip()
 
 
+KIT = os.path.join(ROOT, 'kit-starter')
+absorvidos = {}
+for raiz, _, nomes in os.walk(KIT):
+    for n in nomes:
+        if n.endswith('.md'):
+            t = open(os.path.join(raiz, n), encoding='utf8').read()
+            m = re.search(r'^- Fonte da v1: \[([^\]]+)\]', t, re.M)
+            if m and 'absorvida integralmente' in t:
+                absorvidos.setdefault(m.group(1), []).append(os.path.relpath(os.path.join(raiz, n), ROOT).replace(os.sep, '/'))
+
 linhas_tab = []
 contagem = {}
 for nome in sorted(os.listdir(ANEXO), key=str.lower):
@@ -55,7 +65,10 @@ for nome in sorted(os.listdir(ANEXO), key=str.lower):
     sec = secao_catalogo(nome)
     citado_em = [f for f, t in docs.items() if cita(nome, t) and f not in GERAIS]
     status = ''
-    if os.path.getsize(caminho) < 10:
+    if nome in absorvidos:
+        status = limpa(cat[2]) if cat and len(cat) > 2 else ''
+        situacao = 'Absorvido integralmente no kit-starter: ' + ', '.join(absorvidos[nome])
+    elif os.path.getsize(caminho) < 10:
         status = 'Vazio'
         situacao = 'Arquivo vazio (placeholder), sem conteúdo a absorver'
     elif cat is None:
@@ -91,6 +104,7 @@ texto = f"""# 79 — Rastreabilidade v1 → v2
 - **Só catalogado:** o catálogo registra o arquivo, mas nenhum documento da v2 usa o conteúdo. **Ler no anexo antes de implementar** e trazer as regras para a v2.
 - **Não é especificação:** arquivo de código ou de tarefas, com destino indicado.
 - **Fora do escopo:** removido do produto por decisão registrada.
+- **Absorvido integralmente no kit-starter:** o texto completo está dentro da ficha indicada, com as correções da v2 por cima.
 - **Arquivo vazio:** placeholder sem conteúdo.
 - **LACUNA:** não citado em lugar nenhum da v2. Precisa de decisão.
 

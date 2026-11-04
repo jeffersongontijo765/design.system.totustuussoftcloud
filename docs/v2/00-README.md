@@ -152,6 +152,7 @@ O autor aprovou as propostas adotadas nos documentos 31 a 36. Itens que pedem va
 | [77](77-licenciamento-planos-e-limites.md) | Licenciamento: planos com limite de alunos definido pelo desenvolvedor, situações da assinatura, carência e comportamento ao exceder o limite |
 | [78](78-permissoes-e-papeis.md) | Permissões completas: níveis de papel (0 a 7), escopos, papéis por portal, criação de entidade e unidade só pelo desenvolvedor, separação de funções |
 | [79](79-rastreabilidade-v1-v2.md) | Rastreabilidade v1 → v2: para cada um dos 62 arquivos da v1 (em `anexo-v1/`), o destino na v2 e o que ainda não foi absorvido. Gerado por `inventario/gera_rastreabilidade.py` |
+| [80](80-decisoes-por-padrao.md) | Decisões tomadas por padrão, delegadas pelo autor em 04/11/2026 (melhor prática, mais segura, completa), com motivo e alternativa descartada |
 | Decisões de configuração (CFG-01 a CFG-04) | Agenda iScholar fora do escopo. Foto com consentimento por aluno. Relatório de acesso do responsável com link de uso único. Financeiro completo, com cheques, caixa e DRE | [56](56-configuracoes-e-relatorios-lacunas.md), seção 8 |
 | Notificações (NOT-02, NOT-03, NOT-05, NOT-06) | Silêncio 21h às 7h. Segunda aprovação acima de 500. Remetentes de saúde: secretaria, enfermagem, médico e coordenação. Push por aplicativo Android e iOS | [57](57-notificacoes-por-portal.md), seção 5 |
 | Calendário e eventos escolares | Módulo próprio, nesta versão. Especificação pendente | [56](56-configuracoes-e-relatorios-lacunas.md), CFG-01 |

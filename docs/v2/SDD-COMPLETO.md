@@ -1,6 +1,6 @@
 # SDD v2 — TotusTuus SoftCloud (especificação completa)
 
-> Documento consolidado dos documentos 00 a 79 (80 documentos), gerado por `inventario/gera_sdd_completo.py` em 04/11/2026. Não editar à mão: a fonte são os documentos numerados desta pasta. A v1 está incorporada em `anexo-v1/`; veja a rastreabilidade na [parte 79](#parte-79).
+> Documento consolidado dos documentos 00 a 80 (81 documentos), gerado por `inventario/gera_sdd_completo.py` em 04/11/2026. Não editar à mão: a fonte são os documentos numerados desta pasta. A v1 está incorporada em `anexo-v1/`; veja a rastreabilidade na [parte 79](#parte-79).
 
 ## Índice
 
@@ -84,6 +84,7 @@
 - [77 — Licenciamento, planos, assinaturas e limites](#parte-77)
 - [78 — Permissões, papéis e níveis de acesso por portal](#parte-78)
 - [79 — Rastreabilidade v1 → v2](#parte-79)
+- [80 — Decisões tomadas por padrão (delegadas pelo autor)](#parte-80)
 
 ---
 
@@ -243,6 +244,7 @@ O autor aprovou as propostas adotadas nos documentos 31 a 36. Itens que pedem va
 | [77](#parte-77) | Licenciamento: planos com limite de alunos definido pelo desenvolvedor, situações da assinatura, carência e comportamento ao exceder o limite |
 | [78](#parte-78) | Permissões completas: níveis de papel (0 a 7), escopos, papéis por portal, criação de entidade e unidade só pelo desenvolvedor, separação de funções |
 | [79](#parte-79) | Rastreabilidade v1 → v2: para cada um dos 62 arquivos da v1 (em `anexo-v1/`), o destino na v2 e o que ainda não foi absorvido. Gerado por `inventario/gera_rastreabilidade.py` |
+| [80](#parte-80) | Decisões tomadas por padrão, delegadas pelo autor em 04/11/2026 (melhor prática, mais segura, completa), com motivo e alternativa descartada |
 | Decisões de configuração (CFG-01 a CFG-04) | Agenda iScholar fora do escopo. Foto com consentimento por aluno. Relatório de acesso do responsável com link de uso único. Financeiro completo, com cheques, caixa e DRE | [56](#parte-56), seção 8 |
 | Notificações (NOT-02, NOT-03, NOT-05, NOT-06) | Silêncio 21h às 7h. Segunda aprovação acima de 500. Remetentes de saúde: secretaria, enfermagem, médico e coordenação. Push por aplicativo Android e iOS | [57](#parte-57), seção 5 |
 | Calendário e eventos escolares | Módulo próprio, nesta versão. Especificação pendente | [56](#parte-56), CFG-01 |
@@ -8938,7 +8940,9 @@ Nenhum item de tabela aberto. OCO-01, BIB-04, IA-01, IA-07 e NOT-01, e o prazo d
 
 **PLA-04** também foi decidido em 03/11/2026: BNCC obrigatória no plano de ensino e opcional no plano de aula ([64](#parte-64), seção 4.1).
 
-Continuam com o autor, no texto corrido: Frotas nesta versão e lista de jurisdições (seções 8.5 e 8.2).
+Continua com o autor, no texto corrido: lista de jurisdições (seção 8.2). Frotas nesta versão foi decidida por padrão (DP-01 em [80](#parte-80)).
+
+**Delegação (04/11/2026):** o autor delegou as decisões em aberto, com o critério "melhor prática, mais segura, completa". Decisões tomadas assim ficam em [80](#parte-80).
 
 **Licenciamento e permissões:** todas as propostas dos documentos [77](#parte-77) e [78](#parte-78) foram aprovadas em 04/11/2026 (seção 9.1).
 
@@ -9170,7 +9174,7 @@ Esta seção foi montada por varredura dos marcadores `[Pendente`, `Pendente:`, 
 | Documento | Item | Dono sugerido |
 |---|---|---|
 | [05](#parte-05) e [11](#parte-11) | Confirmar uso de `JWT_SECRET` no código e remover HS256 (ACH-05) | Backend |
-| [12](#parte-12) | Frotas: confirmar se entra nesta versão, pois é de escopo diferente do educacional | Autor |
+| [12](#parte-12) | Frotas: confirmar se entra nesta versão, pois é de escopo diferente do educacional | **Decidido por padrão** em 04/11/2026: entra (DP-01, [80](#parte-80)) |
 | [31](#parte-31) | Atendimento consolidado: DDL pendente (T-02) | Documento |
 
 ---
@@ -17398,6 +17402,13 @@ Papéis listados por portal, com o nível máximo previsto. Permissões detalhad
 | `platform.finance.manager` | 2 | plataforma (financeiro da empresa) | Aprovar despesas e orçamento; segundo aprovador acima de R$ 10.000 (D-43, aprovada) |
 | `platform.accounting` | 1 | plataforma (contábil da empresa) | Papel **Contábil** do [22](#parte-22), seção 5: lançar, fechar período, exportar; não fecha período com lançamento que criou sem revisão (D-45) |
 | `platform.fiscal` | 1 | plataforma (fiscal da empresa) | Papel **Fiscal** do [22](#parte-22), seção 5: emitir e cancelar NFS-e, apurar tributos; cancelamento exige aprovação do contábil (D-45) |
+| `platform.assets` | 1 | plataforma (patrimônio da empresa) | Cadastrar e movimentar bens; manutenção, inventário e seguro (DP-03, [80](#parte-80)) |
+| `platform.assets.approver` | 2 | plataforma (patrimônio da empresa) | Aprovar transferência, descarte e manutenção acima do limite; não aprova o que registrou (DP-03) |
+| `platform.fleet` | 1 | plataforma (frotas da empresa) | Veículos, motoristas, reservas, abastecimentos, viagens, multas e documentos (DP-03) |
+| `platform.fleet.approver` | 2 | plataforma (frotas da empresa) | Aprovar reservas e ordens de manutenção; não aprova a própria reserva (DP-03) |
+| `platform.purchasing` | 1 | plataforma (suprimentos da empresa) | Papel **Compras** do [22](#parte-22), seção 5: cotação, pedido, cadastro de fornecedor |
+| `platform.warehouse` | 1 | plataforma (suprimentos da empresa) | Papel **Almoxarifado** do [22](#parte-22), seção 5: recebimento e movimento |
+| `platform.purchasing.approver` | 2 | plataforma (suprimentos da empresa) | Papel **Aprovador de compras** do [22](#parte-22), seção 5: aprova requisição na alçada; não é o solicitante |
 
 #### 4.2 Portal de Gestão (SaaS da entidade)
 
@@ -17490,6 +17501,7 @@ Papéis listados por portal, com o nível máximo previsto. Permissões detalhad
 - **Só catalogado:** o catálogo registra o arquivo, mas nenhum documento da v2 usa o conteúdo. **Ler no anexo antes de implementar** e trazer as regras para a v2.
 - **Não é especificação:** arquivo de código ou de tarefas, com destino indicado.
 - **Fora do escopo:** removido do produto por decisão registrada.
+- **Absorvido integralmente no kit-starter:** o texto completo está dentro da ficha indicada, com as correções da v2 por cima.
 - **Arquivo vazio:** placeholder sem conteúdo.
 - **LACUNA:** não citado em lugar nenhum da v2. Precisa de decisão.
 
@@ -17498,8 +17510,9 @@ Papéis listados por portal, com o nível máximo previsto. Permissões detalhad
 | Situação | Arquivos |
 |---|---|
 | Absorvido em parte em | 30 |
-| Só catalogado | 17 |
+| Só catalogado | 14 |
 | Substituído | 12 |
+| Absorvido integralmente no kit-starter | 3 |
 | Fora do escopo do produto | 2 |
 | Arquivo vazio (placeholder), sem conteúdo a absorver | 1 |
 
@@ -17551,7 +17564,7 @@ Papéis listados por portal, com o nível máximo previsto. Permissões detalhad
 | [`spec_gestao_cookies_sessions.md`](anexo-v1/spec_gestao_cookies_sessions.md) | 474 | Revisar | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
 | [`spec_gestao_documentos_completo.md`](anexo-v1/spec_gestao_documentos_completo.md) | 546 | Revisar | Absorvido em parte em: 48 |
 | [`spec_gestao_financeiro_completo.md`](anexo-v1/spec_gestao_financeiro_completo.md) | 1532 | Especificado | Absorvido em parte em: 71 |
-| [`spec_gestao_frotas_completo.md`](anexo-v1/spec_gestao_frotas_completo.md) | 1558 | Especificado | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
+| [`spec_gestao_frotas_completo.md`](anexo-v1/spec_gestao_frotas_completo.md) | 1558 | Especificado | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/operacoes-internas/frotas.md |
 | [`spec_gestao_logger_completo.md`](anexo-v1/spec_gestao_logger_completo.md) | 1038 | Revisar | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
 | [`spec_gestao_marketing_redes_sociais.md`](anexo-v1/spec_gestao_marketing_redes_sociais.md) | 350 | Especificado | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
 | [`spec_gestao_notificacoes.md`](anexo-v1/spec_gestao_notificacoes.md) | 378 | Revisar | Absorvido em parte em: 57 |
@@ -17562,10 +17575,34 @@ Papéis listados por portal, com o nível máximo previsto. Permissões detalhad
 | [`spec_gestao_sac_base_conhecimento.md`](anexo-v1/spec_gestao_sac_base_conhecimento.md) | 443 | Revisar | Absorvido em parte em: 31, 32 |
 | [`spec_gestao_seguranca_medicina_trabalho_completo.md`](anexo-v1/spec_gestao_seguranca_medicina_trabalho_completo.md) | 1581 | Especificado | Absorvido em parte em: 39 |
 | [`spec_gestao_simulados_ia.md`](anexo-v1/spec_gestao_simulados_ia.md) | 683 | Especificado em v2 | Absorvido em parte em: 31, 47 |
-| [`spec_gestao_suprimentos_v3_consolidado.md`](anexo-v1/spec_gestao_suprimentos_v3_consolidado.md) | 1271 | Especificado | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
+| [`spec_gestao_suprimentos_v3_consolidado.md`](anexo-v1/spec_gestao_suprimentos_v3_consolidado.md) | 1271 | Especificado | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/operacoes-internas/suprimentos-da-empresa.md |
 | [`spec_gestao_ti_completa.md`](anexo-v1/spec_gestao_ti_completa.md) | 882 | Revisar | Absorvido em parte em: 36 |
 | [`spec_object_storage_digital_assets.md`](anexo-v1/spec_object_storage_digital_assets.md) | 237 | Revisar | Absorvido em parte em: 21 |
-| [`spec_patrimonio_completo.md`](anexo-v1/spec_patrimonio_completo.md) | 1309 | Especificado | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
+| [`spec_patrimonio_completo.md`](anexo-v1/spec_patrimonio_completo.md) | 1309 | Especificado | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/operacoes-internas/patrimonio.md |
 | [`sub_sidebar_itsm.php`](anexo-v1/sub_sidebar_itsm.php) | 151 | Revisar | Absorvido em parte em: 36 |
 | [`TASKS_SPECS.md`](anexo-v1/TASKS_SPECS.md) | 821 | Revisar | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
 | [`teste`](anexo-v1/teste) | 1 | Vazio | Arquivo vazio (placeholder), sem conteúdo a absorver |
+
+---
+
+<a id="parte-80"></a>
+
+## 80 — Decisões tomadas por padrão (delegadas pelo autor)
+
+> Parte do [SDD v2](#parte-00). Em 04/11/2026 o autor delegou as decisões em aberto: "sempre a melhor prática, mais segura, completa", sem bloquear o trabalho para perguntar.
+> **Regra:** antes de decidir, o assunto é buscado em todo o SDD (v2 e [anexo-v1/](anexo-v1/)). Só entra aqui o que não está decidido em nenhum documento. Cada decisão tem motivo, alternativa descartada e onde se aplica. O autor pode revisar qualquer item; revisão vira nova linha, sem apagar a anterior.
+
+### 1. Critérios usados
+
+1. **Segurança e conformidade primeiro:** na dúvida, a opção que expõe menos dado, exige aprovação ou bloqueia o erro.
+2. **Completude:** na dúvida entre incluir e excluir um recurso previsto na v1, incluir.
+3. **Não inventar valor legal ou contábil:** prazo, alíquota, taxa e texto jurídico não são inventados. Ficam como parâmetro obrigatório, configurado pelo responsável, e o sistema bloqueia o uso enquanto não forem configurados.
+4. **Separação de funções:** quem opera não aprova a própria operação ([78](#parte-78), seção 2.2).
+
+### 2. Decisões
+
+| # | Assunto | Decisão | Motivo | Alternativa descartada | Onde se aplica |
+|---|---|---|---|---|---|
+| DP-01 | Frotas nesta versão (pendência do autor em [45](#parte-45), seção 2) | **Entra nesta versão**, para a empresa e para as entidades | Completude; a especificação da v1 é completa e o transporte escolar é uso real | Deixar para versão futura | Portal do desenvolvedor (operações internas) e portal de gestão |
+| DP-02 | Regra de depreciação por categoria (lacuna L-18 do [19](#parte-19)) | Cada categoria de ativo tem método e taxa **aprovados pelo contábil**. Categoria sem regra aprovada **não deprecia** e aparece como pendência no painel | Critério 3: não inventar taxa contábil; não deixar ativo sem controle | Taxa padrão do sistema para todas as categorias | Patrimônio (empresa e entidade) |
+| DP-03 | Papéis de patrimônio e frotas (não definidos no [22](#parte-22), seção 5) | Operador (nível 1) e aprovador (nível 2) separados, para patrimônio e para frotas. Compras, almoxarifado e aprovador de compras seguem o [22](#parte-22), seção 5 | Critério 4; mesmo padrão dos papéis departamentais já aprovados | Um único papel por módulo | [78](#parte-78), seção 4.1 (plataforma) |

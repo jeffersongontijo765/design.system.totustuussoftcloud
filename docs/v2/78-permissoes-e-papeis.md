@@ -81,6 +81,13 @@ Papéis listados por portal, com o nível máximo previsto. Permissões detalhad
 | `platform.finance.manager` | 2 | plataforma (financeiro da empresa) | Aprovar despesas e orçamento; segundo aprovador acima de R$ 10.000 (D-43, aprovada) |
 | `platform.accounting` | 1 | plataforma (contábil da empresa) | Papel **Contábil** do [22](22-crm-canais-e-papeis.md), seção 5: lançar, fechar período, exportar; não fecha período com lançamento que criou sem revisão (D-45) |
 | `platform.fiscal` | 1 | plataforma (fiscal da empresa) | Papel **Fiscal** do [22](22-crm-canais-e-papeis.md), seção 5: emitir e cancelar NFS-e, apurar tributos; cancelamento exige aprovação do contábil (D-45) |
+| `platform.assets` | 1 | plataforma (patrimônio da empresa) | Cadastrar e movimentar bens; manutenção, inventário e seguro (DP-03, [80](80-decisoes-por-padrao.md)) |
+| `platform.assets.approver` | 2 | plataforma (patrimônio da empresa) | Aprovar transferência, descarte e manutenção acima do limite; não aprova o que registrou (DP-03) |
+| `platform.fleet` | 1 | plataforma (frotas da empresa) | Veículos, motoristas, reservas, abastecimentos, viagens, multas e documentos (DP-03) |
+| `platform.fleet.approver` | 2 | plataforma (frotas da empresa) | Aprovar reservas e ordens de manutenção; não aprova a própria reserva (DP-03) |
+| `platform.purchasing` | 1 | plataforma (suprimentos da empresa) | Papel **Compras** do [22](22-crm-canais-e-papeis.md), seção 5: cotação, pedido, cadastro de fornecedor |
+| `platform.warehouse` | 1 | plataforma (suprimentos da empresa) | Papel **Almoxarifado** do [22](22-crm-canais-e-papeis.md), seção 5: recebimento e movimento |
+| `platform.purchasing.approver` | 2 | plataforma (suprimentos da empresa) | Papel **Aprovador de compras** do [22](22-crm-canais-e-papeis.md), seção 5: aprova requisição na alçada; não é o solicitante |
 
 ### 4.2 Portal de Gestão (SaaS da entidade)
 

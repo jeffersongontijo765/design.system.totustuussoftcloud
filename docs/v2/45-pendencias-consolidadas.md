@@ -40,7 +40,9 @@ Nenhum item de tabela aberto. OCO-01, BIB-04, IA-01, IA-07 e NOT-01, e o prazo d
 
 **PLA-04** também foi decidido em 03/11/2026: BNCC obrigatória no plano de ensino e opcional no plano de aula ([64](64-planos-de-aula-e-de-ensino-por-portal.md), seção 4.1).
 
-Continuam com o autor, no texto corrido: Frotas nesta versão e lista de jurisdições (seções 8.5 e 8.2).
+Continua com o autor, no texto corrido: lista de jurisdições (seção 8.2). Frotas nesta versão foi decidida por padrão (DP-01 em [80](80-decisoes-por-padrao.md)).
+
+**Delegação (04/11/2026):** o autor delegou as decisões em aberto, com o critério "melhor prática, mais segura, completa". Decisões tomadas assim ficam em [80](80-decisoes-por-padrao.md).
 
 **Licenciamento e permissões:** todas as propostas dos documentos [77](77-licenciamento-planos-e-limites.md) e [78](78-permissoes-e-papeis.md) foram aprovadas em 04/11/2026 (seção 9.1).
 
@@ -272,7 +274,7 @@ Esta seção foi montada por varredura dos marcadores `[Pendente`, `Pendente:`, 
 | Documento | Item | Dono sugerido |
 |---|---|---|
 | [05](05-seguranca.md) e [11](11-governanca-qualidade.md) | Confirmar uso de `JWT_SECRET` no código e remover HS256 (ACH-05) | Backend |
-| [12](12-catalogo-modulos.md) | Frotas: confirmar se entra nesta versão, pois é de escopo diferente do educacional | Autor |
+| [12](12-catalogo-modulos.md) | Frotas: confirmar se entra nesta versão, pois é de escopo diferente do educacional | **Decidido por padrão** em 04/11/2026: entra (DP-01, [80](80-decisoes-por-padrao.md)) |
 | [31](31-matriz-portais-modulos.md) | Atendimento consolidado: DDL pendente (T-02) | Documento |
 
 ---
