@@ -4,7 +4,7 @@
 - Área: Financeiro da plataforma
 - Domínio: plataforma (banco master), instância separada do financeiro das entidades ([31](../../../docs/v2/31-matriz-portais-modulos.md), seção 2.1)
 - Escopo: contas, movimentação, contas a pagar, contas a receber, fluxo de caixa, conciliação, centros de custo, orçamento e DRE **da empresa desenvolvedora**
-- Status: detalhado (SDD 71 e v1), com D-42 e D-43 pendentes
+- Status: detalhado (SDD 71 e v1); D-42 e D-43 aprovadas
 
 ## 1. Identificação
 - Especificações: [71](../../../docs/v2/71-financeiro-completo-por-portal.md) (regras do financeiro), [17](../../../docs/v2/17-regras-modulos.md) seção 2 (aprovação, conciliação), [20](../../../docs/v2/20-pagamentos-seguranca.md) (pagamentos), v1 [spec_gestao_financeiro_completo.md](../../../docs/v2/anexo-v1/spec_gestao_financeiro_completo.md) (telas, colunas, drawers, kanban, painel).
@@ -31,7 +31,7 @@ Fora daqui: títulos e cobrança de alunos (financeiro da entidade, [18](../../.
 - **Configurações**: categorias financeiras (cada uma ligada a uma linha da DRE), métodos de pagamento, parâmetros (tolerância de conciliação, limite de desvio do orçamento).
 
 ## 4. Dados
-- Conta: corrente, poupança, gateway ou carteira digital do gateway ([71](../../../docs/v2/71-financeiro-completo-por-portal.md), seção 3). Caixa físico: ver D-42.
+- Conta: corrente, poupança, gateway ou carteira digital do gateway ([71](../../../docs/v2/71-financeiro-completo-por-portal.md), seção 3). Caixa físico e cheques não se aplicam à empresa desenvolvedora (D-42, aprovada).
 - Movimentação: conta, data, valor, categoria, centro de custo, origem e estado: `previsto`, `lancado`, `conciliado`, `estornado`. Lançamento conciliado não muda: correção é estorno e novo lançamento, com motivo.
 - Tabelas (v1 seção 1.2): `financial_payables`, `financial_transactions`, `financial_bank_accounts`, `financial_bank_statements`, `financial_reconciliations`, `financial_cost_centers`, `financial_budgets`, `financial_categories`, `financial_payment_methods`, no banco master. DDL de referência em [51](../../../docs/v2/51-ddl-modulos-novos.md), seção 15.16.
 
@@ -55,7 +55,7 @@ Fora daqui: títulos e cobrança de alunos (financeiro da entidade, [18](../../.
 ## 8. Permissões e papéis
 - O portal do desenvolvedor vê só o financeiro da empresa ([71](../../../docs/v2/71-financeiro-completo-por-portal.md), seção 11).
 - Separação de funções: quem solicita não aprova a própria despesa; despesa acima de R$ 10.000 exige segundo aprovador ([17](../../../docs/v2/17-regras-modulos.md), seção 2.4; [78](../../../docs/v2/78-permissoes-e-papeis.md), seção 2.2).
-- Papéis que operam e aprovam: **pendência D-43**.
+- `platform.finance` opera contas, despesas, pagamentos e conciliação; `platform.finance.manager` aprova despesas e orçamento e é o segundo aprovador acima de R$ 10.000 (D-43, aprovada; [78](../../../docs/v2/78-permissoes-e-papeis.md), seção 4.1).
 
 ## 9. Exportação e auditoria
 - Exportação de listas: CSV e XLSX, com permissão e step-up; DRE e fluxo em PDF.
@@ -70,6 +70,6 @@ Fora daqui: títulos e cobrança de alunos (financeiro da entidade, [18](../../.
 
 ## 12. Pendências e decisões
 - **Divergências v1 × v2 (vale a v2):** atraso não é estado gravado, é filtro por data ([71](../../../docs/v2/71-financeiro-completo-por-portal.md), seção 3); tolerância de conciliação é parâmetro, não os R$ 0,01 fixos da v1; aprovação não é opcional como na v1; sem filtro de unidade.
-- **D-42:** cheques e caixa físico ([71](../../../docs/v2/71-financeiro-completo-por-portal.md), seções 5 e 6) foram escritos para as escolas. Aplicam-se à empresa desenvolvedora? Proposta: **não**, até haver necessidade.
-- **D-43:** papéis do financeiro da plataforma. Proposta: `platform.finance` (nível 1, opera contas, pagamentos e conciliação) e `platform.finance.manager` (nível 2, aprova despesas e orçamento; segundo aprovador acima de R$ 10.000).
+- **D-42:** cheques e caixa físico ([71](../../../docs/v2/71-financeiro-completo-por-portal.md), seções 5 e 6) foram escritos para as escolas. Não se aplicam à empresa desenvolvedora, até haver necessidade (**aprovada**).
+- **D-43 (aprovada):** papéis do financeiro da plataforma: `platform.finance` (nível 1, opera contas, pagamentos e conciliação) e `platform.finance.manager` (nível 2, aprova despesas e orçamento; segundo aprovador acima de R$ 10.000).
 - Saldo mínimo por conta e limite de desvio do orçamento: **[Sem detalhamento]** de valor.

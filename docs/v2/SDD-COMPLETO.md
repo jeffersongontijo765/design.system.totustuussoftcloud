@@ -8940,7 +8940,7 @@ Nenhum item de tabela aberto. OCO-01, BIB-04, IA-01, IA-07 e NOT-01, e o prazo d
 
 Continuam com o autor, no texto corrido: Frotas nesta versão e lista de jurisdições (seções 8.5 e 8.2).
 
-**Licenciamento e permissões:** todas as propostas dos documentos [77](#parte-77) e [78](#parte-78) foram aprovadas em 04/11/2026 (seção 9.1). Em aberto: **D-42** (cheques e caixa físico no financeiro da plataforma) e **D-43** (papéis do financeiro da plataforma), em [78](#parte-78), seção 6.
+**Licenciamento e permissões:** todas as propostas dos documentos [77](#parte-77) e [78](#parte-78) foram aprovadas em 04/11/2026 (seção 9.1).
 
 ---
 
@@ -9224,6 +9224,8 @@ Status atualizado no documento de origem, porque a pendência já tinha sido res
 | D-39 | Separação de funções nas ações da seção 2.2. **Aprovada em 04/11/2026** ([78](#parte-78)) |
 | D-40 | Seis regras transversais de permissão. **Aprovada em 04/11/2026** ([78](#parte-78), seção 5) |
 | D-41 | Códigos dos papéis comerciais da plataforma: `platform.sales.sdr`, `platform.sales.ae`, `platform.sales.manager`, `platform.chatbot.operator` e `platform.customer_success`. **Aprovada em 04/11/2026** ([78](#parte-78), seção 4.1) |
+| D-42 | Cheques e caixa físico não se aplicam ao financeiro da empresa desenvolvedora, até haver necessidade. **Aprovada em 04/11/2026** ([78](#parte-78), seção 6) |
+| D-43 | Financeiro da plataforma: `platform.finance` opera e `platform.finance.manager` aprova. **Aprovada em 04/11/2026** ([78](#parte-78), seção 4.1) |
 
 #### 9.2 Documentos escritos depois da auditoria
 
@@ -17314,7 +17316,7 @@ Prazo de carência: **15 dias**, ajustável pelo desenvolvedor por plano (D-28, 
 ## 78 — Permissões, papéis e níveis de acesso por portal
 
 > Parte do [SDD v2](#parte-00). Estende [06](#parte-06), seção 9 (RBAC com contexto) e a seção 10 (contas de plataforma). Escopo de portais em [23](#parte-23) e [31](#parte-31).
-> **Status:** aprovado pelo autor em 04/11/2026 (L-02, P-01, D-30 a D-33 e D-38 a D-41). Propostas em aberto: D-42 e D-43 (financeiro da plataforma).
+> **Status:** aprovado pelo autor em 04/11/2026 (L-02, P-01, D-30 a D-33 e D-38 a D-43). Não há proposta em aberto neste documento.
 
 ---
 
@@ -17390,8 +17392,8 @@ Papéis listados por portal, com o nível máximo previsto. Permissões detalhad
 | `platform.sales.manager` | 2 | plataforma (equipe comercial) | Gerente comercial: atribuir leads, aprovar desconto na alçada, ver funil da equipe (SDD 22, seção 4.1) |
 | `platform.chatbot.operator` | 1 | plataforma (fila de conversas) | Atender, transferir e registrar conversas dos canais (SDD 22, seção 4.1) |
 | `platform.customer_success` | 1 | plataforma (clientes ativos) | Acompanhar implantação e uso, sem alterar cobrança (SDD 22, seção 4.1) |
-| `platform.finance` | 1 | plataforma (financeiro da empresa) | Operar contas, despesas, pagamentos e conciliação da empresa desenvolvedora (proposta D-43) |
-| `platform.finance.manager` | 2 | plataforma (financeiro da empresa) | Aprovar despesas e orçamento; segundo aprovador acima de R$ 10.000 (proposta D-43) |
+| `platform.finance` | 1 | plataforma (financeiro da empresa) | Operar contas, despesas, pagamentos e conciliação da empresa desenvolvedora (D-43, aprovada) |
+| `platform.finance.manager` | 2 | plataforma (financeiro da empresa) | Aprovar despesas e orçamento; segundo aprovador acima de R$ 10.000 (D-43, aprovada) |
 
 #### 4.2 Portal de Gestão (SaaS da entidade)
 
@@ -17454,8 +17456,8 @@ Papéis listados por portal, com o nível máximo previsto. Permissões detalhad
 | D-39 | Separação de funções | As cinco ações da seção 2.2. **Aprovada pelo autor em 04/11/2026.** | Lista definida por módulo |
 | D-40 | Regras transversais | As seis regras da seção 5. **Aprovada pelo autor em 04/11/2026.** | Regras definidas por portal |
 | D-41 | Códigos dos papéis comerciais da plataforma (SDD 22, seção 4.1) | Os cinco códigos `platform.sales.*`, `platform.chatbot.operator` e `platform.customer_success` da seção 4.1. **Aprovada pelo autor em 04/11/2026.** | Outros nomes, mantidos os níveis |
-| D-42 | Cheques e caixa físico no financeiro da plataforma ([71](#parte-71), seções 5 e 6) | Não se aplicam à empresa desenvolvedora, até haver necessidade | Aplicam-se, como nas entidades |
-| D-43 | Papéis do financeiro da plataforma | `platform.finance` (opera) e `platform.finance.manager` (aprova) | Usar `platform.manager` para aprovar |
+| D-42 | Cheques e caixa físico no financeiro da plataforma ([71](#parte-71), seções 5 e 6) | Não se aplicam à empresa desenvolvedora, até haver necessidade. **Aprovada pelo autor em 04/11/2026.** | Aplicam-se, como nas entidades |
+| D-43 | Papéis do financeiro da plataforma | `platform.finance` (opera) e `platform.finance.manager` (aprova). **Aprovada pelo autor em 04/11/2026.** | Usar `platform.manager` para aprovar |
 
 ### 7. Critérios de aceite
 
