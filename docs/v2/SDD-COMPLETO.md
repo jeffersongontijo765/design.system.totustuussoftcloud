@@ -5692,7 +5692,7 @@ Legenda de origem: **P** = plataforma (banco master); **E** = entidade/unidade (
 | Editor de portais | Páginas, rotas, layouts, blocos, publicação e rollback | P | D-23. Chamado de "builder de portais" na v1. **Não é o editor de modelos do Gerador de documentos** (ver seção 3.4) |
 | Comercial da plataforma | CRM da plataforma, leads, propostas, comissões | P | [22](#parte-22), seção 6.1. Não se mistura com o protocolo de atendimento (seção 3.2) |
 | Financeiro da plataforma | Contas a pagar e a receber **da própria empresa** | P | **Decidido** em 03/11/2026: mantido para a gestão da própria empresa desenvolvedora |
-| Contábil da plataforma | Plano de contas, razão, fechamento da empresa | P | Mesma decisão do financeiro |
+| Contábil da plataforma | Plano de contas, razão, fechamento da empresa, tributos e obrigações fiscais da empresa | P | Mesma decisão do financeiro. Tributos da empresa: seção 3.3, confirmado pelo autor em 04/11/2026 |
 | Operações internas | Patrimônio, frotas, suprimentos da empresa | P | **Decidido** em 03/11/2026: mantidos, como instâncias separadas dos módulos das entidades |
 | Pessoas da plataforma | Departamento pessoal, RH e medicina do trabalho da empresa | P | Mesma decisão. O HCM das entidades não é o da plataforma |
 | Suporte | Chamados dos clientes, base de conhecimento, SLA | P | Seção 3.2 |
@@ -8940,7 +8940,7 @@ Nenhum item de tabela aberto. OCO-01, BIB-04, IA-01, IA-07 e NOT-01, e o prazo d
 
 Continuam com o autor, no texto corrido: Frotas nesta versão e lista de jurisdições (seções 8.5 e 8.2).
 
-**Licenciamento e permissões:** todas as propostas dos documentos [77](#parte-77) e [78](#parte-78) foram aprovadas em 04/11/2026 (seção 9.1). Em aberto: **D-44** (tributos e obrigações da empresa) e **D-45** (papéis do contábil da plataforma), em [78](#parte-78), seção 6.
+**Licenciamento e permissões:** todas as propostas dos documentos [77](#parte-77) e [78](#parte-78) foram aprovadas em 04/11/2026 (seção 9.1).
 
 ---
 
@@ -9226,6 +9226,8 @@ Status atualizado no documento de origem, porque a pendência já tinha sido res
 | D-41 | Códigos dos papéis comerciais da plataforma: `platform.sales.sdr`, `platform.sales.ae`, `platform.sales.manager`, `platform.chatbot.operator` e `platform.customer_success`. **Aprovada em 04/11/2026** ([78](#parte-78), seção 4.1) |
 | D-42 | Cheques e caixa físico não se aplicam ao financeiro da empresa desenvolvedora, até haver necessidade. **Aprovada em 04/11/2026** ([78](#parte-78), seção 6) |
 | D-43 | Financeiro da plataforma: `platform.finance` opera e `platform.finance.manager` aprova. **Aprovada em 04/11/2026** ([78](#parte-78), seção 4.1) |
+| D-44 | Tributos e obrigações fiscais da empresa: já definido na [31](#parte-31), seção 3.3; confirmado em 04/11/2026 e incluído na área Contábil da plataforma |
+| D-45 | Papéis do contábil e do fiscal da plataforma: já definidos no [22](#parte-22), seção 5. Códigos `platform.accounting` e `platform.fiscal` |
 
 #### 9.2 Documentos escritos depois da auditoria
 
@@ -17316,7 +17318,7 @@ Prazo de carência: **15 dias**, ajustável pelo desenvolvedor por plano (D-28, 
 ## 78 — Permissões, papéis e níveis de acesso por portal
 
 > Parte do [SDD v2](#parte-00). Estende [06](#parte-06), seção 9 (RBAC com contexto) e a seção 10 (contas de plataforma). Escopo de portais em [23](#parte-23) e [31](#parte-31).
-> **Status:** aprovado pelo autor em 04/11/2026 (L-02, P-01, D-30 a D-33 e D-38 a D-43). Propostas em aberto: D-44 e D-45 (contábil da plataforma).
+> **Status:** aprovado pelo autor em 04/11/2026 (L-02, P-01, D-30 a D-33 e D-38 a D-43); D-44 e D-45 já estavam definidas nos documentos 31 e 22. Não há proposta em aberto neste documento.
 
 ---
 
@@ -17392,10 +17394,10 @@ Papéis listados por portal, com o nível máximo previsto. Permissões detalhad
 | `platform.sales.manager` | 2 | plataforma (equipe comercial) | Gerente comercial: atribuir leads, aprovar desconto na alçada, ver funil da equipe (SDD 22, seção 4.1) |
 | `platform.chatbot.operator` | 1 | plataforma (fila de conversas) | Atender, transferir e registrar conversas dos canais (SDD 22, seção 4.1) |
 | `platform.customer_success` | 1 | plataforma (clientes ativos) | Acompanhar implantação e uso, sem alterar cobrança (SDD 22, seção 4.1) |
-| `platform.finance` | 1 | plataforma (financeiro da empresa) | Operar contas, despesas, pagamentos e conciliação da empresa desenvolvedora (D-43, aprovada) |
+| `platform.finance` | 1 | plataforma (financeiro da empresa) | Papel **Financeiro** do [22](#parte-22), seção 5, na empresa desenvolvedora: operar contas, despesas, pagamentos e conciliação (D-43) |
 | `platform.finance.manager` | 2 | plataforma (financeiro da empresa) | Aprovar despesas e orçamento; segundo aprovador acima de R$ 10.000 (D-43, aprovada) |
-| `platform.accounting` | 1 | plataforma (contábil da empresa) | Lançar, importar e conciliar a contabilidade da empresa desenvolvedora (proposta D-45) |
-| `platform.accounting.manager` | 2 | plataforma (contábil da empresa) | Revisar lançamentos, fechar e reabrir período, com justificativa (proposta D-45) |
+| `platform.accounting` | 1 | plataforma (contábil da empresa) | Papel **Contábil** do [22](#parte-22), seção 5: lançar, fechar período, exportar; não fecha período com lançamento que criou sem revisão (D-45) |
+| `platform.fiscal` | 1 | plataforma (fiscal da empresa) | Papel **Fiscal** do [22](#parte-22), seção 5: emitir e cancelar NFS-e, apurar tributos; cancelamento exige aprovação do contábil (D-45) |
 
 #### 4.2 Portal de Gestão (SaaS da entidade)
 
@@ -17460,8 +17462,8 @@ Papéis listados por portal, com o nível máximo previsto. Permissões detalhad
 | D-41 | Códigos dos papéis comerciais da plataforma (SDD 22, seção 4.1) | Os cinco códigos `platform.sales.*`, `platform.chatbot.operator` e `platform.customer_success` da seção 4.1. **Aprovada pelo autor em 04/11/2026.** | Outros nomes, mantidos os níveis |
 | D-42 | Cheques e caixa físico no financeiro da plataforma ([71](#parte-71), seções 5 e 6) | Não se aplicam à empresa desenvolvedora, até haver necessidade. **Aprovada pelo autor em 04/11/2026.** | Aplicam-se, como nas entidades |
 | D-43 | Papéis do financeiro da plataforma | `platform.finance` (opera) e `platform.finance.manager` (aprova). **Aprovada pelo autor em 04/11/2026.** | Usar `platform.manager` para aprovar |
-| D-44 | Tributos e obrigações fiscais da empresa desenvolvedora ([31](#parte-31), seção 3.3) | Incluir o módulo "Tributos e obrigações da empresa" na área Contábil da plataforma | Tratar por contador externo, sem módulo |
-| D-45 | Papéis do contábil da plataforma | `platform.accounting` (lança e concilia) e `platform.accounting.manager` (revisa, fecha e reabre) | Usar `platform.finance.manager` também no contábil |
+| D-44 | Tributos e obrigações fiscais da empresa desenvolvedora | **Já definido** na [31](#parte-31), seção 3.3 (aprovada em 03/11/2026). Confirmado pelo autor em 04/11/2026: módulo incluído na área Contábil da plataforma | — |
+| D-45 | Papéis do contábil e do fiscal da plataforma | **Já definido** no [22](#parte-22), seção 5 (papéis Contábil e Fiscal, com segregação). Códigos: `platform.accounting` e `platform.fiscal` | — |
 
 ### 7. Critérios de aceite
 

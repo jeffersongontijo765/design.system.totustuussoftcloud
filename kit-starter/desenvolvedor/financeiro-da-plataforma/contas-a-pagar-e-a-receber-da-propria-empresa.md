@@ -27,6 +27,7 @@ Fora daqui: títulos e cobrança de alunos (financeiro da entidade, [18](../../.
 - **Fluxo de caixa** (diário e projetado; [71](../../../docs/v2/71-financeiro-completo-por-portal.md), seção 7).
 - **Conciliação** (v1 seção 7): widgets, rosca de situação, tela em duas colunas (extrato e sistema), importação de extrato OFX ou CSV.
 - **Centros de custo** e **orçamento** (orçado contra realizado; [71](../../../docs/v2/71-financeiro-completo-por-portal.md), seção 8.3).
+- **Taxas de split recebidas** (datatable e gráfico): taxa da plataforma por entidade e por período, gravada no momento da cobrança, sem mudança retroativa ([34](../../../docs/v2/34-pagamentos-fiscal-bancos-por-portal.md), seção 3).
 - **DRE** por competência ([71](../../../docs/v2/71-financeiro-completo-por-portal.md), seção 8).
 - **Configurações**: categorias financeiras (cada uma ligada a uma linha da DRE), métodos de pagamento, parâmetros (tolerância de conciliação, limite de desvio do orçamento).
 

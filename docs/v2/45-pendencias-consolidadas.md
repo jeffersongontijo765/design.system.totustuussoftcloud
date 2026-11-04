@@ -42,7 +42,7 @@ Nenhum item de tabela aberto. OCO-01, BIB-04, IA-01, IA-07 e NOT-01, e o prazo d
 
 Continuam com o autor, no texto corrido: Frotas nesta versão e lista de jurisdições (seções 8.5 e 8.2).
 
-**Licenciamento e permissões:** todas as propostas dos documentos [77](77-licenciamento-planos-e-limites.md) e [78](78-permissoes-e-papeis.md) foram aprovadas em 04/11/2026 (seção 9.1). Em aberto: **D-44** (tributos e obrigações da empresa) e **D-45** (papéis do contábil da plataforma), em [78](78-permissoes-e-papeis.md), seção 6.
+**Licenciamento e permissões:** todas as propostas dos documentos [77](77-licenciamento-planos-e-limites.md) e [78](78-permissoes-e-papeis.md) foram aprovadas em 04/11/2026 (seção 9.1).
 
 ---
 
@@ -328,6 +328,8 @@ Status atualizado no documento de origem, porque a pendência já tinha sido res
 | D-41 | Códigos dos papéis comerciais da plataforma: `platform.sales.sdr`, `platform.sales.ae`, `platform.sales.manager`, `platform.chatbot.operator` e `platform.customer_success`. **Aprovada em 04/11/2026** ([78](78-permissoes-e-papeis.md), seção 4.1) |
 | D-42 | Cheques e caixa físico não se aplicam ao financeiro da empresa desenvolvedora, até haver necessidade. **Aprovada em 04/11/2026** ([78](78-permissoes-e-papeis.md), seção 6) |
 | D-43 | Financeiro da plataforma: `platform.finance` opera e `platform.finance.manager` aprova. **Aprovada em 04/11/2026** ([78](78-permissoes-e-papeis.md), seção 4.1) |
+| D-44 | Tributos e obrigações fiscais da empresa: já definido na [31](31-matriz-portais-modulos.md), seção 3.3; confirmado em 04/11/2026 e incluído na área Contábil da plataforma |
+| D-45 | Papéis do contábil e do fiscal da plataforma: já definidos no [22](22-crm-canais-e-papeis.md), seção 5. Códigos `platform.accounting` e `platform.fiscal` |
 
 ### 9.2 Documentos escritos depois da auditoria
 

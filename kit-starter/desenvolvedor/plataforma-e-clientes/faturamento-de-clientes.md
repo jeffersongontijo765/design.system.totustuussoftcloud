@@ -44,4 +44,4 @@ Emitir e acompanhar as faturas das entidades clientes da plataforma.
 - Exportação CSV com células neutralizadas (`=`, `+`, `@`, tab, retorno de carro).
 
 ## 12. Pendências e decisões
-Todo o módulo: regras de faturamento de clientes **[Sem detalhamento]**. Nota fiscal: SDD 34 (NFS-e).
+Todo o módulo: regras de faturamento de clientes **[Sem detalhamento]**. Nota fiscal: a NFS-e da assinatura do SaaS está **ausente** no SDD e é a pendência PAG-05 ([34](../../../docs/v2/34-pagamentos-fiscal-bancos-por-portal.md), seções 5.1 e 9); emissão e regras na ficha de tributos da área Contábil.

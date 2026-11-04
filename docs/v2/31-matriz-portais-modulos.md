@@ -26,7 +26,7 @@ Legenda de origem: **P** = plataforma (banco master); **E** = entidade/unidade (
 | Editor de portais | Páginas, rotas, layouts, blocos, publicação e rollback | P | D-23. Chamado de "builder de portais" na v1. **Não é o editor de modelos do Gerador de documentos** (ver seção 3.4) |
 | Comercial da plataforma | CRM da plataforma, leads, propostas, comissões | P | [22](22-crm-canais-e-papeis.md), seção 6.1. Não se mistura com o protocolo de atendimento (seção 3.2) |
 | Financeiro da plataforma | Contas a pagar e a receber **da própria empresa** | P | **Decidido** em 03/11/2026: mantido para a gestão da própria empresa desenvolvedora |
-| Contábil da plataforma | Plano de contas, razão, fechamento da empresa | P | Mesma decisão do financeiro |
+| Contábil da plataforma | Plano de contas, razão, fechamento da empresa, tributos e obrigações fiscais da empresa | P | Mesma decisão do financeiro. Tributos da empresa: seção 3.3, confirmado pelo autor em 04/11/2026 |
 | Operações internas | Patrimônio, frotas, suprimentos da empresa | P | **Decidido** em 03/11/2026: mantidos, como instâncias separadas dos módulos das entidades |
 | Pessoas da plataforma | Departamento pessoal, RH e medicina do trabalho da empresa | P | Mesma decisão. O HCM das entidades não é o da plataforma |
 | Suporte | Chamados dos clientes, base de conhecimento, SLA | P | Seção 3.2 |

@@ -2,7 +2,7 @@
 
 Gerado por `inventario/gera_inventario.py` a partir de `docs/v2/31-matriz-portais-modulos.md`, seção 2.
 Nível: portal → área → módulo. As telas de cada módulo são detalhadas antes de implementar.
-Total de módulos listados: 187. Status inicial: nenhum implementado.
+Total de módulos listados: 188. Status inicial: nenhum implementado.
 
 
 ## 2.1 Portal do Desenvolvedor (`desenvolvedor.`) — equipe da plataforma
@@ -46,11 +46,12 @@ Escopo: **Decidido** em 03/11/2026: mantido para a gestão da própria empresa d
 
 ### Contábil da plataforma
 
-Escopo: Mesma decisão do financeiro
+Escopo: Mesma decisão do financeiro. Tributos da empresa: seção 3.3, confirmado pelo autor em 04/11/2026
 
 - [ ] Plano de contas
 - [ ] razão
 - [ ] fechamento da empresa
+- [ ] tributos e obrigações fiscais da empresa
 
 ### Operações internas
 
