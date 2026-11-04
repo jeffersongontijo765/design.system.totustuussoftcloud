@@ -59,7 +59,7 @@ Legenda de origem: **P** = plataforma (banco master); **E** = entidade/unidade (
 
 | Área | Módulos | Escopo |
 |---|---|---|
-| Classe | Turmas e disciplinas do próprio docente, mural, materiais, tarefas | Só turmas vinculadas. Especificação: [80](80-decisoes-por-padrao.md), DP-06 (mural, materiais e tarefas) |
+| Classe | Turmas e disciplinas do próprio docente, mural, materiais, tarefas | Só turmas vinculadas. Especificação: [81](81-classe-mural-materiais-tarefas.md); regra de origem em [80](80-decisoes-por-padrao.md), DP-06 |
 | Diário | Frequência, conteúdo, notas, plano de aula | Só turmas vinculadas. Nota só pelo professor da turma ([22](22-crm-canais-e-papeis.md), seção 5) |
 | Simulados | Elaboração de questões, agendamento, resultados da turma | Questão passa por revisão antes de publicar (seção 3.6) Especificação: [47](47-simulados-por-portal.md), seção 7 |
 | Biblioteca | Consulta de acervo, indicação de leitura | Somente leitura. Especificação: [68](68-biblioteca-por-portal.md), seção 11 |
@@ -73,7 +73,7 @@ Legenda de origem: **P** = plataforma (banco master); **E** = entidade/unidade (
 
 | Área | Módulos | Escopo |
 |---|---|---|
-| Classe e diário | Disciplinas, materiais, entregas, boletim, presença | Só o próprio aluno. Especificação: [61](61-diario-escolar-por-portal.md), seção 7; [62](62-boletim-e-conselho-de-classe-por-portal.md), seção 7; [80](80-decisoes-por-padrao.md), DP-06 |
+| Classe e diário | Disciplinas, materiais, entregas, boletim, presença | Só o próprio aluno. Especificação: [61](61-diario-escolar-por-portal.md), seção 7; [62](62-boletim-e-conselho-de-classe-por-portal.md), seção 7; [81](81-classe-mural-materiais-tarefas.md) |
 | Simulados | Simulados agendados, realização de prova, gabarito e comentários | Só simulados do próprio aluno. Especificação: [47](47-simulados-por-portal.md), seção 7 |
 | Biblioteca | Empréstimos, prazos, renovação, pesquisa de acervo | Só os próprios empréstimos. Especificação: [68](68-biblioteca-por-portal.md), seção 11 |
 | Protocolos online | Requerimento de segunda chamada, declaração de matrícula | Usa o serviço de protocolo. Especificação: [31](31-matriz-portais-modulos.md), seção 3.2 |

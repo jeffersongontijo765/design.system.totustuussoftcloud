@@ -136,7 +136,8 @@ def main():
     global NUMEROS_V2
     import sys
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-    from sdd_partes import PARTES, KIT_PARTE
+    from sdd_partes import PARTES, KIT_PARTE, GLOSSARIO
+    RESTO = 19  # parte das pendências: recebe v1 sem destino, fora do escopo e vazias
     docs = {n: (c, t) for n, c, t in docs_v2()}
     NUMEROS_V2 = set(docs)
     V1_NOMES.update(os.listdir(ANEXO))
@@ -150,12 +151,12 @@ def main():
     v1_fim_parte = {P['n']: [] for P in PARTES}   # no fim da parte (absorvidas no kit, fora do escopo, vazias)
     for arq, linhas, situacao, nums, kit in mapeamento():
         if kit:
-            parte = next((pn for pref, pn in KIT_PARTE if kit[0].startswith('kit-starter/' + pref)), PARTES[-1]['n'])
+            parte = next((pn for pref, pn in KIT_PARTE if kit[0].startswith('kit-starter/' + pref)), RESTO)
             v1_fim_parte[parte].append((arq, linhas, situacao, f'ficha do kit-starter: `{kit[0]}`'))
         elif nums:
             v1_apos_doc[nums[0]].append((arq, linhas, situacao, ''))
         else:
-            v1_fim_parte[PARTES[-1]['n']].append((arq, linhas, situacao, ''))
+            v1_fim_parte[RESTO].append((arq, linhas, situacao, ''))
 
     def bloco_v1(arq, linhas, situacao, nota):
         caminho = os.path.join(ANEXO, arq)
@@ -173,10 +174,14 @@ def main():
         '',
         '## Como ler',
         '',
-        '- O SDD está dividido em 19 partes, por assunto. Cada parte começa com uma visão geral: resumo, diagramas dos fluxos e estados e regras principais.',
+        '- O SDD está dividido em 20 partes, por assunto; a última é o plano de implementação. Cada parte começa com uma visão geral: resumo, diagramas dos fluxos e estados e regras principais.',
         '- Depois da visão geral vem o texto integral de cada documento da v2 da parte e, logo abaixo de cada um, o texto integral das especificações da v1 que ele absorveu.',
         '- No fim de cada parte estão as especificações da v1 que viraram fichas do kit-starter.',
         '- Quando a v1 e a v2 divergem, vale a v2. Nenhum link aponta para fora deste arquivo.',
+        '',
+        '## Glossário',
+        '',
+        GLOSSARIO.strip(),
         '',
         '## Mapa por portal e módulo',
         '',

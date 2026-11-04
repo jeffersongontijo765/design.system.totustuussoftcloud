@@ -14,7 +14,7 @@ MODULOS = [
          papeis=PAP, regras="""- DP-06 do [80]({80}) rege mural, materiais e tarefas.
 - Nota da tarefa só entra no diário se a tarefa for uma avaliação do sistema avaliativo ([59]({59}), seção 4).
 - Arquivos pelo armazenamento ([21]({21}), seção 3).""",
-         fontes=[('80', None), ('21', '3.3'), ('21', '3.9'), ('59', '4')]),
+         fontes=[('81', None), ('21', '3.3'), ('21', '3.9'), ('59', '4')]),
     dict(arquivo=P + 'diario.md', area='Diário', dominio=DOM, titulo='Diário',
          objetivo='Lançar frequência, conteúdo da aula, notas e plano de aula das próprias turmas, até o fechamento do diário.',
          telas="""- **Diário da turma** (página por turma, disciplina e período): aulas do período com estado.

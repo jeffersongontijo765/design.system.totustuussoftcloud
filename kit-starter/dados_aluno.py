@@ -6,7 +6,7 @@ MODULOS = [
     dict(arquivo=A + 'classe-e-diario.md', area='Classe e diário', dominio=DOM, titulo='Classe e diário',
          objetivo='Disciplinas, materiais, entregas de tarefas, boletim e presença do próprio aluno.',
          telas="- **Início do aluno** (dashboard: horário do dia, próximas entregas, últimas notas, avisos).\n- **Minhas disciplinas** (cards).\n- **Disciplina** (abas: mural, materiais, tarefas, notas, faltas).\n- **Entregar tarefa** (upload ou texto; confirmação com data e hora; atraso marcado, DP-06).\n- **Boletim** (por período, com média e situação).\n- **Presença** (faltas por disciplina; pedido de justificativa).",
-         papeis=PAP, regras="- DP-06 ([80]({80})); boletim conforme [62]({62}), seção 2.", fontes=[('62', '2'), ('62', '7'), ('61', '4'), ('61', '7'), ('80', None)]),
+         papeis=PAP, regras="- DP-06 ([80]({80})); boletim conforme [62]({62}), seção 2.", fontes=[('62', '2'), ('62', '7'), ('61', '4'), ('61', '7'), ('81', None)]),
     dict(arquivo=A + 'simulados.md', area='Simulados', dominio=DOM, titulo='Simulados',
          objetivo='Simulados agendados, realização da prova e gabarito com comentários.',
          telas="- **Simulados agendados** (lista).\n- **Realizar prova** (tela em foco, cronômetro, salvamento automático, envio).\n- **Resultado, gabarito e comentários** (após liberação).",

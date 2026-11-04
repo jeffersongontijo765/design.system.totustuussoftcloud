@@ -206,7 +206,7 @@ stateDiagram-v2
 - Despesa acima de R$ 10.000 exige segundo aprovador; o solicitante não aprova a própria ([17](#doc-17), seção 2.4).
 - Duplicidades da v1 resolvidas: suprimentos é dono do estoque; auditoria é dona da trilha; autenticação consolidada no [06](#doc-06); um único módulo de atendimento ([19](#doc-19), seção 2).
 """),
- dict(n=8, titulo='Acadêmico', docs=['55', '59', '58', '60', '61', '62', '63', '64', '65', '66', '67', '68', '69', '40', '41', '42', '43', '44', '47', '37'], abertura="""
+ dict(n=8, titulo='Acadêmico', docs=['55', '59', '58', '60', '61', '81', '62', '63', '64', '65', '66', '67', '68', '69', '40', '41', '42', '43', '44', '47', '37'], abertura="""
 O acadêmico é especificado em ordem de dependência: estrutura, sistemas avaliativos, turmas e grade, diário, boletim e conselho, e os demais módulos ([55](#doc-55), seção 3).
 
 ```mermaid
@@ -244,6 +244,7 @@ stateDiagram-v2
 - Grade publicada só muda por nova versão; turma aponta para curso, grade e versão ([59](#doc-59), [60](#doc-60)).
 - Nota só pelo professor da turma; diário fechado só reabre pela coordenação, com motivo ([61](#doc-61)).
 - Ocorrência tem relato sigiloso e dado de terceiro protegido ([63](#doc-63)).
+- A Classe (mural, materiais e tarefas) tem nota de tarefa no diário só quando a tarefa é avaliação ([81](#doc-81)).
 - Aulas online, formulários, preceptoria, pastoral, agendamento, simulados e planejamento estão nos documentos [40](#doc-40) a [44](#doc-44), [47](#doc-47) e [37](#doc-37).
 """),
  dict(n=9, titulo='Secretaria, matrícula e documentos', docs=['46', '48', '54'], abertura="""
@@ -486,6 +487,83 @@ flowchart LR
   q -->|padrão seguro| dp[Decisão por padrão no 80]
 ```
 
-**Situação em aberto** ([45](#doc-45), seção 1): 58 itens jurídicos sem decisão, 14 jurídicos já decididos pelo autor, 25 de conferência de norma, 12 de homologação e 40 de revisão do owner. Nenhum item de decisão de produto está em aberto.
+**Situação em aberto** ([45](#doc-45), seção 1): 59 itens jurídicos sem decisão, 14 jurídicos já decididos pelo autor, 25 de conferência de norma, 12 de homologação e 41 de revisão do owner. Nenhum item de decisão de produto está em aberto.
 """),
 ]
+
+GLOSSARIO = """
+| Termo | Significado |
+|---|---|
+| Plataforma | A empresa que opera o SaaS. Tenant reservado, com contas de plataforma ([03](#doc-03), seção 1) |
+| Mantenedora | Cliente que contrata o SaaS; agrupa entidades |
+| Entidade | Instituição (razão social). Tem um banco de identidade com o cadastro civil |
+| Unidade | Campus, filial ou polo da entidade. Tem um banco próprio com os dados operacionais |
+| Tenant | Nível de isolamento de dados: entidade e unidade. Toda consulta filtra pelo tenant do contexto |
+| Banco master | Banco da plataforma: catálogo de entidades e unidades, contas de plataforma, CRM da plataforma, índice de pessoas |
+| Conta global | Conta única da pessoa, por e-mail verificado, válida em todas as entidades ([06](#doc-06), seção 12) |
+| Vínculo | Ligação da conta com uma entidade e uma unidade, com um papel (aluno, responsável, professor, colaborador, terceiro) |
+| Contexto | Entidade e unidade ativas na sessão; o token leva só o contexto ativo |
+| Papel | Conjunto de permissões com nível de 0 a 7 ([78](#doc-78)) |
+| Permissão | Ação autorizada no formato `modulo.recurso.acao`; sem permissão explícita, a ação é negada (default-deny) |
+| Step-up | Nova autenticação recente exigida antes de uma ação sensível |
+| Break-glass | Credencial de emergência guardada offline em dois cofres ([06](#doc-06), seção 10) |
+| Separação de funções | Quem cria um objeto financeiro, de compra ou de consentimento não o aprova ([78](#doc-78), seção 2.2) |
+| Portal | Superfície do produto para um público: desenvolvedor, gestão, professor, aluno, responsáveis, terceiros |
+| Área e módulo | Área agrupa módulos dentro de um portal ([31](#doc-31), seção 2) |
+| Protocolo | Número de acompanhamento de requerimento ou solicitação, consultável por número e CPF |
+| Matrícula condicional | Matrícula aceita com pendência e prazo; vencido o prazo, é cancelada por job ([46](#doc-46), M-04) |
+| Diário | Registro de aula, chamada, conteúdo e notas da turma ([61](#doc-61)) |
+| Sistema avaliativo | Escala, média, recuperação e regra de aprovação de uma turma ([59](#doc-59), seção 4) |
+| Ledger | Registro financeiro em partidas dobradas de todo movimento ([20](#doc-20), seção 5) |
+| Split | Divisão do pagamento entre recebedores no gateway ([34](#doc-34), seção 3) |
+| NFS-e | Nota fiscal de serviço eletrônica ([34](#doc-34), seção 5) |
+| DPO (encarregado) | Pessoa indicada para responder pela proteção de dados; a plataforma e cada entidade têm o seu |
+| ROPA | Registro das operações de tratamento de dados pessoais |
+| ANPD | Autoridade Nacional de Proteção de Dados |
+| SLA | Prazo de atendimento com contagem pausada nos estados de espera ([32](#doc-32), seção 2.3) |
+| DDL | Definição das tabelas do banco ([51](#doc-51)) |
+| ADR | Registro de decisão de arquitetura ([02](#doc-02), seção 6) |
+| SBOM e SLSA | Lista de componentes do build e procedência verificável do artefato ([05](#doc-05), [10](#doc-10)) |
+| D-xx, L-xx, DP-xx | Decisão do autor, regra de licenciamento ou permissão aprovada, e decisão tomada por padrão ([80](#doc-80)) |
+| [Declarado] e [Planejado] | Afirmação da v1 ainda não reproduzida; item ainda não implementado, com dono e critério de aceite ([00](#doc-00)) |
+| [A], [V] e [P] | Norma consolidada; norma a verificar; ponto que depende de parecer ([26](#doc-26)) |
+"""
+
+PARTES.append(dict(n=20, titulo='Plano de implementação', docs=[], abertura="""
+O sistema é construído em oito fases. Cada fase só começa quando as fases de que ela depende passaram pelo critério de passagem. As fases seguem a ordem de dependência do acadêmico ([55](#doc-55), seção 3) e o pipeline de entrega ([10](#doc-10), seção 4).
+
+```mermaid
+flowchart LR
+  F0[F0 Fundação] --> F1[F1 Plataforma SaaS]
+  F0 --> F2[F2 Acadêmico núcleo]
+  F1 --> F2
+  F2 --> F3[F3 Secretaria e documentos]
+  F2 --> F4[F4 Financeiro e fiscal]
+  F3 --> F5[F5 Portais do professor, aluno e responsáveis]
+  F4 --> F5
+  F0 --> F6[F6 Pessoas, suprimentos, patrimônio, contratos, terceiros, atendimento]
+  F5 --> F7[F7 Complementos acadêmicos, relatórios, importação e IA]
+  F6 --> F7
+```
+
+| Fase | O que entra | Documentos |
+|---|---|---|
+| F0 Fundação | Tenancy e bancos, identidade e login único, permissões e papéis, auditoria, exclusão lógica, privacidade base, internacionalização, design system, pipeline e observabilidade | [03](#doc-03), [06](#doc-06), [78](#doc-78), [29](#doc-29), [15](#doc-15), [07](#doc-07), [09](#doc-09), [08](#doc-08), [10](#doc-10) |
+| F1 Plataforma SaaS | Provisionamento, domínios e OIDC, licenciamento e limites, Editor de portais, CRM da plataforma, cobrança do SaaS, suporte | [23](#doc-23), [77](#doc-77), [22](#doc-22), [34](#doc-34), [32](#doc-32) |
+| F2 Acadêmico núcleo | Estrutura acadêmica, calendário, turmas e grade, matrícula e rematrícula, diário, boletim e conselho | [59](#doc-59), [58](#doc-58), [60](#doc-60), [46](#doc-46), [61](#doc-61), [62](#doc-62) |
+| F3 Secretaria e documentos | Protocolo, gerador de documentos, gestão de documentos, livros e arquivo morto | [31](#doc-31), seção 3.2; [48](#doc-48), [54](#doc-54), [67](#doc-67) |
+| F4 Financeiro e fiscal | Títulos, cobrança, régua, gateways e split, financeiro completo, contábil e fiscal da entidade | [17](#doc-17), [18](#doc-18), [20](#doc-20), [34](#doc-34), [71](#doc-71) |
+| F5 Portais pessoais | Professor (classe, diário, planos), aluno, responsáveis, notificações | [81](#doc-81), [64](#doc-64), [57](#doc-57), [76](#doc-76) |
+| F6 Gestão de apoio | Pessoas e SST, suprimentos, patrimônio e frotas, contratos, terceiros, biblioteca, simulados, atendimento | [39](#doc-39), [52](#doc-52), [19](#doc-19), [33](#doc-33), [38](#doc-38), [68](#doc-68), [47](#doc-47) |
+| F7 Complementos | Aulas online, formulários, preceptoria, pastoral, agendamento, ocorrências, estágio e TCC, prontuário, relatórios e censo, importação, campos personalizados, integrações oficiais, IA, planejamento e empenho | [40](#doc-40) a [44](#doc-44), [63](#doc-63), [65](#doc-65), [66](#doc-66), [69](#doc-69), [70](#doc-70), [72](#doc-72), [74](#doc-74), [27](#doc-27), [28](#doc-28), [37](#doc-37) |
+
+**Critério de passagem de cada fase**
+1. Critérios de aceite dos documentos da fase atendidos e marcados.
+2. Testes de isolamento de tenant e de autorização passando em CI ([03](#doc-03), seção 7; [06](#doc-06), seção 11).
+3. Definition of Done do [11](#doc-11), seção 2, em cada módulo.
+4. DDL revisado pelo owner e migração testada em homologação ([45](#doc-45), seção 7).
+
+**Antes de produção, por módulo**
+- As pendências jurídicas e de norma do módulo ([45](#doc-45), seções 3 e 4) estão respondidas. Um prazo marcado **[V]** ou **[P]** não entra em produção sem confirmação ([26](#doc-26), seção 3).
+- Os itens de homologação do módulo ([45](#doc-45), seção 6) foram medidos.
+"""))

@@ -283,7 +283,7 @@ Escopo: [37](../docs/v2/37-planejamento-e-empenho.md), seção 5 (especificado e
 
 ### Classe
 
-Escopo: Só turmas vinculadas. Especificação: [80](../docs/v2/80-decisoes-por-padrao.md), DP-06 (mural, materiais e tarefas)
+Escopo: Só turmas vinculadas. Especificação: [81](../docs/v2/81-classe-mural-materiais-tarefas.md); regra de origem em [80](../docs/v2/80-decisoes-por-padrao.md), DP-06
 
 - [ ] Turmas e disciplinas do próprio docente
 - [ ] mural
@@ -362,7 +362,7 @@ Escopo: Só turmas e orientandos vinculados. [63](../docs/v2/63-ocorrencias-disc
 
 ### Classe e diário
 
-Escopo: Só o próprio aluno. Especificação: [61](../docs/v2/61-diario-escolar-por-portal.md), seção 7; [62](../docs/v2/62-boletim-e-conselho-de-classe-por-portal.md), seção 7; [80](../docs/v2/80-decisoes-por-padrao.md), DP-06
+Escopo: Só o próprio aluno. Especificação: [61](../docs/v2/61-diario-escolar-por-portal.md), seção 7; [62](../docs/v2/62-boletim-e-conselho-de-classe-por-portal.md), seção 7; [81](../docs/v2/81-classe-mural-materiais-tarefas.md)
 
 - [ ] Disciplinas
 - [ ] materiais
