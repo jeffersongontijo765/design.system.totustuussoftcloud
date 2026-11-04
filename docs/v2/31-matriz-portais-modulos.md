@@ -66,6 +66,8 @@ Legenda de origem: **P** = plataforma (banco master); **E** = entidade/unidade (
 | Protocolos e pedidos | Solicitação de material, reserva de laboratório, justificativa | Usa o serviço de protocolo (seção 3.2) |
 | Documentos e pessoal | Declarações, contrato de trabalho, holerite, ponto | Só dados do próprio docente |
 | Relatórios | Rendimento da turma, ficha individual | Só turmas vinculadas |
+| Agenda e comunicação | Horário e calendário das turmas, aulas online, notificações, meu perfil | Só turmas vinculadas. [58](58-calendario-e-eventos-por-portal.md), [60](60-turmas-e-grade-de-horarios-por-portal.md), [40](40-aulas-online-por-portal.md), [57](57-notificacoes-por-portal.md), [76](76-meu-perfil-por-portal.md) (explicitado em 04/11/2026) |
+| Acompanhamento pedagógico | Ocorrências da turma, orientação de estágio e TCC, preceptoria, portfólio dos alunos, formulários e pesquisas, pastoral | Só turmas e orientandos vinculados. [63](63-ocorrencias-disciplinares-por-portal.md), [65](65-estagio-e-tcc-por-portal.md), [42](42-preceptoria-por-portal.md), [66](66-prontuario-e-portfolio-do-aluno-por-portal.md), [41](41-formularios-e-pesquisas.md), [43](43-pastoral-por-portal.md) (explicitado em 04/11/2026) |
 
 ### 2.4 Portal do Aluno (`portal-do-aluno.`)
 
@@ -79,6 +81,8 @@ Legenda de origem: **P** = plataforma (banco master); **E** = entidade/unidade (
 | Matrícula | Confirmação para o ano seguinte, eletivas, rematrícula | Seção 3.5 |
 | Financeiro | Mensalidades, boleto, PIX, comprovantes | Só títulos do próprio aluno |
 | Privacidade | Dados cadastrais, solicitações LGPD | [07](07-privacidade-lgpd.md) |
+| Agenda e comunicação | Horário da turma, calendário e eventos, aulas online, notificações, meu perfil | Só o próprio aluno. [58](58-calendario-e-eventos-por-portal.md), [60](60-turmas-e-grade-de-horarios-por-portal.md), [40](40-aulas-online-por-portal.md), [57](57-notificacoes-por-portal.md), [76](76-meu-perfil-por-portal.md) (explicitado em 04/11/2026) |
+| Vida acadêmica | Ocorrências próprias, estágio e TCC, portfólio, preceptoria, formulários e pesquisas, pastoral | Só o próprio aluno. [63](63-ocorrencias-disciplinares-por-portal.md), [65](65-estagio-e-tcc-por-portal.md), [66](66-prontuario-e-portfolio-do-aluno-por-portal.md), [42](42-preceptoria-por-portal.md), [41](41-formularios-e-pesquisas.md), [43](43-pastoral-por-portal.md) (explicitado em 04/11/2026) |
 
 ### 2.5 Portal dos Pais e Responsáveis (`portal-dos-responsaveis.`)
 
@@ -89,6 +93,7 @@ Legenda de origem: **P** = plataforma (banco master); **E** = entidade/unidade (
 | Protocolos da família | Mudança de turno, saída antecipada, documentos | Usa o serviço de protocolo |
 | Financeiro e matrícula | Faturas dos filhos, PIX, rematrícula online, assinatura do contrato | Seção 3.5. Bloqueio parcial por inadimplência ([26](26-sdd-juridico-regulatorio.md), seção 3) |
 | Privacidade e menores | Consentimento de imagem, dados dos filhos | Regra de menor de idade em [07](07-privacidade-lgpd.md) |
+| Agenda e comunicação | Horário e calendário dos dependentes, eventos e autorizações, notificações, meu perfil | Só dependentes com vínculo ativo. [58](58-calendario-e-eventos-por-portal.md), [60](60-turmas-e-grade-de-horarios-por-portal.md), [43](43-pastoral-por-portal.md), [57](57-notificacoes-por-portal.md), [76](76-meu-perfil-por-portal.md) (explicitado em 04/11/2026) |
 
 ### 2.6 Portal de Terceiros (`portal-de-terceiros.`)
 
@@ -100,6 +105,7 @@ Legenda de origem: **P** = plataforma (banco master); **E** = entidade/unidade (
 | Prestação de serviço | Ordens de serviço, relatórios de execução, cronograma | Só ordens do próprio fornecedor |
 | Chamados | Abertura de chamado de manutenção, solicitação de acesso à unidade | Usa o módulo de atendimento (seção 3.7) |
 | Configurações e integrações | Dados da empresa, responsáveis técnicos, dados bancários, integrações via API | Dados bancários exigem confirmação por MFA |
+| Habilitação e acesso | Cadastro e habilitação do prestador, pessoas e papéis do prestador, tipo de prestador, meu perfil | [38](38-portal-de-terceiros-prestadores.md), seções 2 a 6; [76](76-meu-perfil-por-portal.md) (explicitado em 04/11/2026) |
 
 **Regra:** o portal de terceiros nunca mostra financeiro interno, contábil, folha ou dado de aluno.
 

@@ -38,9 +38,15 @@ def rel(destino_dir, alvo):
     return os.path.relpath(alvo, destino_dir).replace(os.sep, '/')
 
 
+def links_locais(texto):
+    """Links file:/// da v1 (máquina do autor) viram referência ao repositório do aplicativo."""
+    return re.sub(r'\[([^\]]*)\]\(file:///[a-zA-Z]:/Xampp/htdocs/totustuussoftcloud/([^)]+)\)',
+                  r'\1 (repositório do aplicativo `jeffersongontijo765/totustuussoftcloud.academic`, arquivo `\2`)', texto)
+
+
 def rebaixa(texto, extra=2):
     out, codigo = [], False
-    for linha in texto.splitlines():
+    for linha in links_locais(texto).splitlines():
         if linha.lstrip().startswith('```'):
             codigo = not codigo
         if not codigo:

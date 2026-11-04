@@ -16,9 +16,15 @@ def rel(destino_dir, alvo):
     return os.path.relpath(alvo, destino_dir).replace(os.sep, '/')
 
 
+def links_locais(texto):
+    """Links file:/// da v1 (máquina do autor) viram referência ao repositório do aplicativo."""
+    return re.sub(r'\[([^\]]*)\]\(file:///[a-zA-Z]:/Xampp/htdocs/totustuussoftcloud/([^)]+)\)',
+                  r'\1 (repositório do aplicativo `jeffersongontijo765/totustuussoftcloud.academic`, arquivo `\2`)', texto)
+
+
 def rebaixa(texto, niveis=2):
     out, codigo = [], False
-    for linha in texto.splitlines():
+    for linha in links_locais(texto).splitlines():
         if linha.lstrip().startswith('```'):
             codigo = not codigo
         if not codigo and re.match(r'^#{1,4} ', linha):
@@ -113,6 +119,7 @@ def monta(cfg):
 
 
 PLAT = 'plataforma (banco master), instância separada do módulo das entidades ([31]({31-matriz-portais-modulos.md}), seção 2.1)'
+TRANSV = 'transversal: vale para todos os portais e módulos'
 SEM_UNIDADE = '- **Instância da empresa:** sem filtro de unidade, entidade ou filial; dados no banco master; o portal do desenvolvedor não vê o módulo de nenhuma entidade.'
 FICHAS = [
  dict(arquivo='desenvolvedor/operacoes-internas/patrimonio.md', v1='spec_patrimonio_completo.md',
@@ -365,6 +372,69 @@ FICHAS = [
   dados="- Metadados dos bancos no master (`tenant_databases`, versão de esquema, backups). Nenhum dado de cliente é lido pelo painel.",
   integracoes="- Provisionamento ([provisionamento.md](../plataforma-e-clientes/provisionamento.md)): cria banco e registro.\n- Backup externo ([16]({16-integracoes-externas.md}), seção 2).",
   pendencias="- Prazo de retenção de backup (G-12, [36]({36-tecnologia-da-informacao-por-portal.md}), seção 3)."),
+ dict(arquivo='transversal/exclusao-logica.md', v1='spec-soft-delete-totustuus.md',
+  titulo='Exclusão lógica (soft delete)', portal='Todos', area='Transversal', dominio=TRANSV,
+  objetivo='Regra única de exclusão lógica para toda tabela que aceita exclusão: colunas, validação prévia, unicidade, cascata lógica, restauração, expurgo e testes.',
+  correcoes="""- **Exclusão é lógica por padrão** (`deleted_at`); física só pelo processo de retenção ou pedido do titular ([03]({03-dominio-tenancy.md}), seção 6).
+- **Colunas** `deleted_at` e `deleted_by` em toda tabela que aceita exclusão ([19]({19-regras-modulos-3.md}), seção 14).
+- **Exclusão bloqueada se houver dependente ativo**; a resposta lista só os tipos de dependentes, sem dados ([15]({15-validacoes.md}), seções 4 e 5). Motivo obrigatório para registros financeiros e de saúde.
+- **Auditoria nunca é expurgada por soft delete** ([19]({19-regras-modulos-3.md}), seção 14; [29]({29-auditoria.md})).
+- **IA não executa nem sugere exclusão** ([28]({28-cobertura-ia-todos-os-modulos.md})).""",
+  decisoes="- Nenhuma decisão nova.",
+  papeis="- Quem pode excluir é definido pela permissão `modulo.recurso.excluir` de cada módulo ([78]({78-permissoes-e-papeis.md})); restaurar exige a mesma permissão; expurgo só pelo job de retenção.",
+  dados="- Índices de unicidade consideram `deleted_at` conforme a v1 (seção 13), sem permitir dois registros ativos iguais.",
+  integracoes="- Busca e cache removem o registro excluído do índice ([21]({21-busca-e-armazenamento.md}), [30]({30-cache.md})).",
+  pendencias="- Prazo de expurgo por tipo de dado: matriz de retenção ([26]({26-sdd-juridico-regulatorio.md}), seção 3)."),
+ dict(arquivo='transversal/arquitetura-da-plataforma.md', v1='spec_education_saas_architecture.md',
+  titulo='Arquitetura da plataforma educacional SaaS', portal='Todos', area='Transversal', dominio=TRANSV,
+  objetivo='Visão de arquitetura da v1 (visão, princípios, áreas, tenant, identidade, portais, módulos, dados, banco, segurança e API), guardada integralmente e subordinada à arquitetura da v2.',
+  correcoes="""- **Arquitetura, camadas, middleware e ADRs:** o [02]({02-arquitetura.md}) prevalece.
+- **Tenant, unidade e bancos:** o [03]({03-dominio-tenancy.md}) prevalece (banco por unidade, master da plataforma, banco de identidade da entidade).
+- **Identidade:** o [06]({06-identidade-acesso.md}) prevalece (conta global, vínculos e contexto, seção 12).
+- **Portais e módulos:** a matriz [31]({31-matriz-portais-modulos.md}) prevalece; papéis no [78]({78-permissoes-e-papeis.md}).
+- **API:** o [04]({04-api.md}) prevalece.""",
+  decisoes="- Nenhuma decisão nova.", papeis="- Não se aplica (documento de arquitetura).",
+  dados="- Domínios de dados conforme [03]({03-dominio-tenancy.md}) e DDL do [51]({51-ddl-modulos-novos.md}).",
+  integracoes="- [14]({14-integracao-modulos.md}) e [16]({16-integracoes-externas.md}).",
+  pendencias="- Riscos arquiteturais conhecidos ([02]({02-arquitetura.md}), seção 8)."),
+ dict(arquivo='transversal/build-e-procedencia-slsa.md', v1='slsa-build-spec.md',
+  titulo='Build, procedência e SLSA', portal='Todos', area='Transversal', dominio=TRANSV,
+  objetivo='Pipeline de build com procedência verificável (SLSA), SBOM, assinatura de artefatos, gate de deploy, cofre de segredos e logs de build.',
+  correcoes="""- **Pipeline e ambientes:** o [10]({10-implantacao-operacao.md}), seções 2 a 4, prevalece; gates de entrega no [11]({11-governanca-qualidade.md}), seção 3.
+- **SBOM CycloneDX, assinatura e procedência SLSA** estão marcados como **[Planejado]** no [05]({05-seguranca.md}); esta ficha é o roteiro de implementação.
+- **Segredos:** cofre e nenhum segredo em repositório ou log ([10]({10-implantacao-operacao.md}), seção 3; [05]({05-seguranca.md}), seção 2).
+- **IA:** só explica falha de build; não aprova release ([28]({28-cobertura-ia-todos-os-modulos.md})).""",
+  decisoes="- Nenhuma decisão nova.", papeis="- `platform.ops` opera o pipeline; `platform.developer` aprova release (segundo papel).",
+  dados="- Atestados de procedência e SBOM guardados por versão publicada.", integracoes="- Cofre de segredos e armazenamento de artefatos ([16]({16-integracoes-externas.md}), seção 2).",
+  pendencias="- Nível SLSA alvo e prazo (ADR, [11]({11-governanca-qualidade.md}), seção 4)."),
+ dict(arquivo='transversal/teste-de-intrusao.md', v1='penetration-test-spec-v2.md',
+  titulo='Teste de intrusão (pentest)', portal='Todos', area='Transversal', dominio=TRANSV,
+  objetivo='Fases, responsabilidades e checklist do teste de intrusão externo e interno.',
+  correcoes="""- **Estratégia de testes e pentest externo:** o [24]({24-operacao-continuidade-qualidade.md}), seção 5, prevalece; escopo definido por esta ficha.
+- **Divulgação de vulnerabilidade:** [24]({24-operacao-continuidade-qualidade.md}), seção 6.
+- **Testes de tenancy e de identidade** são critério de aceite obrigatório ([03]({03-dominio-tenancy.md}), seção 7; [06]({06-identidade-acesso.md}), seção 11).""",
+  decisoes="- Nenhuma decisão nova.", papeis="- `platform.security` coordena; o pentest externo é contratado; achados viram chamados com SLA de correção.",
+  dados="- Relatórios de pentest com acesso restrito a `platform.security` e `platform.developer`.", integracoes="- Não se aplica.",
+  pendencias="- Periodicidade e fornecedor do pentest externo ([24]({24-operacao-continuidade-qualidade.md}), seção 9)."),
+ dict(arquivo='transversal/navegacao-dos-portais.md', v1='12-portals-navigation-sidebar-pages-spec.md',
+  titulo='Navegação dos portais (sidebars e páginas)', portal='Todos', area='Transversal', dominio=TRANSV,
+  objetivo='Arquitetura de navegação dos seis portais (sidebar e sub-sidebar), matriz de páginas da v1, checklist de 21 itens de layout e governança de segurança da navegação.',
+  correcoes="""- **Matriz de portais, áreas e módulos:** a [31]({31-matriz-portais-modulos.md}) prevalece; itens da v1 fora da matriz não entram no menu sem passar pela matriz.
+- **Layout, componentes e acessibilidade:** o [08]({08-frontend-design-system.md}) prevalece; o checklist de 21 itens da v1 (seção 13) vale onde não contradiz o 08.
+- **Menu por permissão:** item sem permissão não aparece e a rota responde 404 ou 403 (default-deny, [78]({78-permissoes-e-papeis.md}), seção 5).
+- **Itens só citados na v1** (mural, materiais, tarefas) ganharam regra no DP-06 ([80]({80-decisoes-por-padrao.md})).
+- **`sub_sidebar_itsm.php`** é código de view com `onclick=` (ACH-01) e não é especificação ([12]({12-catalogo-modulos.md}), seção 3).""",
+  decisoes="- DP-06 ([80]({80-decisoes-por-padrao.md})).", papeis="- O menu de cada portal é montado pelos papéis do [78]({78-permissoes-e-papeis.md}).",
+  dados="- Itens de menu publicados pelo Editor de portais ([editor-de-portais](../desenvolvedor/editor-de-portais/)).", integracoes="- Editor de portais (D-23).",
+  pendencias="- Nenhuma."),
+ dict(arquivo='transversal/plano-de-implementacao-v1.md', v1='TASKS_SPECS.md',
+  titulo='Plano de implementação da v1 (fases e checklist)', portal='Todos', area='Transversal', dominio=TRANSV,
+  objetivo='Plano de tarefas da v1 (fases 0 a 3, ordem de dependência e checklist de 18 itens por módulo), guardado integralmente como referência de ordem de construção.',
+  correcoes="""- **Ordem de construção da v2:** fundações transversais (tenancy [03]({03-dominio-tenancy.md}), identidade [06]({06-identidade-acesso.md}), auditoria [29]({29-auditoria.md}), exclusão lógica, privacidade [07]({07-privacidade-lgpd.md})), depois o acadêmico na ordem do [55]({55-academico-verificacao-e-lacunas.md}), seção 3, e os demais módulos pela matriz [31]({31-matriz-portais-modulos.md}).
+- **Definition of Done e gates:** [11]({11-governanca-qualidade.md}), seções 2 e 3.
+- **Caminho `C:\\Xampp\\htdocs\\ttscdoc\\` e o progresso de 10/07/2026** são da v1 e não valem para a v2.""",
+  decisoes="- Nenhuma decisão nova.", papeis="- Não se aplica.", dados="- Não se aplica.", integracoes="- Não se aplica.",
+  pendencias="- Backlog priorizado: [11]({11-governanca-qualidade.md}), seção 8."),
 ]
 
 for cfg in FICHAS:

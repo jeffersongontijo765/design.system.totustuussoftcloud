@@ -1,0 +1,205 @@
+# Prestação de serviço
+
+- Portal: Terceiros (`portal-de-terceiros.`)
+- Área: Prestação de serviço
+- Domínio: entidade: banco da unidade; o prestador vê **só o que é da própria organização e do contrato vinculado**; nunca financeiro interno, contábil, folha ou dado de aluno ([31](../../docs/v2/31-matriz-portais-modulos.md), seção 2.6; [38](../../docs/v2/38-portal-de-terceiros-prestadores.md), seção 6)
+- Status: detalhado; regras da v2 copiadas integralmente (seção 13)
+- Fonte da v2: [38](../../docs/v2/38-portal-de-terceiros-prestadores.md), seção 3
+- Fonte da v1: sem especificação própria; valem as regras do SDD v2 (seção 13)
+
+## 1. Regra de leitura
+
+As seções 1 a 12 resumem e organizam a implementação. A seção 13 é o texto integral do SDD v2 que rege o módulo e prevalece em caso de dúvida. Decisões tomadas por padrão estão no [80](../../docs/v2/80-decisoes-por-padrao.md).
+
+## 2. Objetivo e escopo
+
+Ordens de serviço, relatórios de execução e cronograma, com regras por tipo de prestador.
+
+## 3. Telas
+
+- **Ordens de serviço** (aceitar, executar, concluir com evidência).
+- **Relatórios de execução**.
+- **Cronograma** (calendário).
+
+## 4. Permissões por portal (extraídas do SDD)
+
+- O SDD não traz tabela por portal para este módulo; vale o escopo da seção 2 e os papéis abaixo.
+
+## 5. Papéis
+
+- `thirdparty` (nível 0, contrato vinculado) e `thirdparty.manager` (nível 1, gestão de entregas e faturas do contrato) ([78](../../docs/v2/78-permissoes-e-papeis.md), seção 4.6; papéis do prestador em [38](../../docs/v2/38-portal-de-terceiros-prestadores.md), seção 2).
+- Regras transversais: default-deny, separação de funções, step-up para ação sensível e revisão de acesso ([78](../../docs/v2/78-permissoes-e-papeis.md), seções 2 e 5).
+
+## 6. Regras de negócio essenciais
+
+- Regras específicas por tipo de prestador ([38](../../docs/v2/38-portal-de-terceiros-prestadores.md), seção 3).
+
+## 7. Dados
+
+- Tabelas e campos conforme a seção 13 e o DDL do [51](../../docs/v2/51-ddl-modulos-novos.md), quando o módulo estiver lá. Toda tabela tem `entidade_id`, `unidade_id`, `created_at`, `updated_at`, `created_by` e exclusão lógica com `deleted_at` e `deleted_by` ([03](../../docs/v2/03-dominio-tenancy.md), seção 6; [15](../../docs/v2/15-validacoes.md); [19](../../docs/v2/19-regras-modulos-3.md), seção 14).
+
+## 8. Integrações
+
+- Ver a seção de integrações do documento de origem, na seção 13.
+
+## 9. Exportação, auditoria e privacidade
+
+- Exportação de listas: CSV, XLSX, PDF e JSON, com permissão de exportação e step-up; CSV com células neutralizadas ([08](../../docs/v2/08-frontend-design-system.md), seção 3).
+- Toda criação, alteração, aprovação, exclusão lógica, exportação e leitura de dado sensível gera evento de auditoria no banco da unidade ([29](../../docs/v2/29-auditoria.md)).
+- Dados pessoais conforme [07](../../docs/v2/07-privacidade-lgpd.md): mínimo necessário, mascaramento em listas, base legal registrada.
+
+## 10. Estados de interface
+
+- Carregando (skeleton), vazio com chamada para ação, sem resultado de filtro, erro com nova tentativa, acesso negado, registro bloqueado, fechado ou baixado (somente leitura), conflito de edição (versão).
+
+## 11. Requisitos de frontend
+
+- Sem JavaScript inline nem atributos `on*=`; textos por chave de i18n; tema claro e escuro; WCAG 2.2 AA; 320 px sem rolagem horizontal ([08](../../docs/v2/08-frontend-design-system.md)).
+- Componentes do design system (índice em `docs/design-system/template/components/` no projeto e skill `agente-frontend`): página de lista com DataTable, KPIs, drawer de detalhe, formulário em página ou modal, kanban quando houver fluxo de estados.
+- Seletor de unidade no topo quando o usuário tiver mais de uma; a troca reemite o token com o novo contexto ([06](../../docs/v2/06-identidade-acesso.md), seção 12).
+
+## 12. Critérios de aceite e pendências
+
+- Critérios de aceite: os do documento de origem (seção 13) e os de [31](../../docs/v2/31-matriz-portais-modulos.md), seção 6.
+- Testes de isolamento: usuário de outra unidade ou entidade recebe 404 em toda rota do módulo ([03](../../docs/v2/03-dominio-tenancy.md)).
+- As pendências do documento de origem estão na seção 13 e consolidadas no [45](../../docs/v2/45-pendencias-consolidadas.md).
+
+## 13. Regras da v2 (texto integral das fontes, sem corte)
+
+### 13.1 [38](../../docs/v2/38-portal-de-terceiros-prestadores.md), seção 3
+
+#### 3. Tipos de prestador
+
+Cada tipo tem um **pacote fixo** de ações e de dados. A entidade habilita o pacote no contrato. Nenhum tipo recebe dado de outro tipo.
+
+##### 3.1 Jurídico (escritório de advocacia)
+
+| Pode | Não pode |
+|---|---|
+| Ver contratos, pareceres e processos designados | Ver financeiro completo da entidade |
+| Registrar parecer e minuta ([33](../../docs/v2/33-contratos-por-portal.md), seção 8, perfil JU) | Aprovar contrato como gestor |
+| Ver dado de aluno apenas em processo designado, com motivo | Ver lista geral de alunos |
+
+Sigilo profissional. Todo acesso a processo gera evento de auditoria com motivo ([29](../../docs/v2/29-auditoria.md)).
+
+##### 3.2 Contabilidade
+
+| Pode | Não pode |
+|---|---|
+| Lançamentos, obrigações e tributos do escopo | Ver folha detalhada por colaborador. Recebe só totais |
+| Propor fechamento, que o contador da entidade aprova | Fechar período sozinho |
+| Exportar para o ERP do contador | Ver dado de saúde ou de aluno |
+
+Lançamento proposto pelo prestador tem origem registrada. Aprovação é do contador da entidade ([22](../../docs/v2/22-crm-canais-e-papeis.md), seção 5).
+
+##### 3.3 Cartório (serviço notarial ou registral contratado)
+
+| Pode | Não pode |
+|---|---|
+| Receber pedido de autenticação ou reconhecimento de documento indicado pela entidade | Ver outros documentos do titular |
+| Devolver status e selo digital, quando o cartório emitir | Alterar o documento original |
+
+Dado do titular aparece mascarado (CPF e e-mail, [29](../../docs/v2/29-auditoria.md), seção 6). Validade jurídica do selo **(verificar)** com o tipo de ato.
+
+##### 3.4 Alimentação escolar (lanchonete ou fornecedor de merenda)
+
+| Pode | Não pode |
+|---|---|
+| Ver cardápio aprovado por nutricionista e quantidade de refeições por unidade e dia | Ver lista nominal de alunos sem restrição |
+| Registrar entrega, temperatura e validade, conforme a RDC ANVISA nº 216/2004 (ver regra abaixo) | Ver histórico de compra da entidade com outro prestador |
+| Receber lista de restrição alimentar, sem diagnóstico | Ver diagnóstico ou CID |
+
+Regra de dado da alimentação, conferida em 03/11/2026 no texto da RDC ANVISA nº 216/2004 (bvsms.saude.gov.br). A RDC vale para cantinas e cozinhas institucionais (item 1.2). Leitura nossa: inclui cantina escolar e cozinha de merenda. A vigilância sanitária local pode complementar (art. 2º).
+
+| Registro | Limite que o sistema confere |
+|---|---|
+| Cocção | Pelo menos 70 ºC em todas as partes do alimento (4.8.8) |
+| Conservação a quente | Acima de 60 ºC por no máximo 6 horas (4.8.15) |
+| Resfriamento | De 60 ºC a 10 ºC em até 2 horas, depois abaixo de 5 ºC ou a -18 ºC ou menos (4.8.16) |
+| Preparado refrigerado | Até 5 dias a 4 ºC ou menos. Entre 4 ºC e 5 ºC, prazo menor, configurado pelo prestador (4.8.17) |
+| Identificação | Designação, data de preparo e validade no preparado e no aguardando transporte. Data de abertura e nova validade no ingrediente aberto (4.8.6, 4.8.18 e 4.9.1) |
+| Transporte e exposição | Temperatura monitorada e registrada (4.9.2 e 4.10.3) |
+| Guarda | Registros mantidos por no mínimo 30 dias da data de preparo (4.11.3). O sistema guarda pelo prazo do contrato, nunca menos de 30 dias |
+
+Valor fora do limite gera ocorrência para o responsável da entidade. O registro não é apagado nem corrigido sem rastro.
+
+**Restrição alimentar** é dado de saúde ([07](../../docs/v2/07-privacidade-lgpd.md), seção 2). O prestador recebe apenas o aviso "restrição: sim" e o tipo de alimento a evitar, com consentimento do responsável **(jurídico)**. Não recebe a condição clínica.
+
+##### 3.5 Transporte escolar
+
+| Pode | Não pode |
+|---|---|
+| Ver rotas, horários e pontos do contrato | Ver endereço completo do aluno |
+| Ver lista de embarque por ponto, com nome e turma | Ver CPF, saúde ou notas |
+| Registrar embarque e desembarque | Ver histórico de localização passado |
+| Rastrear o veículo durante a viagem, sem identificar o aluno no mapa | Ver localização de aluno fora da viagem |
+
+**Dado de menor com localização** é o caso de maior risco desta seção. Regras:
+
+- A localização do veículo só é transmitida durante a viagem. Não há histórico além do necessário para a viagem, com prazo de 30 dias, decidido em 03/11/2026.
+- Embarque só com autorização do responsável registrada ([35](../../docs/v2/35-acesso-e-seguranca-fisica-por-portal.md), seção 3.3).
+- Alerta de desvio de rota vai para a coordenação e para o responsável, não para o prestador.
+- Base legal e prazo de guarda **(jurídico)**.
+
+##### 3.6 Transportadora (carga e entrega de materiais)
+
+| Pode | Não pode |
+|---|---|
+| Ver pedidos de compra e ordens de entrega do contrato | Ver dado pessoal de qualquer pessoa |
+| Registrar coleta, entrega e comprovante | Ver rota de veículo de outro prestador |
+| Rastrear a carga | Ver frota da entidade além das próprias cargas |
+
+Rastreio é de carga, não de pessoa.
+
+##### 3.7 Tecnologia da informação (terceirizado de TI)
+
+| Pode | Não pode |
+|---|---|
+| Atender chamados de TI do escopo ([36](../../docs/v2/36-tecnologia-da-informacao-por-portal.md)) | Ver banco de dados de pessoas |
+| Ver a vista de ativos de TI do escopo | Alterar contrato ou configuração de segurança |
+| Acesso remoto só com chamado aberto, passkey e sessão gravada | Acesso remoto permanente |
+
+Acesso remoto de terceiro é o caminho de maior risco de TI. Exige chamado vinculado, janela de atendimento e registro da sessão ([36](../../docs/v2/36-tecnologia-da-informacao-por-portal.md), seção 6).
+
+##### 3.8 Limpeza e manutenção predial
+
+| Pode | Não pode |
+|---|---|
+| Ver ordens de serviço, cronograma e áreas do contrato | Ver dado de aluno ou de colaborador |
+| Solicitar crachá temporário pela portaria ([35](../../docs/v2/35-acesso-e-seguranca-fisica-por-portal.md)) | Ver registro de acesso de outras pessoas |
+| Registrar execução e foto da área sem pessoa identificável | Ver câmera |
+
+##### 3.9 Vigilância e segurança patrimonial
+
+| Pode | Não pode |
+|---|---|
+| Ver plantão, rondas e ocorrências do contrato | Ver câmera ao vivo fora de ocorrência aberta |
+| Registrar ocorrência | Exportar imagem |
+| Ver lista de visitantes autorizados do dia | Ver histórico de visitantes |
+
+Acesso a imagem, quando permitido por ocorrência, gera evento de auditoria com motivo e tempo limitado ([35](../../docs/v2/35-acesso-e-seguranca-fisica-por-portal.md), seção 6).
+
+##### 3.10 Uniformes, material didático e livraria
+
+| Pode | Não pode |
+|---|---|
+| Ver pedidos, catálogo e entregas do contrato | Ver lista nominal de alunos |
+| Ver quantidades por série, tamanho e unidade | Ver dado pessoal além do destinatário da entrega, quando necessário |
+| Emitir nota da venda ([34](../../docs/v2/34-pagamentos-fiscal-bancos-por-portal.md), seção 5.3) | Ver pagamento de outro prestador |
+
+##### 3.11 Saúde ocupacional terceirizada (clínica de ASO)
+
+| Pode | Não pode |
+|---|---|
+| Receber agendamento de exame ocupacional: nome, função, tipo de exame | Ver histórico de exame de outro colaborador |
+| Devolver resultado: apto, inapto ou apto com restrição, e o ASO | Ver CID, diagnóstico ou prontuário fora do ASO |
+| Médico responsável com CRM válido | Acessar sistema da entidade além do agendamento |
+
+Regra de dado: o prontuário fica sob responsabilidade do médico responsável pelo PCMSO, ou do médico que fez o exame quando a entidade é dispensada do PCMSO (NR-7, 7.6.1). A entidade é obrigada a manter o prontuário por no mínimo 20 anos após o desligamento (7.6.1.1). Por isso, o contrato com a clínica garante a guarda pelo prazo e a transferência formal dos prontuários quando o médico responsável ou a clínica mudar (7.6.1.2). A entidade recebe o resultado e o ASO, não o prontuário. Prontuário eletrônico segue o Conselho Federal de Medicina (7.6.1.3) **(verificar)**.
+
+##### 3.12 Consultoria pedagógica e treinamento
+
+| Pode | Não pode |
+|---|---|
+| Ver turmas e conteúdo de formação do contrato | Ver notas ou dado de aluno |
+| Registrar presença de participantes | Ver dado pessoal além de nome e função, para certificado |

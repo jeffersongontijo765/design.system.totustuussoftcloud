@@ -2,7 +2,7 @@
 
 Gerado por `inventario/gera_inventario.py` a partir de `docs/v2/31-matriz-portais-modulos.md`, seção 2.
 Nível: portal → área → módulo. As telas de cada módulo são detalhadas antes de implementar.
-Total de módulos listados: 216. Status inicial: nenhum implementado.
+Total de módulos listados: 245. Status inicial: nenhum implementado.
 
 
 ## 2.1 Portal do Desenvolvedor (`desenvolvedor.`) — equipe da plataforma
@@ -338,6 +338,26 @@ Escopo: Só turmas vinculadas
 - [ ] Rendimento da turma
 - [ ] ficha individual
 
+### Agenda e comunicação
+
+Escopo: Só turmas vinculadas. [58](../docs/v2/58-calendario-e-eventos-por-portal.md), [60](../docs/v2/60-turmas-e-grade-de-horarios-por-portal.md), [40](../docs/v2/40-aulas-online-por-portal.md), [57](../docs/v2/57-notificacoes-por-portal.md), [76](../docs/v2/76-meu-perfil-por-portal.md) (explicitado em 04/11/2026)
+
+- [ ] Horário e calendário das turmas
+- [ ] aulas online
+- [ ] notificações
+- [ ] meu perfil
+
+### Acompanhamento pedagógico
+
+Escopo: Só turmas e orientandos vinculados. [63](../docs/v2/63-ocorrencias-disciplinares-por-portal.md), [65](../docs/v2/65-estagio-e-tcc-por-portal.md), [42](../docs/v2/42-preceptoria-por-portal.md), [66](../docs/v2/66-prontuario-e-portfolio-do-aluno-por-portal.md), [41](../docs/v2/41-formularios-e-pesquisas.md), [43](../docs/v2/43-pastoral-por-portal.md) (explicitado em 04/11/2026)
+
+- [ ] Ocorrências da turma
+- [ ] orientação de estágio e TCC
+- [ ] preceptoria
+- [ ] portfólio dos alunos
+- [ ] formulários e pesquisas
+- [ ] pastoral
+
 ## 2.4 Portal do Aluno (`portal-do-aluno.`)
 
 ### Classe e diário
@@ -406,6 +426,27 @@ Escopo: [07](../docs/v2/07-privacidade-lgpd.md)
 - [ ] Dados cadastrais
 - [ ] solicitações LGPD
 
+### Agenda e comunicação
+
+Escopo: Só o próprio aluno. [58](../docs/v2/58-calendario-e-eventos-por-portal.md), [60](../docs/v2/60-turmas-e-grade-de-horarios-por-portal.md), [40](../docs/v2/40-aulas-online-por-portal.md), [57](../docs/v2/57-notificacoes-por-portal.md), [76](../docs/v2/76-meu-perfil-por-portal.md) (explicitado em 04/11/2026)
+
+- [ ] Horário da turma
+- [ ] calendário e eventos
+- [ ] aulas online
+- [ ] notificações
+- [ ] meu perfil
+
+### Vida acadêmica
+
+Escopo: Só o próprio aluno. [63](../docs/v2/63-ocorrencias-disciplinares-por-portal.md), [65](../docs/v2/65-estagio-e-tcc-por-portal.md), [66](../docs/v2/66-prontuario-e-portfolio-do-aluno-por-portal.md), [42](../docs/v2/42-preceptoria-por-portal.md), [41](../docs/v2/41-formularios-e-pesquisas.md), [43](../docs/v2/43-pastoral-por-portal.md) (explicitado em 04/11/2026)
+
+- [ ] Ocorrências próprias
+- [ ] estágio e TCC
+- [ ] portfólio
+- [ ] preceptoria
+- [ ] formulários e pesquisas
+- [ ] pastoral
+
 ## 2.5 Portal dos Pais e Responsáveis (`portal-dos-responsaveis.`)
 
 ### Acompanhamento
@@ -447,6 +488,15 @@ Escopo: Regra de menor de idade em [07](../docs/v2/07-privacidade-lgpd.md)
 
 - [ ] Consentimento de imagem
 - [ ] dados dos filhos
+
+### Agenda e comunicação
+
+Escopo: Só dependentes com vínculo ativo. [58](../docs/v2/58-calendario-e-eventos-por-portal.md), [60](../docs/v2/60-turmas-e-grade-de-horarios-por-portal.md), [43](../docs/v2/43-pastoral-por-portal.md), [57](../docs/v2/57-notificacoes-por-portal.md), [76](../docs/v2/76-meu-perfil-por-portal.md) (explicitado em 04/11/2026)
+
+- [ ] Horário e calendário dos dependentes
+- [ ] eventos e autorizações
+- [ ] notificações
+- [ ] meu perfil
 
 ## 2.6 Portal de Terceiros (`portal-de-terceiros.`)
 
@@ -497,4 +547,13 @@ Escopo: Dados bancários exigem confirmação por MFA
 - [ ] responsáveis técnicos
 - [ ] dados bancários
 - [ ] integrações via API
+
+### Habilitação e acesso
+
+Escopo: [38](../docs/v2/38-portal-de-terceiros-prestadores.md), seções 2 a 6; [76](../docs/v2/76-meu-perfil-por-portal.md) (explicitado em 04/11/2026)
+
+- [ ] Cadastro e habilitação do prestador
+- [ ] pessoas e papéis do prestador
+- [ ] tipo de prestador
+- [ ] meu perfil
 

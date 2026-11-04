@@ -5734,6 +5734,8 @@ Legenda de origem: **P** = plataforma (banco master); **E** = entidade/unidade (
 | Protocolos e pedidos | Solicitação de material, reserva de laboratório, justificativa | Usa o serviço de protocolo (seção 3.2) |
 | Documentos e pessoal | Declarações, contrato de trabalho, holerite, ponto | Só dados do próprio docente |
 | Relatórios | Rendimento da turma, ficha individual | Só turmas vinculadas |
+| Agenda e comunicação | Horário e calendário das turmas, aulas online, notificações, meu perfil | Só turmas vinculadas. [58](#parte-58), [60](#parte-60), [40](#parte-40), [57](#parte-57), [76](#parte-76) (explicitado em 04/11/2026) |
+| Acompanhamento pedagógico | Ocorrências da turma, orientação de estágio e TCC, preceptoria, portfólio dos alunos, formulários e pesquisas, pastoral | Só turmas e orientandos vinculados. [63](#parte-63), [65](#parte-65), [42](#parte-42), [66](#parte-66), [41](#parte-41), [43](#parte-43) (explicitado em 04/11/2026) |
 
 #### 2.4 Portal do Aluno (`portal-do-aluno.`)
 
@@ -5747,6 +5749,8 @@ Legenda de origem: **P** = plataforma (banco master); **E** = entidade/unidade (
 | Matrícula | Confirmação para o ano seguinte, eletivas, rematrícula | Seção 3.5 |
 | Financeiro | Mensalidades, boleto, PIX, comprovantes | Só títulos do próprio aluno |
 | Privacidade | Dados cadastrais, solicitações LGPD | [07](#parte-07) |
+| Agenda e comunicação | Horário da turma, calendário e eventos, aulas online, notificações, meu perfil | Só o próprio aluno. [58](#parte-58), [60](#parte-60), [40](#parte-40), [57](#parte-57), [76](#parte-76) (explicitado em 04/11/2026) |
+| Vida acadêmica | Ocorrências próprias, estágio e TCC, portfólio, preceptoria, formulários e pesquisas, pastoral | Só o próprio aluno. [63](#parte-63), [65](#parte-65), [66](#parte-66), [42](#parte-42), [41](#parte-41), [43](#parte-43) (explicitado em 04/11/2026) |
 
 #### 2.5 Portal dos Pais e Responsáveis (`portal-dos-responsaveis.`)
 
@@ -5757,6 +5761,7 @@ Legenda de origem: **P** = plataforma (banco master); **E** = entidade/unidade (
 | Protocolos da família | Mudança de turno, saída antecipada, documentos | Usa o serviço de protocolo |
 | Financeiro e matrícula | Faturas dos filhos, PIX, rematrícula online, assinatura do contrato | Seção 3.5. Bloqueio parcial por inadimplência ([26](#parte-26), seção 3) |
 | Privacidade e menores | Consentimento de imagem, dados dos filhos | Regra de menor de idade em [07](#parte-07) |
+| Agenda e comunicação | Horário e calendário dos dependentes, eventos e autorizações, notificações, meu perfil | Só dependentes com vínculo ativo. [58](#parte-58), [60](#parte-60), [43](#parte-43), [57](#parte-57), [76](#parte-76) (explicitado em 04/11/2026) |
 
 #### 2.6 Portal de Terceiros (`portal-de-terceiros.`)
 
@@ -5768,6 +5773,7 @@ Legenda de origem: **P** = plataforma (banco master); **E** = entidade/unidade (
 | Prestação de serviço | Ordens de serviço, relatórios de execução, cronograma | Só ordens do próprio fornecedor |
 | Chamados | Abertura de chamado de manutenção, solicitação de acesso à unidade | Usa o módulo de atendimento (seção 3.7) |
 | Configurações e integrações | Dados da empresa, responsáveis técnicos, dados bancários, integrações via API | Dados bancários exigem confirmação por MFA |
+| Habilitação e acesso | Cadastro e habilitação do prestador, pessoas e papéis do prestador, tipo de prestador, meu perfil | [38](#parte-38), seções 2 a 6; [76](#parte-76) (explicitado em 04/11/2026) |
 
 **Regra:** o portal de terceiros nunca mostra financeiro interno, contábil, folha ou dado de aluno.
 
@@ -8950,7 +8956,7 @@ Continua com o autor, no texto corrido: lista de jurisdições (seção 8.2). Fr
 
 #### 2.1 Especificações da v1 ainda não absorvidas na v2
 
-Sete arquivos (na data de 04/11/2026; a contagem viva está no [79](#parte-79)) de [anexo-v1/](anexo-v1/) estão no catálogo, mas nenhum documento da v2 usa o conteúdo deles (lista e situação em [79](#parte-79), seção 3, situação "Só catalogado"). **Antes de implementar o módulo correspondente, a especificação da v1 deve ser lida e as regras trazidas para a v2.** Responsável: owner de cada módulo. Ao absorver, regerar o [79](#parte-79).
+**Nenhuma** (situação em 04/11/2026). Todas as especificações da v1 foram substituídas pela v2, ficaram fora do escopo, ou foram absorvidas integralmente nas fichas do [kit-starter](../../kit-starter/README.md), com as regras da v2 prevalecendo. A única exceção é `sub_sidebar_itsm.php`, que é código de view e não especificação. A contagem viva está no [79](#parte-79); ao mudar a v1 ou o kit, regerar o 79.
 
 ---
 
@@ -17547,11 +17553,10 @@ Os papéis acima vêm dos papéis nomeados no [22](#parte-22), seção 5, e nos 
 
 | Situação | Arquivos |
 |---|---|
-| Absorvido integralmente no kit-starter | 40 |
+| Absorvido integralmente no kit-starter | 46 |
 | Substituído | 12 |
-| Só catalogado | 4 |
-| Absorvido em parte em | 3 |
 | Fora do escopo do produto | 2 |
+| Absorvido em parte em | 1 |
 | Arquivo vazio (placeholder), sem conteúdo a absorver | 1 |
 
 ### 3. Arquivo por arquivo
@@ -17570,24 +17575,24 @@ Os papéis acima vêm dos papéis nomeados no [22](#parte-22), seção 5, e nos 
 | [`09-deployment-ops.md`](anexo-v1/09-deployment-ops.md) | 72 | Substituído | Substituído por 10 |
 | [`10-governance-delivery.md`](anexo-v1/10-governance-delivery.md) | 75 | Substituído | Substituído por 11 |
 | [`11-frontend-design-system-master-model.md`](anexo-v1/11-frontend-design-system-master-model.md) | 260 | Substituído | Substituído por 08 |
-| [`12-portals-navigation-sidebar-pages-spec.md`](anexo-v1/12-portals-navigation-sidebar-pages-spec.md) | 279 | Revisar | Absorvido em parte em: 31, 34, 36, 40, 42, 43, 44 |
+| [`12-portals-navigation-sidebar-pages-spec.md`](anexo-v1/12-portals-navigation-sidebar-pages-spec.md) | 279 | Revisar | Absorvido integralmente no kit-starter: kit-starter/transversal/navegacao-dos-portais.md |
 | [`chart-builder-spec-complete.md`](anexo-v1/chart-builder-spec-complete.md) | 1499 | Especificado | Absorvido integralmente no kit-starter: kit-starter/gestao/relatorios-e-graficos/graficos-salvos.md |
 | [`client-migration-module-spec-completo.md`](anexo-v1/client-migration-module-spec-completo.md) | 1207 | Especificado | Absorvido integralmente no kit-starter: kit-starter/gestao/configuracao-e-acesso/importacao-de-dados.md |
 | [`global_meeting_spec_v2_complete.md`](anexo-v1/global_meeting_spec_v2_complete.md) | 620 | Especificado em v2 | Absorvido integralmente no kit-starter: kit-starter/gestao/academico/aulas-online.md |
 | [`language_locale_selector_spec.md`](anexo-v1/language_locale_selector_spec.md) | 387 | Revisar | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/seguranca-e-operacao/configuracoes-do-sistema.md |
-| [`penetration-test-spec-v2.md`](anexo-v1/penetration-test-spec-v2.md) | 529 | Especificado | Absorvido em parte em: 24 |
+| [`penetration-test-spec-v2.md`](anexo-v1/penetration-test-spec-v2.md) | 529 | Especificado | Absorvido integralmente no kit-starter: kit-starter/transversal/teste-de-intrusao.md |
 | [`sdd-mestre-php8-mvc-saas.md`](anexo-v1/sdd-mestre-php8-mvc-saas.md) | 535 | Substituído | Substituído por 00 e 02 |
-| [`slsa-build-spec.md`](anexo-v1/slsa-build-spec.md) | 356 | Especificado | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
+| [`slsa-build-spec.md`](anexo-v1/slsa-build-spec.md) | 356 | Especificado | Absorvido integralmente no kit-starter: kit-starter/transversal/build-e-procedencia-slsa.md |
 | [`spec-builder-documentos-academicos.md`](anexo-v1/spec-builder-documentos-academicos.md) | 896 | Revisar | Absorvido integralmente no kit-starter: kit-starter/gestao/secretaria/emissao-de-documentos.md |
 | [`spec-gestao-preceptoria-autoavaliacao.md`](anexo-v1/spec-gestao-preceptoria-autoavaliacao.md) | 409 | Especificação parcial, reclassificada | Absorvido integralmente no kit-starter: kit-starter/gestao/academico/preceptoria.md |
 | [`SPEC-HELPDESK.md`](anexo-v1/SPEC-HELPDESK.md) | 929 | Revisar | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/suporte/chamados-dos-clientes.md |
 | [`SPEC-LAYOUT-TICKET.md`](anexo-v1/SPEC-LAYOUT-TICKET.md) | 350 | Especificado | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/suporte/chamados-dos-clientes.md |
-| [`spec-soft-delete-totustuus.md`](anexo-v1/spec-soft-delete-totustuus.md) | 248 | Especificado | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
+| [`spec-soft-delete-totustuus.md`](anexo-v1/spec-soft-delete-totustuus.md) | 248 | Especificado | Absorvido integralmente no kit-starter: kit-starter/transversal/exclusao-logica.md |
 | [`spec-sub-sidebar-privacidade-lgpd.md`](anexo-v1/spec-sub-sidebar-privacidade-lgpd.md) | 321 | Revisar | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/seguranca-e-operacao/privacidade-dpo.md |
 | [`spec_chat_rapido_sac.md`](anexo-v1/spec_chat_rapido_sac.md) | 294 | Revisar | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/suporte/chamados-dos-clientes.md |
 | [`spec_complementar_integracoes_governanca.md`](anexo-v1/spec_complementar_integracoes_governanca.md) | 307 | Especificado | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/seguranca-e-operacao/integracoes-globais.md |
 | [`spec_crm_funil_comercial.md`](anexo-v1/spec_crm_funil_comercial.md) | 244 | Especificado | Absorvido integralmente no kit-starter: kit-starter/gestao/comercial-e-admissoes/crm-do-tenant-captacao-pre-cadastro-inscricao.md |
-| [`spec_education_saas_architecture.md`](anexo-v1/spec_education_saas_architecture.md) | 729 | Revisar | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
+| [`spec_education_saas_architecture.md`](anexo-v1/spec_education_saas_architecture.md) | 729 | Revisar | Absorvido integralmente no kit-starter: kit-starter/transversal/arquitetura-da-plataforma.md |
 | [`spec_gestao_academica_completo.md`](anexo-v1/spec_gestao_academica_completo.md) | 1382 | Especificado | Absorvido integralmente no kit-starter: kit-starter/gestao/academico/administracao-escolar-estrutura-academica.md |
 | [`spec_gestao_armazenamento_completo.md`](anexo-v1/spec_gestao_armazenamento_completo.md) | 1380 | Revisar | Absorvido integralmente no kit-starter: kit-starter/gestao/suprimentos-e-compras/almoxarifado.md |
 | [`spec_gestao_auditoria_completo.md`](anexo-v1/spec_gestao_auditoria_completo.md) | 731 | Especificado | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/seguranca-e-operacao/auditoria.md |
@@ -17618,7 +17623,7 @@ Os papéis acima vêm dos papéis nomeados no [22](#parte-22), seção 5, e nos 
 | [`spec_object_storage_digital_assets.md`](anexo-v1/spec_object_storage_digital_assets.md) | 237 | Revisar | Absorvido integralmente no kit-starter: kit-starter/gestao/arquivos/armazenamento-de-arquivos.md |
 | [`spec_patrimonio_completo.md`](anexo-v1/spec_patrimonio_completo.md) | 1309 | Especificado | Absorvido integralmente no kit-starter: kit-starter/desenvolvedor/operacoes-internas/patrimonio.md |
 | [`sub_sidebar_itsm.php`](anexo-v1/sub_sidebar_itsm.php) | 151 | Revisar | Absorvido em parte em: 36 |
-| [`TASKS_SPECS.md`](anexo-v1/TASKS_SPECS.md) | 821 | Revisar | Só catalogado: conteúdo ainda não absorvido na v2 (ler no anexo antes de implementar) |
+| [`TASKS_SPECS.md`](anexo-v1/TASKS_SPECS.md) | 821 | Revisar | Absorvido integralmente no kit-starter: kit-starter/transversal/plano-de-implementacao-v1.md |
 | [`teste`](anexo-v1/teste) | 1 | Vazio | Arquivo vazio (placeholder), sem conteúdo a absorver |
 
 ---
@@ -17646,3 +17651,4 @@ Os papéis acima vêm dos papéis nomeados no [22](#parte-22), seção 5, e nos 
 | DP-03 | Papéis de patrimônio e frotas (não definidos no [22](#parte-22), seção 5) | Operador (nível 1) e aprovador (nível 2) separados, para patrimônio e para frotas. Compras, almoxarifado e aprovador de compras seguem o [22](#parte-22), seção 5 | Critério 4; mesmo padrão dos papéis departamentais já aprovados | Um único papel por módulo | [78](#parte-78), seção 4.1 (plataforma) |
 | DP-04 | Conteúdo das configurações do sistema da plataforma (não definido em nenhum documento) | Configurações agrupadas pelo documento do SDD que define cada regra (idiomas [09](#parte-09); senha, sessão e MFA [06](#parte-06); limites de API [04](#parte-04); e-mail e integrações [16](#parte-16); cache [30](#parte-30); manutenção [24](#parte-24)). Toda mudança exige step-up, motivo, auditoria e gera versão com rollback. Valor fora do limite do documento de origem é recusado | Critérios 1 e 4; o sistema não aceita configuração que contrarie o SDD | Tela livre de chave e valor | Portal do desenvolvedor (segurança e operação) |
 | DP-05 | Códigos dos papéis da entidade no portal de gestão (o [22](#parte-22), seção 5, e os documentos por portal nomeiam os papéis, mas o [78](#parte-78), seção 4.2, só listava nove) | Um código `unit.*` ou `entity.*` para cada papel já nomeado no SDD (contábil, fiscal, comercial, compras, almoxarifado, aprovador de compras, folha, aprovador da folha, médico do trabalho, SESMT, jurídico, encarregado, segurança, TI, preceptoria, pastoral, portaria). Patrimônio e frotas da entidade seguem o DP-03 (operador e aprovador separados). Aprovador financeiro da unidade separado de quem lança ([17](#parte-17), seção 2.4) | Critério 4; nenhum papel novo de negócio, só o código do que já existe | Reaproveitar os nove papéis genéricos | [78](#parte-78), seção 4.2 |
+| DP-06 | Mural, materiais e tarefas da classe (portal do professor, do aluno e dos responsáveis): a v1 só os cita na navegação ([12-portals-navigation-sidebar-pages-spec.md](anexo-v1/12-portals-navigation-sidebar-pages-spec.md)) e a v2 não tem regra | **Mural:** aviso por turma, publicado pelo professor da turma ou pela coordenação; comentários desligados por padrão (o professor liga por aviso); sem foto de aluno sem termo de imagem ([32](#parte-32), seção 3.2). **Materiais:** arquivos pelo armazenamento ([21](#parte-21)), com antivírus e limite de tamanho; visíveis só à turma; download registrado. **Tarefas:** título, instruções, prazo, anexos, forma de entrega; entrega do aluno com data e hora, atraso marcado; nota da tarefa só pelo professor da turma e só entra no diário se a tarefa for uma avaliação do sistema avaliativo ([59](#parte-59), seção 4); IA só sugere correção ([27](#parte-27)). **Responsáveis:** veem tarefas, prazos e entregas dos dependentes com vínculo ativo, sem poder entregar. Retenção: até o fim do período letivo mais o prazo da matriz de retenção ([26](#parte-26), seção 3) | Critérios 1 e 2; mesmo escopo "só turmas vinculadas" da [31](#parte-31), seção 2.3 | Mural aberto com comentários livres | Portais do professor, do aluno e dos responsáveis |

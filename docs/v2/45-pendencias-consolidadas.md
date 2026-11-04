@@ -50,7 +50,7 @@ Continua com o autor, no texto corrido: lista de jurisdições (seção 8.2). Fr
 
 ### 2.1 Especificações da v1 ainda não absorvidas na v2
 
-Sete arquivos (na data de 04/11/2026; a contagem viva está no [79](79-rastreabilidade-v1-v2.md)) de [anexo-v1/](anexo-v1/) estão no catálogo, mas nenhum documento da v2 usa o conteúdo deles (lista e situação em [79](79-rastreabilidade-v1-v2.md), seção 3, situação "Só catalogado"). **Antes de implementar o módulo correspondente, a especificação da v1 deve ser lida e as regras trazidas para a v2.** Responsável: owner de cada módulo. Ao absorver, regerar o [79](79-rastreabilidade-v1-v2.md).
+**Nenhuma** (situação em 04/11/2026). Todas as especificações da v1 foram substituídas pela v2, ficaram fora do escopo, ou foram absorvidas integralmente nas fichas do [kit-starter](../../kit-starter/README.md), com as regras da v2 prevalecendo. A única exceção é `sub_sidebar_itsm.php`, que é código de view e não especificação. A contagem viva está no [79](79-rastreabilidade-v1-v2.md); ao mudar a v1 ou o kit, regerar o 79.
 
 ---
 

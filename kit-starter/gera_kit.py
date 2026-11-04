@@ -16,6 +16,7 @@ def slug(t):
     return re.sub(r'[^a-z0-9]+', '-', t.lower()).strip('-')
 
 
+POR_AREA = {'2.3', '2.4', '2.5', '2.6'}  # portais de uso pessoal: uma ficha por área, módulos viram telas
 PASTAS = {'2.1': 'desenvolvedor', '2.2': 'gestao', '2.3': 'professor', '2.4': 'aluno', '2.5': 'responsaveis', '2.6': 'terceiros'}
 
 linhas = open(INV, encoding='utf8').read().splitlines()
@@ -33,9 +34,23 @@ for l in linhas:
     if l.startswith('### '):
         area = l[4:].strip()
         escopo = ''
-        os.makedirs(os.path.join(ROOT, 'kit-starter', pasta, slug(area)), exist_ok=True)
+        os.makedirs(os.path.join(ROOT, 'kit-starter', pasta) if sec in POR_AREA else os.path.join(ROOT, 'kit-starter', pasta, slug(area)), exist_ok=True)
     elif l.startswith('Escopo: '):
         escopo = l[len('Escopo: '):].strip()
+    elif l.startswith('- [ ] ') and area and sec in POR_AREA:
+        caminho = os.path.join(ROOT, 'kit-starter', pasta, slug(area) + '.md')
+        if os.path.exists(caminho):
+            t = open(caminho, encoding='utf8').read()
+            if 'Status: pendente' in t and l[6:].strip() not in t:
+                open(caminho, 'a', encoding='utf8').write(f'- {l[6:].strip()}\n')
+            continue
+        rel = os.path.relpath(os.path.join(ROOT, 'docs', 'v2'), os.path.dirname(caminho)).replace(os.sep, '/')
+        escopo_ficha = escopo.replace('](../docs/v2/', f']({rel}/')
+        escopo_ficha = re.sub(r'\]\((\d\d-)', f']({rel}/\\1', escopo_ficha)
+        open(caminho, 'w', encoding='utf8').write(
+            f'# {area}\n\n- Portal: {portal}\n- Escopo: {escopo_ficha}\n- Status: pendente (telas por detalhar)\n'
+            f'- Referência: [31]({rel}/31-matriz-portais-modulos.md), seção {sec}\n\n## Módulos\n\n- {l[6:].strip()}\n')
+        total += 1
     elif l.startswith('- [ ] ') and area:
         modulo = l[6:].strip()
         caminho = os.path.join(ROOT, 'kit-starter', pasta, slug(area), slug(modulo)[:60].strip('-') + '.md')
