@@ -42,6 +42,8 @@ Nenhum item de tabela aberto. OCO-01, BIB-04, IA-01, IA-07 e NOT-01, e o prazo d
 
 Continuam com o autor, no texto corrido: Frotas nesta versão e lista de jurisdições (seções 8.5 e 8.2).
 
+**Propostas de licenciamento e permissões ainda sem resposta do autor:** D-27 (bloqueio de novas matrículas ao exceder o limite de alunos), D-28 (carência de 15 dias na inadimplência), D-29 (preço e ciclo por plano), D-30 (códigos dos papéis de gestão), D-31 (professor que também coordena) e D-32 (responsável com mais de um aluno). Documentos [77](77-licenciamento-planos-e-limites.md) e [78](78-permissoes-e-papeis.md), seções 5 e 6.
+
 ---
 
 ## 3. Jurídico (parecer)
@@ -300,6 +302,10 @@ Status atualizado no documento de origem, porque a pendência já tinha sido res
 | IA-01 | IA dentro do plano, com a quota de IA-06. Excedente cobrado conforme o contrato ([27](27-inteligencia-artificial-e-portais.md)) |
 | IA-07 | Não usar dado de cliente sem consentimento específico. Falta o parecer do jurídico (seção 3.2) |
 | NOT-01 | As duas versões da v1 são unidas. Telas e painel da original em [57](57-notificacoes-por-portal.md), seções 3.8 e 3.9, que também fecham NOT-08 |
+| L-01 | Cada plano tem limite de alunos, definido pelo desenvolvedor da plataforma. **Aprovada em 04/11/2026** ([77](77-licenciamento-planos-e-limites.md), seção 1) |
+| L-02 | Criar entidade e criar unidade é exclusivo do papel `platform.developer`. **Aprovada em 04/11/2026** ([78](78-permissoes-e-papeis.md), seção 1) |
+| P-01 | Sistema de permissões completo, com níveis de papel, para todos os portais. **Aprovada em 04/11/2026** ([78](78-permissoes-e-papeis.md)) |
+| D-33 | Quem aprova a publicação no Editor de portais é `platform.developer`, diferente de quem edita (`platform.builder`). **Aprovada em 04/11/2026** ([78](78-permissoes-e-papeis.md), seção 6) |
 
 ### 9.2 Documentos escritos depois da auditoria
 

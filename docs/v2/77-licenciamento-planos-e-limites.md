@@ -1,7 +1,7 @@
 # 77 — Licenciamento, planos, assinaturas e limites
 
 > Parte do [SDD v2](00-README.md). Complementa [16](16-integracoes-externas.md) (cobrança da assinatura do SaaS) e [20](20-pagamentos-seguranca.md) (pagamentos). Permissões em [78](78-permissoes-e-papeis.md).
-> **Status:** proposta do autor em 03/11/2026, para aprovação. Itens marcados **[Proposta]** entram no SDD quando aprovados.
+> **Status:** regras L-01 aprovada pelo autor em 04/11/2026. Itens marcados **[Proposta]** aguardam aprovação do autor (D-27 a D-29).
 
 ---
 

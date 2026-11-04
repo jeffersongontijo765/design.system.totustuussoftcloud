@@ -1,7 +1,7 @@
 # 78 — Permissões, papéis e níveis de acesso por portal
 
 > Parte do [SDD v2](00-README.md). Estende [06](06-identidade-acesso.md), seção 9 (RBAC com contexto) e a seção 10 (contas de plataforma). Escopo de portais em [23](23-dominios-provisionamento-ciclo-de-vida.md) e [31](31-matriz-portais-modulos.md).
-> **Status:** proposta do autor em 03/11/2026, para aprovação. Itens marcados **[Proposta]** entram no SDD quando aprovados.
+> **Status:** L-02, P-01 e D-33 aprovadas pelo autor em 04/11/2026. Itens marcados **[Proposta]** aguardam aprovação do autor (D-30 a D-32).
 
 ---
 
