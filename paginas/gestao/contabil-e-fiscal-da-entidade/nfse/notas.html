@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notas · NFS-e</title>
+<link rel="stylesheet" href="../../../../components/__tokens.css">
+<link rel="stylesheet" href="../../../../components/bundle.css">
+<style>
+:root{color-scheme:light dark}
+body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font:13px/1.5 Inter,system-ui,sans-serif}
+.pg{padding:16px;max-width:1280px;margin:0 auto}
+@media(min-width:640px){.pg{padding:20px}}
+.pg-cabeca{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin:8px 0 16px}
+.pg-titulo{font-size:20px;line-height:28px;font-weight:700;letter-spacing:-.01em;margin:0}
+.pg-layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
+@media(max-width:900px){.pg-layout{grid-template-columns:1fr}}
+.pg-principal{display:flex;flex-direction:column;gap:16px;min-width:0}
+.pg-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.pg-kpis .ttsc-kpi-value{font-size:28px;font-weight:600}
+.pg-toolbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.pg-toolbar .ttsc-input{flex:1 1 220px}
+.pg-paginacao{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:12px;color:var(--ttsc-text-muted);font-size:12px}
+.pg-grafico{display:flex;align-items:flex-end;gap:10px;height:180px;padding:8px 0}
+.pg-grafico span{flex:1;background:var(--ttsc-accent-soft);border-top:3px solid var(--ttsc-accent);border-radius:6px 6px 0 0}
+.pg-lista{margin:0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.pg-kanban{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.pg-coluna{background:var(--ttsc-canvas-2);border:1px solid var(--ttsc-border-soft);border-radius:var(--ttsc-radius-surface);padding:10px;display:flex;flex-direction:column;gap:8px;min-height:160px}
+.pg-coluna-titulo{font-weight:600;font-size:12px;color:var(--ttsc-text-2)}
+.pg-cartao{background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-sm);padding:8px;font-size:12px}
+.pg-cartao small{color:var(--ttsc-text-muted)}
+.pg-etapas{display:flex;flex-wrap:wrap;gap:12px;list-style:none;padding:0;margin:0 0 16px;color:var(--ttsc-text-muted)}
+.pg-etapas li{display:flex;align-items:center;gap:6px}
+.pg-etapas li span{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:999px;border:1px solid var(--ttsc-border-strong);font-size:11px}
+.pg-etapas li.is-ativo{color:var(--ttsc-text);font-weight:600}
+.pg-etapas li.is-ativo span{background:var(--ttsc-accent);color:var(--ttsc-accent-on);border-color:transparent}
+.pg-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.pg-campo{display:flex;flex-direction:column;gap:6px}
+.pg-campo textarea,.pg-form textarea{grid-column:1/-1}
+.pg-acoes{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;flex-wrap:wrap}
+.pg-kv{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--ttsc-border-soft)}
+.pg-kv span{color:var(--ttsc-text-muted)}
+.pg-lateral .ttsc-card-content{display:flex;flex-direction:column;gap:10px}
+.pg-lateral h3{font-size:13px;margin:0;color:var(--ttsc-text)}
+.pg-lateral ul{margin:0;padding-left:16px;color:var(--ttsc-text-2);font-size:12px}
+.pg-lateral a{color:var(--ttsc-accent-text);font-size:12px}
+.pg-aviso{font-size:12px;color:var(--ttsc-text-muted);margin:0}
+</style>
+</head>
+<body>
+<main class="pg" data-arquetipo="lista">
+  <nav aria-label="Trilha de navegação"><ol class="ttsc-breadcrumb"><li class="ttsc-breadcrumb-item"><a class="ttsc-breadcrumb-link" href="#">Gestão</a></li><li class="ttsc-breadcrumb-separator" aria-hidden="true"><i class="fa-light fa-chevron-right"></i></li><li class="ttsc-breadcrumb-item"><a class="ttsc-breadcrumb-link" href="#">Contábil e fiscal da entidade</a></li><li class="ttsc-breadcrumb-separator" aria-hidden="true"><i class="fa-light fa-chevron-right"></i></li><li class="ttsc-breadcrumb-item"><a class="ttsc-breadcrumb-link" href="#">NFS-e</a></li><li class="ttsc-breadcrumb-separator" aria-hidden="true"><i class="fa-light fa-chevron-right"></i></li><li class="ttsc-breadcrumb-item"><span class="ttsc-breadcrumb-page" aria-current="page">Notas</span></li></ol></nav>
+  <div class="pg-cabeca">
+    <h1 class="pg-titulo">Notas</h1>
+    <div class="pg-botoes" style="display:flex;gap:8px"><button class="ttsc-btn ttsc-btn-outline ttsc-btn-sm" type="button"><i class="fa-light fa-download"></i> Exportar</button><button class="ttsc-btn ttsc-btn-primary" type="button"><i class="fa-light fa-plus"></i> Novo registro</button></div>
+  </div>
+  <div class="pg-layout">
+    <div class="pg-principal">
+<section class="ttsc-card" aria-labelledby="lst">
+  <div class="ttsc-card-header"><div class="ttsc-card-heading">
+    <h2 class="ttsc-card-title" id="lst">Notas</h2>
+    <p class="ttsc-card-description">Lista com busca, filtros e exportação. Dados ilustrativos.</p></div></div>
+  <div class="ttsc-card-content">
+    <div class="pg-toolbar">
+      <input class="ttsc-input" type="search" placeholder="Buscar registros..." aria-label="Buscar registros">
+      <select class="ttsc-select" aria-label="Situação"><option>Todas as situações</option><option>Em andamento</option><option>Concluído</option><option>Pendente</option></select>
+    </div>
+    <div class="ttsc-table-wrapper"><table class="ttsc-table ttsc-table-zebra">
+      <thead><tr><th>Registro</th><th>Situação</th><th>Responsável</th><th>Atualizado em</th></tr></thead><tbody><tr><td>REG-0001</td><td><span class="ttsc-badge ttsc-badge-info ttsc-badge-light ttsc-badge-sm">Em andamento</span></td><td>Equipe da unidade</td><td>12/11/2026</td></tr><tr><td>REG-0002</td><td><span class="ttsc-badge ttsc-badge-success ttsc-badge-light ttsc-badge-sm">Concluído</span></td><td>Coordenação</td><td>11/11/2026</td></tr><tr><td>REG-0003</td><td><span class="ttsc-badge ttsc-badge-warning ttsc-badge-light ttsc-badge-sm">Pendente</span></td><td>Secretaria</td><td>10/11/2026</td></tr></tbody></table></div>
+    <nav class="pg-paginacao" aria-label="Paginação"><span>1 a 3 de 3</span><span>Estados: carregando, vazio, sem resultado, erro e acesso negado.</span></nav>
+  </div>
+</section></div>
+    <aside class="pg-lateral">
+      <section class="ttsc-card"><div class="ttsc-card-content">
+        <h3>Quem acessa</h3><ul><li>unit.fiscal: emitir e pedir cancelamento.</li><li>unit.accounting: aprovar cancelamento.</li><li>Regras transversais: default-deny, separação de funções, step-up para ação sensível e revisão de acesso (78, seções 2 e 5).</li></ul>
+        <h3>Regras essenciais</h3><ul><li>NFS-e (18, seção 2.7; 34, seção 5).</li></ul>
+        <p class="pg-aviso">Ficha de origem: <a href="../../../../kit-starter/gestao/contabil-e-fiscal-da-entidade/nfse.md">NFS-e</a> · <a href="../../../../docs/v2/00-README.md">SDD v2</a></p>
+      </div></section>
+    </aside>
+  </div>
+</main>
+</body>
+</html>

@@ -31,6 +31,7 @@ Decisões tomadas por padrão (sem pergunta ao autor, com o critério mais segur
 | `kit-starter/gera_kit.py` | Cria esqueletos "pendente" para módulos novos; nunca sobrescreve ficha detalhada |
 | `kit-starter/absorve_v1.py` | Fichas do desenvolvedor e transversais que absorvem especificações da v1 |
 | `kit-starter/fichas_portais.py` | Fichas dos portais de entidade a partir de `dados_gestao.py`, `dados_professor.py`, `dados_aluno.py`, `dados_responsaveis.py` e `dados_terceiros.py` |
+| `build/gen_paginas.py` | Gera uma página HTML por tela das fichas em `paginas/` (517 telas, com índice em `paginas/index.html`) |
 | `inventario/gera_rastreabilidade.py` | Regera o [79](../docs/v2/79-rastreabilidade-v1-v2.md) e reconhece as especificações absorvidas no kit |
 | `inventario/gera_sdd_completo.py` | Regera `docs/v2/SDD-COMPLETO.md` |
 
