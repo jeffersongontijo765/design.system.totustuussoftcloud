@@ -6,28 +6,59 @@
 <title>Painel de assinaturas · Emissão de documentos (gerador de documentos)</title>
 <link rel="stylesheet" href="../../../../components/__tokens.css">
 <link rel="stylesheet" href="../../../../components/bundle.css">
-<script src="../../../../components/bundle.js"></script>
-<style>html,body{margin:0} #main-viewport{padding:14px 16px 24px} .pg-fonte{font:12px/1.5 Inter,system-ui,sans-serif;color:var(--ttsc-text-muted);padding:0 16px 24px} .pg-fonte a{color:var(--ttsc-accent-text)}</style>
+<style>
+html,body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font:13px/1.5 Inter,system-ui,sans-serif}
+.pg{padding:16px;max-width:1280px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+@media(min-width:640px){.pg{padding:20px}}
+.pg-trilha{font-size:12px;color:var(--ttsc-text-muted)}
+.pg-titulo{font-size:20px;line-height:28px;font-weight:700;margin:0}
+.pg-faixa{font-size:12px;color:var(--ttsc-text-muted)}
+.pg-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.pg-kpis .ttsc-kpi-value{font-size:28px;font-weight:600}
+.pg-layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
+@media(max-width:900px){.pg-layout{grid-template-columns:1fr}}
+.pg-principal{display:flex;flex-direction:column;gap:16px;min-width:0}
+.pg-kanban{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.pg-coluna{background:var(--ttsc-canvas-2);border:1px solid var(--ttsc-border-soft);border-radius:var(--ttsc-radius-surface);padding:10px;display:flex;flex-direction:column;gap:8px}
+.pg-coluna-titulo{font-size:12px}
+.pg-cartao{background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-sm);padding:8px;font-size:12px}
+.pg-cartao small{color:var(--ttsc-text-muted)}
+.pg-analise{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.pg-barra{display:grid;grid-template-columns:1fr;gap:4px;margin:8px 0;font-size:12px}
+.pg-barra span{display:block;height:10px;border-radius:6px;background:var(--ttsc-accent)}
+.pg-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.pg-campo{display:flex;flex-direction:column;gap:6px}
+.pg-lista{margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2);display:flex;flex-direction:column;gap:6px}
+.pg-lateral h3{font-size:13px;margin:0 0 6px}
+.pg-rodape{font-size:12px;color:var(--ttsc-text-muted)}
+.pg-rodape a{color:var(--ttsc-accent-text)}
+</style>
 </head>
 <body>
-<main id="main-viewport" class="bg-slate-50">
-  <div id="model-page" class="space-y-3.5" aria-live="polite"></div>
-  <section class="ttsc-card" style="margin:0 16px 16px"><div class="ttsc-card-content" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
-    <div><h3 style="font-size:13px;margin:0 0 6px">Quem acessa</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)"><li>unit.secretary: emitir e revogar com motivo.</li><li>unit.manager: aprovar modelo.</li><li>platform.developer: publicar modelos-base, sem dado.</li><li>Regras transversais: default-deny, separação de funções, step-up para ação sensível e revisão de acesso (78, seções 2 e 5).</li></ul></div>
-    <div><h3 style="font-size:13px;margin:0 0 6px">Regras essenciais</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)"><li>Modelo só é usado depois de aprovado; documento emitido é imutável e só é revogado com motivo (seção 13, 12 e 15).</li><li>Editor de modelos do gerador não é o Editor de portais (31, seção 3.4).</li></ul></div>
-  </div></section>
-  <p class="pg-fonte">Tela gerada a partir de <a href="../../../../kit-starter/gestao/secretaria/emissao-de-documentos.md">Emissão de documentos (gerador de documentos)</a> (SDD v2: <a href="../../../../docs/v2/00-README.md">índice</a>). Registros de exemplo.</p>
+<main class="pg">
+  <nav class="pg-trilha" aria-label="Trilha">Gestão (gestao.) / Emissão de documentos (gerador de documentos) / Painel de assinaturas</nav>
+  <div>
+    <h1 class="pg-titulo">Painel de assinaturas</h1>
+    <p class="pg-faixa">seção 13, 19).</p>
+  </div>
+  <div class="pg-layout">
+    <div class="pg-principal"><div class="pg-kpis"><section class="ttsc-card ttsc-card-kpi"><div class="ttsc-card-content">
+  <span class="ttsc-kpi-label"><i class="fa-light fa-inbox"></i> Recebidos</span>
+  <div class="ttsc-kpi-value">2</div><div class="ttsc-kpi-delta">Aguardando triagem</div></div></section><section class="ttsc-card ttsc-card-kpi"><div class="ttsc-card-content">
+  <span class="ttsc-kpi-label"><i class="fa-light fa-magnifying-glass"></i> Em análise</span>
+  <div class="ttsc-kpi-value">7</div><div class="ttsc-kpi-delta">Em tramitação</div></div></section><section class="ttsc-card ttsc-card-kpi"><div class="ttsc-card-content">
+  <span class="ttsc-kpi-label"><i class="fa-light fa-circle-check"></i> Concluídos</span>
+  <div class="ttsc-kpi-value">6</div><div class="ttsc-kpi-delta">Entregues ao solicitante</div></div></section></div><section class="ttsc-card" aria-labelledby="tabela">
+  <div class="ttsc-card-header"><div class="ttsc-card-heading"><h2 class="ttsc-card-title" id="tabela">Registros</h2>
+  <p class="ttsc-card-description">10 de 24 registros de exemplo. Ordenação e filtro pelo cabeçalho.</p></div></div>
+  <div class="ttsc-card-content"><div class="ttsc-table-wrapper"><table class="ttsc-table ttsc-table-zebra">
+    <thead><tr><th>Documento</th><th>Solicitante</th><th>Protocolo</th><th>Tipo</th><th>Canal</th><th>Prazo</th><th>Situação</th><th class="num">Ações</th></tr></thead><tbody><tr><td>Requerimento de transferência</td><td>Isabela Freitas</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">PRO-1001</span></td><td>declaração</td><td>balcão</td><td>22/10/2026</td><td><span class="ttsc-badge ttsc-badge-warning ttsc-badge-light ttsc-badge-sm">Em análise</span></td><td class="num">Ver · Editar</td></tr><tr><td>Ofício interno</td><td>Felipe Duarte</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">PRO-1002</span></td><td>ofício</td><td>balcão</td><td>29/11/2026</td><td><span class="ttsc-badge ttsc-badge-secondary ttsc-badge-light ttsc-badge-sm">Indeferido</span></td><td class="num">Ver · Editar</td></tr><tr><td>Declaração de matrícula</td><td>Otávio Barros</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">PRO-1003</span></td><td>requerimento</td><td>e-mail</td><td>12/11/2026</td><td><span class="ttsc-badge ttsc-badge-danger ttsc-badge-light ttsc-badge-sm">Pendente</span></td><td class="num">Ver · Editar</td></tr><tr><td>Ofício interno</td><td>Otávio Barros</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">PRO-1004</span></td><td>declaração</td><td>balcão</td><td>18/10/2026</td><td><span class="ttsc-badge ttsc-badge-warning ttsc-badge-light ttsc-badge-sm">Em análise</span></td><td class="num">Ver · Editar</td></tr><tr><td>Declaração de matrícula</td><td>Isabela Freitas</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">PRO-1005</span></td><td>requerimento</td><td>balcão</td><td>03/11/2026</td><td><span class="ttsc-badge ttsc-badge-warning ttsc-badge-light ttsc-badge-sm">Em análise</span></td><td class="num">Ver · Editar</td></tr><tr><td>Histórico escolar</td><td>Ana Ribeiro</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">PRO-1006</span></td><td>requerimento</td><td>balcão</td><td>08/10/2026</td><td><span class="ttsc-badge ttsc-badge-warning ttsc-badge-light ttsc-badge-sm">Em análise</span></td><td class="num">Ver · Editar</td></tr><tr><td>Contrato de prestação</td><td>Lucas Martins</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">PRO-1007</span></td><td>declaração</td><td>balcão</td><td>06/10/2026</td><td><span class="ttsc-badge ttsc-badge-warning ttsc-badge-light ttsc-badge-sm">Em análise</span></td><td class="num">Ver · Editar</td></tr><tr><td>Requerimento de transferência</td><td>Elisa Rocha</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">PRO-1008</span></td><td>requerimento</td><td>e-mail</td><td>18/11/2026</td><td><span class="ttsc-badge ttsc-badge-warning ttsc-badge-light ttsc-badge-sm">Em análise</span></td><td class="num">Ver · Editar</td></tr><tr><td>Histórico escolar</td><td>Elisa Rocha</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">PRO-1009</span></td><td>requerimento</td><td>portal</td><td>05/11/2026</td><td><span class="ttsc-badge ttsc-badge-success ttsc-badge-light ttsc-badge-sm">Concluído</span></td><td class="num">Ver · Editar</td></tr><tr><td>Histórico escolar</td><td>Lucas Martins</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">PRO-1010</span></td><td>declaração</td><td>portal</td><td>29/11/2026</td><td><span class="ttsc-badge ttsc-badge-warning ttsc-badge-light ttsc-badge-sm">Em análise</span></td><td class="num">Ver · Editar</td></tr></tbody></table></div></div></section><div class="pg-analise"><section class="ttsc-card"><div class="ttsc-card-header"><div class="ttsc-card-heading"><h2 class="ttsc-card-title">Por tipo</h2><p class="ttsc-card-description">Situação atual</p></div></div><div class="ttsc-card-content"><div class="pg-barra"><span style="width:71%"></span><b>declaração</b></div><div class="pg-barra"><span style="width:66%"></span><b>histórico</b></div><div class="pg-barra"><span style="width:46%"></span><b>requerimento</b></div><div class="pg-barra"><span style="width:71%"></span><b>ofício</b></div></div></section><section class="ttsc-card"><div class="ttsc-card-header"><div class="ttsc-card-heading"><h2 class="ttsc-card-title">Por situação</h2><p class="ttsc-card-description">Distribuição por status</p></div></div><div class="ttsc-card-content"><div class="pg-barra"><span style="width:84%"></span><b>Recebido</b></div><div class="pg-barra"><span style="width:46%"></span><b>Em análise</b></div><div class="pg-barra"><span style="width:77%"></span><b>Pendente</b></div><div class="pg-barra"><span style="width:53%"></span><b>Concluído</b></div><div class="pg-barra"><span style="width:23%"></span><b>Indeferido</b></div></div></section></div></div>
+    <aside class="pg-lateral"><section class="ttsc-card"><div class="ttsc-card-content">
+      <h3>Quem acessa</h3><ul class="pg-lista"><li>unit.secretary: emitir e revogar com motivo.</li><li>unit.manager: aprovar modelo.</li><li>platform.developer: publicar modelos-base, sem dado.</li><li>Regras transversais: default-deny, separação de funções, step-up para ação sensível e revisão de acesso (78, seções 2 e 5).</li></ul>
+      <h3>Regras essenciais</h3><ul class="pg-lista"><li>Modelo só é usado depois de aprovado; documento emitido é imutável e só é revogado com motivo (seção 13, 12 e 15).</li><li>Editor de modelos do gerador não é o Editor de portais (31, seção 3.4).</li></ul>
+    </div></section></aside>
+  </div>
+  <p class="pg-rodape">Tela gerada a partir de <a href="../../../../kit-starter/gestao/secretaria/emissao-de-documentos.md">Emissão de documentos (gerador de documentos)</a> · <a href="../../../../docs/v2/00-README.md">SDD v2</a>. Dados de exemplo.</p>
 </main>
-<script>
-  (function () {
-    var SPEC = {"title": "Painel de assinaturas", "icon": "fa-folder-open", "currency": "BRL", "create": false, "entity": {"singular": "Painel de assinaturas", "plural": "Painel de assinaturas", "icon": "fa-folder-open", "newLabel": "Novo registro"}, "banner": {"icon": "fa-folder-open", "title": "Painel de assinaturas", "desc": "seção 13, 19).", "pill": "{count} registros"}, "titleField": "name", "codeField": "code", "subField": "tipo", "statusField": "status", "stageField": "status", "count": 24, "fields": [{"key": "name", "label": "Documento", "type": "title", "samples": ["Declaração de matrícula", "Histórico escolar", "Requerimento de transferência", "Ofício interno", "Contrato de prestação"]}, {"key": "person", "label": "Solicitante", "type": "person"}, {"key": "code", "label": "Protocolo", "type": "code", "prefix": "PRO"}, {"key": "tipo", "label": "Tipo", "type": "enum", "values": [{"id": "declaração", "label": "declaração", "tone": "blue", "weight": 4}, {"id": "histórico", "label": "histórico", "tone": "emerald", "weight": 3}, {"id": "requerimento", "label": "requerimento", "tone": "amber", "weight": 2}, {"id": "ofício", "label": "ofício", "tone": "purple", "weight": 1}]}, {"key": "canal", "label": "Canal", "type": "enum", "values": [{"id": "portal", "label": "portal", "tone": "blue", "weight": 4}, {"id": "balcão", "label": "balcão", "tone": "emerald", "weight": 3}, {"id": "e-mail", "label": "e-mail", "tone": "amber", "weight": 2}]}, {"key": "prazo", "label": "Prazo", "type": "date", "from": -30, "to": 30}, {"key": "status", "label": "Situação", "type": "status"}], "statuses": [{"id": "recebido", "label": "Recebido", "tone": "blue", "weight": 2}, {"id": "em_analise", "label": "Em análise", "tone": "amber", "weight": 2}, {"id": "pendente", "label": "Pendente", "tone": "rose", "weight": 2}, {"id": "concluido", "label": "Concluído", "tone": "emerald", "weight": 2}, {"id": "indeferido", "label": "Indeferido", "tone": "slate", "weight": 2}], "stages": [{"id": "recebido", "label": "Recebido", "tone": "blue", "weight": 2}, {"id": "em_analise", "label": "Em análise", "tone": "amber", "weight": 2}, {"id": "pendente", "label": "Pendente", "tone": "rose", "weight": 2}, {"id": "concluido", "label": "Concluído", "tone": "emerald", "weight": 2}, {"id": "indeferido", "label": "Indeferido", "tone": "slate", "weight": 2}], "kpis": [{"label": "Recebidos", "sub": "Aguardando triagem", "icon": "fa-inbox", "tone": "blue", "value": {"agg": "count", "where": {"status": "recebido"}}, "unitLabel": "Registros", "unit": "count"}, {"label": "Em análise", "sub": "Em tramitação", "icon": "fa-magnifying-glass", "tone": "blue", "value": {"agg": "count", "where": {"status": "em_analise"}}, "unitLabel": "Registros", "unit": "count"}, {"label": "Concluídos", "sub": "Entregues ao solicitante", "icon": "fa-circle-check", "tone": "blue", "value": {"agg": "count", "where": {"status": "concluido"}}, "unitLabel": "Registros", "unit": "count"}], "breakdown": {"by": "tipo", "title": "Distribuição", "desc": "Distribuição atual", "icon": "fa-layer-group"}, "cardFields": ["person", "tipo"], "cardLine": "tipo", "kanbanTitle": "Painel de assinaturas", "kanbanDesc": "seção 13, 19).", "kanbanValue": null, "kanbanDate": "prazo", "drawer": {"metrics": ["prazo"], "sections": [{"title": "Registro", "icon": "fa-id-card", "fields": ["person", "code", "tipo", "canal", "prazo", "status"]}]}, "form": ["name", "person", "tipo", "canal", "prazo"], "analytics": [{"title": "Por tipo", "desc": "Situação atual", "by": "tipo", "type": "bar", "measure": {"agg": "count", "unit": "count"}}, {"title": "Por situação", "desc": "Distribuição por status", "by": "status", "type": "doughnut", "measure": {"agg": "count", "unit": "count"}}]};
-    TTSCModelKit.syncTheme();
-    TTSCModelKit.render(
-      { portal: { label: "Gestão (gestao.)" }, module: { label: "Emissão de documentos (gerador de documentos)" }, page: { label: "Painel de assinaturas", route: "/gestao/secretaria/emissao-de-documentos" } },
-      SPEC, {}
-    );
-    TTSCModelKit.switchTab("kpi");
-  })();
-</script>
 </body>
 </html>

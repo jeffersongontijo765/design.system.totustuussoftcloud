@@ -6,28 +6,59 @@
 <title>ASO e exames · SST (segurança e medicina do trabalho)</title>
 <link rel="stylesheet" href="../../../../components/__tokens.css">
 <link rel="stylesheet" href="../../../../components/bundle.css">
-<script src="../../../../components/bundle.js"></script>
-<style>html,body{margin:0} #main-viewport{padding:14px 16px 24px} .pg-fonte{font:12px/1.5 Inter,system-ui,sans-serif;color:var(--ttsc-text-muted);padding:0 16px 24px} .pg-fonte a{color:var(--ttsc-accent-text)}</style>
+<style>
+html,body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font:13px/1.5 Inter,system-ui,sans-serif}
+.pg{padding:16px;max-width:1280px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+@media(min-width:640px){.pg{padding:20px}}
+.pg-trilha{font-size:12px;color:var(--ttsc-text-muted)}
+.pg-titulo{font-size:20px;line-height:28px;font-weight:700;margin:0}
+.pg-faixa{font-size:12px;color:var(--ttsc-text-muted)}
+.pg-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.pg-kpis .ttsc-kpi-value{font-size:28px;font-weight:600}
+.pg-layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
+@media(max-width:900px){.pg-layout{grid-template-columns:1fr}}
+.pg-principal{display:flex;flex-direction:column;gap:16px;min-width:0}
+.pg-kanban{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.pg-coluna{background:var(--ttsc-canvas-2);border:1px solid var(--ttsc-border-soft);border-radius:var(--ttsc-radius-surface);padding:10px;display:flex;flex-direction:column;gap:8px}
+.pg-coluna-titulo{font-size:12px}
+.pg-cartao{background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-sm);padding:8px;font-size:12px}
+.pg-cartao small{color:var(--ttsc-text-muted)}
+.pg-analise{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.pg-barra{display:grid;grid-template-columns:1fr;gap:4px;margin:8px 0;font-size:12px}
+.pg-barra span{display:block;height:10px;border-radius:6px;background:var(--ttsc-accent)}
+.pg-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.pg-campo{display:flex;flex-direction:column;gap:6px}
+.pg-lista{margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2);display:flex;flex-direction:column;gap:6px}
+.pg-lateral h3{font-size:13px;margin:0 0 6px}
+.pg-rodape{font-size:12px;color:var(--ttsc-text-muted)}
+.pg-rodape a{color:var(--ttsc-accent-text)}
+</style>
 </head>
 <body>
-<main id="main-viewport" class="bg-slate-50">
-  <div id="model-page" class="space-y-3.5" aria-live="polite"></div>
-  <section class="ttsc-card" style="margin:0 16px 16px"><div class="ttsc-card-content" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
-    <div><h3 style="font-size:13px;margin:0 0 6px">Quem acessa</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)"><li>unit.sst.doctor: ASO completo, prontuário, CID.</li><li>unit.sst.technician: CAT, EPI, NR, PGR; sem diagnóstico.</li><li>RH e gestão veem só apto ou inapto, sem CID.</li><li>Regras transversais: default-deny, separação de funções, step-up para ação sensível e revisão de acesso (78, seções 2 e 5).</li></ul></div>
-    <div><h3 style="font-size:13px;margin:0 0 6px">Regras essenciais</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)"><li>Medicina do trabalho (52); permissões SST (39, seção 7).</li></ul></div>
-  </div></section>
-  <p class="pg-fonte">Tela gerada a partir de <a href="../../../../kit-starter/gestao/pessoas-e-rh/sst.md">SST (segurança e medicina do trabalho)</a> (SDD v2: <a href="../../../../docs/v2/00-README.md">índice</a>). Registros de exemplo.</p>
+<main class="pg">
+  <nav class="pg-trilha" aria-label="Trilha">Gestão (gestao.) / SST (segurança e medicina do trabalho) / ASO e exames</nav>
+  <div>
+    <h1 class="pg-titulo">ASO e exames</h1>
+    <p class="pg-faixa">lista; resultado só pelo médico).</p>
+  </div>
+  <div class="pg-layout">
+    <div class="pg-principal"><div class="pg-kpis"><section class="ttsc-card ttsc-card-kpi"><div class="ttsc-card-content">
+  <span class="ttsc-kpi-label"><i class="fa-light fa-shield-heart"></i> Válidos</span>
+  <div class="ttsc-kpi-value">10</div><div class="ttsc-kpi-delta">Dentro da validade</div></div></section><section class="ttsc-card ttsc-card-kpi"><div class="ttsc-card-content">
+  <span class="ttsc-kpi-label"><i class="fa-light fa-clock"></i> Vencendo</span>
+  <div class="ttsc-kpi-value">4</div><div class="ttsc-kpi-delta">Renovar em 30 dias</div></div></section><section class="ttsc-card ttsc-card-kpi"><div class="ttsc-card-content">
+  <span class="ttsc-kpi-label"><i class="fa-light fa-triangle-exclamation"></i> Vencidos</span>
+  <div class="ttsc-kpi-value">5</div><div class="ttsc-kpi-delta">Renovação obrigatória</div></div></section></div><section class="ttsc-card" aria-labelledby="tabela">
+  <div class="ttsc-card-header"><div class="ttsc-card-heading"><h2 class="ttsc-card-title" id="tabela">Registros</h2>
+  <p class="ttsc-card-description">10 de 24 registros de exemplo. Ordenação e filtro pelo cabeçalho.</p></div></div>
+  <div class="ttsc-card-content"><div class="ttsc-table-wrapper"><table class="ttsc-table ttsc-table-zebra">
+    <thead><tr><th>Registro</th><th>Colaborador</th><th>Registro nº</th><th>Tipo</th><th>Resultado</th><th>Validade</th><th>Situação</th><th class="num">Ações</th></tr></thead><tbody><tr><td>Treinamento NR-10</td><td>Isabela Freitas</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">SST-1001</span></td><td>admissional</td><td>apto com restrição</td><td>23/03/2027</td><td><span class="ttsc-badge ttsc-badge-warning ttsc-badge-light ttsc-badge-sm">Vence em 30 dias</span></td><td class="num">Ver · Editar</td></tr><tr><td>ASO admissional</td><td>Lucas Martins</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">SST-1002</span></td><td>admissional</td><td>apto</td><td>08/09/2027</td><td><span class="ttsc-badge ttsc-badge-success ttsc-badge-light ttsc-badge-sm">Válido</span></td><td class="num">Ver · Editar</td></tr><tr><td>CAT de trajeto</td><td>Mariana Souza</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">SST-1003</span></td><td>demissional</td><td>apto</td><td>03/01/2027</td><td><span class="ttsc-badge ttsc-badge-success ttsc-badge-light ttsc-badge-sm">Válido</span></td><td class="num">Ver · Editar</td></tr><tr><td>Exame periódico</td><td>Felipe Duarte</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">SST-1004</span></td><td>periódico</td><td>apto</td><td>16/09/2027</td><td><span class="ttsc-badge ttsc-badge-success ttsc-badge-light ttsc-badge-sm">Válido</span></td><td class="num">Ver · Editar</td></tr><tr><td>Exame periódico</td><td>Mariana Souza</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">SST-1005</span></td><td>admissional</td><td>apto</td><td>12/04/2027</td><td><span class="ttsc-badge ttsc-badge-danger ttsc-badge-light ttsc-badge-sm">Vencido</span></td><td class="num">Ver · Editar</td></tr><tr><td>CAT de trajeto</td><td>Elisa Rocha</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">SST-1006</span></td><td>admissional</td><td>apto</td><td>25/10/2027</td><td><span class="ttsc-badge ttsc-badge-warning ttsc-badge-light ttsc-badge-sm">Vence em 30 dias</span></td><td class="num">Ver · Editar</td></tr><tr><td>Entrega de EPI</td><td>Gabriela Lima</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">SST-1007</span></td><td>periódico</td><td>apto com restrição</td><td>22/07/2027</td><td><span class="ttsc-badge ttsc-badge-danger ttsc-badge-light ttsc-badge-sm">Vencido</span></td><td class="num">Ver · Editar</td></tr><tr><td>CAT de trajeto</td><td>Ana Ribeiro</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">SST-1008</span></td><td>demissional</td><td>apto</td><td>21/06/2027</td><td><span class="ttsc-badge ttsc-badge-success ttsc-badge-light ttsc-badge-sm">Válido</span></td><td class="num">Ver · Editar</td></tr><tr><td>Treinamento NR-10</td><td>Ana Ribeiro</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">SST-1009</span></td><td>admissional</td><td>apto</td><td>31/07/2027</td><td><span class="ttsc-badge ttsc-badge-info ttsc-badge-light ttsc-badge-sm">Pendente</span></td><td class="num">Ver · Editar</td></tr><tr><td>Exame periódico</td><td>Isabela Freitas</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">SST-1010</span></td><td>demissional</td><td>apto com restrição</td><td>22/10/2026</td><td><span class="ttsc-badge ttsc-badge-danger ttsc-badge-light ttsc-badge-sm">Vencido</span></td><td class="num">Ver · Editar</td></tr></tbody></table></div></div></section><div class="pg-analise"><section class="ttsc-card"><div class="ttsc-card-header"><div class="ttsc-card-heading"><h2 class="ttsc-card-title">Por tipo</h2><p class="ttsc-card-description">Situação atual</p></div></div><div class="ttsc-card-content"><div class="pg-barra"><span style="width:54%"></span><b>admissional</b></div><div class="pg-barra"><span style="width:42%"></span><b>periódico</b></div><div class="pg-barra"><span style="width:37%"></span><b>demissional</b></div></div></section><section class="ttsc-card"><div class="ttsc-card-header"><div class="ttsc-card-heading"><h2 class="ttsc-card-title">Por situação</h2><p class="ttsc-card-description">Distribuição por status</p></div></div><div class="ttsc-card-content"><div class="pg-barra"><span style="width:57%"></span><b>Válido</b></div><div class="pg-barra"><span style="width:40%"></span><b>Vence em 30 dias</b></div><div class="pg-barra"><span style="width:63%"></span><b>Vencido</b></div><div class="pg-barra"><span style="width:76%"></span><b>Pendente</b></div></div></section></div></div>
+    <aside class="pg-lateral"><section class="ttsc-card"><div class="ttsc-card-content">
+      <h3>Quem acessa</h3><ul class="pg-lista"><li>unit.sst.doctor: ASO completo, prontuário, CID.</li><li>unit.sst.technician: CAT, EPI, NR, PGR; sem diagnóstico.</li><li>RH e gestão veem só apto ou inapto, sem CID.</li><li>Regras transversais: default-deny, separação de funções, step-up para ação sensível e revisão de acesso (78, seções 2 e 5).</li></ul>
+      <h3>Regras essenciais</h3><ul class="pg-lista"><li>Medicina do trabalho (52); permissões SST (39, seção 7).</li></ul>
+    </div></section></aside>
+  </div>
+  <p class="pg-rodape">Tela gerada a partir de <a href="../../../../kit-starter/gestao/pessoas-e-rh/sst.md">SST (segurança e medicina do trabalho)</a> · <a href="../../../../docs/v2/00-README.md">SDD v2</a>. Dados de exemplo.</p>
 </main>
-<script>
-  (function () {
-    var SPEC = {"title": "ASO e exames", "icon": "fa-hard-hat", "currency": "BRL", "create": false, "entity": {"singular": "ASO e exames", "plural": "ASO e exames", "icon": "fa-hard-hat", "newLabel": "Novo registro"}, "banner": {"icon": "fa-hard-hat", "title": "ASO e exames", "desc": "lista; resultado só pelo médico).", "pill": "{count} registros"}, "titleField": "name", "codeField": "code", "subField": "tipo", "statusField": "status", "stageField": "status", "count": 24, "fields": [{"key": "name", "label": "Registro", "type": "title", "samples": ["ASO admissional", "Exame periódico", "CAT de trajeto", "Entrega de EPI", "Treinamento NR-10"]}, {"key": "person", "label": "Colaborador", "type": "person"}, {"key": "code", "label": "Registro nº", "type": "code", "prefix": "SST"}, {"key": "tipo", "label": "Tipo", "type": "enum", "values": [{"id": "admissional", "label": "admissional", "tone": "blue", "weight": 4}, {"id": "periódico", "label": "periódico", "tone": "emerald", "weight": 3}, {"id": "demissional", "label": "demissional", "tone": "amber", "weight": 2}]}, {"key": "resultado", "label": "Resultado", "type": "enum", "values": [{"id": "apto", "label": "apto", "tone": "blue", "weight": 4}, {"id": "apto com restrição", "label": "apto com restrição", "tone": "emerald", "weight": 3}]}, {"key": "validade", "label": "Validade", "type": "date", "from": -30, "to": 365}, {"key": "status", "label": "Situação", "type": "status"}], "statuses": [{"id": "valido", "label": "Válido", "tone": "emerald", "weight": 2}, {"id": "vencendo", "label": "Vence em 30 dias", "tone": "amber", "weight": 2}, {"id": "vencido", "label": "Vencido", "tone": "rose", "weight": 2}, {"id": "pendente", "label": "Pendente", "tone": "blue", "weight": 2}], "stages": [{"id": "valido", "label": "Válido", "tone": "emerald", "weight": 2}, {"id": "vencendo", "label": "Vence em 30 dias", "tone": "amber", "weight": 2}, {"id": "vencido", "label": "Vencido", "tone": "rose", "weight": 2}, {"id": "pendente", "label": "Pendente", "tone": "blue", "weight": 2}], "kpis": [{"label": "Válidos", "sub": "Dentro da validade", "icon": "fa-shield-heart", "tone": "blue", "value": {"agg": "count", "where": {"status": "valido"}}, "unitLabel": "Registros", "unit": "count"}, {"label": "Vencendo", "sub": "Renovar em 30 dias", "icon": "fa-clock", "tone": "blue", "value": {"agg": "count", "where": {"status": "vencendo"}}, "unitLabel": "Registros", "unit": "count"}, {"label": "Vencidos", "sub": "Renovação obrigatória", "icon": "fa-triangle-exclamation", "tone": "blue", "value": {"agg": "count", "where": {"status": "vencido"}}, "unitLabel": "Registros", "unit": "count"}], "breakdown": {"by": "tipo", "title": "Distribuição", "desc": "Distribuição atual", "icon": "fa-layer-group"}, "cardFields": ["person", "tipo"], "cardLine": "tipo", "kanbanTitle": "ASO e exames", "kanbanDesc": "lista; resultado só pelo médico).", "kanbanValue": null, "kanbanDate": "validade", "drawer": {"metrics": ["validade"], "sections": [{"title": "Registro", "icon": "fa-id-card", "fields": ["person", "code", "tipo", "resultado", "validade", "status"]}]}, "form": ["name", "person", "tipo", "resultado", "validade"], "analytics": [{"title": "Por tipo", "desc": "Situação atual", "by": "tipo", "type": "bar", "measure": {"agg": "count", "unit": "count"}}, {"title": "Por situação", "desc": "Distribuição por status", "by": "status", "type": "doughnut", "measure": {"agg": "count", "unit": "count"}}]};
-    TTSCModelKit.syncTheme();
-    TTSCModelKit.render(
-      { portal: { label: "Gestão (gestao.)" }, module: { label: "SST (segurança e medicina do trabalho)" }, page: { label: "ASO e exames", route: "/gestao/pessoas-e-rh/sst" } },
-      SPEC, {}
-    );
-    TTSCModelKit.switchTab("kpi");
-  })();
-</script>
 </body>
 </html>

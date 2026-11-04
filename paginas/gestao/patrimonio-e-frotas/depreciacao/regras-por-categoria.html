@@ -6,28 +6,59 @@
 <title>Regras por categoria · Depreciação</title>
 <link rel="stylesheet" href="../../../../components/__tokens.css">
 <link rel="stylesheet" href="../../../../components/bundle.css">
-<script src="../../../../components/bundle.js"></script>
-<style>html,body{margin:0} #main-viewport{padding:14px 16px 24px} .pg-fonte{font:12px/1.5 Inter,system-ui,sans-serif;color:var(--ttsc-text-muted);padding:0 16px 24px} .pg-fonte a{color:var(--ttsc-accent-text)}</style>
+<style>
+html,body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font:13px/1.5 Inter,system-ui,sans-serif}
+.pg{padding:16px;max-width:1280px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+@media(min-width:640px){.pg{padding:20px}}
+.pg-trilha{font-size:12px;color:var(--ttsc-text-muted)}
+.pg-titulo{font-size:20px;line-height:28px;font-weight:700;margin:0}
+.pg-faixa{font-size:12px;color:var(--ttsc-text-muted)}
+.pg-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.pg-kpis .ttsc-kpi-value{font-size:28px;font-weight:600}
+.pg-layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
+@media(max-width:900px){.pg-layout{grid-template-columns:1fr}}
+.pg-principal{display:flex;flex-direction:column;gap:16px;min-width:0}
+.pg-kanban{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.pg-coluna{background:var(--ttsc-canvas-2);border:1px solid var(--ttsc-border-soft);border-radius:var(--ttsc-radius-surface);padding:10px;display:flex;flex-direction:column;gap:8px}
+.pg-coluna-titulo{font-size:12px}
+.pg-cartao{background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-sm);padding:8px;font-size:12px}
+.pg-cartao small{color:var(--ttsc-text-muted)}
+.pg-analise{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.pg-barra{display:grid;grid-template-columns:1fr;gap:4px;margin:8px 0;font-size:12px}
+.pg-barra span{display:block;height:10px;border-radius:6px;background:var(--ttsc-accent)}
+.pg-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.pg-campo{display:flex;flex-direction:column;gap:6px}
+.pg-lista{margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2);display:flex;flex-direction:column;gap:6px}
+.pg-lateral h3{font-size:13px;margin:0 0 6px}
+.pg-rodape{font-size:12px;color:var(--ttsc-text-muted)}
+.pg-rodape a{color:var(--ttsc-accent-text)}
+</style>
 </head>
 <body>
-<main id="main-viewport" class="bg-slate-50">
-  <div id="model-page" class="space-y-3.5" aria-live="polite"></div>
-  <section class="ttsc-card" style="margin:0 16px 16px"><div class="ttsc-card-content" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
-    <div><h3 style="font-size:13px;margin:0 0 6px">Quem acessa</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)"><li>unit.assets e unit.accounting.</li><li>Regras transversais: default-deny, separação de funções, step-up para ação sensível e revisão de acesso (78, seções 2 e 5).</li></ul></div>
-    <div><h3 style="font-size:13px;margin:0 0 6px">Regras essenciais</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)"><li>DP-02 do 80: categoria sem regra não deprecia.</li></ul></div>
-  </div></section>
-  <p class="pg-fonte">Tela gerada a partir de <a href="../../../../kit-starter/gestao/patrimonio-e-frotas/depreciacao.md">Depreciação</a> (SDD v2: <a href="../../../../docs/v2/00-README.md">índice</a>). Registros de exemplo.</p>
+<main class="pg">
+  <nav class="pg-trilha" aria-label="Trilha">Gestão (gestao.) / Depreciação / Regras por categoria</nav>
+  <div>
+    <h1 class="pg-titulo">Regras por categoria</h1>
+    <p class="pg-faixa">.</p>
+  </div>
+  <div class="pg-layout">
+    <div class="pg-principal"><div class="pg-kpis"><section class="ttsc-card ttsc-card-kpi"><div class="ttsc-card-content">
+  <span class="ttsc-kpi-label"><i class="fa-light fa-check"></i> Em uso</span>
+  <div class="ttsc-kpi-value">7</div><div class="ttsc-kpi-delta">Bens alocados</div></div></section><section class="ttsc-card ttsc-card-kpi"><div class="ttsc-card-content">
+  <span class="ttsc-kpi-label"><i class="fa-light fa-wrench"></i> Em manutenção</span>
+  <div class="ttsc-kpi-value">7</div><div class="ttsc-kpi-delta">Ordens abertas</div></div></section><section class="ttsc-card ttsc-card-kpi"><div class="ttsc-card-content">
+  <span class="ttsc-kpi-label"><i class="fa-light fa-sack-dollar"></i> Valor em uso</span>
+  <div class="ttsc-kpi-value">R$ 965.429,00</div><div class="ttsc-kpi-delta">Soma de aquisição</div></div></section></div><section class="ttsc-card" aria-labelledby="tabela">
+  <div class="ttsc-card-header"><div class="ttsc-card-heading"><h2 class="ttsc-card-title" id="tabela">Registros</h2>
+  <p class="ttsc-card-description">10 de 24 registros de exemplo. Ordenação e filtro pelo cabeçalho.</p></div></div>
+  <div class="ttsc-card-content"><div class="ttsc-table-wrapper"><table class="ttsc-table ttsc-table-zebra">
+    <thead><tr><th>Bem</th><th>Responsável</th><th>Plaqueta</th><th>Categoria</th><th>Valor de aquisição</th><th>Aquisição</th><th>Situação</th><th class="num">Ações</th></tr></thead><tbody><tr><td>Rota Norte</td><td>Isabela Freitas</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">BEM-1001</span></td><td>veículo</td><td>R$ 94.364,00</td><td>05/10/2021</td><td><span class="ttsc-badge ttsc-badge-info ttsc-badge-light ttsc-badge-sm">Disponível</span></td><td class="num">Ver · Editar</td></tr><tr><td>Notebook administrativo</td><td>Isabela Freitas</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">BEM-1002</span></td><td>veículo</td><td>R$ 111.988,00</td><td>30/12/2022</td><td><span class="ttsc-badge ttsc-badge-warning ttsc-badge-light ttsc-badge-sm">Em manutenção</span></td><td class="num">Ver · Editar</td></tr><tr><td>Notebook administrativo</td><td>Ana Ribeiro</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">BEM-1003</span></td><td>informática</td><td>R$ 129.061,00</td><td>19/10/2024</td><td><span class="ttsc-badge ttsc-badge-warning ttsc-badge-light ttsc-badge-sm">Em manutenção</span></td><td class="num">Ver · Editar</td></tr><tr><td>Bebedouro industrial</td><td>Elisa Rocha</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">BEM-1004</span></td><td>veículo</td><td>R$ 141.259,00</td><td>17/12/2024</td><td><span class="ttsc-badge ttsc-badge-success ttsc-badge-light ttsc-badge-sm">Em uso</span></td><td class="num">Ver · Editar</td></tr><tr><td>Notebook administrativo</td><td>Felipe Duarte</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">BEM-1005</span></td><td>equipamento</td><td>R$ 165.449,00</td><td>11/08/2021</td><td><span class="ttsc-badge ttsc-badge-warning ttsc-badge-light ttsc-badge-sm">Em manutenção</span></td><td class="num">Ver · Editar</td></tr><tr><td>Rota Norte</td><td>Mariana Souza</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">BEM-1006</span></td><td>mobiliário</td><td>R$ 132.419,00</td><td>22/08/2023</td><td><span class="ttsc-badge ttsc-badge-warning ttsc-badge-light ttsc-badge-sm">Em manutenção</span></td><td class="num">Ver · Editar</td></tr><tr><td>Rota Norte</td><td>Otávio Barros</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">BEM-1007</span></td><td>mobiliário</td><td>R$ 141.857,00</td><td>26/04/2023</td><td><span class="ttsc-badge ttsc-badge-success ttsc-badge-light ttsc-badge-sm">Em uso</span></td><td class="num">Ver · Editar</td></tr><tr><td>Bebedouro industrial</td><td>Mariana Souza</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">BEM-1008</span></td><td>informática</td><td>R$ 120.351,00</td><td>25/08/2021</td><td><span class="ttsc-badge ttsc-badge-success ttsc-badge-light ttsc-badge-sm">Em uso</span></td><td class="num">Ver · Editar</td></tr><tr><td>Rota Norte</td><td>Mariana Souza</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">BEM-1009</span></td><td>veículo</td><td>R$ 159.787,00</td><td>29/05/2024</td><td><span class="ttsc-badge ttsc-badge-success ttsc-badge-light ttsc-badge-sm">Em uso</span></td><td class="num">Ver · Editar</td></tr><tr><td>Projetor multimídia</td><td>Otávio Barros</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">BEM-1010</span></td><td>veículo</td><td>R$ 65.514,00</td><td>24/06/2025</td><td><span class="ttsc-badge ttsc-badge-info ttsc-badge-light ttsc-badge-sm">Disponível</span></td><td class="num">Ver · Editar</td></tr></tbody></table></div></div></section><section class="ttsc-card"><div class="ttsc-card-header"><div class="ttsc-card-heading"><h2 class="ttsc-card-title">Cadastro</h2></div></div><div class="ttsc-card-content"><div class="pg-form"><div class="pg-campo"><label class="ttsc-form-label">Bem</label><input class="ttsc-input"></div><div class="pg-campo"><label class="ttsc-form-label">Responsável</label><input class="ttsc-input"></div><div class="pg-campo"><label class="ttsc-form-label">Categoria</label><select class="ttsc-select"><option>informática</option><option>veículo</option><option>mobiliário</option><option>equipamento</option></select></div><div class="pg-campo"><label class="ttsc-form-label">Valor de aquisição</label><input class="ttsc-input" inputmode="decimal" placeholder="R$ 0,00"></div><div class="pg-campo"><label class="ttsc-form-label">Aquisição</label><input class="ttsc-input" type="date"></div></div></div></section></div>
+    <aside class="pg-lateral"><section class="ttsc-card"><div class="ttsc-card-content">
+      <h3>Quem acessa</h3><ul class="pg-lista"><li>unit.assets e unit.accounting.</li><li>Regras transversais: default-deny, separação de funções, step-up para ação sensível e revisão de acesso (78, seções 2 e 5).</li></ul>
+      <h3>Regras essenciais</h3><ul class="pg-lista"><li>DP-02 do 80: categoria sem regra não deprecia.</li></ul>
+    </div></section></aside>
+  </div>
+  <p class="pg-rodape">Tela gerada a partir de <a href="../../../../kit-starter/gestao/patrimonio-e-frotas/depreciacao.md">Depreciação</a> · <a href="../../../../docs/v2/00-README.md">SDD v2</a>. Dados de exemplo.</p>
 </main>
-<script>
-  (function () {
-    var SPEC = {"title": "Regras por categoria", "icon": "fa-boxes-stacked", "currency": "BRL", "create": true, "entity": {"singular": "Regras por categoria", "plural": "Regras por categoria", "icon": "fa-boxes-stacked", "newLabel": "Novo registro"}, "banner": {"icon": "fa-boxes-stacked", "title": "Regras por categoria", "desc": ".", "pill": "{count} registros"}, "titleField": "name", "codeField": "code", "subField": "categoria", "statusField": "status", "stageField": "status", "count": 24, "fields": [{"key": "name", "label": "Bem", "type": "title", "samples": ["Notebook administrativo", "Veículo de transporte escolar", "Projetor multimídia", "Bebedouro industrial", "Rota Norte"]}, {"key": "person", "label": "Responsável", "type": "person"}, {"key": "code", "label": "Plaqueta", "type": "code", "prefix": "BEM"}, {"key": "categoria", "label": "Categoria", "type": "enum", "values": [{"id": "informática", "label": "informática", "tone": "blue", "weight": 4}, {"id": "veículo", "label": "veículo", "tone": "emerald", "weight": 3}, {"id": "mobiliário", "label": "mobiliário", "tone": "amber", "weight": 2}, {"id": "equipamento", "label": "equipamento", "tone": "purple", "weight": 1}]}, {"key": "valor", "label": "Valor de aquisição", "type": "money", "min": 300, "max": 180000}, {"key": "aquisicao", "label": "Aquisição", "type": "date", "from": -2000, "to": -10}, {"key": "status", "label": "Situação", "type": "status"}], "statuses": [{"id": "em_uso", "label": "Em uso", "tone": "emerald", "weight": 2}, {"id": "em_manutencao", "label": "Em manutenção", "tone": "amber", "weight": 2}, {"id": "disponivel", "label": "Disponível", "tone": "blue", "weight": 2}, {"id": "baixado", "label": "Baixado", "tone": "slate", "weight": 2}], "stages": [{"id": "em_uso", "label": "Em uso", "tone": "emerald", "weight": 2}, {"id": "em_manutencao", "label": "Em manutenção", "tone": "amber", "weight": 2}, {"id": "disponivel", "label": "Disponível", "tone": "blue", "weight": 2}, {"id": "baixado", "label": "Baixado", "tone": "slate", "weight": 2}], "kpis": [{"label": "Em uso", "sub": "Bens alocados", "icon": "fa-check", "tone": "blue", "value": {"agg": "count", "where": {"status": "em_uso"}}, "unitLabel": "Registros", "unit": "count"}, {"label": "Em manutenção", "sub": "Ordens abertas", "icon": "fa-wrench", "tone": "blue", "value": {"agg": "count", "where": {"status": "em_manutencao"}}, "unitLabel": "Registros", "unit": "count"}, {"label": "Valor em uso", "sub": "Soma de aquisição", "icon": "fa-sack-dollar", "tone": "blue", "value": {"agg": "sum", "field": "valor", "where": {"status": "em_uso"}}, "unitLabel": "Registros", "unit": "money"}], "breakdown": {"by": "categoria", "title": "Distribuição", "desc": "Distribuição atual", "icon": "fa-layer-group"}, "cardFields": ["person", "categoria"], "cardLine": "categoria", "kanbanTitle": "Regras por categoria", "kanbanDesc": ".", "kanbanValue": "valor", "kanbanDate": "aquisicao", "drawer": {"metrics": ["valor", "aquisicao"], "sections": [{"title": "Registro", "icon": "fa-id-card", "fields": ["person", "code", "categoria", "valor", "aquisicao", "status"]}]}, "form": ["name", "person", "categoria", "valor", "aquisicao"], "analytics": [{"title": "Por categoria", "desc": "Situação atual", "by": "categoria", "type": "bar", "measure": {"agg": "count", "unit": "count"}}, {"title": "Por situação", "desc": "Distribuição por status", "by": "status", "type": "doughnut", "measure": {"agg": "count", "unit": "count"}}]};
-    TTSCModelKit.syncTheme();
-    TTSCModelKit.render(
-      { portal: { label: "Gestão (gestao.)" }, module: { label: "Depreciação" }, page: { label: "Regras por categoria", route: "/gestao/patrimonio-e-frotas/depreciacao" } },
-      SPEC, {}
-    );
-    TTSCModelKit.switchTab("table");
-  })();
-</script>
 </body>
 </html>

@@ -6,28 +6,59 @@
 <title>Conversas dos canais · CRM da plataforma</title>
 <link rel="stylesheet" href="../../../../components/__tokens.css">
 <link rel="stylesheet" href="../../../../components/bundle.css">
-<script src="../../../../components/bundle.js"></script>
-<style>html,body{margin:0} #main-viewport{padding:14px 16px 24px} .pg-fonte{font:12px/1.5 Inter,system-ui,sans-serif;color:var(--ttsc-text-muted);padding:0 16px 24px} .pg-fonte a{color:var(--ttsc-accent-text)}</style>
+<style>
+html,body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font:13px/1.5 Inter,system-ui,sans-serif}
+.pg{padding:16px;max-width:1280px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+@media(min-width:640px){.pg{padding:20px}}
+.pg-trilha{font-size:12px;color:var(--ttsc-text-muted)}
+.pg-titulo{font-size:20px;line-height:28px;font-weight:700;margin:0}
+.pg-faixa{font-size:12px;color:var(--ttsc-text-muted)}
+.pg-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.pg-kpis .ttsc-kpi-value{font-size:28px;font-weight:600}
+.pg-layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
+@media(max-width:900px){.pg-layout{grid-template-columns:1fr}}
+.pg-principal{display:flex;flex-direction:column;gap:16px;min-width:0}
+.pg-kanban{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.pg-coluna{background:var(--ttsc-canvas-2);border:1px solid var(--ttsc-border-soft);border-radius:var(--ttsc-radius-surface);padding:10px;display:flex;flex-direction:column;gap:8px}
+.pg-coluna-titulo{font-size:12px}
+.pg-cartao{background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-sm);padding:8px;font-size:12px}
+.pg-cartao small{color:var(--ttsc-text-muted)}
+.pg-analise{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.pg-barra{display:grid;grid-template-columns:1fr;gap:4px;margin:8px 0;font-size:12px}
+.pg-barra span{display:block;height:10px;border-radius:6px;background:var(--ttsc-accent)}
+.pg-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.pg-campo{display:flex;flex-direction:column;gap:6px}
+.pg-lista{margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2);display:flex;flex-direction:column;gap:6px}
+.pg-lateral h3{font-size:13px;margin:0 0 6px}
+.pg-rodape{font-size:12px;color:var(--ttsc-text-muted)}
+.pg-rodape a{color:var(--ttsc-accent-text)}
+</style>
 </head>
 <body>
-<main id="main-viewport" class="bg-slate-50">
-  <div id="model-page" class="space-y-3.5" aria-live="polite"></div>
-  <section class="ttsc-card" style="margin:0 16px 16px"><div class="ttsc-card-content" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
-    <div><h3 style="font-size:13px;margin:0 0 6px">Quem acessa</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)"><li>Separação de funções: quem cria a proposta não a aprova (SDD 78, seção 2.2).</li></ul></div>
-    <div><h3 style="font-size:13px;margin:0 0 6px">Regras essenciais</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)"><li>Ver a ficha da tela.</li></ul></div>
-  </div></section>
-  <p class="pg-fonte">Tela gerada a partir de <a href="../../../../kit-starter/desenvolvedor/comercial-da-plataforma/crm-da-plataforma.md">CRM da plataforma</a> (SDD v2: <a href="../../../../docs/v2/00-README.md">índice</a>). Registros de exemplo.</p>
+<main class="pg">
+  <nav class="pg-trilha" aria-label="Trilha">Desenvolvedor (desenvolvedor.) / CRM da plataforma / Conversas dos canais</nav>
+  <div>
+    <h1 class="pg-titulo">Conversas dos canais</h1>
+    <p class="pg-faixa">fila do chatbot): site, WhatsApp, Telegram, Instagram, Messenger, com handoff para vendedor (SDD 22, seção 2.1).</p>
+  </div>
+  <div class="pg-layout">
+    <div class="pg-principal"><div class="pg-kpis"><section class="ttsc-card ttsc-card-kpi"><div class="ttsc-card-content">
+  <span class="ttsc-kpi-label"><i class="fa-light fa-envelope-open"></i> Abertos</span>
+  <div class="ttsc-kpi-value">6</div><div class="ttsc-kpi-delta">Sem resposta</div></div></section><section class="ttsc-card ttsc-card-kpi"><div class="ttsc-card-content">
+  <span class="ttsc-kpi-label"><i class="fa-light fa-user-headset"></i> Em atendimento</span>
+  <div class="ttsc-kpi-value">5</div><div class="ttsc-kpi-delta">Com responsável</div></div></section><section class="ttsc-card ttsc-card-kpi"><div class="ttsc-card-content">
+  <span class="ttsc-kpi-label"><i class="fa-light fa-circle-check"></i> Resolvidos</span>
+  <div class="ttsc-kpi-value">5</div><div class="ttsc-kpi-delta">Encerrados</div></div></section></div><section class="ttsc-card" aria-labelledby="tabela">
+  <div class="ttsc-card-header"><div class="ttsc-card-heading"><h2 class="ttsc-card-title" id="tabela">Registros</h2>
+  <p class="ttsc-card-description">10 de 24 registros de exemplo. Ordenação e filtro pelo cabeçalho.</p></div></div>
+  <div class="ttsc-card-content"><div class="ttsc-table-wrapper"><table class="ttsc-table ttsc-table-zebra">
+    <thead><tr><th>Assunto</th><th>Solicitante</th><th>Ticket</th><th>Prioridade</th><th>Fila</th><th>Aberto em</th><th>Situação</th><th class="num">Ações</th></tr></thead><tbody><tr><td>Não recebi o boleto</td><td>Gabriela Lima</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">TKT-1001</span></td><td>baixa</td><td>SAC</td><td>13/10/2026 14:30</td><td><span class="ttsc-badge ttsc-badge-success ttsc-badge-light ttsc-badge-sm">Resolvido</span></td><td class="num">Ver · Editar</td></tr><tr><td>Dúvida sobre bolsa</td><td>Lucas Martins</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">TKT-1002</span></td><td>alta</td><td>SAC</td><td>06/10/2026 14:30</td><td><span class="ttsc-badge ttsc-badge-info ttsc-badge-light ttsc-badge-sm">Aberto</span></td><td class="num">Ver · Editar</td></tr><tr><td>Alteração de dados cadastrais</td><td>Lucas Martins</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">TKT-1003</span></td><td>alta</td><td>chat</td><td>20/10/2026 14:30</td><td><span class="ttsc-badge ttsc-badge-warning ttsc-badge-light ttsc-badge-sm">Em atendimento</span></td><td class="num">Ver · Editar</td></tr><tr><td>Problema de acesso ao portal</td><td>Isabela Freitas</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">TKT-1004</span></td><td>média</td><td>chat</td><td>30/10/2026 14:30</td><td><span class="ttsc-badge ttsc-badge-success ttsc-badge-light ttsc-badge-sm">Resolvido</span></td><td class="num">Ver · Editar</td></tr><tr><td>Não recebi o boleto</td><td>Gabriela Lima</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">TKT-1005</span></td><td>baixa</td><td>SAC</td><td>31/10/2026 14:30</td><td><span class="ttsc-badge ttsc-badge-info ttsc-badge-light ttsc-badge-sm">Aberto</span></td><td class="num">Ver · Editar</td></tr><tr><td>Problema de acesso ao portal</td><td>Ana Ribeiro</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">TKT-1006</span></td><td>baixa</td><td>SAC</td><td>24/10/2026 14:30</td><td><span class="ttsc-badge ttsc-badge-primary ttsc-badge-light ttsc-badge-sm">Aguardando cliente</span></td><td class="num">Ver · Editar</td></tr><tr><td>Dúvida sobre bolsa</td><td>Mariana Souza</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">TKT-1007</span></td><td>média</td><td>helpdesk</td><td>30/10/2026 14:30</td><td><span class="ttsc-badge ttsc-badge-warning ttsc-badge-light ttsc-badge-sm">Em atendimento</span></td><td class="num">Ver · Editar</td></tr><tr><td>Não recebi o boleto</td><td>Isabela Freitas</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">TKT-1008</span></td><td>alta</td><td>helpdesk</td><td>22/10/2026 14:30</td><td><span class="ttsc-badge ttsc-badge-primary ttsc-badge-light ttsc-badge-sm">Aguardando cliente</span></td><td class="num">Ver · Editar</td></tr><tr><td>Dúvida sobre bolsa</td><td>Ana Ribeiro</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">TKT-1009</span></td><td>alta</td><td>helpdesk</td><td>02/11/2026 14:30</td><td><span class="ttsc-badge ttsc-badge-info ttsc-badge-light ttsc-badge-sm">Aberto</span></td><td class="num">Ver · Editar</td></tr><tr><td>Problema de acesso ao portal</td><td>Elisa Rocha</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">TKT-1010</span></td><td>média</td><td>SAC</td><td>02/11/2026 14:30</td><td><span class="ttsc-badge ttsc-badge-warning ttsc-badge-light ttsc-badge-sm">Em atendimento</span></td><td class="num">Ver · Editar</td></tr></tbody></table></div></div></section><div class="pg-analise"><section class="ttsc-card"><div class="ttsc-card-header"><div class="ttsc-card-heading"><h2 class="ttsc-card-title">Por prioridade</h2><p class="ttsc-card-description">Situação atual</p></div></div><div class="ttsc-card-content"><div class="pg-barra"><span style="width:81%"></span><b>baixa</b></div><div class="pg-barra"><span style="width:34%"></span><b>média</b></div><div class="pg-barra"><span style="width:58%"></span><b>alta</b></div></div></section><section class="ttsc-card"><div class="ttsc-card-header"><div class="ttsc-card-heading"><h2 class="ttsc-card-title">Por situação</h2><p class="ttsc-card-description">Distribuição por status</p></div></div><div class="ttsc-card-content"><div class="pg-barra"><span style="width:54%"></span><b>Aberto</b></div><div class="pg-barra"><span style="width:67%"></span><b>Em atendimento</b></div><div class="pg-barra"><span style="width:56%"></span><b>Aguardando cliente</b></div><div class="pg-barra"><span style="width:55%"></span><b>Resolvido</b></div></div></section></div><section class="ttsc-card"><div class="ttsc-card-header"><div class="ttsc-card-heading"><h2 class="ttsc-card-title">Cadastro</h2></div></div><div class="ttsc-card-content"><div class="pg-form"><div class="pg-campo"><label class="ttsc-form-label">Assunto</label><input class="ttsc-input"></div><div class="pg-campo"><label class="ttsc-form-label">Solicitante</label><input class="ttsc-input"></div><div class="pg-campo"><label class="ttsc-form-label">Prioridade</label><select class="ttsc-select"><option>baixa</option><option>média</option><option>alta</option></select></div><div class="pg-campo"><label class="ttsc-form-label">Fila</label><select class="ttsc-select"><option>SAC</option><option>helpdesk</option><option>chat</option></select></div><div class="pg-campo"><label class="ttsc-form-label">Aberto em</label><input class="ttsc-input" type="date"></div></div></div></section></div>
+    <aside class="pg-lateral"><section class="ttsc-card"><div class="ttsc-card-content">
+      <h3>Quem acessa</h3><ul class="pg-lista"><li>Separação de funções: quem cria a proposta não a aprova (SDD 78, seção 2.2).</li></ul>
+      <h3>Regras essenciais</h3><ul class="pg-lista"><li>Ver a ficha da tela.</li></ul>
+    </div></section></aside>
+  </div>
+  <p class="pg-rodape">Tela gerada a partir de <a href="../../../../kit-starter/desenvolvedor/comercial-da-plataforma/crm-da-plataforma.md">CRM da plataforma</a> · <a href="../../../../docs/v2/00-README.md">SDD v2</a>. Dados de exemplo.</p>
 </main>
-<script>
-  (function () {
-    var SPEC = {"title": "Conversas dos canais", "icon": "fa-headset", "currency": "BRL", "create": true, "entity": {"singular": "Conversas dos canais", "plural": "Conversas dos canais", "icon": "fa-headset", "newLabel": "Novo registro"}, "banner": {"icon": "fa-headset", "title": "Conversas dos canais", "desc": "fila do chatbot): site, WhatsApp, Telegram, Instagram, Messenger, com handoff para vendedor (SDD 22, seção 2.1).", "pill": "{count} registros"}, "titleField": "name", "codeField": "code", "subField": "prioridade", "statusField": "status", "stageField": "status", "count": 24, "fields": [{"key": "name", "label": "Assunto", "type": "title", "samples": ["Não recebi o boleto", "Alteração de dados cadastrais", "Problema de acesso ao portal", "Segunda via de documento", "Dúvida sobre bolsa"]}, {"key": "person", "label": "Solicitante", "type": "person"}, {"key": "code", "label": "Ticket", "type": "code", "prefix": "TKT"}, {"key": "prioridade", "label": "Prioridade", "type": "enum", "values": [{"id": "baixa", "label": "baixa", "tone": "blue", "weight": 4}, {"id": "média", "label": "média", "tone": "emerald", "weight": 3}, {"id": "alta", "label": "alta", "tone": "amber", "weight": 2}]}, {"key": "fila", "label": "Fila", "type": "enum", "values": [{"id": "SAC", "label": "SAC", "tone": "blue", "weight": 4}, {"id": "helpdesk", "label": "helpdesk", "tone": "emerald", "weight": 3}, {"id": "chat", "label": "chat", "tone": "amber", "weight": 2}]}, {"key": "aberto", "label": "Aberto em", "type": "datetime", "from": -30, "to": 0}, {"key": "status", "label": "Situação", "type": "status"}], "statuses": [{"id": "aberto", "label": "Aberto", "tone": "blue", "weight": 2}, {"id": "em_atendimento", "label": "Em atendimento", "tone": "amber", "weight": 2}, {"id": "aguardando_cliente", "label": "Aguardando cliente", "tone": "purple", "weight": 2}, {"id": "resolvido", "label": "Resolvido", "tone": "emerald", "weight": 2}], "stages": [{"id": "aberto", "label": "Aberto", "tone": "blue", "weight": 2}, {"id": "em_atendimento", "label": "Em atendimento", "tone": "amber", "weight": 2}, {"id": "aguardando_cliente", "label": "Aguardando cliente", "tone": "purple", "weight": 2}, {"id": "resolvido", "label": "Resolvido", "tone": "emerald", "weight": 2}], "kpis": [{"label": "Abertos", "sub": "Sem resposta", "icon": "fa-envelope-open", "tone": "blue", "value": {"agg": "count", "where": {"status": "aberto"}}, "unitLabel": "Registros", "unit": "count"}, {"label": "Em atendimento", "sub": "Com responsável", "icon": "fa-user-headset", "tone": "blue", "value": {"agg": "count", "where": {"status": "em_atendimento"}}, "unitLabel": "Registros", "unit": "count"}, {"label": "Resolvidos", "sub": "Encerrados", "icon": "fa-circle-check", "tone": "blue", "value": {"agg": "count", "where": {"status": "resolvido"}}, "unitLabel": "Registros", "unit": "count"}], "breakdown": {"by": "prioridade", "title": "Distribuição", "desc": "Distribuição atual", "icon": "fa-layer-group"}, "cardFields": ["person", "prioridade"], "cardLine": "prioridade", "kanbanTitle": "Conversas dos canais", "kanbanDesc": "fila do chatbot): site, WhatsApp, Telegram, Instagram, Messenger, com handoff para vendedor (SDD 22, seção 2.1).", "kanbanValue": null, "kanbanDate": "aberto", "drawer": {"metrics": ["aberto"], "sections": [{"title": "Registro", "icon": "fa-id-card", "fields": ["person", "code", "prioridade", "fila", "aberto", "status"]}]}, "form": ["name", "person", "prioridade", "fila", "aberto"], "analytics": [{"title": "Por prioridade", "desc": "Situação atual", "by": "prioridade", "type": "bar", "measure": {"agg": "count", "unit": "count"}}, {"title": "Por situação", "desc": "Distribuição por status", "by": "status", "type": "doughnut", "measure": {"agg": "count", "unit": "count"}}]};
-    TTSCModelKit.syncTheme();
-    TTSCModelKit.render(
-      { portal: { label: "Desenvolvedor (desenvolvedor.)" }, module: { label: "CRM da plataforma" }, page: { label: "Conversas dos canais", route: "/desenvolvedor/comercial-da-plataforma/crm-da-plataforma" } },
-      SPEC, {}
-    );
-    TTSCModelKit.switchTab("table");
-  })();
-</script>
 </body>
 </html>

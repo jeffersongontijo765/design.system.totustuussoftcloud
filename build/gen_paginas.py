@@ -318,13 +318,190 @@ def tela_spec(nome, desc, ficha_titulo, arq, dom):
     return spec
 
 
-def aba_inicial(arq):
-    return {'painel': 'kpi', 'kanban': 'kanban'}.get(arq, 'table')
+TOM_BADGE = {'emerald': 'success', 'amber': 'warning', 'rose': 'danger', 'blue': 'info', 'purple': 'primary', 'slate': 'secondary'}
 
 
-def pagina(nome, spec, portal, modulo, rota, arq, ficha_rel, sdd_rel, tok, bun, js, papeis=(), regras=()):
-    dados = json.dumps(spec, ensure_ascii=False).replace('</', '<\\/')
-    return f'''<!doctype html>
+def _rng(semente):
+    import random
+    return random.Random(semente)
+
+
+def celula(campo, rnd, linha):
+    t = campo['type']
+    if t == 'title':
+        return html.escape(rnd.choice(campo.get('samples') or ['Registro']))
+    if t == 'person':
+        nomes = ['Ana Ribeiro', 'Otávio Barros', 'Elisa Rocha', 'Gabriela Lima', 'Felipe Duarte', 'Isabela Freitas', 'Lucas Martins', 'Mariana Souza']
+        return html.escape(rnd.choice(nomes))
+    if t == 'code':
+        return f'<span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">{campo.get("prefix", "REF")}-{1000 + linha}</span>'
+    if t == 'enum':
+        v = rnd.choice(campo['values'])
+        return html.escape(v['label'])
+    if t == 'money':
+        v = rnd.randint(campo.get('min', 100), campo.get('max', 1000))
+        return 'R$ ' + f'{v:,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.')
+    if t == 'pct':
+        return f'{rnd.randint(campo.get("min", 0), campo.get("max", 100))}%'
+    if t == 'int':
+        return str(rnd.randint(campo.get('min', 1), campo.get('max', 100)))
+    if t in ('date', 'datetime'):
+        import datetime as dt
+        base = dt.date(2026, 11, 4)
+        d = base + dt.timedelta(days=rnd.randint(campo.get('from', -60), campo.get('to', 60)))
+        return d.strftime('%d/%m/%Y') + (' 14:30' if t == 'datetime' else '')
+    if t == 'bool':
+        return 'Sim' if rnd.random() < 0.2 else 'Não'
+    if t == 'email':
+        return 'contato@exemplo.com.br'
+    return ''
+
+
+def badge_status(statuses, sid):
+    for st_ in statuses:
+        if st_['id'] == sid:
+            return f'<span class="ttsc-badge ttsc-badge-{TOM_BADGE.get(st_["tone"], "info")} ttsc-badge-light ttsc-badge-sm">{html.escape(st_["label"])}</span>'
+    return html.escape(sid)
+
+
+def gera_registros(spec, semente):
+    rnd = _rng(str(semente) + 'r')
+    registros = []
+    for i in range(spec['count']):
+        reg = {}
+        for c in spec['fields']:
+            if c['type'] == 'status':
+                reg[c['key']] = rnd.choice(spec['statuses'])['id']
+            elif c['type'] == 'money':
+                reg[c['key']] = rnd.randint(c.get('min', 100), c.get('max', 1000))
+            else:
+                reg[c['key']] = celula(c, rnd, i + 1)
+        registros.append(reg)
+    return registros
+
+
+def secao_tabela(spec, semente, registros):
+    campos = spec['fields']
+    cab = ''.join(f'<th>{html.escape(c["label"])}</th>' for c in campos) + '<th class="num">Ações</th>'
+    linhas = []
+    for reg in registros[:10]:
+        cels = []
+        for c in campos:
+            v = reg[c['key']]
+            if c['type'] == 'status':
+                cels.append(f'<td>{badge_status(spec["statuses"], v)}</td>')
+            elif c['type'] == 'money':
+                cels.append('<td>R$ ' + f'{v:,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.') + '</td>')
+            else:
+                cels.append(f'<td>{v}</td>')
+        linhas.append('<tr>' + ''.join(cels) + '<td class="num">Ver · Editar</td></tr>')
+    return f"""<section class="ttsc-card" aria-labelledby="tabela">
+  <div class="ttsc-card-header"><div class="ttsc-card-heading"><h2 class="ttsc-card-title" id="tabela">Registros</h2>
+  <p class="ttsc-card-description">10 de {spec['count']} registros de exemplo. Ordenação e filtro pelo cabeçalho.</p></div></div>
+  <div class="ttsc-card-content"><div class="ttsc-table-wrapper"><table class="ttsc-table ttsc-table-zebra">
+    <thead><tr>{cab}</tr></thead><tbody>{''.join(linhas)}</tbody></table></div></div></section>"""
+
+
+def secao_kpis(spec, registros):
+    cards = []
+    for k in spec['kpis']:
+        alvo = k['value']['where']['status']
+        do_status = [r for r in registros if r.get(spec['statusField']) == alvo]
+        if k['value']['agg'] == 'count':
+            valor = str(len(do_status))
+        else:
+            soma = sum(r[k['value']['field']] for r in do_status)
+            valor = 'R$ ' + f'{soma:,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.')
+        cards.append(f"""<section class="ttsc-card ttsc-card-kpi"><div class="ttsc-card-content">
+  <span class="ttsc-kpi-label"><i class="fa-light {k['icon']}"></i> {html.escape(k['label'])}</span>
+  <div class="ttsc-kpi-value">{valor}</div><div class="ttsc-kpi-delta">{html.escape(k['sub'])}</div></div></section>""")
+    return '<div class="pg-kpis">' + ''.join(cards) + '</div>'
+
+
+def secao_kanban(spec, semente):
+    rnd = _rng(str(semente) + '1')
+    colunas = []
+    for st_ in spec['statuses']:
+        cartoes = ''.join(f'<div class="pg-cartao"><b>{celula(spec["fields"][0], rnd, n)}</b><br><small>{celula(next((c for c in spec["fields"] if c["type"] == "person"), spec["fields"][0]), rnd, n)}</small></div>' for n in range(2))
+        colunas.append(f'<div class="pg-coluna"><div class="pg-coluna-titulo">{badge_status(spec["statuses"], st_["id"])}</div>{cartoes}</div>')
+    return '<section class="ttsc-card"><div class="ttsc-card-header"><div class="ttsc-card-heading"><h2 class="ttsc-card-title">Quadro por situação</h2></div></div><div class="ttsc-card-content"><div class="pg-kanban">' + ''.join(colunas) + '</div></div></section>'
+
+
+def secao_analise(spec, semente):
+    rnd = _rng(str(semente) + '2')
+    blocos = []
+    for a in spec['analytics']:
+        chave = a['by']
+        opcoes = next((c['values'] for c in spec['fields'] if c['key'] == chave and c.get('values')), None)
+        rotulos = [o['label'] for o in opcoes] if opcoes else [s_['label'] for s_ in spec['statuses']]
+        barras = ''.join(f'<div class="pg-barra"><span style="width:{rnd.randint(20, 100)}%"></span><b>{html.escape(r)}</b></div>' for r in rotulos)
+        blocos.append(f'<section class="ttsc-card"><div class="ttsc-card-header"><div class="ttsc-card-heading"><h2 class="ttsc-card-title">{html.escape(a["title"])}</h2><p class="ttsc-card-description">{html.escape(a["desc"])}</p></div></div><div class="ttsc-card-content">{barras}</div></section>')
+    return '<div class="pg-analise">' + ''.join(blocos) + '</div>'
+
+
+def secao_form(spec):
+    campos = {c['key']: c for c in spec['fields']}
+    itens = []
+    for k in spec['form']:
+        c = campos[k]
+        rotulo = html.escape(c['label'])
+        if c['type'] == 'enum':
+            ctrl = '<select class="ttsc-select">' + ''.join(f'<option>{html.escape(v["label"])}</option>' for v in c['values']) + '</select>'
+        elif c['type'] in ('date', 'datetime'):
+            ctrl = '<input class="ttsc-input" type="date">'
+        elif c['type'] == 'money':
+            ctrl = '<input class="ttsc-input" inputmode="decimal" placeholder="R$ 0,00">'
+        else:
+            ctrl = '<input class="ttsc-input">'
+        itens.append(f'<div class="pg-campo"><label class="ttsc-form-label">{rotulo}</label>{ctrl}</div>')
+    return '<section class="ttsc-card"><div class="ttsc-card-header"><div class="ttsc-card-heading"><h2 class="ttsc-card-title">Cadastro</h2></div></div><div class="ttsc-card-content"><div class="pg-form">' + ''.join(itens) + '</div></div></section>'
+
+
+ESTILO_ESTATICO = """
+html,body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font:13px/1.5 Inter,system-ui,sans-serif}
+.pg{padding:16px;max-width:1280px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+@media(min-width:640px){.pg{padding:20px}}
+.pg-trilha{font-size:12px;color:var(--ttsc-text-muted)}
+.pg-titulo{font-size:20px;line-height:28px;font-weight:700;margin:0}
+.pg-faixa{font-size:12px;color:var(--ttsc-text-muted)}
+.pg-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.pg-kpis .ttsc-kpi-value{font-size:28px;font-weight:600}
+.pg-layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
+@media(max-width:900px){.pg-layout{grid-template-columns:1fr}}
+.pg-principal{display:flex;flex-direction:column;gap:16px;min-width:0}
+.pg-kanban{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.pg-coluna{background:var(--ttsc-canvas-2);border:1px solid var(--ttsc-border-soft);border-radius:var(--ttsc-radius-surface);padding:10px;display:flex;flex-direction:column;gap:8px}
+.pg-coluna-titulo{font-size:12px}
+.pg-cartao{background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-sm);padding:8px;font-size:12px}
+.pg-cartao small{color:var(--ttsc-text-muted)}
+.pg-analise{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.pg-barra{display:grid;grid-template-columns:1fr;gap:4px;margin:8px 0;font-size:12px}
+.pg-barra span{display:block;height:10px;border-radius:6px;background:var(--ttsc-accent)}
+.pg-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.pg-campo{display:flex;flex-direction:column;gap:6px}
+.pg-lista{margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2);display:flex;flex-direction:column;gap:6px}
+.pg-lateral h3{font-size:13px;margin:0 0 6px}
+.pg-rodape{font-size:12px;color:var(--ttsc-text-muted)}
+.pg-rodape a{color:var(--ttsc-accent-text)}
+"""
+
+
+def pagina_estatica(nome, spec, portal, modulo, rota, arq, ficha_rel, sdd_rel, tok, bun, papeis, regras, semente):
+    trilha = ' / '.join(html.escape(x) for x in [portal, modulo, nome])
+    registros = gera_registros(spec, semente)
+    partes_principal = [secao_kpis(spec, registros), secao_tabela(spec, semente, registros)]
+    if arq == 'kanban':
+        partes_principal.append(secao_kanban(spec, semente))
+    if arq == 'painel':
+        partes_principal.append(secao_analise(spec, semente))
+    elif arq in ('formulario', 'assistente'):
+        partes_principal.append(secao_form(spec))
+    else:
+        partes_principal.append(secao_analise(spec, semente))
+        partes_principal.append(secao_form(spec))
+    papeis_html = ''.join(f'<li>{html.escape(x)}</li>' for x in papeis) or '<li>Ver a ficha da tela.</li>'
+    regras_html = ''.join(f'<li>{html.escape(x)}</li>' for x in regras) or '<li>Ver a ficha da tela.</li>'
+    return f"""<!doctype html>
 <html lang="pt-BR" data-theme="light">
 <head>
 <meta charset="utf-8">
@@ -332,32 +509,27 @@ def pagina(nome, spec, portal, modulo, rota, arq, ficha_rel, sdd_rel, tok, bun, 
 <title>{html.escape(nome)} · {html.escape(modulo)}</title>
 <link rel="stylesheet" href="{tok}">
 <link rel="stylesheet" href="{bun}">
-<script src="{js}"></script>
-<style>html,body{{margin:0}} #main-viewport{{padding:14px 16px 24px}} .pg-fonte{{font:12px/1.5 Inter,system-ui,sans-serif;color:var(--ttsc-text-muted);padding:0 16px 24px}} .pg-fonte a{{color:var(--ttsc-accent-text)}}</style>
+<style>{ESTILO_ESTATICO}</style>
 </head>
 <body>
-<main id="main-viewport" class="bg-slate-50">
-  <div id="model-page" class="space-y-3.5" aria-live="polite"></div>
-  <section class="ttsc-card" style="margin:0 16px 16px"><div class="ttsc-card-content" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
-    <div><h3 style="font-size:13px;margin:0 0 6px">Quem acessa</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)">{''.join(f'<li>{html.escape(x)}</li>' for x in papeis) or '<li>Ver a ficha da tela.</li>'}</ul></div>
-    <div><h3 style="font-size:13px;margin:0 0 6px">Regras essenciais</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)">{''.join(f'<li>{html.escape(x)}</li>' for x in regras) or '<li>Ver a ficha da tela.</li>'}</ul></div>
-  </div></section>
-  <p class="pg-fonte">Tela gerada a partir de <a href="{ficha_rel}">{html.escape(modulo)}</a> (SDD v2: <a href="{sdd_rel}">índice</a>). Registros de exemplo.</p>
+<main class="pg">
+  <nav class="pg-trilha" aria-label="Trilha">{trilha}</nav>
+  <div>
+    <h1 class="pg-titulo">{html.escape(nome)}</h1>
+    <p class="pg-faixa">{html.escape(spec['banner']['desc'])}</p>
+  </div>
+  <div class="pg-layout">
+    <div class="pg-principal">{''.join(partes_principal)}</div>
+    <aside class="pg-lateral"><section class="ttsc-card"><div class="ttsc-card-content">
+      <h3>Quem acessa</h3><ul class="pg-lista">{papeis_html}</ul>
+      <h3>Regras essenciais</h3><ul class="pg-lista">{regras_html}</ul>
+    </div></section></aside>
+  </div>
+  <p class="pg-rodape">Tela gerada a partir de <a href="{ficha_rel}">{html.escape(modulo)}</a> · <a href="{sdd_rel}">SDD v2</a>. Dados de exemplo.</p>
 </main>
-<script>
-  (function () {{
-    var SPEC = {dados};
-    TTSCModelKit.syncTheme();
-    TTSCModelKit.render(
-      {{ portal: {{ label: {json.dumps(portal, ensure_ascii=False)} }}, module: {{ label: {json.dumps(modulo, ensure_ascii=False)} }}, page: {{ label: {json.dumps(nome, ensure_ascii=False)}, route: {json.dumps(rota, ensure_ascii=False)} }} }},
-      SPEC, {{}}
-    );
-    TTSCModelKit.switchTab({json.dumps(aba_inicial(arq))});
-  }})();
-</script>
 </body>
 </html>
-'''
+"""
 
 
 def main():
@@ -385,8 +557,8 @@ def main():
             d = os.path.dirname(fn)
             rel_ = lambda alvo: os.path.relpath(alvo, d).replace(os.sep, '/')
             rota = '/' + '/'.join(slug(x) for x in rel[:-3].split('/'))
-            src = pagina(nome, spec, portal, modulo, rota, arq, rel_(caminho), rel_(os.path.join(ROOT, 'docs', 'v2', '00-README.md')),
-                         rel_(TOKENS), rel_(BUNDLE_CSS), rel_(BUNDLE_JS), papeis, regras)
+            src = pagina_estatica(nome, spec, portal, modulo, rota, arq, rel_(caminho), rel_(os.path.join(ROOT, 'docs', 'v2', '00-README.md')),
+                                  rel_(TOKENS), rel_(BUNDLE_CSS), papeis, regras, slug(nome) + modulo)
             open(fn, 'w', encoding='utf8').write(src)
             total += 1
             indice.append((portal, modulo, nome, arq, dom, rel_(fn) if False else os.path.relpath(fn, OUT).replace(os.sep, '/')))

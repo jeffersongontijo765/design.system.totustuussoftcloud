@@ -6,28 +6,59 @@
 <title>Licenças por entidade · Licenciamento</title>
 <link rel="stylesheet" href="../../../../components/__tokens.css">
 <link rel="stylesheet" href="../../../../components/bundle.css">
-<script src="../../../../components/bundle.js"></script>
-<style>html,body{margin:0} #main-viewport{padding:14px 16px 24px} .pg-fonte{font:12px/1.5 Inter,system-ui,sans-serif;color:var(--ttsc-text-muted);padding:0 16px 24px} .pg-fonte a{color:var(--ttsc-accent-text)}</style>
+<style>
+html,body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font:13px/1.5 Inter,system-ui,sans-serif}
+.pg{padding:16px;max-width:1280px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+@media(min-width:640px){.pg{padding:20px}}
+.pg-trilha{font-size:12px;color:var(--ttsc-text-muted)}
+.pg-titulo{font-size:20px;line-height:28px;font-weight:700;margin:0}
+.pg-faixa{font-size:12px;color:var(--ttsc-text-muted)}
+.pg-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.pg-kpis .ttsc-kpi-value{font-size:28px;font-weight:600}
+.pg-layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
+@media(max-width:900px){.pg-layout{grid-template-columns:1fr}}
+.pg-principal{display:flex;flex-direction:column;gap:16px;min-width:0}
+.pg-kanban{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.pg-coluna{background:var(--ttsc-canvas-2);border:1px solid var(--ttsc-border-soft);border-radius:var(--ttsc-radius-surface);padding:10px;display:flex;flex-direction:column;gap:8px}
+.pg-coluna-titulo{font-size:12px}
+.pg-cartao{background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-sm);padding:8px;font-size:12px}
+.pg-cartao small{color:var(--ttsc-text-muted)}
+.pg-analise{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.pg-barra{display:grid;grid-template-columns:1fr;gap:4px;margin:8px 0;font-size:12px}
+.pg-barra span{display:block;height:10px;border-radius:6px;background:var(--ttsc-accent)}
+.pg-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.pg-campo{display:flex;flex-direction:column;gap:6px}
+.pg-lista{margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2);display:flex;flex-direction:column;gap:6px}
+.pg-lateral h3{font-size:13px;margin:0 0 6px}
+.pg-rodape{font-size:12px;color:var(--ttsc-text-muted)}
+.pg-rodape a{color:var(--ttsc-accent-text)}
+</style>
 </head>
 <body>
-<main id="main-viewport" class="bg-slate-50">
-  <div id="model-page" class="space-y-3.5" aria-live="polite"></div>
-  <section class="ttsc-card" style="margin:0 16px 16px"><div class="ttsc-card-content" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
-    <div><h3 style="font-size:13px;margin:0 0 6px">Quem acessa</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)"><li>Licença e módulos do plano: platform.developer (SDD 77, seção 2).</li></ul></div>
-    <div><h3 style="font-size:13px;margin:0 0 6px">Regras essenciais</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)"><li>Ver a ficha da tela.</li></ul></div>
-  </div></section>
-  <p class="pg-fonte">Tela gerada a partir de <a href="../../../../kit-starter/desenvolvedor/plataforma-e-clientes/licenciamento.md">Licenciamento</a> (SDD v2: <a href="../../../../docs/v2/00-README.md">índice</a>). Registros de exemplo.</p>
+<main class="pg">
+  <nav class="pg-trilha" aria-label="Trilha">Desenvolvedor (desenvolvedor.) / Licenciamento / Licenças por entidade</nav>
+  <div>
+    <h1 class="pg-titulo">Licenças por entidade</h1>
+    <p class="pg-faixa">datatable): módulo, status, data de início e fim, limite contratado.</p>
+  </div>
+  <div class="pg-layout">
+    <div class="pg-principal"><div class="pg-kpis"><section class="ttsc-card ttsc-card-kpi"><div class="ttsc-card-content">
+  <span class="ttsc-kpi-label"><i class="fa-light fa-circle-check"></i> Ativos</span>
+  <div class="ttsc-kpi-value">8</div><div class="ttsc-kpi-delta">Em vigor</div></div></section><section class="ttsc-card ttsc-card-kpi"><div class="ttsc-card-content">
+  <span class="ttsc-kpi-label"><i class="fa-light fa-hourglass-half"></i> Pendentes</span>
+  <div class="ttsc-kpi-value">9</div><div class="ttsc-kpi-delta">Aguardam ação</div></div></section><section class="ttsc-card ttsc-card-kpi"><div class="ttsc-card-content">
+  <span class="ttsc-kpi-label"><i class="fa-light fa-box-archive"></i> Inativos</span>
+  <div class="ttsc-kpi-value">7</div><div class="ttsc-kpi-delta">Fora de uso</div></div></section></div><section class="ttsc-card" aria-labelledby="tabela">
+  <div class="ttsc-card-header"><div class="ttsc-card-heading"><h2 class="ttsc-card-title" id="tabela">Registros</h2>
+  <p class="ttsc-card-description">10 de 24 registros de exemplo. Ordenação e filtro pelo cabeçalho.</p></div></div>
+  <div class="ttsc-card-content"><div class="ttsc-table-wrapper"><table class="ttsc-table ttsc-table-zebra">
+    <thead><tr><th>Nome</th><th>Responsável</th><th>Referência</th><th>Unidade</th><th>Atualizado em</th><th>Situação</th><th class="num">Ações</th></tr></thead><tbody><tr><td>Registro 4</td><td>Elisa Rocha</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">REF-1001</span></td><td>Sul</td><td>11/10/2026</td><td><span class="ttsc-badge ttsc-badge-warning ttsc-badge-light ttsc-badge-sm">Pendente</span></td><td class="num">Ver · Editar</td></tr><tr><td>Registro 2</td><td>Isabela Freitas</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">REF-1002</span></td><td>Norte</td><td>13/09/2026</td><td><span class="ttsc-badge ttsc-badge-warning ttsc-badge-light ttsc-badge-sm">Pendente</span></td><td class="num">Ver · Editar</td></tr><tr><td>Registro 5</td><td>Isabela Freitas</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">REF-1003</span></td><td>Sul</td><td>12/09/2026</td><td><span class="ttsc-badge ttsc-badge-success ttsc-badge-light ttsc-badge-sm">Ativo</span></td><td class="num">Ver · Editar</td></tr><tr><td>Registro 5</td><td>Gabriela Lima</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">REF-1004</span></td><td>Centro</td><td>14/10/2026</td><td><span class="ttsc-badge ttsc-badge-warning ttsc-badge-light ttsc-badge-sm">Pendente</span></td><td class="num">Ver · Editar</td></tr><tr><td>Registro 4</td><td>Isabela Freitas</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">REF-1005</span></td><td>Sul</td><td>19/10/2026</td><td><span class="ttsc-badge ttsc-badge-warning ttsc-badge-light ttsc-badge-sm">Pendente</span></td><td class="num">Ver · Editar</td></tr><tr><td>Registro 4</td><td>Felipe Duarte</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">REF-1006</span></td><td>Centro</td><td>29/10/2026</td><td><span class="ttsc-badge ttsc-badge-secondary ttsc-badge-light ttsc-badge-sm">Inativo</span></td><td class="num">Ver · Editar</td></tr><tr><td>Registro 2</td><td>Mariana Souza</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">REF-1007</span></td><td>Sul</td><td>30/10/2026</td><td><span class="ttsc-badge ttsc-badge-secondary ttsc-badge-light ttsc-badge-sm">Inativo</span></td><td class="num">Ver · Editar</td></tr><tr><td>Registro 3</td><td>Isabela Freitas</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">REF-1008</span></td><td>Centro</td><td>04/10/2026</td><td><span class="ttsc-badge ttsc-badge-secondary ttsc-badge-light ttsc-badge-sm">Inativo</span></td><td class="num">Ver · Editar</td></tr><tr><td>Registro 2</td><td>Felipe Duarte</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">REF-1009</span></td><td>Sul</td><td>06/09/2026</td><td><span class="ttsc-badge ttsc-badge-success ttsc-badge-light ttsc-badge-sm">Ativo</span></td><td class="num">Ver · Editar</td></tr><tr><td>Registro 1</td><td>Mariana Souza</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">REF-1010</span></td><td>Norte</td><td>14/09/2026</td><td><span class="ttsc-badge ttsc-badge-success ttsc-badge-light ttsc-badge-sm">Ativo</span></td><td class="num">Ver · Editar</td></tr></tbody></table></div></div></section><div class="pg-analise"><section class="ttsc-card"><div class="ttsc-card-header"><div class="ttsc-card-heading"><h2 class="ttsc-card-title">Por unidade</h2><p class="ttsc-card-description">Situação atual</p></div></div><div class="ttsc-card-content"><div class="pg-barra"><span style="width:66%"></span><b>Centro</b></div><div class="pg-barra"><span style="width:86%"></span><b>Norte</b></div><div class="pg-barra"><span style="width:86%"></span><b>Sul</b></div></div></section><section class="ttsc-card"><div class="ttsc-card-header"><div class="ttsc-card-heading"><h2 class="ttsc-card-title">Por situação</h2><p class="ttsc-card-description">Distribuição por status</p></div></div><div class="ttsc-card-content"><div class="pg-barra"><span style="width:32%"></span><b>Ativo</b></div><div class="pg-barra"><span style="width:97%"></span><b>Pendente</b></div><div class="pg-barra"><span style="width:47%"></span><b>Inativo</b></div></div></section></div><section class="ttsc-card"><div class="ttsc-card-header"><div class="ttsc-card-heading"><h2 class="ttsc-card-title">Cadastro</h2></div></div><div class="ttsc-card-content"><div class="pg-form"><div class="pg-campo"><label class="ttsc-form-label">Nome</label><input class="ttsc-input"></div><div class="pg-campo"><label class="ttsc-form-label">Responsável</label><input class="ttsc-input"></div><div class="pg-campo"><label class="ttsc-form-label">Unidade</label><select class="ttsc-select"><option>Centro</option><option>Norte</option><option>Sul</option></select></div><div class="pg-campo"><label class="ttsc-form-label">Atualizado em</label><input class="ttsc-input" type="date"></div></div></div></section></div>
+    <aside class="pg-lateral"><section class="ttsc-card"><div class="ttsc-card-content">
+      <h3>Quem acessa</h3><ul class="pg-lista"><li>Licença e módulos do plano: platform.developer (SDD 77, seção 2).</li></ul>
+      <h3>Regras essenciais</h3><ul class="pg-lista"><li>Ver a ficha da tela.</li></ul>
+    </div></section></aside>
+  </div>
+  <p class="pg-rodape">Tela gerada a partir de <a href="../../../../kit-starter/desenvolvedor/plataforma-e-clientes/licenciamento.md">Licenciamento</a> · <a href="../../../../docs/v2/00-README.md">SDD v2</a>. Dados de exemplo.</p>
 </main>
-<script>
-  (function () {
-    var SPEC = {"title": "Licenças por entidade", "icon": "fa-table-list", "currency": "BRL", "create": true, "entity": {"singular": "Licenças por entidade", "plural": "Licenças por entidade", "icon": "fa-table-list", "newLabel": "Novo registro"}, "banner": {"icon": "fa-table-list", "title": "Licenças por entidade", "desc": "datatable): módulo, status, data de início e fim, limite contratado.", "pill": "{count} registros"}, "titleField": "name", "codeField": "code", "subField": "unidade", "statusField": "status", "stageField": "status", "count": 24, "fields": [{"key": "name", "label": "Nome", "type": "title", "samples": ["Registro 1", "Registro 2", "Registro 3", "Registro 4", "Registro 5"]}, {"key": "person", "label": "Responsável", "type": "person"}, {"key": "code", "label": "Referência", "type": "code", "prefix": "REF"}, {"key": "unidade", "label": "Unidade", "type": "enum", "values": [{"id": "Centro", "label": "Centro", "tone": "blue", "weight": 4}, {"id": "Norte", "label": "Norte", "tone": "emerald", "weight": 3}, {"id": "Sul", "label": "Sul", "tone": "amber", "weight": 2}]}, {"key": "atualizado", "label": "Atualizado em", "type": "date", "from": -60, "to": 0}, {"key": "status", "label": "Situação", "type": "status"}], "statuses": [{"id": "ativo", "label": "Ativo", "tone": "emerald", "weight": 2}, {"id": "pendente", "label": "Pendente", "tone": "amber", "weight": 2}, {"id": "inativo", "label": "Inativo", "tone": "slate", "weight": 2}], "stages": [{"id": "ativo", "label": "Ativo", "tone": "emerald", "weight": 2}, {"id": "pendente", "label": "Pendente", "tone": "amber", "weight": 2}, {"id": "inativo", "label": "Inativo", "tone": "slate", "weight": 2}], "kpis": [{"label": "Ativos", "sub": "Em vigor", "icon": "fa-circle-check", "tone": "blue", "value": {"agg": "count", "where": {"status": "ativo"}}, "unitLabel": "Registros", "unit": "count"}, {"label": "Pendentes", "sub": "Aguardam ação", "icon": "fa-hourglass-half", "tone": "blue", "value": {"agg": "count", "where": {"status": "pendente"}}, "unitLabel": "Registros", "unit": "count"}, {"label": "Inativos", "sub": "Fora de uso", "icon": "fa-box-archive", "tone": "blue", "value": {"agg": "count", "where": {"status": "inativo"}}, "unitLabel": "Registros", "unit": "count"}], "breakdown": {"by": "unidade", "title": "Distribuição", "desc": "Distribuição atual", "icon": "fa-layer-group"}, "cardFields": ["person", "unidade"], "cardLine": "unidade", "kanbanTitle": "Licenças por entidade", "kanbanDesc": "datatable): módulo, status, data de início e fim, limite contratado.", "kanbanValue": null, "kanbanDate": "atualizado", "drawer": {"metrics": ["atualizado"], "sections": [{"title": "Registro", "icon": "fa-id-card", "fields": ["person", "code", "unidade", "atualizado", "status"]}]}, "form": ["name", "person", "unidade", "atualizado"], "analytics": [{"title": "Por unidade", "desc": "Situação atual", "by": "unidade", "type": "bar", "measure": {"agg": "count", "unit": "count"}}, {"title": "Por situação", "desc": "Distribuição por status", "by": "status", "type": "doughnut", "measure": {"agg": "count", "unit": "count"}}]};
-    TTSCModelKit.syncTheme();
-    TTSCModelKit.render(
-      { portal: { label: "Desenvolvedor (desenvolvedor.)" }, module: { label: "Licenciamento" }, page: { label: "Licenças por entidade", route: "/desenvolvedor/plataforma-e-clientes/licenciamento" } },
-      SPEC, {}
-    );
-    TTSCModelKit.switchTab("table");
-  })();
-</script>
 </body>
 </html>

@@ -6,28 +6,59 @@
 <title>Configuração · Integrações educacionais oficiais</title>
 <link rel="stylesheet" href="../../../../components/__tokens.css">
 <link rel="stylesheet" href="../../../../components/bundle.css">
-<script src="../../../../components/bundle.js"></script>
-<style>html,body{margin:0} #main-viewport{padding:14px 16px 24px} .pg-fonte{font:12px/1.5 Inter,system-ui,sans-serif;color:var(--ttsc-text-muted);padding:0 16px 24px} .pg-fonte a{color:var(--ttsc-accent-text)}</style>
+<style>
+html,body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font:13px/1.5 Inter,system-ui,sans-serif}
+.pg{padding:16px;max-width:1280px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+@media(min-width:640px){.pg{padding:20px}}
+.pg-trilha{font-size:12px;color:var(--ttsc-text-muted)}
+.pg-titulo{font-size:20px;line-height:28px;font-weight:700;margin:0}
+.pg-faixa{font-size:12px;color:var(--ttsc-text-muted)}
+.pg-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.pg-kpis .ttsc-kpi-value{font-size:28px;font-weight:600}
+.pg-layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
+@media(max-width:900px){.pg-layout{grid-template-columns:1fr}}
+.pg-principal{display:flex;flex-direction:column;gap:16px;min-width:0}
+.pg-kanban{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.pg-coluna{background:var(--ttsc-canvas-2);border:1px solid var(--ttsc-border-soft);border-radius:var(--ttsc-radius-surface);padding:10px;display:flex;flex-direction:column;gap:8px}
+.pg-coluna-titulo{font-size:12px}
+.pg-cartao{background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-sm);padding:8px;font-size:12px}
+.pg-cartao small{color:var(--ttsc-text-muted)}
+.pg-analise{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.pg-barra{display:grid;grid-template-columns:1fr;gap:4px;margin:8px 0;font-size:12px}
+.pg-barra span{display:block;height:10px;border-radius:6px;background:var(--ttsc-accent)}
+.pg-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.pg-campo{display:flex;flex-direction:column;gap:6px}
+.pg-lista{margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2);display:flex;flex-direction:column;gap:6px}
+.pg-lateral h3{font-size:13px;margin:0 0 6px}
+.pg-rodape{font-size:12px;color:var(--ttsc-text-muted)}
+.pg-rodape a{color:var(--ttsc-accent-text)}
+</style>
 </head>
 <body>
-<main id="main-viewport" class="bg-slate-50">
-  <div id="model-page" class="space-y-3.5" aria-live="polite"></div>
-  <section class="ttsc-card" style="margin:0 16px 16px"><div class="ttsc-card-content" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
-    <div><h3 style="font-size:13px;margin:0 0 6px">Quem acessa</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)"><li>entity.admin e unit.secretary (operação).</li><li>Regras transversais: default-deny, separação de funções, step-up para ação sensível e revisão de acesso (78, seções 2 e 5).</li></ul></div>
-    <div><h3 style="font-size:13px;margin:0 0 6px">Regras essenciais</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)"><li>74; dois níveis de integração (16, seção 1).</li></ul></div>
-  </div></section>
-  <p class="pg-fonte">Tela gerada a partir de <a href="../../../../kit-starter/gestao/configuracao-e-acesso/integracoes-educacionais-oficiais.md">Integrações educacionais oficiais</a> (SDD v2: <a href="../../../../docs/v2/00-README.md">índice</a>). Registros de exemplo.</p>
+<main class="pg">
+  <nav class="pg-trilha" aria-label="Trilha">Gestão (gestao.) / Integrações educacionais oficiais / Configuração</nav>
+  <div>
+    <h1 class="pg-titulo">Configuração</h1>
+    <p class="pg-faixa">credencial por referência ao cofre do tenant).</p>
+  </div>
+  <div class="pg-layout">
+    <div class="pg-principal"><div class="pg-kpis"><section class="ttsc-card ttsc-card-kpi"><div class="ttsc-card-content">
+  <span class="ttsc-kpi-label"><i class="fa-light fa-circle-check"></i> Ativos</span>
+  <div class="ttsc-kpi-value">6</div><div class="ttsc-kpi-delta">Em vigor</div></div></section><section class="ttsc-card ttsc-card-kpi"><div class="ttsc-card-content">
+  <span class="ttsc-kpi-label"><i class="fa-light fa-hourglass-half"></i> Pendentes</span>
+  <div class="ttsc-kpi-value">9</div><div class="ttsc-kpi-delta">Aguardam aprovação</div></div></section><section class="ttsc-card ttsc-card-kpi"><div class="ttsc-card-content">
+  <span class="ttsc-kpi-label"><i class="fa-light fa-ban"></i> Bloqueados</span>
+  <div class="ttsc-kpi-value">3</div><div class="ttsc-kpi-delta">Acesso negado</div></div></section></div><section class="ttsc-card" aria-labelledby="tabela">
+  <div class="ttsc-card-header"><div class="ttsc-card-heading"><h2 class="ttsc-card-title" id="tabela">Registros</h2>
+  <p class="ttsc-card-description">10 de 24 registros de exemplo. Ordenação e filtro pelo cabeçalho.</p></div></div>
+  <div class="ttsc-card-content"><div class="ttsc-table-wrapper"><table class="ttsc-table ttsc-table-zebra">
+    <thead><tr><th>Registro</th><th>Usuário</th><th>Evento</th><th>Portal</th><th>Resultado</th><th>Data</th><th>Situação</th><th class="num">Ações</th></tr></thead><tbody><tr><td>Exportação de auditoria</td><td>Isabela Freitas</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">EVT-1001</span></td><td>Professor</td><td>negado</td><td>16/10/2026 14:30</td><td><span class="ttsc-badge ttsc-badge-danger ttsc-badge-light ttsc-badge-sm">Bloqueado</span></td><td class="num">Ver · Editar</td></tr><tr><td>Certificado do domínio</td><td>Isabela Freitas</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">EVT-1002</span></td><td>Desenvolvedor</td><td>bloqueado</td><td>13/10/2026 14:30</td><td><span class="ttsc-badge ttsc-badge-secondary ttsc-badge-light ttsc-badge-sm">Revogado</span></td><td class="num">Ver · Editar</td></tr><tr><td>Pedido de acesso do titular</td><td>Isabela Freitas</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">EVT-1003</span></td><td>Gestão</td><td>negado</td><td>25/10/2026 14:30</td><td><span class="ttsc-badge ttsc-badge-success ttsc-badge-light ttsc-badge-sm">Ativo</span></td><td class="num">Ver · Editar</td></tr><tr><td>Exportação de auditoria</td><td>Mariana Souza</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">EVT-1004</span></td><td>Gestão</td><td>negado</td><td>17/10/2026 14:30</td><td><span class="ttsc-badge ttsc-badge-success ttsc-badge-light ttsc-badge-sm">Ativo</span></td><td class="num">Ver · Editar</td></tr><tr><td>Login do administrador</td><td>Lucas Martins</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">EVT-1005</span></td><td>Desenvolvedor</td><td>bloqueado</td><td>09/10/2026 14:30</td><td><span class="ttsc-badge ttsc-badge-secondary ttsc-badge-light ttsc-badge-sm">Revogado</span></td><td class="num">Ver · Editar</td></tr><tr><td>Certificado do domínio</td><td>Lucas Martins</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">EVT-1006</span></td><td>Aluno</td><td>sucesso</td><td>23/10/2026 14:30</td><td><span class="ttsc-badge ttsc-badge-danger ttsc-badge-light ttsc-badge-sm">Bloqueado</span></td><td class="num">Ver · Editar</td></tr><tr><td>Exportação de auditoria</td><td>Elisa Rocha</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">EVT-1007</span></td><td>Gestão</td><td>bloqueado</td><td>31/10/2026 14:30</td><td><span class="ttsc-badge ttsc-badge-warning ttsc-badge-light ttsc-badge-sm">Pendente</span></td><td class="num">Ver · Editar</td></tr><tr><td>Backup do banco master</td><td>Otávio Barros</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">EVT-1008</span></td><td>Gestão</td><td>bloqueado</td><td>23/10/2026 14:30</td><td><span class="ttsc-badge ttsc-badge-warning ttsc-badge-light ttsc-badge-sm">Pendente</span></td><td class="num">Ver · Editar</td></tr><tr><td>Certificado do domínio</td><td>Lucas Martins</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">EVT-1009</span></td><td>Desenvolvedor</td><td>bloqueado</td><td>07/10/2026 14:30</td><td><span class="ttsc-badge ttsc-badge-danger ttsc-badge-light ttsc-badge-sm">Bloqueado</span></td><td class="num">Ver · Editar</td></tr><tr><td>Certificado do domínio</td><td>Mariana Souza</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">EVT-1010</span></td><td>Professor</td><td>bloqueado</td><td>24/10/2026 14:30</td><td><span class="ttsc-badge ttsc-badge-warning ttsc-badge-light ttsc-badge-sm">Pendente</span></td><td class="num">Ver · Editar</td></tr></tbody></table></div></div></section><section class="ttsc-card"><div class="ttsc-card-header"><div class="ttsc-card-heading"><h2 class="ttsc-card-title">Cadastro</h2></div></div><div class="ttsc-card-content"><div class="pg-form"><div class="pg-campo"><label class="ttsc-form-label">Registro</label><input class="ttsc-input"></div><div class="pg-campo"><label class="ttsc-form-label">Usuário</label><input class="ttsc-input"></div><div class="pg-campo"><label class="ttsc-form-label">Portal</label><select class="ttsc-select"><option>Desenvolvedor</option><option>Gestão</option><option>Professor</option><option>Aluno</option></select></div><div class="pg-campo"><label class="ttsc-form-label">Resultado</label><select class="ttsc-select"><option>sucesso</option><option>bloqueado</option><option>negado</option></select></div><div class="pg-campo"><label class="ttsc-form-label">Data</label><input class="ttsc-input" type="date"></div></div></div></section></div>
+    <aside class="pg-lateral"><section class="ttsc-card"><div class="ttsc-card-content">
+      <h3>Quem acessa</h3><ul class="pg-lista"><li>entity.admin e unit.secretary (operação).</li><li>Regras transversais: default-deny, separação de funções, step-up para ação sensível e revisão de acesso (78, seções 2 e 5).</li></ul>
+      <h3>Regras essenciais</h3><ul class="pg-lista"><li>74; dois níveis de integração (16, seção 1).</li></ul>
+    </div></section></aside>
+  </div>
+  <p class="pg-rodape">Tela gerada a partir de <a href="../../../../kit-starter/gestao/configuracao-e-acesso/integracoes-educacionais-oficiais.md">Integrações educacionais oficiais</a> · <a href="../../../../docs/v2/00-README.md">SDD v2</a>. Dados de exemplo.</p>
 </main>
-<script>
-  (function () {
-    var SPEC = {"title": "Configuração", "icon": "fa-shield-halved", "currency": "BRL", "create": true, "entity": {"singular": "Configuração", "plural": "Configuração", "icon": "fa-shield-halved", "newLabel": "Novo registro"}, "banner": {"icon": "fa-shield-halved", "title": "Configuração", "desc": "credencial por referência ao cofre do tenant).", "pill": "{count} registros"}, "titleField": "name", "codeField": "code", "subField": "portal", "statusField": "status", "stageField": "status", "count": 24, "fields": [{"key": "name", "label": "Registro", "type": "title", "samples": ["Login do administrador", "Alteração de papel", "Exportação de auditoria", "Pedido de acesso do titular", "Certificado do domínio", "Backup do banco master"]}, {"key": "person", "label": "Usuário", "type": "person"}, {"key": "code", "label": "Evento", "type": "code", "prefix": "EVT"}, {"key": "portal", "label": "Portal", "type": "enum", "values": [{"id": "Desenvolvedor", "label": "Desenvolvedor", "tone": "blue", "weight": 4}, {"id": "Gestão", "label": "Gestão", "tone": "emerald", "weight": 3}, {"id": "Professor", "label": "Professor", "tone": "amber", "weight": 2}, {"id": "Aluno", "label": "Aluno", "tone": "purple", "weight": 1}]}, {"key": "resultado", "label": "Resultado", "type": "enum", "values": [{"id": "sucesso", "label": "sucesso", "tone": "blue", "weight": 4}, {"id": "bloqueado", "label": "bloqueado", "tone": "emerald", "weight": 3}, {"id": "negado", "label": "negado", "tone": "amber", "weight": 2}]}, {"key": "data", "label": "Data", "type": "datetime", "from": -30, "to": 0}, {"key": "status", "label": "Situação", "type": "status"}], "statuses": [{"id": "ativo", "label": "Ativo", "tone": "emerald", "weight": 2}, {"id": "pendente", "label": "Pendente", "tone": "amber", "weight": 2}, {"id": "bloqueado", "label": "Bloqueado", "tone": "rose", "weight": 2}, {"id": "revogado", "label": "Revogado", "tone": "slate", "weight": 2}], "stages": [{"id": "ativo", "label": "Ativo", "tone": "emerald", "weight": 2}, {"id": "pendente", "label": "Pendente", "tone": "amber", "weight": 2}, {"id": "bloqueado", "label": "Bloqueado", "tone": "rose", "weight": 2}, {"id": "revogado", "label": "Revogado", "tone": "slate", "weight": 2}], "kpis": [{"label": "Ativos", "sub": "Em vigor", "icon": "fa-circle-check", "tone": "blue", "value": {"agg": "count", "where": {"status": "ativo"}}, "unitLabel": "Registros", "unit": "count"}, {"label": "Pendentes", "sub": "Aguardam aprovação", "icon": "fa-hourglass-half", "tone": "blue", "value": {"agg": "count", "where": {"status": "pendente"}}, "unitLabel": "Registros", "unit": "count"}, {"label": "Bloqueados", "sub": "Acesso negado", "icon": "fa-ban", "tone": "blue", "value": {"agg": "count", "where": {"status": "bloqueado"}}, "unitLabel": "Registros", "unit": "count"}], "breakdown": {"by": "portal", "title": "Distribuição", "desc": "Distribuição atual", "icon": "fa-layer-group"}, "cardFields": ["person", "portal"], "cardLine": "portal", "kanbanTitle": "Configuração", "kanbanDesc": "credencial por referência ao cofre do tenant).", "kanbanValue": null, "kanbanDate": "data", "drawer": {"metrics": ["data"], "sections": [{"title": "Registro", "icon": "fa-id-card", "fields": ["person", "code", "portal", "resultado", "data", "status"]}]}, "form": ["name", "person", "portal", "resultado", "data"], "analytics": [{"title": "Por portal", "desc": "Situação atual", "by": "portal", "type": "bar", "measure": {"agg": "count", "unit": "count"}}, {"title": "Por situação", "desc": "Distribuição por status", "by": "status", "type": "doughnut", "measure": {"agg": "count", "unit": "count"}}]};
-    TTSCModelKit.syncTheme();
-    TTSCModelKit.render(
-      { portal: { label: "Gestão (gestao.)" }, module: { label: "Integrações educacionais oficiais" }, page: { label: "Configuração", route: "/gestao/configuracao-e-acesso/integracoes-educacionais-oficiais" } },
-      SPEC, {}
-    );
-    TTSCModelKit.switchTab("table");
-  })();
-</script>
 </body>
 </html>

@@ -6,28 +6,59 @@
 <title>Movimentos · Almoxarifado (estoque)</title>
 <link rel="stylesheet" href="../../../../components/__tokens.css">
 <link rel="stylesheet" href="../../../../components/bundle.css">
-<script src="../../../../components/bundle.js"></script>
-<style>html,body{margin:0} #main-viewport{padding:14px 16px 24px} .pg-fonte{font:12px/1.5 Inter,system-ui,sans-serif;color:var(--ttsc-text-muted);padding:0 16px 24px} .pg-fonte a{color:var(--ttsc-accent-text)}</style>
+<style>
+html,body{margin:0;background:var(--ttsc-canvas);color:var(--ttsc-text);font:13px/1.5 Inter,system-ui,sans-serif}
+.pg{padding:16px;max-width:1280px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+@media(min-width:640px){.pg{padding:20px}}
+.pg-trilha{font-size:12px;color:var(--ttsc-text-muted)}
+.pg-titulo{font-size:20px;line-height:28px;font-weight:700;margin:0}
+.pg-faixa{font-size:12px;color:var(--ttsc-text-muted)}
+.pg-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.pg-kpis .ttsc-kpi-value{font-size:28px;font-weight:600}
+.pg-layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:16px;align-items:start}
+@media(max-width:900px){.pg-layout{grid-template-columns:1fr}}
+.pg-principal{display:flex;flex-direction:column;gap:16px;min-width:0}
+.pg-kanban{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.pg-coluna{background:var(--ttsc-canvas-2);border:1px solid var(--ttsc-border-soft);border-radius:var(--ttsc-radius-surface);padding:10px;display:flex;flex-direction:column;gap:8px}
+.pg-coluna-titulo{font-size:12px}
+.pg-cartao{background:var(--ttsc-surface);border:1px solid var(--ttsc-border);border-radius:var(--ttsc-radius-sm);padding:8px;font-size:12px}
+.pg-cartao small{color:var(--ttsc-text-muted)}
+.pg-analise{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.pg-barra{display:grid;grid-template-columns:1fr;gap:4px;margin:8px 0;font-size:12px}
+.pg-barra span{display:block;height:10px;border-radius:6px;background:var(--ttsc-accent)}
+.pg-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.pg-campo{display:flex;flex-direction:column;gap:6px}
+.pg-lista{margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2);display:flex;flex-direction:column;gap:6px}
+.pg-lateral h3{font-size:13px;margin:0 0 6px}
+.pg-rodape{font-size:12px;color:var(--ttsc-text-muted)}
+.pg-rodape a{color:var(--ttsc-accent-text)}
+</style>
 </head>
 <body>
-<main id="main-viewport" class="bg-slate-50">
-  <div id="model-page" class="space-y-3.5" aria-live="polite"></div>
-  <section class="ttsc-card" style="margin:0 16px 16px"><div class="ttsc-card-content" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px">
-    <div><h3 style="font-size:13px;margin:0 0 6px">Quem acessa</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)"><li>unit.warehouse: movimentar.</li><li>unit.purchasing.approver: aprovar ajuste.</li><li>Regras transversais: default-deny, separação de funções, step-up para ação sensível e revisão de acesso (78, seções 2 e 5).</li></ul></div>
-    <div><h3 style="font-size:13px;margin:0 0 6px">Regras essenciais</h3><ul style="margin:0;padding-left:16px;font-size:12px;color:var(--ttsc-text-2)"><li>Saldo nunca negativo; lote e validade para item controlado (19, seção 5).</li></ul></div>
-  </div></section>
-  <p class="pg-fonte">Tela gerada a partir de <a href="../../../../kit-starter/gestao/suprimentos-e-compras/almoxarifado.md">Almoxarifado (estoque)</a> (SDD v2: <a href="../../../../docs/v2/00-README.md">índice</a>). Registros de exemplo.</p>
+<main class="pg">
+  <nav class="pg-trilha" aria-label="Trilha">Gestão (gestao.) / Almoxarifado (estoque) / Movimentos</nav>
+  <div>
+    <h1 class="pg-titulo">Movimentos</h1>
+    <p class="pg-faixa">entrada, saída, transferência).</p>
+  </div>
+  <div class="pg-layout">
+    <div class="pg-principal"><div class="pg-kpis"><section class="ttsc-card ttsc-card-kpi"><div class="ttsc-card-content">
+  <span class="ttsc-kpi-label"><i class="fa-light fa-hand"></i> Solicitadas</span>
+  <div class="ttsc-kpi-value">5</div><div class="ttsc-kpi-delta">Aguardam aprovação</div></div></section><section class="ttsc-card ttsc-card-kpi"><div class="ttsc-card-content">
+  <span class="ttsc-kpi-label"><i class="fa-light fa-thumbs-up"></i> Aprovadas</span>
+  <div class="ttsc-kpi-value">6</div><div class="ttsc-kpi-delta">Prontas para cotar</div></div></section><section class="ttsc-card ttsc-card-kpi"><div class="ttsc-card-content">
+  <span class="ttsc-kpi-label"><i class="fa-light fa-truck"></i> Em pedido</span>
+  <div class="ttsc-kpi-value">R$ 90.428,00</div><div class="ttsc-kpi-delta">Valor pedido</div></div></section></div><section class="ttsc-card" aria-labelledby="tabela">
+  <div class="ttsc-card-header"><div class="ttsc-card-heading"><h2 class="ttsc-card-title" id="tabela">Registros</h2>
+  <p class="ttsc-card-description">10 de 24 registros de exemplo. Ordenação e filtro pelo cabeçalho.</p></div></div>
+  <div class="ttsc-card-content"><div class="ttsc-table-wrapper"><table class="ttsc-table ttsc-table-zebra">
+    <thead><tr><th>Item</th><th>Solicitante</th><th>Pedido</th><th>Quantidade</th><th>Valor total</th><th>Entrega prevista</th><th>Situação</th><th class="num">Ações</th></tr></thead><tbody><tr><td>Material de limpeza</td><td>Felipe Duarte</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">PED-1001</span></td><td>110</td><td>R$ 1.602,00</td><td>29/11/2026</td><td><span class="ttsc-badge ttsc-badge-warning ttsc-badge-light ttsc-badge-sm">Cotada</span></td><td class="num">Ver · Editar</td></tr><tr><td>Material de limpeza</td><td>Gabriela Lima</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">PED-1002</span></td><td>107</td><td>R$ 16.292,00</td><td>24/11/2026</td><td><span class="ttsc-badge ttsc-badge-success ttsc-badge-light ttsc-badge-sm">Aprovada</span></td><td class="num">Ver · Editar</td></tr><tr><td>Papel A4 resma</td><td>Otávio Barros</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">PED-1003</span></td><td>143</td><td>R$ 25.685,00</td><td>02/12/2026</td><td><span class="ttsc-badge ttsc-badge-success ttsc-badge-light ttsc-badge-sm">Aprovada</span></td><td class="num">Ver · Editar</td></tr><tr><td>Gêneros para merenda</td><td>Lucas Martins</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">PED-1004</span></td><td>288</td><td>R$ 32.799,00</td><td>07/11/2026</td><td><span class="ttsc-badge ttsc-badge-primary ttsc-badge-light ttsc-badge-sm">Pedida</span></td><td class="num">Ver · Editar</td></tr><tr><td>Gêneros para merenda</td><td>Elisa Rocha</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">PED-1005</span></td><td>164</td><td>R$ 8.823,00</td><td>19/11/2026</td><td><span class="ttsc-badge ttsc-badge-info ttsc-badge-light ttsc-badge-sm">Solicitada</span></td><td class="num">Ver · Editar</td></tr><tr><td>Papel A4 resma</td><td>Gabriela Lima</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">PED-1006</span></td><td>247</td><td>R$ 26.634,00</td><td>19/12/2026</td><td><span class="ttsc-badge ttsc-badge-primary ttsc-badge-light ttsc-badge-sm">Pedida</span></td><td class="num">Ver · Editar</td></tr><tr><td>Papel A4 resma</td><td>Otávio Barros</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">PED-1007</span></td><td>203</td><td>R$ 13.256,00</td><td>18/12/2026</td><td><span class="ttsc-badge ttsc-badge-warning ttsc-badge-light ttsc-badge-sm">Cotada</span></td><td class="num">Ver · Editar</td></tr><tr><td>Papel A4 resma</td><td>Otávio Barros</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">PED-1008</span></td><td>169</td><td>R$ 7.918,00</td><td>19/11/2026</td><td><span class="ttsc-badge ttsc-badge-info ttsc-badge-light ttsc-badge-sm">Solicitada</span></td><td class="num">Ver · Editar</td></tr><tr><td>Papel A4 resma</td><td>Gabriela Lima</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">PED-1009</span></td><td>256</td><td>R$ 1.990,00</td><td>25/11/2026</td><td><span class="ttsc-badge ttsc-badge-success ttsc-badge-light ttsc-badge-sm">Aprovada</span></td><td class="num">Ver · Editar</td></tr><tr><td>Material de limpeza</td><td>Ana Ribeiro</td><td><span class="ttsc-badge ttsc-badge-light ttsc-badge-sm">PED-1010</span></td><td>91</td><td>R$ 2.851,00</td><td>18/11/2026</td><td><span class="ttsc-badge ttsc-badge-info ttsc-badge-light ttsc-badge-sm">Solicitada</span></td><td class="num">Ver · Editar</td></tr></tbody></table></div></div></section><div class="pg-analise"><section class="ttsc-card"><div class="ttsc-card-header"><div class="ttsc-card-heading"><h2 class="ttsc-card-title">Por situação</h2><p class="ttsc-card-description">Situação atual</p></div></div><div class="ttsc-card-content"><div class="pg-barra"><span style="width:22%"></span><b>Solicitada</b></div><div class="pg-barra"><span style="width:37%"></span><b>Aprovada</b></div><div class="pg-barra"><span style="width:27%"></span><b>Cotada</b></div><div class="pg-barra"><span style="width:87%"></span><b>Pedida</b></div><div class="pg-barra"><span style="width:60%"></span><b>Recebida</b></div></div></section><section class="ttsc-card"><div class="ttsc-card-header"><div class="ttsc-card-heading"><h2 class="ttsc-card-title">Por situação</h2><p class="ttsc-card-description">Distribuição por status</p></div></div><div class="ttsc-card-content"><div class="pg-barra"><span style="width:75%"></span><b>Solicitada</b></div><div class="pg-barra"><span style="width:65%"></span><b>Aprovada</b></div><div class="pg-barra"><span style="width:51%"></span><b>Cotada</b></div><div class="pg-barra"><span style="width:38%"></span><b>Pedida</b></div><div class="pg-barra"><span style="width:95%"></span><b>Recebida</b></div></div></section></div><section class="ttsc-card"><div class="ttsc-card-header"><div class="ttsc-card-heading"><h2 class="ttsc-card-title">Cadastro</h2></div></div><div class="ttsc-card-content"><div class="pg-form"><div class="pg-campo"><label class="ttsc-form-label">Item</label><input class="ttsc-input"></div><div class="pg-campo"><label class="ttsc-form-label">Solicitante</label><input class="ttsc-input"></div><div class="pg-campo"><label class="ttsc-form-label">Quantidade</label><input class="ttsc-input"></div><div class="pg-campo"><label class="ttsc-form-label">Valor total</label><input class="ttsc-input" inputmode="decimal" placeholder="R$ 0,00"></div><div class="pg-campo"><label class="ttsc-form-label">Entrega prevista</label><input class="ttsc-input" type="date"></div></div></div></section></div>
+    <aside class="pg-lateral"><section class="ttsc-card"><div class="ttsc-card-content">
+      <h3>Quem acessa</h3><ul class="pg-lista"><li>unit.warehouse: movimentar.</li><li>unit.purchasing.approver: aprovar ajuste.</li><li>Regras transversais: default-deny, separação de funções, step-up para ação sensível e revisão de acesso (78, seções 2 e 5).</li></ul>
+      <h3>Regras essenciais</h3><ul class="pg-lista"><li>Saldo nunca negativo; lote e validade para item controlado (19, seção 5).</li></ul>
+    </div></section></aside>
+  </div>
+  <p class="pg-rodape">Tela gerada a partir de <a href="../../../../kit-starter/gestao/suprimentos-e-compras/almoxarifado.md">Almoxarifado (estoque)</a> · <a href="../../../../docs/v2/00-README.md">SDD v2</a>. Dados de exemplo.</p>
 </main>
-<script>
-  (function () {
-    var SPEC = {"title": "Movimentos", "icon": "fa-cart-shopping", "currency": "BRL", "create": true, "entity": {"singular": "Movimentos", "plural": "Movimentos", "icon": "fa-cart-shopping", "newLabel": "Novo registro"}, "banner": {"icon": "fa-cart-shopping", "title": "Movimentos", "desc": "entrada, saída, transferência).", "pill": "{count} registros"}, "titleField": "name", "codeField": "code", "subField": "status", "statusField": "status", "stageField": "status", "count": 24, "fields": [{"key": "name", "label": "Item", "type": "title", "samples": ["Papel A4 resma", "Gêneros para merenda", "Material de limpeza", "Kit de laboratório", "Uniformes"]}, {"key": "person", "label": "Solicitante", "type": "person"}, {"key": "code", "label": "Pedido", "type": "code", "prefix": "PED"}, {"key": "quantidade", "label": "Quantidade", "type": "int", "min": 1, "max": 300}, {"key": "valor", "label": "Valor total", "type": "money", "min": 80, "max": 40000}, {"key": "entrega", "label": "Entrega prevista", "type": "date", "from": -10, "to": 45}, {"key": "status", "label": "Situação", "type": "status"}], "statuses": [{"id": "solicitada", "label": "Solicitada", "tone": "blue", "weight": 2}, {"id": "aprovada", "label": "Aprovada", "tone": "emerald", "weight": 2}, {"id": "cotada", "label": "Cotada", "tone": "amber", "weight": 2}, {"id": "pedida", "label": "Pedida", "tone": "purple", "weight": 2}, {"id": "recebida", "label": "Recebida", "tone": "slate", "weight": 2}], "stages": [{"id": "solicitada", "label": "Solicitada", "tone": "blue", "weight": 2}, {"id": "aprovada", "label": "Aprovada", "tone": "emerald", "weight": 2}, {"id": "cotada", "label": "Cotada", "tone": "amber", "weight": 2}, {"id": "pedida", "label": "Pedida", "tone": "purple", "weight": 2}, {"id": "recebida", "label": "Recebida", "tone": "slate", "weight": 2}], "kpis": [{"label": "Solicitadas", "sub": "Aguardam aprovação", "icon": "fa-hand", "tone": "blue", "value": {"agg": "count", "where": {"status": "solicitada"}}, "unitLabel": "Registros", "unit": "count"}, {"label": "Aprovadas", "sub": "Prontas para cotar", "icon": "fa-thumbs-up", "tone": "blue", "value": {"agg": "count", "where": {"status": "aprovada"}}, "unitLabel": "Registros", "unit": "count"}, {"label": "Em pedido", "sub": "Valor pedido", "icon": "fa-truck", "tone": "blue", "value": {"agg": "sum", "field": "valor", "where": {"status": "pedida"}}, "unitLabel": "Registros", "unit": "money"}], "cardFields": ["person", "quantidade"], "cardLine": "status", "kanbanTitle": "Movimentos", "kanbanDesc": "entrada, saída, transferência).", "kanbanValue": "valor", "kanbanDate": "entrega", "drawer": {"metrics": ["valor", "entrega"], "sections": [{"title": "Registro", "icon": "fa-id-card", "fields": ["person", "code", "quantidade", "valor", "entrega", "status"]}]}, "form": ["name", "person", "quantidade", "valor", "entrega"], "analytics": [{"title": "Por situação", "desc": "Situação atual", "by": "status", "type": "bar", "measure": {"agg": "count", "unit": "count"}}, {"title": "Por situação", "desc": "Distribuição por status", "by": "status", "type": "doughnut", "measure": {"agg": "count", "unit": "count"}}]};
-    TTSCModelKit.syncTheme();
-    TTSCModelKit.render(
-      { portal: { label: "Gestão (gestao.)" }, module: { label: "Almoxarifado (estoque)" }, page: { label: "Movimentos", route: "/gestao/suprimentos-e-compras/almoxarifado" } },
-      SPEC, {}
-    );
-    TTSCModelKit.switchTab("table");
-  })();
-</script>
 </body>
 </html>
