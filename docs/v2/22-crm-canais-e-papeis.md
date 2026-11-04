@@ -229,8 +229,8 @@ Notas:
 | # | Lacuna | Dono sugerido | Situação em 04/11/2026 |
 |---|---|---|---|
 | LAC-21 | Texto de aceite de finalidade por contexto | Jurídico | Aberta (jurídico) |
-| LAC-22 | Limite de mensagens proativas por canal | Comercial, Jurídico | Aberta |
-| LAC-23 | Alçada de desconto do CRM da plataforma | Comercial | Aberta |
+| LAC-22 | Limite de mensagens proativas por canal | Comercial, Jurídico | Parcial: padrão seguro provisório DP-08 ([80](80-decisoes-por-padrao.md)); o limite por canal continua dependendo do jurídico |
+| LAC-23 | Alçada de desconto do CRM da plataforma | Comercial | Resolvida por padrão: DP-07 ([80](80-decisoes-por-padrao.md)). Parâmetro sem valor inventado; até a configuração, todo desconto fora da regra passa pelo gerente comercial |
 | LAC-24 | Retenção de transcrição e de gravação de ligação | Jurídico, DPO | Aberta (jurídico): ATD-03 ([32](32-atendimento-privacidade-por-portal.md)) |
 | LAC-25 | Contrato de operadora entre plataforma e tenant para atendimento de canal | Jurídico | Aberta (jurídico) |
 

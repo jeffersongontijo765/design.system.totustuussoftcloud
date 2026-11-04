@@ -194,7 +194,7 @@ Conforme a proposta da seção 4.1, as regras abaixo são do submódulo RH/HCM.
 | # | Lacuna | Dono sugerido | Situação em 04/11/2026 |
 |---|---|---|---|
 | LAC-07 | Parecer sobre base legal, negativação e bloqueio de portal (seção 2.6) | Jurídico | Aberta (jurídico). Ver [26](26-sdd-juridico-regulatorio.md), seção 4 |
-| LAC-08 | Limite de valor para baixa manual e aprovação de desconto | Financeiro | Parcial: baixa manual acima de R$ 1.000 exige segundo aprovador ([18](18-regras-modulos-2.md), seção 2.4). Limite de aprovação de desconto em aberto |
+| LAC-08 | Limite de valor para baixa manual e aprovação de desconto | Financeiro | Resolvida: baixa manual acima de R$ 1.000 exige segundo aprovador ([18](18-regras-modulos-2.md), seção 2.4). Limite de aprovação de desconto: padrão DP-07 ([80](80-decisoes-por-padrao.md)) |
 | LAC-09 | Política de acumulatividade de descontos | Financeiro | Resolvida: descontos não acumulam, vale o maior, configurável por entidade ([18](18-regras-modulos-2.md), seção 2.5) |
 | LAC-10 | Regra de NFSe por município | Fiscal | Parcial: regras gerais em [34](34-pagamentos-fiscal-bancos-por-portal.md), seção 5. Regra de cada município depende do provedor (homologação) |
 | LAC-11 | Fronteira RH/Pessoas (seção 4.1) | Produto | Resolvida: um módulo HCM com submódulos ([39](39-departamento-pessoal-rh-medicina-por-portal.md), seção 2) |
