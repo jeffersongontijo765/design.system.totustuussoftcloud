@@ -12,7 +12,11 @@ As seções 1 a 12 prevalecem sobre a seção 13. A seção 13 é o texto integr
 ## 2. Objetivo e escopo
 Arquitetura de navegação dos seis portais (sidebar e sub-sidebar), matriz de páginas da v1, checklist de 21 itens de layout e governança de segurança da navegação.
 
-## 3. Telas (índice da v1)
+## 3. Telas
+- **Matriz de navegação por portal** (lista): portal, área, item de menu, papel exigido.
+- **Checklist de layout** (lista): os 21 itens, por tela, com situação.
+**Títulos da v1 (referência, não são telas):**
+
 - 1. Visão Geral e Fundamentação
 - 2. Princípios Globais de Implementação
 - 3. Arquitetura de Navegação: Sidebars & Sub-Sidebars

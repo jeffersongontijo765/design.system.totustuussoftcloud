@@ -12,7 +12,11 @@ As seções 1 a 12 prevalecem sobre a seção 13. A seção 13 é o texto integr
 ## 2. Objetivo e escopo
 Manter os artigos de ajuda da plataforma, usados pelo atendimento, pelo portal do cliente e pelo bot.
 
-## 3. Telas (índice da v1)
+## 3. Telas
+- **Artigos** (datatable): título, categoria, situação (rascunho, publicado, arquivado), autor.
+- **Editor de artigo** (formulário): conteúdo, categoria, público, revisão antes de publicar.
+**Títulos da v1 (referência, não são telas):**
+
 - Objetivo
 - Escopo funcional
 - Módulos principais

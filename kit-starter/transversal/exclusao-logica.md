@@ -12,7 +12,12 @@ As seções 1 a 12 prevalecem sobre a seção 13. A seção 13 é o texto integr
 ## 2. Objetivo e escopo
 Regra única de exclusão lógica para toda tabela que aceita exclusão: colunas, validação prévia, unicidade, cascata lógica, restauração, expurgo e testes.
 
-## 3. Telas (índice da v1)
+## 3. Telas
+- **Regras de exclusão por tabela** (datatable): tabela, colunas, validação prévia, cascata lógica.
+- **Pedido de restauração** (formulário): registro, motivo, permissão exigida.
+- **Painel de exclusões e expurgos** (painel): exclusões do período, expurgos pelo job de retenção.
+**Títulos da v1 (referência, não são telas):**
+
 - 1. Objetivo
 - 2. Conceito
 - 3. Estrutura de Banco de Dados

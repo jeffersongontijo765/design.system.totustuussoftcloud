@@ -12,7 +12,12 @@ As seções 1 a 12 prevalecem sobre a seção 13. A seção 13 é o texto integr
 ## 2. Objetivo e escopo
 Gerir as integrações contratadas e pagas pela plataforma e acompanhar, sem ver segredos, as integrações das entidades.
 
-## 3. Telas (índice da v1)
+## 3. Telas
+- **Integrações da plataforma** (datatable): integração, estado, última execução, credencial por referência ao cofre.
+- **Configurar integração** (formulário): provedor, ambiente, credencial, limites de uso.
+- **Visualizar segredo de tenant** (formulário): motivo, step-up e alerta ao canal de segurança.
+**Títulos da v1 (referência, não são telas):**
+
 - 1. Objetivo
 - 2. Escopo
 - 3. Lacunas Prioritárias

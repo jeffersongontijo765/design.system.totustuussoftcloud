@@ -12,7 +12,11 @@ As seções 1 a 12 prevalecem sobre a seção 13. A seção 13 é o texto integr
 ## 2. Objetivo e escopo
 Gerir recrutamento, onboarding, avaliação de desempenho, clima, treinamento e movimentação interna dos funcionários da própria empresa desenvolvedora.
 
-## 3. Telas (índice da v1)
+## 3. Telas
+- **Recrutamento** (kanban): vaga, etapas, candidatos.
+- **Avaliações de desempenho** (datatable): ciclo, colaborador, situação, consolidação.
+**Títulos da v1 (referência, não são telas):**
+
 - 1.1 Objetivo
 - 1.2 Escopo funcional
 - 1.3 Princípios de arquitetura

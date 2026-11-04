@@ -12,7 +12,12 @@ As seções 1 a 12 prevalecem sobre a seção 13. A seção 13 é o texto integr
 ## 2. Objetivo e escopo
 Gerir as compras e o estoque da própria empresa desenvolvedora: requisição, aprovação, cotação, pedido, entrega, recebimento, almoxarifado, fornecedores e contratos.
 
-## 3. Telas (índice da v1)
+## 3. Telas
+- **Requisições** (kanban): solicitada, aprovada, cotada, pedida, recebida.
+- **Pedidos e cotações** (datatable): fornecedor, itens, valor, prazo de entrega.
+- **Estoque** (datatable): item, saldo, lote, validade; saldo nunca negativo.
+**Títulos da v1 (referência, não são telas):**
+
 - 2.1 Operacionais
 - 2.2 Gerenciais
 - 2.3 Controle

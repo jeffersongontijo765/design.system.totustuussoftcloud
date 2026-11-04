@@ -12,7 +12,13 @@ As seções 1 a 12 prevalecem sobre a seção 13. A seção 13 é o texto integr
 ## 2. Objetivo e escopo
 Cumprir a LGPD como controladora (dados da própria plataforma) e como operadora (dados das entidades): inventário, bases legais, consentimento, pedidos de titular, ROPA, incidentes e painel do DPO.
 
-## 3. Telas (índice da v1)
+## 3. Telas
+- **Painel do DPO** (painel): pedidos de titulares abertos e vencidos, incidentes, consentimentos.
+- **Pedidos de titulares** (datatable): protocolo, tipo, prazo, situação, resposta.
+- **Registro de tratamento (ROPA)** (datatable): finalidade, base legal, categoria de dado, operador.
+- **Incidentes de segurança** (kanban): registro, avaliação de risco, comunicação à ANPD.
+**Títulos da v1 (referência, não são telas):**
+
 **spec_gestao_privacy_global_completo.md**
 
 - 1. Objetivo

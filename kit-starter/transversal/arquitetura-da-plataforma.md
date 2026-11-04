@@ -12,7 +12,11 @@ As seções 1 a 12 prevalecem sobre a seção 13. A seção 13 é o texto integr
 ## 2. Objetivo e escopo
 Visão de arquitetura da v1 (visão, princípios, áreas, tenant, identidade, portais, módulos, dados, banco, segurança e API), guardada integralmente e subordinada à arquitetura da v2.
 
-## 3. Telas (índice da v1)
+## 3. Telas
+- **Mapa da arquitetura** (detalhe): camadas, bancos, filas, portais.
+- **Saúde das camadas** (painel): estado de cada camada e do master.
+**Títulos da v1 (referência, não são telas):**
+
 - 1. Purpose
 - 2. Platform Vision
 - 3. Core Architecture Principles

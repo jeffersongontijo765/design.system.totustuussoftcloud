@@ -12,7 +12,11 @@ As seções 1 a 12 prevalecem sobre a seção 13. A seção 13 é o texto integr
 ## 2. Objetivo e escopo
 Gerir a saúde e a segurança do trabalho dos funcionários da própria empresa desenvolvedora: ASO, PCMSO, PGR, LTCAT, CAT, EPI, CIPA, ergonomia e treinamentos de NR, com dado de saúde sob acesso restrito.
 
-## 3. Telas (índice da v1)
+## 3. Telas
+- **ASO** (datatable): colaborador, tipo de exame, validade, resultado (apto ou inapto); CID só para o médico do trabalho.
+- **Ocorrências de SST** (datatable): registro, CAT, afastamento, providências.
+**Títulos da v1 (referência, não são telas):**
+
 - Sumário
 - 1. Visão Geral
   - 1.1 Objetivos Funcionais

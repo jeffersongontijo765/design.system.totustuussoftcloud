@@ -80,8 +80,9 @@ def monta(cfg):
 ## 2. Objetivo e escopo
 {linha(cfg['objetivo'])}
 
-## 3. Telas{' (índice da v1)' if textos else ''}
-{indice if textos else linha(cfg.get('telas', ''))}
+## 3. Telas
+{linha(TELAS_DET[cfg['arquivo']]) if cfg['arquivo'] in TELAS_DET else linha(cfg.get('telas', ''))}
+{('**Títulos da v1 (referência, não são telas):**\n\n' + indice) if textos else ''}
 
 ## 4. Correções da v2 que prevalecem
 {linha(cfg['correcoes'])}
@@ -119,6 +120,67 @@ def monta(cfg):
 
 
 PLAT = 'plataforma (banco master), instância separada do módulo das entidades ([31]({31-matriz-portais-modulos.md}), seção 2.1)'
+TELAS_DET = {
+ 'desenvolvedor/seguranca-e-operacao/acesso.md': """- **Contas da plataforma** (datatable): contas de plataforma, papel, passkey cadastrada, último uso; máximo de cinco contas ativas.
+- **Sessões ativas** (datatable): usuário, origem, início, expiração; encerrar sessão com motivo.
+- **Papéis e permissões** (formulário): concessão e revogação de papel com justificativa e revisão.
+- **Conta de emergência (break-glass)** (detalhe): credencial offline, último uso, alerta enviado.""",
+ 'desenvolvedor/seguranca-e-operacao/auditoria.md': """- **Trilha de auditoria** (datatable): evento, portal, usuário, entidade, data, resultado; filtros e mascaramento de dado pessoal.
+- **Integridade da cadeia** (painel): verificação horária, ancoragem diária, último ponto válido.
+- **Exportação de auditoria** (formulário): período, motivo, MFA recente; exportação registrada.""",
+ 'desenvolvedor/seguranca-e-operacao/privacidade-dpo.md': """- **Painel do DPO** (painel): pedidos de titulares abertos e vencidos, incidentes, consentimentos.
+- **Pedidos de titulares** (datatable): protocolo, tipo, prazo, situação, resposta.
+- **Registro de tratamento (ROPA)** (datatable): finalidade, base legal, categoria de dado, operador.
+- **Incidentes de segurança** (kanban): registro, avaliação de risco, comunicação à ANPD.""",
+ 'desenvolvedor/seguranca-e-operacao/integracoes-globais.md': """- **Integrações da plataforma** (datatable): integração, estado, última execução, credencial por referência ao cofre.
+- **Configurar integração** (formulário): provedor, ambiente, credencial, limites de uso.
+- **Visualizar segredo de tenant** (formulário): motivo, step-up e alerta ao canal de segurança.""",
+ 'desenvolvedor/seguranca-e-operacao/ti.md': """- **Inventário de serviços** (datatable): serviço, versão, responsável, estado.
+- **Backups e restauração** (painel): último backup por banco, teste de restauração, prazo de retenção.
+- **Certificados** (datatable): domínio, validade, alerta a 14 dias.
+- **Manutenção programada** (formulário): janela, aviso aos clientes, plano de volta; aprovação de segundo papel.
+- **Monitoramento** (painel): filas, workers, cache e erros, sem dado pessoal.""",
+ 'desenvolvedor/seguranca-e-operacao/configuracoes-do-sistema.md': """- **Configurações globais** (formulário): grupos ligados ao documento do SDD que define cada regra.
+- **Histórico de alterações** (datatable): valor anterior, novo valor, autor, motivo, versão; reverter com aprovação.""",
+ 'desenvolvedor/operacoes-internas/frotas.md': """- **Veículos da empresa** (datatable): placa, documentos com validade, situação, responsável.
+- **Reservas** (calendário): veículo, solicitante, aprovação pela alçada.
+- **Manutenções** (kanban): solicitada, aprovada, em execução, concluída.""",
+ 'desenvolvedor/operacoes-internas/patrimonio.md': """- **Bens da empresa** (datatable): plaqueta, categoria, localização, responsável, situação.
+- **Depreciação** (painel): valor residual por categoria; categoria sem regra não deprecia.
+- **Inventário** (datatable): contagem por localização, divergências.
+- **Baixa de bem** (formulário): motivo, aprovação do aprovador de patrimônio.""",
+ 'desenvolvedor/operacoes-internas/suprimentos-da-empresa.md': """- **Requisições** (kanban): solicitada, aprovada, cotada, pedida, recebida.
+- **Pedidos e cotações** (datatable): fornecedor, itens, valor, prazo de entrega.
+- **Estoque** (datatable): item, saldo, lote, validade; saldo nunca negativo.""",
+ 'desenvolvedor/pessoas-da-plataforma/departamento-pessoal.md': """- **Colaboradores da empresa** (datatable): cadastro funcional, situação, unidade de lotação.
+- **Folha** (painel): competência, bruto, descontos, líquido; folha fechada não muda.
+- **Ponto** (datatable): espelho por colaborador; ajuste com motivo obrigatório.""",
+ 'desenvolvedor/pessoas-da-plataforma/recursos-humanos.md': """- **Recrutamento** (kanban): vaga, etapas, candidatos.
+- **Avaliações de desempenho** (datatable): ciclo, colaborador, situação, consolidação.""",
+ 'desenvolvedor/pessoas-da-plataforma/medicina-e-seguranca-do-trabalho-da-empresa.md': """- **ASO** (datatable): colaborador, tipo de exame, validade, resultado (apto ou inapto); CID só para o médico do trabalho.
+- **Ocorrências de SST** (datatable): registro, CAT, afastamento, providências.""",
+ 'desenvolvedor/suporte/base-de-conhecimento.md': """- **Artigos** (datatable): título, categoria, situação (rascunho, publicado, arquivado), autor.
+- **Editor de artigo** (formulário): conteúdo, categoria, público, revisão antes de publicar.""",
+ 'desenvolvedor/suporte/chamados-dos-clientes.md': """- **Chamados dos clientes** (kanban): aberto, em atendimento, aguardando cliente, resolvido.
+- **Chamado — detalhe** (detalhe): conversa, anexos, SLA, histórico.
+- **SLA** (painel): tempo de primeira resposta e de resolução por fila.""",
+ 'transversal/exclusao-logica.md': """- **Regras de exclusão por tabela** (datatable): tabela, colunas, validação prévia, cascata lógica.
+- **Pedido de restauração** (formulário): registro, motivo, permissão exigida.
+- **Painel de exclusões e expurgos** (painel): exclusões do período, expurgos pelo job de retenção.""",
+ 'transversal/arquitetura-da-plataforma.md': """- **Mapa da arquitetura** (detalhe): camadas, bancos, filas, portais.
+- **Saúde das camadas** (painel): estado de cada camada e do master.""",
+ 'transversal/build-e-procedencia-slsa.md': """- **Pipeline de build** (painel): etapas, duração, falhas, artefatos.
+- **Gate de deploy** (lista): versão, SBOM, assinatura, aprovação; só publica com os três.
+- **Cofre de segredos** (lista): segredo por referência, último rodízio, dono.""",
+ 'transversal/teste-de-intrusao.md': """- **Plano de teste de intrusão** (lista): fase, escopo, responsável, prazo.
+- **Achados do teste** (lista): severidade, situação, prazo de correção.
+- **Checklist de implementação** (lista): item, responsável, evidência.""",
+ 'transversal/navegacao-dos-portais.md': """- **Matriz de navegação por portal** (lista): portal, área, item de menu, papel exigido.
+- **Checklist de layout** (lista): os 21 itens, por tela, com situação.""",
+ 'transversal/plano-de-implementacao-v1.md': """- **Fases e tarefas** (lista): fase, tarefa, dependência, situação.
+- **Checklist por módulo** (lista): 18 itens de auditoria por módulo.""",
+}
+
 TRANSV = 'transversal: vale para todos os portais e módulos'
 SEM_UNIDADE = '- **Instância da empresa:** sem filtro de unidade, entidade ou filial; dados no banco master; o portal do desenvolvedor não vê o módulo de nenhuma entidade.'
 FICHAS = [

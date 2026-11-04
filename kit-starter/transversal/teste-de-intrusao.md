@@ -12,7 +12,12 @@ As seções 1 a 12 prevalecem sobre a seção 13. A seção 13 é o texto integr
 ## 2. Objetivo e escopo
 Fases, responsabilidades e checklist do teste de intrusão externo e interno.
 
-## 3. Telas (índice da v1)
+## 3. Telas
+- **Plano de teste de intrusão** (lista): fase, escopo, responsável, prazo.
+- **Achados do teste** (lista): severidade, situação, prazo de correção.
+- **Checklist de implementação** (lista): item, responsável, evidência.
+**Títulos da v1 (referência, não são telas):**
+
 - 1. Fases do Teste
   - Fase 1 — Reconhecimento (Information Gathering)
   - Fase 2 — Hardening de Headers

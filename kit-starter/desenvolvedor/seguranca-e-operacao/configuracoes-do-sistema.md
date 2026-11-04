@@ -12,7 +12,11 @@ As seções 1 a 12 prevalecem sobre a seção 13. A seção 13 é o texto integr
 ## 2. Objetivo e escopo
 Manter as configurações globais da plataforma, agrupadas pelo documento do SDD que define cada regra, com mudança auditada e reversível.
 
-## 3. Telas (índice da v1)
+## 3. Telas
+- **Configurações globais** (formulário): grupos ligados ao documento do SDD que define cada regra.
+- **Histórico de alterações** (datatable): valor anterior, novo valor, autor, motivo, versão; reverter com aprovação.
+**Títulos da v1 (referência, não são telas):**
+
 **language_locale_selector_spec.md**
 
 - 1. Overview

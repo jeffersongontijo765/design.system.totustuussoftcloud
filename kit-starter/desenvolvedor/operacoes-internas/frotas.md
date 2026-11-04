@@ -12,7 +12,12 @@ As seções 1 a 12 prevalecem sobre a seção 13. A seção 13 é o texto integr
 ## 2. Objetivo e escopo
 Gerir os veículos da própria empresa desenvolvedora: veículos, motoristas, reservas, manutenção, abastecimento, viagens, multas e documentos.
 
-## 3. Telas (índice da v1)
+## 3. Telas
+- **Veículos da empresa** (datatable): placa, documentos com validade, situação, responsável.
+- **Reservas** (calendário): veículo, solicitante, aprovação pela alçada.
+- **Manutenções** (kanban): solicitada, aprovada, em execução, concluída.
+**Títulos da v1 (referência, não são telas):**
+
 - Sumário
 - 1. Visão Geral
   - 1.1 Objetivo

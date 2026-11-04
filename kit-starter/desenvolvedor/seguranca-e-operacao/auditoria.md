@@ -12,7 +12,12 @@ As seções 1 a 12 prevalecem sobre a seção 13. A seção 13 é o texto integr
 ## 2. Objetivo e escopo
 Registrar, proteger e consultar a trilha de auditoria de negócio e de segurança da plataforma, com integridade por cadeia de hash e acesso controlado.
 
-## 3. Telas (índice da v1)
+## 3. Telas
+- **Trilha de auditoria** (datatable): evento, portal, usuário, entidade, data, resultado; filtros e mascaramento de dado pessoal.
+- **Integridade da cadeia** (painel): verificação horária, ancoragem diária, último ponto válido.
+- **Exportação de auditoria** (formulário): período, motivo, MFA recente; exportação registrada.
+**Títulos da v1 (referência, não são telas):**
+
 **spec_gestao_auditoria_completo.md**
 
 - 1. Visão geral

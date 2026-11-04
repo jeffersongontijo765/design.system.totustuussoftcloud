@@ -17,6 +17,7 @@ Configurar e acompanhar a autenticação multifator de todas as contas, com regr
 - **Painel de MFA** (dashboard): contas com e sem MFA por portal, passkeys cadastradas, contas de plataforma sem passkey.
 - **Fatores da conta** (drawer em Acesso): cadastrar, revogar e recuperar fator, com step-up.
 
+
 ## 4. Correções da v2 que prevalecem
 - **MFA** conforme o [06](../../../docs/v2/06-identidade-acesso.md), seção 5: fatores, cadastro e recuperação. **SMS não é fator de MFA** ([16](../../../docs/v2/16-integracoes-externas.md), seção 2).
 - **Contas de plataforma:** passkey obrigatória; conta sem passkey é desativada no primeiro login após a migração ([06](../../../docs/v2/06-identidade-acesso.md), seção 10).

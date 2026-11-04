@@ -12,7 +12,11 @@ As seções 1 a 12 prevalecem sobre a seção 13. A seção 13 é o texto integr
 ## 2. Objetivo e escopo
 Plano de tarefas da v1 (fases 0 a 3, ordem de dependência e checklist de 18 itens por módulo), guardado integralmente como referência de ordem de construção.
 
-## 3. Telas (índice da v1)
+## 3. Telas
+- **Fases e tarefas** (lista): fase, tarefa, dependência, situação.
+- **Checklist por módulo** (lista): 18 itens de auditoria por módulo.
+**Títulos da v1 (referência, não são telas):**
+
 - FASE 0 — Fundações Transversais (prioridade máxima)
   - 0.1 — Soft Delete (Exclusão Lógica)
   - 0.2 — Autenticação e Controle de Acesso ✅ (parcial)

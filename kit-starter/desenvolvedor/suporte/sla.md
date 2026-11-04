@@ -17,6 +17,7 @@ Definir e acompanhar os prazos de atendimento dos chamados das entidades cliente
 - **Painel de SLA** (dashboard): chamados dentro do prazo, com 80% do prazo consumido e com prazo estourado, por fila e por prioridade; gráfico de cumprimento por período.
 - **Calendário de dias úteis** (configuração): dias úteis e feriados usados na contagem.
 
+
 ## 4. Correções da v2 que prevalecem
 - **Tipos de prazo** ([32](../../../docs/v2/32-atendimento-privacidade-por-portal.md), seção 2.3): primeira resposta, próxima resposta, resolução e fechamento.
 - **Padrão aprovado** (ATD-02): urgente 1 h e 4 h; alta 4 h e 2 dias úteis; média 1 dia útil e 5 dias úteis; baixa 2 dias úteis e 10 dias úteis (primeira resposta e resolução). Ajustável por entidade dentro do limite do contrato.

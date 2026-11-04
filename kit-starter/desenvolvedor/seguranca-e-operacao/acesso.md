@@ -12,7 +12,13 @@ As seções 1 a 12 prevalecem sobre a seção 13. A seção 13 é o texto integr
 ## 2. Objetivo e escopo
 Gerir contas, vínculos, papéis, sessões e tokens de toda a plataforma: conta global única, login no domínio de autenticação, RBAC com contexto e contas de plataforma.
 
-## 3. Telas (índice da v1)
+## 3. Telas
+- **Contas da plataforma** (datatable): contas de plataforma, papel, passkey cadastrada, último uso; máximo de cinco contas ativas.
+- **Sessões ativas** (datatable): usuário, origem, início, expiração; encerrar sessão com motivo.
+- **Papéis e permissões** (formulário): concessão e revogação de papel com justificativa e revisão.
+- **Conta de emergência (break-glass)** (detalhe): credencial offline, último uso, alerta enviado.
+**Títulos da v1 (referência, não são telas):**
+
 **spec_gestao_autenticacao_completo.md**
 
 - 1. Document Purpose

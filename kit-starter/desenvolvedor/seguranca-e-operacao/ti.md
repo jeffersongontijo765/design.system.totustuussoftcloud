@@ -12,7 +12,14 @@ As seções 1 a 12 prevalecem sobre a seção 13. A seção 13 é o texto integr
 ## 2. Objetivo e escopo
 Operar a infraestrutura da plataforma: backup e restauração, certificados, monitoramento, filas, cache, manutenção programada e segredos.
 
-## 3. Telas (índice da v1)
+## 3. Telas
+- **Inventário de serviços** (datatable): serviço, versão, responsável, estado.
+- **Backups e restauração** (painel): último backup por banco, teste de restauração, prazo de retenção.
+- **Certificados** (datatable): domínio, validade, alerta a 14 dias.
+- **Manutenção programada** (formulário): janela, aviso aos clientes, plano de volta; aprovação de segundo papel.
+- **Monitoramento** (painel): filas, workers, cache e erros, sem dado pessoal.
+**Títulos da v1 (referência, não são telas):**
+
 - 1. Objetivo
 - 2. Escopo Funcional
 - 3. Diretrizes de Interface

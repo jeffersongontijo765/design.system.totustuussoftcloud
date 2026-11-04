@@ -12,7 +12,12 @@ As seções 1 a 12 prevalecem sobre a seção 13. A seção 13 é o texto integr
 ## 2. Objetivo e escopo
 Gerir o cadastro funcional e a rotina de pessoal dos funcionários da própria empresa desenvolvedora: admissão, folha, férias, afastamentos, ponto, rescisão, benefícios e eSocial. HCM da empresa no banco master, isolado do HCM de qualquer entidade (HCM-10 do [39](../../../docs/v2/39-departamento-pessoal-rh-medicina-por-portal.md), seção 11).
 
-## 3. Telas (índice da v1)
+## 3. Telas
+- **Colaboradores da empresa** (datatable): cadastro funcional, situação, unidade de lotação.
+- **Folha** (painel): competência, bruto, descontos, líquido; folha fechada não muda.
+- **Ponto** (datatable): espelho por colaborador; ajuste com motivo obrigatório.
+**Títulos da v1 (referência, não são telas):**
+
 - Sumário
 - 1. Visão Geral
   - Descrição

@@ -12,7 +12,13 @@ As seções 1 a 12 prevalecem sobre a seção 13. A seção 13 é o texto integr
 ## 2. Objetivo e escopo
 Controlar os bens da própria empresa desenvolvedora: cadastro, depreciação, manutenção, transferência, inventário, descarte e seguros.
 
-## 3. Telas (índice da v1)
+## 3. Telas
+- **Bens da empresa** (datatable): plaqueta, categoria, localização, responsável, situação.
+- **Depreciação** (painel): valor residual por categoria; categoria sem regra não deprecia.
+- **Inventário** (datatable): contagem por localização, divergências.
+- **Baixa de bem** (formulário): motivo, aprovação do aprovador de patrimônio.
+**Títulos da v1 (referência, não são telas):**
+
 - Índice
 - 1. Visão Geral
   - Subdomínios

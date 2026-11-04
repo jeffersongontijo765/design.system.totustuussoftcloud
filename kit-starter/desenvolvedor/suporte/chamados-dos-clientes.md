@@ -12,7 +12,12 @@ As seções 1 a 12 prevalecem sobre a seção 13. A seção 13 é o texto integr
 ## 2. Objetivo e escopo
 Atender as entidades clientes da plataforma: abertura, triagem, atendimento, escalonamento e encerramento dos chamados, por todos os canais.
 
-## 3. Telas (índice da v1)
+## 3. Telas
+- **Chamados dos clientes** (kanban): aberto, em atendimento, aguardando cliente, resolvido.
+- **Chamado — detalhe** (detalhe): conversa, anexos, SLA, histórico.
+- **SLA** (painel): tempo de primeira resposta e de resolução por fila.
+**Títulos da v1 (referência, não são telas):**
+
 **SPEC-HELPDESK.md**
 
 - 1. Visão Geral

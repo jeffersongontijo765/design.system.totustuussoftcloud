@@ -18,6 +18,7 @@ Gerir todos os bancos da plataforma (master, bancos de unidade e bancos de ident
 - **Backups** (datatable): estado e prazo de cada backup; pedido de restauração com dupla aprovação.
 - **Acesso técnico de emergência** (página de pedido): motivo, chamado vinculado, tempo da sessão, leitura ou escrita.
 
+
 ## 4. Correções da v2 que prevalecem
 - **Regras do [34](../../../docs/v2/34-pagamentos-fiscal-bancos-por-portal.md), seção 4 (PAG-03):**
   - Não existe console SQL no painel comum.

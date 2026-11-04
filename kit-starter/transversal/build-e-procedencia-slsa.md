@@ -12,7 +12,12 @@ As seções 1 a 12 prevalecem sobre a seção 13. A seção 13 é o texto integr
 ## 2. Objetivo e escopo
 Pipeline de build com procedência verificável (SLSA), SBOM, assinatura de artefatos, gate de deploy, cofre de segredos e logs de build.
 
-## 3. Telas (índice da v1)
+## 3. Telas
+- **Pipeline de build** (painel): etapas, duração, falhas, artefatos.
+- **Gate de deploy** (lista): versão, SBOM, assinatura, aprovação; só publica com os três.
+- **Cofre de segredos** (lista): segredo por referência, último rodízio, dono.
+**Títulos da v1 (referência, não são telas):**
+
 - 1. Visão Geral
 - 2. SLSA Níveis
   - 2.1 Nível 1 — Provenance Básica
