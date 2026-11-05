@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Matrículas — registros | Referência</title>
+<link rel="stylesheet" href="../../components/ttsc.css">
+<link rel="stylesheet" href="./assets/referencia.css">
+</head>
+<body class="ttsc-page">
+<svg class="ref-sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-theme" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-export" viewBox="0 0 24 24"><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/><path d="M4 15v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="M5 12h14"/></symbol>
+  <symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.4" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
+  <symbol id="i-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+</svg>
+<!-- page-spec {"id":"ref-registros-matriculas","archetype":"records","variant":"dense-table","density":"compact","intent":"localizar e operar matriculas por status e curso numa tabela densa","components":["ttsc-card","ttsc-input","ttsc-table","ttsc-badge","ttsc-btn","ttsc-empty-state","ttsc-skeleton","ttsc-alert"]} -->
+<main class="ttsc-container ttsc-stack ttsc-density-compact" data-ref-registros>
+
+  <header class="ttsc-page-header">
+    <div class="ttsc-stack ttsc-stack--tight">
+      <nav class="ref-breadcrumb" aria-label="Trilha de navegação">
+        <a href="../index.html">Páginas de referência</a>
+        <span aria-hidden="true">/</span>
+        <span>Secretaria</span>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Matrículas</span>
+      </nav>
+      <h1 class="ttsc-title-fluid">Matrículas</h1>
+      <p class="ref-state-note" data-ref-count>48 registros · 6 aguardando documentos</p>
+    </div>
+    <div class="ttsc-page-header__actions">
+      <button class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon" type="button" aria-label="Alternar tema" data-ref-theme>
+        <svg class="ref-icon" aria-hidden="true"><use href="#i-theme"/></svg>
+      </button>
+      <button class="ttsc-btn ttsc-btn-outline" type="button">
+        <svg class="ref-icon" aria-hidden="true"><use href="#i-export"/></svg>
+        <span>Exportar</span>
+      </button>
+      <button class="ttsc-btn ttsc-btn-primary" type="button">
+        <svg class="ref-icon" aria-hidden="true"><use href="#i-plus"/></svg>
+        <span>Nova matrícula</span>
+      </button>
+    </div>
+  </header>
+
+  <section class="ttsc-card" aria-label="Filtros e lista de matrículas">
+    <div class="ttsc-card-content">
+      <div class="ttsc-toolbar">
+        <div class="ttsc-toolbar__grow">
+          <label class="sr-only" for="busca">Buscar matrícula</label>
+          <input class="ttsc-input" id="busca" name="busca" type="search" placeholder="Buscar aluno, código ou responsável..." autocomplete="off" data-ref-search>
+        </div>
+        <label class="sr-only" for="filtro-status">Filtrar por situação</label>
+        <select class="ttsc-input" id="filtro-status" name="status" data-ref-status>
+          <option value="">Todas as situações</option>
+          <option value="confirmada">Confirmada</option>
+          <option value="pendente">Pendente</option>
+          <option value="cancelada">Cancelada</option>
+        </select>
+        <div class="ttsc-toolbar__actions">
+          <button class="ttsc-btn ttsc-btn-ghost" type="button" data-ref-clear>Limpar filtros</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="ttsc-table-wrapper ttsc-table-wrapper--scroll" tabindex="0" role="region" aria-label="Lista de matrículas">
+      <table class="ttsc-table ttsc-table-compact ttsc-table-highlight">
+        <thead>
+          <tr>
+            <th scope="col">Aluno</th>
+            <th scope="col" class="ttsc-hide-sm">Curso</th>
+            <th scope="col" class="ttsc-hide-sm">Turma</th>
+            <th scope="col">Situação</th>
+            <th scope="col" class="ttsc-hide-sm">Mensalidade</th>
+            <th scope="col" class="ttsc-hide-sm">Atualizado</th>
+            <th scope="col"><span class="sr-only">Ações</span></th>
+          </tr>
+        </thead>
+        <tbody data-ref-rows>
+          <tr data-status="confirmada">
+            <td><div class="ref-user"><span class="ttsc-avatar ttsc-avatar-sm"><span class="ttsc-avatar-fallback">AR</span></span><div><div class="ref-user__name">Ana Ribeiro</div><div class="ref-user__sub">MAT-2026-0142</div></div></div></td>
+            <td class="ttsc-hide-sm">Ensino Médio</td>
+            <td class="ttsc-hide-sm">3º Ano A</td>
+            <td><span class="ttsc-badge ttsc-badge-light ttsc-badge-success">Confirmada</span></td>
+            <td class="ttsc-hide-sm">R$ 1.250,00</td>
+            <td class="ttsc-hide-sm">05/11 14:28</td>
+            <td><button class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon" type="button" aria-label="Abrir matrícula de Ana Ribeiro"><svg class="ref-icon" aria-hidden="true"><use href="#i-dots"/></svg></button></td>
+          </tr>
+          <tr data-status="pendente">
+            <td><div class="ref-user"><span class="ttsc-avatar ttsc-avatar-sm"><span class="ttsc-avatar-fallback">BF</span></span><div><div class="ref-user__name">Bruno Ferreira</div><div class="ref-user__sub">MAT-2026-0141</div></div></div></td>
+            <td class="ttsc-hide-sm">Técnico em Informática</td>
+            <td class="ttsc-hide-sm">1º Módulo</td>
+            <td><span class="ttsc-badge ttsc-badge-light ttsc-badge-warning">Pendente</span></td>
+            <td class="ttsc-hide-sm">R$ 890,00</td>
+            <td class="ttsc-hide-sm">05/11 14:11</td>
+            <td><button class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon" type="button" aria-label="Abrir matrícula de Bruno Ferreira"><svg class="ref-icon" aria-hidden="true"><use href="#i-dots"/></svg></button></td>
+          </tr>
+          <tr data-status="confirmada">
+            <td><div class="ref-user"><span class="ttsc-avatar ttsc-avatar-sm"><span class="ttsc-avatar-fallback">CS</span></span><div><div class="ref-user__name">Carla Souza</div><div class="ref-user__sub">MAT-2026-0140</div></div></div></td>
+            <td class="ttsc-hide-sm">Fundamental II</td>
+            <td class="ttsc-hide-sm">9º Ano B</td>
+            <td><span class="ttsc-badge ttsc-badge-light ttsc-badge-success">Confirmada</span></td>
+            <td class="ttsc-hide-sm">R$ 980,00</td>
+            <td class="ttsc-hide-sm">05/11 13:57</td>
+            <td><button class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon" type="button" aria-label="Abrir matrícula de Carla Souza"><svg class="ref-icon" aria-hidden="true"><use href="#i-dots"/></svg></button></td>
+          </tr>
+          <tr data-status="pendente">
+            <td><div class="ref-user"><span class="ttsc-avatar ttsc-avatar-sm"><span class="ttsc-avatar-fallback">DM</span></span><div><div class="ref-user__name">Diego Martins</div><div class="ref-user__sub">MAT-2026-0139</div></div></div></td>
+            <td class="ttsc-hide-sm">Ensino Médio</td>
+            <td class="ttsc-hide-sm">2º Ano C</td>
+            <td><span class="ttsc-badge ttsc-badge-light ttsc-badge-warning">Pendente</span></td>
+            <td class="ttsc-hide-sm">R$ 1.250,00</td>
+            <td class="ttsc-hide-sm">05/11 11:42</td>
+            <td><button class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon" type="button" aria-label="Abrir matrícula de Diego Martins"><svg class="ref-icon" aria-hidden="true"><use href="#i-dots"/></svg></button></td>
+          </tr>
+          <tr data-status="cancelada">
+            <td><div class="ref-user"><span class="ttsc-avatar ttsc-avatar-sm"><span class="ttsc-avatar-fallback">EL</span></span><div><div class="ref-user__name">Elisa Lima</div><div class="ref-user__sub">MAT-2026-0138</div></div></div></td>
+            <td class="ttsc-hide-sm">Fundamental II</td>
+            <td class="ttsc-hide-sm">8º Ano A</td>
+            <td><span class="ttsc-badge ttsc-badge-light ttsc-badge-destructive">Cancelada</span></td>
+            <td class="ttsc-hide-sm">R$ 980,00</td>
+            <td class="ttsc-hide-sm">04/11 17:20</td>
+            <td><button class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon" type="button" aria-label="Abrir matrícula de Elisa Lima"><svg class="ref-icon" aria-hidden="true"><use href="#i-dots"/></svg></button></td>
+          </tr>
+          <tr data-status="confirmada">
+            <td><div class="ref-user"><span class="ttsc-avatar ttsc-avatar-sm"><span class="ttsc-avatar-fallback">FN</span></span><div><div class="ref-user__name">Felipe Nunes</div><div class="ref-user__sub">MAT-2026-0137</div></div></div></td>
+            <td class="ttsc-hide-sm">Técnico em Informática</td>
+            <td class="ttsc-hide-sm">2º Módulo</td>
+            <td><span class="ttsc-badge ttsc-badge-light ttsc-badge-success">Confirmada</span></td>
+            <td class="ttsc-hide-sm">R$ 890,00</td>
+            <td class="ttsc-hide-sm">04/11 16:05</td>
+            <td><button class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon" type="button" aria-label="Abrir matrícula de Felipe Nunes"><svg class="ref-icon" aria-hidden="true"><use href="#i-dots"/></svg></button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ttsc-card-footer">
+      <div class="ref-pagination">
+        <span class="ref-state-note" data-ref-range>Mostrando 1–6 de 6</span>
+        <div class="ref-pagination__pages" role="group" aria-label="Paginação">
+          <button class="ref-page-btn" type="button" disabled aria-label="Página anterior"><svg class="ref-icon" aria-hidden="true"><use href="#i-left"/></svg></button>
+          <button class="ref-page-btn" type="button" aria-current="page">1</button>
+          <button class="ref-page-btn" type="button" aria-label="Página 2">2</button>
+          <button class="ref-page-btn" type="button" aria-label="Página 3">3</button>
+          <button class="ref-page-btn" type="button" aria-label="Próxima página"><svg class="ref-icon" aria-hidden="true"><use href="#i-right"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ttsc-card" data-state="empty" hidden aria-label="Nenhum resultado">
+    <div class="ttsc-empty-state">
+      <span class="ttsc-empty-state-icon"><svg class="ref-icon" aria-hidden="true"><use href="#i-search"/></svg></span>
+      <p class="ttsc-empty-state-title">Nenhuma matrícula encontrada</p>
+      <p class="ttsc-empty-state-desc">Ajuste a busca ou remova os filtros para ver todos os registros.</p>
+      <button class="ttsc-btn ttsc-btn-outline" type="button" data-ref-clear>Limpar filtros</button>
+    </div>
+  </section>
+
+  <section class="ttsc-card" data-state="loading" hidden aria-label="Carregando registros">
+    <div class="ttsc-card-content">
+      <div class="ref-skeleton-line"></div>
+      <div class="ref-skeleton-line"></div>
+      <div class="ref-skeleton-line"></div>
+    </div>
+  </section>
+
+  <section class="ttsc-card" data-state="error" hidden aria-label="Erro ao carregar">
+    <div class="ttsc-card-content">
+      <div class="ttsc-alert ttsc-alert-destructive">
+        <div class="ttsc-alert-content">
+          <p class="ttsc-alert-title">Falha ao listar matrículas</p>
+          <p class="ttsc-alert-description">O serviço retornou erro. Os filtros foram preservados.</p>
+        </div>
+        <div class="ttsc-alert-actions">
+          <button class="ttsc-btn ttsc-btn-outline" type="button">Tentar novamente</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+<script type="module" src="./assets/registros.js"></script>
+</body>
+</html>

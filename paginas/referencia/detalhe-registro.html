@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Matrícula — detalhe | Referência</title>
+<link rel="stylesheet" href="../../components/ttsc.css">
+<link rel="stylesheet" href="./assets/referencia.css">
+</head>
+<body class="ttsc-page">
+<svg class="ref-sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-theme" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-clock-back" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/><path d="M12 8v5l3 2"/></symbol>
+  <symbol id="i-pen" viewBox="0 0 24 24"><path d="M4 20h4L20 8a2.8 2.8 0 0 0-4-4L4 16z"/><path d="M14 6l4 4"/></symbol>
+  <symbol id="i-pointer" viewBox="0 0 24 24"><path d="M6 3l12 9-5 1 3 6-2 1-3-6-3 4z"/></symbol>
+</svg>
+<!-- page-spec {"id":"ref-detalhe-matricula","archetype":"detail","variant":"split-pane","density":"comfortable","intent":"analisar uma matricula: documentos, financeiro e historico sem perder a lista","components":["ttsc-card","ttsc-badge","ttsc-progress","ttsc-avatar","ttsc-empty-state","ttsc-skeleton","ttsc-alert"]} -->
+<main class="ttsc-container ttsc-stack" data-ref-detalhe>
+
+  <header class="ttsc-page-header">
+    <div class="ttsc-stack ttsc-stack--tight">
+      <nav class="ref-breadcrumb" aria-label="Trilha de navegação">
+        <a href="../index.html">Páginas de referência</a>
+        <span aria-hidden="true">/</span>
+        <a href="./registros-tabela.html">Matrículas</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Ana Ribeiro</span>
+      </nav>
+      <h1 class="ttsc-title-fluid" data-ref-title>Ana Ribeiro</h1>
+      <p class="ref-state-note">MAT-2026-0142 · Ensino Médio · 3º Ano A</p>
+    </div>
+    <div class="ttsc-page-header__actions">
+      <button class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon" type="button" aria-label="Alternar tema" data-ref-theme>
+        <svg class="ref-icon" aria-hidden="true"><use href="#i-theme"/></svg>
+      </button>
+      <button class="ttsc-btn ttsc-btn-outline" type="button">
+        <svg class="ref-icon" aria-hidden="true"><use href="#i-clock-back"/></svg>
+        <span>Histórico</span>
+      </button>
+      <button class="ttsc-btn ttsc-btn-primary" type="button">
+        <svg class="ref-icon" aria-hidden="true"><use href="#i-pen"/></svg>
+        <span>Editar matrícula</span>
+      </button>
+    </div>
+  </header>
+
+  <div class="ttsc-split ttsc-split--aside-start">
+    <aside class="ttsc-card" aria-labelledby="titulo-lista">
+      <div class="ttsc-card-header">
+        <h2 class="ttsc-card-title" id="titulo-lista">Fila de análise</h2>
+        <span class="ttsc-badge ttsc-badge-light ttsc-badge-info">6</span>
+      </div>
+      <div class="ttsc-card-content">
+        <div class="ref-master" role="list">
+          <button class="ref-master__item" type="button" role="listitem" aria-current="true" data-ref-item data-nome="Ana Ribeiro" data-codigo="MAT-2026-0142" data-curso="Ensino Médio · 3º Ano A" data-status="Confirmada" data-tone="success">
+            <span class="ttsc-avatar ttsc-avatar-sm"><span class="ttsc-avatar-fallback">AR</span></span>
+            <span><span class="ref-user__name">Ana Ribeiro</span><span class="ref-user__sub">MAT-2026-0142</span></span>
+          </button>
+          <button class="ref-master__item" type="button" role="listitem" data-ref-item data-nome="Bruno Ferreira" data-codigo="MAT-2026-0141" data-curso="Técnico em Informática · 1º Módulo" data-status="Pendente" data-tone="warning">
+            <span class="ttsc-avatar ttsc-avatar-sm"><span class="ttsc-avatar-fallback">BF</span></span>
+            <span><span class="ref-user__name">Bruno Ferreira</span><span class="ref-user__sub">MAT-2026-0141</span></span>
+          </button>
+          <button class="ref-master__item" type="button" role="listitem" data-ref-item data-nome="Carla Souza" data-codigo="MAT-2026-0140" data-curso="Fundamental II · 9º Ano B" data-status="Confirmada" data-tone="success">
+            <span class="ttsc-avatar ttsc-avatar-sm"><span class="ttsc-avatar-fallback">CS</span></span>
+            <span><span class="ref-user__name">Carla Souza</span><span class="ref-user__sub">MAT-2026-0140</span></span>
+          </button>
+          <button class="ref-master__item" type="button" role="listitem" data-ref-item data-nome="Diego Martins" data-codigo="MAT-2026-0139" data-curso="Ensino Médio · 2º Ano C" data-status="Pendente" data-tone="warning">
+            <span class="ttsc-avatar ttsc-avatar-sm"><span class="ttsc-avatar-fallback">DM</span></span>
+            <span><span class="ref-user__name">Diego Martins</span><span class="ref-user__sub">MAT-2026-0139</span></span>
+          </button>
+          <button class="ref-master__item" type="button" role="listitem" data-ref-item data-nome="Elisa Lima" data-codigo="MAT-2026-0138" data-curso="Fundamental II · 8º Ano A" data-status="Cancelada" data-tone="destructive">
+            <span class="ttsc-avatar ttsc-avatar-sm"><span class="ttsc-avatar-fallback">EL</span></span>
+            <span><span class="ref-user__name">Elisa Lima</span><span class="ref-user__sub">MAT-2026-0138</span></span>
+          </button>
+          <button class="ref-master__item" type="button" role="listitem" data-ref-item data-nome="Felipe Nunes" data-codigo="MAT-2026-0137" data-curso="Técnico em Informática · 2º Módulo" data-status="Confirmada" data-tone="success">
+            <span class="ttsc-avatar ttsc-avatar-sm"><span class="ttsc-avatar-fallback">FN</span></span>
+            <span><span class="ref-user__name">Felipe Nunes</span><span class="ref-user__sub">MAT-2026-0137</span></span>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <div class="ttsc-stack" data-ref-panel>
+      <section class="ttsc-card" aria-labelledby="titulo-resumo">
+        <div class="ttsc-card-header">
+          <h2 class="ttsc-card-title" id="titulo-resumo">Resumo da matrícula</h2>
+          <span class="ttsc-badge ttsc-badge-light ttsc-badge-success" data-ref-status>Confirmada</span>
+        </div>
+        <div class="ttsc-card-content ttsc-stack">
+          <dl class="ref-meta">
+            <div><dt>Aluno</dt><dd data-ref-nome>Ana Ribeiro</dd></div>
+            <div><dt>Código</dt><dd data-ref-codigo>MAT-2026-0142</dd></div>
+            <div><dt>Curso e turma</dt><dd data-ref-curso>Ensino Médio · 3º Ano A</dd></div>
+            <div><dt>Responsável</dt><dd>Cláudia Ribeiro</dd></div>
+          </dl>
+          <div>
+            <p class="ref-kpi__label">Documentação entregue</p>
+            <div class="ttsc-progress ttsc-progress-success" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" aria-label="Documentação entregue">
+              <div class="ttsc-progress-indicator" style="width:80%"></div>
+            </div>
+            <p class="ref-state-note">4 de 5 documentos · falta comprovante de residência</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="ttsc-card" aria-labelledby="titulo-historico">
+        <div class="ttsc-card-header">
+          <h2 class="ttsc-card-title" id="titulo-historico">Histórico</h2>
+        </div>
+        <div class="ttsc-card-content">
+          <ul class="ref-timeline">
+            <li>
+              <p class="ref-list__title">Matrícula confirmada</p>
+              <p class="ref-list__meta">05/11/2026 14:28 · Secretaria</p>
+            </li>
+            <li>
+              <p class="ref-list__title">Documentos aprovados (4/5)</p>
+              <p class="ref-list__meta">05/11/2026 11:02 · Análise documental</p>
+            </li>
+            <li>
+              <p class="ref-list__title">Pré-matrícula criada</p>
+              <p class="ref-list__meta">04/11/2026 09:15 · Portal do responsável</p>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="ttsc-card" aria-labelledby="titulo-financeiro">
+        <div class="ttsc-card-header">
+          <h2 class="ttsc-card-title" id="titulo-financeiro">Financeiro</h2>
+          <span class="ttsc-badge ttsc-badge-light ttsc-badge-info">Em dia</span>
+        </div>
+        <div class="ttsc-card-content">
+          <dl class="ref-meta">
+            <div><dt>Mensalidade</dt><dd>R$ 1.250,00</dd></div>
+            <div><dt>Desconto</dt><dd>Irmão · 10%</dd></div>
+            <div><dt>Próximo vencimento</dt><dd>10/11/2026</dd></div>
+            <div><dt>Contrato</dt><dd>Assinado em 04/11/2026</dd></div>
+          </dl>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <section class="ttsc-card" data-state="loading" hidden aria-label="Carregando matrícula">
+    <div class="ttsc-card-content">
+      <div class="ref-skeleton-line"></div>
+      <div class="ref-skeleton-line"></div>
+      <div class="ref-skeleton-line"></div>
+    </div>
+  </section>
+
+  <section class="ttsc-card" data-state="error" hidden aria-label="Erro ao carregar">
+    <div class="ttsc-card-content">
+      <div class="ttsc-alert ttsc-alert-destructive">
+        <div class="ttsc-alert-content">
+          <p class="ttsc-alert-title">Não foi possível abrir a matrícula</p>
+          <p class="ttsc-alert-description">O registro pode ter sido alterado por outro usuário.</p>
+        </div>
+        <div class="ttsc-alert-actions">
+          <button class="ttsc-btn ttsc-btn-outline" type="button">Recarregar</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ttsc-card" data-state="empty" hidden aria-label="Sem seleção">
+    <div class="ttsc-empty-state">
+      <span class="ttsc-empty-state-icon"><svg class="ref-icon" aria-hidden="true"><use href="#i-pointer"/></svg></span>
+      <p class="ttsc-empty-state-title">Selecione uma matrícula</p>
+      <p class="ttsc-empty-state-desc">Escolha um registro na fila para ver documentos, financeiro e histórico.</p>
+    </div>
+  </section>
+
+</main>
+<script type="module" src="./assets/detalhe.js"></script>
+</body>
+</html>
