@@ -1,0 +1,252 @@
+/* ==========================================================================
+   ttsc-responsive.css — breakpoints, primitivos de layout e correções mobile
+   Carregado por components/ttsc.css (entrada única do design system).
+
+   Breakpoints (mobile-first):
+     sm 480px · md 768px · lg 1024px · xl 1280px
+   Regras: nada de largura fixa; tabela rola dentro do wrapper; página nunca
+   rola na horizontal; alvo de toque >= 44px.
+   ========================================================================== */
+
+:root {
+  --ttsc-bp-sm: 480px;
+  --ttsc-bp-md: 768px;
+  --ttsc-bp-lg: 1024px;
+  --ttsc-bp-xl: 1280px;
+
+  --ttsc-container-max: 1440px;
+  --ttsc-container-pad: clamp(12px, 1.6vw + 6px, 20px);
+  --ttsc-gutter: clamp(12px, 1.2vw + 8px, 20px);
+  --ttsc-tap: 44px;
+}
+
+/* --------------------------------------------------------------------------
+   Página
+   -------------------------------------------------------------------------- */
+
+.ttsc-page {
+  overflow-x: clip;                 /* a página nunca rola na horizontal */
+  padding-bottom: calc(var(--ttsc-space-8) + env(safe-area-inset-bottom, 0px));
+}
+
+.ttsc-container {
+  width: 100%;
+  max-width: var(--ttsc-container-max);
+  margin-inline: auto;
+  padding-inline: var(--ttsc-container-pad);
+}
+
+/* --------------------------------------------------------------------------
+   Empilhamento e grades
+   -------------------------------------------------------------------------- */
+
+.ttsc-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ttsc-space-4);
+  min-width: 0;
+}
+.ttsc-stack--tight { gap: var(--ttsc-space-2); }
+.ttsc-stack--loose { gap: var(--ttsc-space-6); }
+
+.ttsc-grid {
+  display: grid;
+  gap: var(--ttsc-gutter);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--ttsc-grid-min, 280px)), 1fr));
+  min-width: 0;
+}
+.ttsc-grid--kpi   { --ttsc-grid-min: 190px; }
+.ttsc-grid--tight { --ttsc-grid-min: 220px; }
+.ttsc-grid--wide  { --ttsc-grid-min: 360px; }
+
+@media (min-width: 1280px) {
+  .ttsc-grid--kpi { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+/* Mestre/detalhe: colapsa em uma coluna abaixo de 1024px */
+.ttsc-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ttsc-gutter);
+  min-width: 0;
+}
+@media (min-width: 1024px) {
+  .ttsc-split { grid-template-columns: minmax(0, 1fr) minmax(300px, 360px); }
+  .ttsc-split--aside-start { grid-template-columns: minmax(300px, 360px) minmax(0, 1fr); }
+}
+.ttsc-split > * { min-width: 0; }
+
+/* --------------------------------------------------------------------------
+   Cabeçalho de página e barras de ação
+   -------------------------------------------------------------------------- */
+
+.ttsc-page-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ttsc-space-3);
+  min-width: 0;
+}
+@media (min-width: 768px) {
+  .ttsc-page-header {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+}
+.ttsc-page-header__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ttsc-space-2);
+}
+@media (max-width: 639px) {
+  .ttsc-page-header__actions { width: 100%; }
+  .ttsc-page-header__actions > .ttsc-btn { flex: 1 1 auto; justify-content: center; }
+}
+
+.ttsc-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ttsc-space-2);
+  min-width: 0;
+}
+.ttsc-toolbar__grow { flex: 1 1 240px; min-width: 0; }
+.ttsc-toolbar__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ttsc-space-2);
+  margin-inline-start: auto;
+}
+@media (max-width: 639px) {
+  .ttsc-toolbar__actions {
+    margin-inline-start: 0;
+    width: 100%;
+  }
+  .ttsc-toolbar__actions > * { flex: 1 1 auto; }
+}
+
+/* --------------------------------------------------------------------------
+   Tabelas: rolagem no componente, nunca na página
+   -------------------------------------------------------------------------- */
+
+.ttsc-table-wrapper {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  -webkit-overflow-scrolling: touch;
+}
+.ttsc-table-wrapper:focus-visible {
+  outline: 2px solid var(--ttsc-accent-text);
+  outline-offset: -2px;
+}
+/* Largura mínima só a partir do tablet: no telefone a tabela cabe com as
+   colunas de identificação, sem esconder a coluna de situação atrás do scroll. */
+@media (min-width: 768px) {
+  .ttsc-table-wrapper--scroll > table { min-width: 640px; }
+}
+
+/* --------------------------------------------------------------------------
+   Acessibilidade: conteúdo só para leitor de tela
+   (o bundle não traz .sr-only — sem isto, label/legenda vira texto visível)
+   -------------------------------------------------------------------------- */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+.sr-only-focusable:focus,
+.sr-only-focusable:focus-within {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: inherit;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  clip-path: none;
+  white-space: normal;
+}
+
+/* Coluna de baixa prioridade: some no mobile, nunca a de identificação */
+@media (max-width: 767px) {
+  .ttsc-hide-sm { display: none !important; }
+}
+@media (min-width: 768px) {
+  .ttsc-show-sm { display: none !important; }
+}
+
+/* --------------------------------------------------------------------------
+   Densidade e tipografia fluida
+   -------------------------------------------------------------------------- */
+
+.ttsc-title-fluid {
+  font-size: clamp(18px, 1.1vw + 13px, 22px);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+.ttsc-kpi-value-fluid {
+  font-size: clamp(22px, 1.8vw + 14px, 28px);
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+@media (max-width: 639px) {
+  .ttsc-density-compact .ttsc-card-content { padding: var(--ttsc-space-3); }
+  .ttsc-density-compact .ttsc-table tbody td { padding-block: 8px; }
+}
+
+/* --------------------------------------------------------------------------
+   Drawer e modal em tela pequena
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 639px) {
+  .ttsc-drawer--responsive {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100dvh;
+    border-radius: 0;
+  }
+  .ttsc-modal--responsive {
+    width: calc(100vw - 24px) !important;
+    max-width: calc(100vw - 24px) !important;
+    max-height: calc(100dvh - 24px);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Toque e foco
+   -------------------------------------------------------------------------- */
+
+@media (pointer: coarse) {
+  .ttsc-tap,
+  .ttsc-btn-icon { min-height: var(--ttsc-tap); min-width: var(--ttsc-tap); }
+}
+
+/* Reforço de foco (o anel de 2px do tema tem ~2:1 sobre superfície clara) */
+.ttsc-focus-strong:focus-visible {
+  outline: 2px solid var(--ttsc-accent-text);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--ttsc-accent-soft);
+}
+
+/* --------------------------------------------------------------------------
+   Movimento
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .ttsc-page *,
+  .ttsc-page *::before,
+  .ttsc-page *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

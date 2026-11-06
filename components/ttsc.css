@@ -1,0 +1,15 @@
+/* ==========================================================================
+   ttsc.css — entrada única do design system TotusTuus SoftCloud
+   Uso: <link rel="stylesheet" href="components/ttsc.css">
+
+   Ordem obrigatória:
+     1. tokens (variáveis dos temas claro/escuro)
+     2. bundle de componentes (ttscui + plugins + utilitários compilados)
+     3. ponte de tema (variáveis do bundle -> tokens TTSC)
+     4. camada responsiva (breakpoints e primitivos)
+   ========================================================================== */
+
+@import url("./__tokens.css");
+@import url("./bundle.css");
+@import url("./ttsc-theme-bridge.css");
+@import url("./ttsc-responsive.css");

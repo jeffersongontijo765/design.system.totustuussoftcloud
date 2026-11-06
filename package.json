@@ -1,0 +1,16 @@
+{
+  "name": "@totustuus/design-system",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Design system Emerald Cloud do chassi TotusTuus SoftCloud — tokens, componentes e contrato para agentes.",
+  "type": "module",
+  "scripts": {
+    "ds:index": "node scripts/ds-index.mjs",
+    "ds:check": "node scripts/ds-check.mjs",
+    "ds:report": "node scripts/ds-check.mjs --all --report"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "UNLICENSED"
+}

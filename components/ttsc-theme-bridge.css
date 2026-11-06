@@ -1,0 +1,66 @@
+/* ==========================================================================
+   ttsc-theme-bridge.css — liga os tokens do bundle (shadcn) aos tokens TTSC.
+
+   Problema medido: o bundle.css define --muted, --secondary-foreground,
+   --border etc. com valores fixos de tema claro e só os troca sob a classe
+   `.dark`. O design system usa [data-theme="dark"]. Resultado: no escuro, o
+   cabeçalho de <table> ficava cinza-claro com texto cinza-claro (contraste
+   abaixo de AA) e hover de linha virava branco.
+
+   Correção: apelidar as variáveis neutras do bundle para os tokens --ttsc-*,
+   que já respondem a [data-theme]. Como var() resolve no uso, uma única
+   declaração em :root vale para os dois temas.
+
+   Não remapeamos --primary/--destructive de propósito: são cores de marca e
+   de estado com contraste próprio; trocá-las sem medir quebraria botões.
+   ========================================================================== */
+
+:root {
+  --background: var(--ttsc-canvas);
+  --foreground: var(--ttsc-text);
+
+  --card: var(--ttsc-surface);
+  --card-foreground: var(--ttsc-text);
+  --popover: var(--ttsc-surface);
+  --popover-foreground: var(--ttsc-text);
+
+  --muted-foreground: var(--ttsc-text-muted);
+
+  --border: var(--ttsc-border);
+  --input: var(--ttsc-border);
+  --ring: var(--ttsc-accent);
+}
+
+/* Reforço: o bundle tem regras de cabeçalho de tabela com color-mix; nos dois
+   temas, o texto do th deve vir do token de texto secundário. */
+.ttsc-table thead th {
+  color: var(--ttsc-text-muted);
+}
+
+[data-theme="dark"] .ttsc-table thead th {
+  color: var(--ttsc-text-muted);
+}
+
+/* O bundle também contém uma camada legada com cores literais e !important.
+   Estas regras limitadas aos componentes públicos restauram os tokens no tema
+   escuro sem alterar as páginas históricas durante a migração. */
+[data-theme="dark"] .ttsc-card,
+[data-theme="dark"] .ttsc-input,
+[data-theme="dark"] .ttsc-table-wrapper {
+  background-color: var(--ttsc-surface-2) !important;
+  border-color: var(--ttsc-border) !important;
+}
+
+[data-theme="dark"] .ttsc-table thead th {
+  background-color: var(--ttsc-canvas-2) !important;
+  color: var(--ttsc-text-muted) !important;
+  border-color: var(--ttsc-border) !important;
+}
+
+[data-theme="dark"] .ttsc-table tbody td {
+  border-color: var(--ttsc-border-soft) !important;
+}
+
+[data-theme="dark"] .ttsc-input {
+  color: var(--ttsc-text) !important;
+}
