@@ -7,8 +7,10 @@
 //     No app, o estado vem da resposta do servidor. Aqui dá para ver cada um pela URL:
 //     index.html?estado=vazio | ?estado=carregando | ?estado=erro
 //   - "Tentar novamente" e "Limpar busca" voltam para os dados.
-import { normalize } from "./chassi/util.js";
 
+(function () {
+"use strict";
+const normalize = (t) => (t || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 const root = document.querySelector("[data-turmas]");
 
 if (root) {
@@ -50,3 +52,4 @@ if (root) {
   show(PREVIEW[requested] || "data");
   filter();
 }
+})();

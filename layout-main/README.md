@@ -9,15 +9,11 @@ Página base com as cinco regiões do sistema: **header | sidebar (rail) | sub-s
 
 ## Como abrir
 
-Os scripts são módulos ES (`type="module"`, regra R18). O navegador não carrega módulos de `file://`, então sirva a pasta **acima** de `layout-main/`, a que contém `components/`:
+**Duplo clique no `index.html`.** Não precisa de servidor nem de comando.
 
-```bash
-# na raiz do repositório (ou na pasta extraída do zip)
-python3 -m http.server 8000
-# abra http://localhost:8000/layout-main/index.html
-```
+Para ver os estados do bloco de dados, acrescente ao endereço `?estado=vazio`, `?estado=carregando` ou `?estado=erro`.
 
-Para ver os estados do bloco de dados: `index.html?estado=vazio`, `?estado=carregando` e `?estado=erro`.
+Sobre o JavaScript: o código-fonte são os módulos de `js/chassi/`. O navegador não carrega módulos aberto direto do arquivo, então o `index.html` usa o `js/layout.bundle.js`, que é um script comum gerado a partir deles. Se você editar um módulo, rode `node layout-main/js/build.mjs` para gerar o bundle de novo. Por isso o `ds-check` mostra um aviso (R18), que não reprova a página. No app, servido por HTTP, dá para carregar `js/layout.js` com `type="module"`.
 
 ## Arquivos
 
@@ -29,7 +25,9 @@ layout-main/
 │   ├── layout.css          Posição e tamanho das regiões; gavetas abaixo de 1100px
 │   └── components.css      Peças próprias do chassi (hdr-*, rail-*, sb-*, subnav-*, ftr-*) e lacunas do DS
 ├── js/
-│   ├── layout.js           Entrada do chassi: importa e inicia os módulos
+│   ├── layout.js           Entrada do chassi em módulo (para o app, via HTTP)
+│   ├── layout.bundle.js    O mesmo em script comum, usado pelo index.html (gerado)
+│   ├── build.mjs           Gera o layout.bundle.js
 │   ├── chassi/
 │   │   ├── util.js         Corte de 1100px, chaves das preferências, localStorage com try/catch
 │   │   ├── theme.js        Tema claro/escuro
@@ -50,8 +48,8 @@ Ordem de carga:
 <link rel="stylesheet" href="css/layout.css">
 <link rel="stylesheet" href="css/components.css">
 …
-<script type="module" src="js/layout.js"></script>         <!-- chassi -->
-<script type="module" src="js/pagina-turmas.js"></script>  <!-- página -->
+<script src="js/layout.bundle.js"></script>   <!-- chassi -->
+<script src="js/pagina-turmas.js"></script>    <!-- página -->
 ```
 
 ## Anatomia
@@ -220,4 +218,4 @@ O Font Awesome Pro é licenciado e não está no repositório. Em produção, o 
 
 ## Zip
 
-`entregas/layout-main.zip` é gerado pelo `layout-main/empacotar.sh` e traz `layout-main/` junto com os cinco arquivos de `components/` que o `ttsc.css` importa. Basta extrair e servir a pasta.
+`entregas/layout-main.zip` é gerado pelo `layout-main/empacotar.sh` e traz `layout-main/` junto com os cinco arquivos de `components/` que o `ttsc.css` importa. Basta extrair e abrir `layout-main/index.html`.
