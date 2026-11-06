@@ -1,0 +1,500 @@
+<!doctype html>
+<!--
+  index.html — chassi completo do TotusTuus: header | rail | sub-sidebar | container | footer.
+
+  Estrutura (mesmos IDs do layouts/main.php do app):
+    body
+    ├── a.skip-link                         pula para o conteúdo
+    ├── svg (sprite)                        ícones <symbol id="i-*">
+    └── div.app-shell
+        ├── header.app-header[data-od-id=topnav]      REGIÃO 1 — header
+        └── div.app-body
+            ├── div#primary-rail-wrapper > aside#primary-rail   REGIÃO 2 — sidebar (rail)
+            ├── aside#sub-sidebar                               REGIÃO 3 — sub-sidebar
+            └── div.app-column
+                ├── main#main-viewport[data-od-id=content]      REGIÃO 4 — container
+                └── footer.app-footer                           REGIÃO 5 — footer
+    div#navigation-backdrop[hidden]          fundo das gavetas (< 1100px)
+
+  CSS: tokens → base → layout → components.  JS: js/layout.js (sem handlers inline).
+  Conteúdo do container é exemplo (Gestão › Acadêmico › Turmas); troque pela página real.
+-->
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Turmas · Acadêmico · TotusTuus</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+
+  <script src="js/layout.js" defer></script>
+</head>
+<body>
+
+<a class="skip-link" href="#main-viewport">Pular para o conteúdo</a>
+
+<!-- ======================================================================
+     Sprite de ícones (traço 1.75, currentColor). Uso: <svg class="icon"><use href="#i-nome"/></svg>
+     Font Awesome Pro não pode ser distribuído; no app, troque pelo kit licenciado se quiser.
+     ====================================================================== -->
+<svg xmlns="http://www.w3.org/2000/svg" hidden>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+  <symbol id="i-panel" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></symbol>
+  <symbol id="i-panel-close" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16M16 10l-2 2 2 2"/></symbol>
+  <symbol id="i-panel-open" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16M14 10l2 2-2 2"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></symbol>
+  <symbol id="i-academic" viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5-10-5z"/><path d="M6 11v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/><path d="M22 9v6"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></symbol>
+  <symbol id="i-wallet" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M3 10h18M16 15h2"/><path d="M6 6l9-3 2 3"/></symbol>
+  <symbol id="i-megaphone" viewBox="0 0 24 24"><path d="M3 11v2a1 1 0 0 0 1 1h3l6 4V6L7 10H4a1 1 0 0 0-1 1z"/><path d="M17 9a4 4 0 0 1 0 6"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18 14a6 6 0 0 1 3.5 6"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></symbol>
+  <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 20a2 2 0 0 0 4 0"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
+  <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h.01"/></symbol>
+  <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M9 4h6l-1 6 4 3v2H6v-2l4-3z"/><path d="M12 15v6"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M4 20h16"/></symbol>
+  <symbol id="i-filter" viewBox="0 0 24 24"><path d="M3 5h18l-7 8v6l-4 2v-8z"/></symbol>
+  <symbol id="i-building" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2M10 21v-3h4v3"/></symbol>
+  <symbol id="i-pinmap" viewBox="0 0 24 24"><path d="M12 21s7-6 7-12a7 7 0 0 0-14 0c0 6 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+  <symbol id="i-logout" viewBox="0 0 24 24"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h11"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></symbol>
+</svg>
+
+<div class="app-shell">
+
+  <!-- ====================================================================
+       REGIÃO 1 — HEADER (56px)
+       Esquerda: botões das gavetas (só < 1100px), marca, organização, unidade, período.
+       Direita: busca (Ctrl+K), calendário, notificações, ajuda, tema, usuário.
+       ==================================================================== -->
+  <header class="app-header" data-od-id="topnav">
+    <div class="hdr-left">
+      <div class="hdr-nav-toggles">
+        <button type="button" class="icon-btn" id="btn-mobile" data-drawer-toggle
+                aria-controls="primary-rail-wrapper" aria-expanded="false" aria-label="Abrir menu principal">
+          <svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg>
+        </button>
+        <button type="button" class="icon-btn" id="btn-sub-sidebar" data-drawer-toggle
+                aria-controls="sub-sidebar" aria-expanded="false" aria-label="Abrir menu do módulo">
+          <svg class="icon" aria-hidden="true"><use href="#i-panel"/></svg>
+        </button>
+      </div>
+
+      <a class="hdr-brand" href="#" aria-label="TotusTuus, página inicial">
+        <span class="hdr-brand__logo" aria-hidden="true">TT</span>
+        <span class="hdr-brand__name">TotusTuus</span>
+      </a>
+
+      <span class="hdr-divider" aria-hidden="true"></span>
+
+      <!-- Contexto: organização -->
+      <div class="hdr-context hdr-org-ctx">
+        <button type="button" class="hdr-context__btn" id="btn-org-dropdown" data-menu aria-controls="menu-org">
+          <svg class="icon icon--sm" aria-hidden="true"><use href="#i-building"/></svg>
+          <span class="hdr-context__label"><small>Organização</small><span data-menu-value>Colégio São José</span></span>
+          <svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron-down"/></svg>
+        </button>
+        <div class="menu menu--left" id="menu-org" role="menu" aria-label="Trocar organização" hidden>
+          <p class="menu__label t-meta">Organizações</p>
+          <button type="button" class="menu__item" role="menuitemradio" aria-checked="true" data-value="Colégio São José">Colégio São José</button>
+          <button type="button" class="menu__item" role="menuitemradio" aria-checked="false" data-value="Instituto Santa Clara">Instituto Santa Clara</button>
+        </div>
+      </div>
+
+      <!-- Contexto: unidade -->
+      <div class="hdr-context hdr-unit-ctx">
+        <button type="button" class="hdr-context__btn" id="btn-unit-dropdown" data-menu aria-controls="menu-unit">
+          <svg class="icon icon--sm" aria-hidden="true"><use href="#i-pinmap"/></svg>
+          <span class="hdr-context__label"><small>Unidade</small><span data-menu-value>Unidade Centro</span></span>
+          <svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron-down"/></svg>
+        </button>
+        <div class="menu menu--left" id="menu-unit" role="menu" aria-label="Trocar unidade" hidden>
+          <p class="menu__label t-meta">Unidades</p>
+          <button type="button" class="menu__item" role="menuitemradio" aria-checked="true" data-value="Unidade Centro">Unidade Centro</button>
+          <button type="button" class="menu__item" role="menuitemradio" aria-checked="false" data-value="Unidade Jardim">Unidade Jardim</button>
+          <button type="button" class="menu__item" role="menuitemradio" aria-checked="false" data-value="Todas as unidades">Todas as unidades</button>
+        </div>
+      </div>
+
+      <!-- Contexto: período letivo -->
+      <div class="hdr-context hdr-period-ctx">
+        <button type="button" class="hdr-context__btn" id="btn-period-dropdown" data-menu aria-controls="menu-period">
+          <svg class="icon icon--sm" aria-hidden="true"><use href="#i-calendar"/></svg>
+          <span class="hdr-context__label"><small>Período</small><span data-menu-value>2026</span></span>
+          <svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron-down"/></svg>
+        </button>
+        <div class="menu menu--left" id="menu-period" role="menu" aria-label="Trocar período letivo" hidden>
+          <p class="menu__label t-meta">Períodos letivos</p>
+          <button type="button" class="menu__item" role="menuitemradio" aria-checked="false" data-value="2027">2027 (planejamento)</button>
+          <button type="button" class="menu__item" role="menuitemradio" aria-checked="true" data-value="2026">2026 (em curso)</button>
+          <button type="button" class="menu__item" role="menuitemradio" aria-checked="false" data-value="2025">2025 (encerrado)</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="hdr-right">
+      <label class="hdr-search" for="global-search">
+        <svg class="icon icon--sm" aria-hidden="true"><use href="#i-search"/></svg>
+        <span class="sr-only">Buscar no sistema</span>
+        <input id="global-search" type="search" placeholder="Buscar alunos, turmas, páginas…" autocomplete="off">
+        <kbd aria-hidden="true">Ctrl K</kbd>
+      </label>
+      <button type="button" class="icon-btn" id="btn-search-sm" aria-controls="global-search" aria-expanded="false" aria-label="Buscar">
+        <svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>
+      </button>
+
+      <a class="icon-btn hdr-hide-sm" href="#" aria-label="Calendário">
+        <svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>
+      </a>
+
+      <div class="hdr-context">
+        <button type="button" class="icon-btn" id="btn-notifications" data-menu aria-controls="menu-notifications" aria-label="Notificações, 3 não lidas">
+          <svg class="icon" aria-hidden="true"><use href="#i-bell"/></svg>
+          <span class="badge" aria-hidden="true">3</span>
+        </button>
+        <div class="menu" id="menu-notifications" role="menu" aria-label="Notificações" hidden>
+          <p class="menu__label t-meta">Não lidas</p>
+          <a class="menu__item" role="menuitem" href="#">Conselho de classe do 9º ano amanhã às 14h</a>
+          <a class="menu__item" role="menuitem" href="#">12 diários com frequência pendente</a>
+          <a class="menu__item" role="menuitem" href="#">Rematrícula 2027 abre em 10/11</a>
+          <div class="menu__sep" role="separator"></div>
+          <a class="menu__item" role="menuitem" href="#">Ver todas</a>
+        </div>
+      </div>
+
+      <a class="icon-btn hdr-hide-sm" href="#" aria-label="Ajuda">
+        <svg class="icon" aria-hidden="true"><use href="#i-help"/></svg>
+      </a>
+
+      <button type="button" class="icon-btn" id="btn-theme" aria-pressed="false" aria-label="Usar tema escuro">
+        <svg class="icon" aria-hidden="true"><use href="#i-moon"/></svg>
+      </button>
+
+      <div class="hdr-context">
+        <button type="button" class="hdr-user" id="btn-user-menu" data-menu aria-controls="menu-user" aria-label="Menu do usuário: Ana Ribeiro">
+          <span class="avatar" aria-hidden="true">AR</span>
+          <span class="hdr-user__name" aria-hidden="true"><span>Ana Ribeiro</span><small>Coordenação pedagógica</small></span>
+        </button>
+        <div class="menu" id="menu-user" role="menu" aria-label="Conta" hidden>
+          <a class="menu__item" role="menuitem" href="#"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-user"/></svg>Meu perfil</a>
+          <a class="menu__item" role="menuitem" href="#"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-settings"/></svg>Preferências</a>
+          <div class="menu__sep" role="separator"></div>
+          <a class="menu__item" role="menuitem" href="#"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-logout"/></svg>Sair</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="app-body">
+
+    <!-- ==================================================================
+         REGIÃO 2 — SIDEBAR (rail, 60px → 288px)
+         Expande no hover e no foco; o alfinete fixa expandido (desktop).
+         Abaixo de 1100px vira gaveta aberta por #btn-mobile.
+         ================================================================== -->
+    <div id="primary-rail-wrapper">
+      <aside id="primary-rail" aria-label="Menu principal">
+        <div class="rail-top">
+          <a class="rail-item" id="btn-sidebar-portal" href="#" aria-label="Portal Gestão — trocar portal">
+            <span class="hdr-brand__logo" aria-hidden="true"><svg class="icon icon--sm"><use href="#i-grid"/></svg></span>
+            <span class="rail-label">Portal Gestão</span>
+            <svg class="icon icon--sm rail-chevron" aria-hidden="true"><use href="#i-chevron-right"/></svg>
+          </a>
+        </div>
+
+        <nav class="rail-scroll" aria-label="Áreas do portal">
+          <ul>
+            <li>
+              <a class="rail-item" href="#">
+                <svg class="icon" aria-hidden="true"><use href="#i-home"/></svg>
+                <span class="rail-label">Painel</span>
+              </a>
+            </li>
+            <li>
+              <details class="portal-rail-group" data-group="academico" open>
+                <summary>
+                  <svg class="icon" aria-hidden="true"><use href="#i-academic"/></svg>
+                  <span class="rail-label">Acadêmico</span>
+                  <svg class="icon icon--sm rail-chevron" aria-hidden="true"><use href="#i-chevron-right"/></svg>
+                </summary>
+                <ul>
+                  <li><a class="rail-item" href="#"><span class="rail-label">Estrutura acadêmica</span></a></li>
+                  <li><a class="rail-item is-active" href="#" aria-current="page"><span class="rail-label">Turmas e grade</span></a></li>
+                  <li><a class="rail-item" href="#"><span class="rail-label">Diário de classe</span></a></li>
+                  <li><a class="rail-item" href="#"><span class="rail-label">Boletim e conselho</span></a></li>
+                </ul>
+              </details>
+            </li>
+            <li>
+              <details class="portal-rail-group" data-group="secretaria">
+                <summary>
+                  <svg class="icon" aria-hidden="true"><use href="#i-file"/></svg>
+                  <span class="rail-label">Secretaria</span>
+                  <svg class="icon icon--sm rail-chevron" aria-hidden="true"><use href="#i-chevron-right"/></svg>
+                </summary>
+                <ul>
+                  <li><a class="rail-item" href="#"><span class="rail-label">Matrículas</span></a></li>
+                  <li><a class="rail-item" href="#"><span class="rail-label">Documentos</span></a></li>
+                  <li><a class="rail-item" href="#"><span class="rail-label">Transferências</span></a></li>
+                </ul>
+              </details>
+            </li>
+            <li>
+              <details class="portal-rail-group" data-group="financeiro">
+                <summary>
+                  <svg class="icon" aria-hidden="true"><use href="#i-wallet"/></svg>
+                  <span class="rail-label">Financeiro</span>
+                  <svg class="icon icon--sm rail-chevron" aria-hidden="true"><use href="#i-chevron-right"/></svg>
+                </summary>
+                <ul>
+                  <li><a class="rail-item" href="#"><span class="rail-label">Contas a receber</span></a></li>
+                  <li><a class="rail-item" href="#"><span class="rail-label">Contratos</span></a></li>
+                  <li><a class="rail-item" href="#"><span class="rail-label">Bolsas e descontos</span></a></li>
+                </ul>
+              </details>
+            </li>
+            <li>
+              <a class="rail-item" href="#">
+                <svg class="icon" aria-hidden="true"><use href="#i-users"/></svg>
+                <span class="rail-label">Pessoas</span>
+              </a>
+            </li>
+            <li>
+              <a class="rail-item" href="#">
+                <svg class="icon" aria-hidden="true"><use href="#i-megaphone"/></svg>
+                <span class="rail-label">Comunicação</span>
+              </a>
+            </li>
+            <li>
+              <a class="rail-item" href="#">
+                <svg class="icon" aria-hidden="true"><use href="#i-chart"/></svg>
+                <span class="rail-label">Relatórios</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <div class="rail-bottom">
+          <a class="rail-item" href="#">
+            <svg class="icon" aria-hidden="true"><use href="#i-settings"/></svg>
+            <span class="rail-label">Configurações</span>
+          </a>
+          <button type="button" class="rail-item" id="btn-rail-pin" aria-pressed="false" aria-label="Fixar menu lateral expandido">
+            <svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg>
+            <span class="rail-label" aria-hidden="true">Fixar expandido</span>
+          </button>
+        </div>
+      </aside>
+    </div>
+
+    <!-- ==================================================================
+         REGIÃO 3 — SUB-SIDEBAR (320px)
+         Cabeçalho do módulo, filtro ("/"), seções sanfona com contagem, rodapé com ação.
+         Recolhe no desktop (#subsidebar-collapse-btn); vira gaveta < 1100px.
+         ================================================================== -->
+    <aside id="sub-sidebar" aria-label="Menu do módulo Turmas e grade">
+      <div class="sb-head">
+        <span class="sb-tile" aria-hidden="true"><svg class="icon"><use href="#i-academic"/></svg></span>
+        <div class="sb-head__text">
+          <p class="sb-title">Turmas e grade</p>
+          <p class="sb-sub">Acadêmico · 2026</p>
+        </div>
+        <button type="button" class="icon-btn" id="subsidebar-collapse-btn" aria-controls="sub-sidebar" aria-expanded="true" aria-label="Recolher menu do módulo">
+          <svg class="icon" aria-hidden="true"><use href="#i-panel-close"/></svg>
+        </button>
+      </div>
+
+      <label class="sb-search-filter" for="subsidebar-filter">
+        <svg class="icon icon--sm" aria-hidden="true"><use href="#i-filter"/></svg>
+        <span class="sr-only">Filtrar itens do menu</span>
+        <input id="subsidebar-filter" type="search" placeholder="Filtrar menu" autocomplete="off">
+        <kbd aria-hidden="true">/</kbd>
+      </label>
+
+      <nav class="sb-scroll" aria-label="Páginas do módulo">
+        <div class="subnav-group">
+          <button type="button" class="sb-section-btn" aria-expanded="true" aria-controls="sec-turmas">
+            <svg class="icon icon--sm sb-chevron" aria-hidden="true"><use href="#i-chevron-down"/></svg>
+            Turmas
+            <span class="sb-count-pill" aria-label="4 páginas">4</span>
+          </button>
+          <ul class="subnav-accordion-content is-open" id="sec-turmas">
+            <li><a class="subnav-link is-active" href="#" aria-current="page">Lista de turmas</a></li>
+            <li><a class="subnav-link" href="#">Nova turma</a></li>
+            <li><a class="subnav-link" href="#">Enturmação de alunos</a></li>
+            <li><a class="subnav-link" href="#">Remanejamento <span class="subnav-link__tag">3 pendentes</span></a></li>
+          </ul>
+        </div>
+
+        <div class="subnav-group">
+          <button type="button" class="sb-section-btn" aria-expanded="true" aria-controls="sec-grade">
+            <svg class="icon icon--sm sb-chevron" aria-hidden="true"><use href="#i-chevron-down"/></svg>
+            Grade horária
+            <span class="sb-count-pill" aria-label="3 páginas">3</span>
+          </button>
+          <ul class="subnav-accordion-content is-open" id="sec-grade">
+            <li><a class="subnav-link" href="#">Quadro de horários</a></li>
+            <li><a class="subnav-link" href="#">Alocação de professores</a></li>
+            <li><a class="subnav-link" href="#">Salas e espaços</a></li>
+          </ul>
+        </div>
+
+        <div class="subnav-group">
+          <button type="button" class="sb-section-btn" aria-expanded="false" aria-controls="sec-config">
+            <svg class="icon icon--sm sb-chevron" aria-hidden="true"><use href="#i-chevron-down"/></svg>
+            Configuração
+            <span class="sb-count-pill" aria-label="3 páginas">3</span>
+          </button>
+          <ul class="subnav-accordion-content is-closed" id="sec-config">
+            <li><a class="subnav-link" href="#">Turnos</a></li>
+            <li><a class="subnav-link" href="#">Capacidade por sala</a></li>
+            <li><a class="subnav-link" href="#">Regras de enturmação</a></li>
+          </ul>
+        </div>
+
+        <p class="sb-empty" id="subsidebar-empty" role="status" hidden>Nenhum item encontrado.</p>
+      </nav>
+
+      <div class="sb-foot">
+        <a class="btn btn--primary btn--block" href="#">
+          <svg class="icon icon--sm" aria-hidden="true"><use href="#i-plus"/></svg>
+          Nova turma
+        </a>
+      </div>
+    </aside>
+
+    <div class="app-column">
+
+      <!-- ================================================================
+           REGIÃO 4 — CONTAINER (main#main-viewport, rola sozinho)
+           Exemplo: lista de turmas. Troque pelo conteúdo real da página.
+           ================================================================ -->
+      <main id="main-viewport" data-od-id="content" tabindex="-1">
+        <div class="page">
+          <nav class="breadcrumb" aria-label="Você está em">
+            <a href="#">Gestão</a>
+            <svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron-right"/></svg>
+            <a href="#">Acadêmico</a>
+            <svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron-right"/></svg>
+            <a href="#">Turmas e grade</a>
+            <svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron-right"/></svg>
+            <span aria-current="page">Lista de turmas</span>
+          </nav>
+
+          <div class="page-header">
+            <div class="page-header__lead">
+              <button type="button" class="icon-btn" id="sub-sidebar-expand-btn" aria-controls="sub-sidebar" aria-expanded="true" aria-label="Mostrar menu do módulo" hidden>
+                <svg class="icon" aria-hidden="true"><use href="#i-panel-open"/></svg>
+              </button>
+              <div>
+                <h1 class="t-page-title">Lista de turmas</h1>
+                <p class="t-muted">Período letivo 2026 · Unidade Centro</p>
+              </div>
+            </div>
+            <div class="page-header__actions">
+              <button type="button" class="btn">
+                <svg class="icon icon--sm" aria-hidden="true"><use href="#i-download"/></svg>
+                Exportar
+              </button>
+              <a class="btn btn--primary" href="#">
+                <svg class="icon icon--sm" aria-hidden="true"><use href="#i-plus"/></svg>
+                Nova turma
+              </a>
+            </div>
+          </div>
+
+          <section class="kpis" aria-label="Resumo">
+            <div class="card card__body">
+              <p class="t-meta">Turmas ativas</p>
+              <p class="kpi__value">38</p>
+              <p class="kpi__trend">em 3 turnos</p>
+            </div>
+            <div class="card card__body">
+              <p class="t-meta">Alunos enturmados</p>
+              <p class="kpi__value">1.046</p>
+              <p class="kpi__trend kpi__trend--up">+24 desde agosto</p>
+            </div>
+            <div class="card card__body">
+              <p class="t-meta">Ocupação média</p>
+              <p class="kpi__value">87%</p>
+              <p class="kpi__trend">capacidade total 1.200</p>
+            </div>
+            <div class="card card__body">
+              <p class="t-meta">Sem professor regente</p>
+              <p class="kpi__value">2</p>
+              <p class="kpi__trend kpi__trend--down">resolver antes do conselho</p>
+            </div>
+          </section>
+
+          <section class="card" aria-labelledby="tbl-title">
+            <div class="card__head">
+              <h2 class="t-subheading" id="tbl-title">Turmas de 2026</h2>
+              <span class="t-muted">Mostrando 6 de 38</span>
+            </div>
+            <div class="table-wrap">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Turma</th>
+                    <th scope="col">Segmento</th>
+                    <th scope="col">Turno</th>
+                    <th scope="col">Regente</th>
+                    <th scope="col" class="num">Alunos</th>
+                    <th scope="col">Situação</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td><a href="#">1º ano A</a></td><td>Fundamental I</td><td>Manhã</td><td>Marta Lopes</td><td class="num">28 / 30</td><td><span class="status status--ok">Ativa</span></td></tr>
+                  <tr><td><a href="#">1º ano B</a></td><td>Fundamental I</td><td>Tarde</td><td>Paulo Mendes</td><td class="num">25 / 30</td><td><span class="status status--ok">Ativa</span></td></tr>
+                  <tr><td><a href="#">5º ano A</a></td><td>Fundamental I</td><td>Manhã</td><td>Cláudia Reis</td><td class="num">30 / 30</td><td><span class="status status--warn">Lotada</span></td></tr>
+                  <tr><td><a href="#">9º ano A</a></td><td>Fundamental II</td><td>Manhã</td><td>—</td><td class="num">32 / 35</td><td><span class="status status--danger">Sem regente</span></td></tr>
+                  <tr><td><a href="#">1ª série EM</a></td><td>Ensino Médio</td><td>Manhã</td><td>Rafael Souza</td><td class="num">34 / 40</td><td><span class="status status--ok">Ativa</span></td></tr>
+                  <tr><td><a href="#">3ª série EM</a></td><td>Ensino Médio</td><td>Integral</td><td>Helena Dias</td><td class="num">29 / 40</td><td><span class="status status--ok">Ativa</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="card__foot">
+              <span class="t-muted">Página 1 de 7</span>
+              <button type="button" class="btn">Próxima página</button>
+            </div>
+          </section>
+        </div>
+      </main>
+
+      <!-- ================================================================
+           REGIÃO 5 — FOOTER (40px)
+           ================================================================ -->
+      <footer class="app-footer">
+        <span>© 2026 TotusTuus · v2.0</span>
+        <nav class="ftr-links" aria-label="Links do rodapé">
+          <a href="#">Privacidade</a>
+          <a href="#">Termos de uso</a>
+          <a href="#">Suporte</a>
+        </nav>
+        <span class="ftr-status" role="status">Sistemas operando</span>
+      </footer>
+    </div>
+  </div>
+</div>
+
+<div id="navigation-backdrop" hidden></div>
+
+</body>
+</html>

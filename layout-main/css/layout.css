@@ -1,0 +1,174 @@
+/*
+ * layout.css — posição das cinco regiões do chassi.
+ *
+ *   ┌──────────────────────────── header (56px) ────────────────────────────┐
+ *   ├────────┬─────────────────────┬────────────────────────────────────────┤
+ *   │ rail   │ sub-sidebar (320px) │ container (rola sozinho)               │
+ *   │ 60px → │ recolhível          │                                        │
+ *   │ 288px  │                     ├────────────────────────────────────────┤
+ *   │        │                     │ footer (40px)                          │
+ *   └────────┴─────────────────────┴────────────────────────────────────────┘
+ *
+ * Abaixo de 1100px o rail e o sub-sidebar viram gavetas abertas pelos botões do header,
+ * como no chassi real do app (layouts/main.php). Só posição e tamanho ficam aqui;
+ * aparência de itens fica em components.css.
+ */
+
+/* 1. Página inteira: header em cima, corpo embaixo ------------------------- */
+.app-shell {
+  display: grid;
+  grid-template-rows: var(--ttsc-header-h) minmax(0, 1fr);
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;              /* só o container rola */
+}
+
+/* 2. Header ---------------------------------------------------------------- */
+.app-header {
+  position: relative;
+  z-index: var(--ttsc-z-navigation);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ttsc-space-3);
+  padding: 0 var(--ttsc-space-4);
+  background: var(--ttsc-surface);
+  border-bottom: 1px solid var(--ttsc-border);
+}
+
+/* 3. Corpo: rail | sub-sidebar | coluna de conteúdo ------------------------ */
+.app-body {
+  display: grid;
+  grid-template-columns: var(--ttsc-rail-w) auto minmax(0, 1fr);
+  min-height: 0;
+}
+
+/* 4. Rail: ocupa 60px na grade e expande por cima do conteúdo -------------- */
+#primary-rail-wrapper {
+  position: relative;
+  width: var(--ttsc-rail-w);
+  z-index: var(--ttsc-z-floating);
+}
+
+#primary-rail {
+  position: absolute;
+  inset: 0 auto 0 0;
+  display: flex;
+  flex-direction: column;
+  width: var(--ttsc-rail-w);
+  background: var(--ttsc-surface);
+  border-right: 1px solid var(--ttsc-border);
+  overflow: hidden;
+  transition: width 200ms cubic-bezier(.4, 0, .2, 1), box-shadow 200ms;
+}
+
+/* Expande no hover, no foco por teclado ou fixado pelo botão (classe .is-expanded no wrapper). */
+#primary-rail:hover,
+#primary-rail:focus-within,
+#primary-rail-wrapper.is-expanded #primary-rail {
+  width: min(288px, 100vw - 16px);
+  box-shadow: var(--ttsc-shadow-lg);
+}
+
+/* 5. Sub-sidebar ------------------------------------------------------------ */
+#sub-sidebar {
+  display: flex;
+  flex-direction: column;
+  width: var(--ttsc-sub-sidebar-w);
+  min-height: 0;
+  background: var(--ttsc-surface);
+  border-right: 1px solid var(--ttsc-border);
+}
+
+#sub-sidebar.collapsed {
+  display: none;                 /* recolhido no desktop; reabre pelo botão #sub-sidebar-expand-btn */
+}
+
+/* 6. Coluna de conteúdo: container que rola + rodapé ----------------------- */
+.app-column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+#main-viewport {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  padding: var(--ttsc-space-4) var(--ttsc-space-4) var(--ttsc-space-16);  /* 64px de folga no fim */
+  background: var(--ttsc-canvas);
+}
+
+@media (min-width: 640px) {
+  #main-viewport {
+    padding-left: var(--ttsc-space-5);
+    padding-right: var(--ttsc-space-5);
+  }
+}
+
+.app-footer {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ttsc-space-3);
+  height: var(--ttsc-footer-h);
+  padding: 0 var(--ttsc-space-4);
+  background: var(--ttsc-surface);
+  border-top: 1px solid var(--ttsc-border);
+}
+
+/* 7. Fundo das gavetas ------------------------------------------------------ */
+#navigation-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--ttsc-z-backdrop);
+  background: rgba(15, 23, 42, 0.4);
+}
+
+#navigation-backdrop[hidden] {
+  display: none;
+}
+
+/* 8. Gavetas abaixo de 1100px ---------------------------------------------- */
+@media (max-width: 1099px) {
+  .app-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #primary-rail-wrapper,
+  #sub-sidebar {
+    position: fixed;
+    top: var(--ttsc-header-h);
+    bottom: 0;
+    left: 0;
+    z-index: var(--ttsc-z-drawer);
+    width: min(320px, 100vw - 48px);
+    transform: translateX(-100%);
+    transition: transform 300ms cubic-bezier(.4, 0, .2, 1);
+  }
+
+  #primary-rail {
+    position: static;
+    width: 100%;
+    height: 100%;
+    box-shadow: none;
+  }
+
+  #primary-rail:hover,
+  #primary-rail:focus-within {
+    width: 100%;
+    box-shadow: none;
+  }
+
+  #primary-rail-wrapper.is-mobile-open,
+  #sub-sidebar.is-mobile-open {
+    transform: translateX(0);
+    box-shadow: var(--ttsc-shadow-xl);  /* sombra só com a gaveta aberta, para não vazar na borda */
+  }
+
+  #sub-sidebar.collapsed {
+    display: flex;               /* no celular o recolher do desktop não se aplica */
+  }
+}
