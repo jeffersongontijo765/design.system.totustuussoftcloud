@@ -2,50 +2,44 @@
 <!--
   index.html — chassi completo do TotusTuus: header | rail | sub-sidebar | container | footer.
 
-  Estrutura (mesmos IDs do layouts/main.php do app):
+  Estrutura (mesmos IDs do layouts/main.php do app e de components/Navigation/README.md):
     body
-    ├── a.skip-link                         pula para o conteúdo
-    ├── svg (sprite)                        ícones <symbol id="i-*">
-    └── div.app-shell
-        ├── header.app-header[data-od-id=topnav]      REGIÃO 1 — header
-        └── div.app-body
-            ├── div#primary-rail-wrapper > aside#primary-rail   REGIÃO 2 — sidebar (rail)
-            ├── aside#sub-sidebar                               REGIÃO 3 — sub-sidebar
-            └── div.app-column
-                ├── main#main-viewport[data-od-id=content]      REGIÃO 4 — container
-                └── footer.app-footer                           REGIÃO 5 — footer
-    div#navigation-backdrop[hidden]          fundo das gavetas (< 1100px)
+    ├── a.skip-link                              pula para o conteúdo
+    ├── svg.icon-sprite                          ícones <symbol id="i-*">
+    ├── div.app-shell.ttsc-page
+    │   ├── header.app-header[data-od-id=topnav]            REGIÃO 1 — header
+    │   └── div.app-body
+    │       ├── div#primary-rail-wrapper > aside#primary-rail  REGIÃO 2 — sidebar (rail)
+    │       ├── aside#sub-sidebar                              REGIÃO 3 — sub-sidebar
+    │       └── div.app-column
+    │           ├── main#main-viewport[data-od-id=content]     REGIÃO 4 — container
+    │           └── footer.app-footer                          REGIÃO 5 — footer
+    └── div#navigation-backdrop[hidden]          fundo das gavetas (< 1100px)
 
-  CSS: tokens → base → layout → components.  JS: js/layout.js (sem handlers inline).
-  Conteúdo do container é exemplo (Gestão › Acadêmico › Turmas); troque pela página real.
+  CSS: ../components/ttsc.css (design system) → css/base.css → css/layout.css → css/components.css
+  JS:  js/layout.js (chassi, módulos em js/chassi/) + js/pagina-turmas.js (controller desta página)
+  Conteúdo do container: exemplo real do SDD (kit-starter/gestao/academico/series-e-turmas-grade-de-horarios.md,
+  tela "Turmas"), com dados fictícios. Troque pelo template da sua página.
 -->
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
-  <title>Turmas · Acadêmico · TotusTuus</title>
+  <title>Turmas · Séries e turmas · TotusTuus</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
-
-  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="../components/ttsc.css">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/components.css">
-
-  <script src="js/layout.js" defer></script>
 </head>
-<body>
+<body class="sb-app">
 
 <a class="skip-link" href="#main-viewport">Pular para o conteúdo</a>
 
-<!-- ======================================================================
-     Sprite de ícones (traço 1.75, currentColor). Uso: <svg class="icon"><use href="#i-nome"/></svg>
-     Font Awesome Pro não pode ser distribuído; no app, troque pelo kit licenciado se quiser.
-     ====================================================================== -->
-<svg xmlns="http://www.w3.org/2000/svg" hidden>
+<!-- Sprite de ícones (traço 1.75, currentColor). Uso: <svg class="icon" aria-hidden="true"><use href="#i-nome"/></svg>
+     Font Awesome Pro não é distribuído (licença); no app o shell pode servir fonts/ e trocar por <i class="fa-light …">. -->
+<svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
   <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
   <symbol id="i-panel" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></symbol>
   <symbol id="i-panel-close" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16M16 10l-2 2 2 2"/></symbol>
@@ -63,6 +57,7 @@
   <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
   <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h.01"/></symbol>
   <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+  <symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
   <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
   <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
   <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/></symbol>
@@ -75,23 +70,28 @@
   <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
   <symbol id="i-logout" viewBox="0 0 24 24"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h11"/></symbol>
   <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3l9.5 17h-19z"/><path d="M12 10v4M12 17h.01"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.5-4.5L4 8M4 4v4h4M4 13a8 8 0 0 0 14.5 4.5L20 16M20 20v-4h-4"/></symbol>
 </svg>
 
-<div class="app-shell">
+<div class="app-shell ttsc-page">
 
   <!-- ====================================================================
        REGIÃO 1 — HEADER (56px)
-       Esquerda: botões das gavetas (só < 1100px), marca, organização, unidade, período.
-       Direita: busca (Ctrl+K), calendário, notificações, ajuda, tema, usuário.
+       Esquerda: gavetas (< 1100px), marca, contexto (organização, unidade, período).
+       Direita: busca (Ctrl+K), calendário, notificações, ajuda, tema, conta.
+       < 900px os três seletores viram #btn-context-sm; < 600px calendário e ajuda
+       ficam no menu da conta e a busca vira ícone. Nada some, só muda de lugar.
        ==================================================================== -->
   <header class="app-header" data-od-id="topnav">
     <div class="hdr-left">
       <div class="hdr-nav-toggles">
-        <button type="button" class="icon-btn" id="btn-mobile" data-drawer-toggle
+        <button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon" id="btn-mobile" data-drawer-toggle
                 aria-controls="primary-rail-wrapper" aria-expanded="false" aria-label="Abrir menu principal">
           <svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg>
         </button>
-        <button type="button" class="icon-btn" id="btn-sub-sidebar" data-drawer-toggle
+        <button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon" id="btn-sub-sidebar" data-drawer-toggle
                 aria-controls="sub-sidebar" aria-expanded="false" aria-label="Abrir menu do módulo">
           <svg class="icon" aria-hidden="true"><use href="#i-panel"/></svg>
         </button>
@@ -99,104 +99,137 @@
 
       <a class="hdr-brand" href="#" aria-label="TotusTuus, página inicial">
         <span class="hdr-brand__logo" aria-hidden="true">TT</span>
-        <span class="hdr-brand__name">TotusTuus</span>
+        <span class="hdr-brand__name" aria-hidden="true">TotusTuus</span>
       </a>
 
       <span class="hdr-divider" aria-hidden="true"></span>
 
-      <!-- Contexto: organização -->
-      <div class="hdr-context hdr-org-ctx">
-        <button type="button" class="hdr-context__btn" id="btn-org-dropdown" data-menu aria-controls="menu-org">
-          <svg class="icon icon--sm" aria-hidden="true"><use href="#i-building"/></svg>
-          <span class="hdr-context__label"><small>Organização</small><span data-menu-value>Colégio São José</span></span>
-          <svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron-down"/></svg>
-        </button>
-        <div class="menu menu--left" id="menu-org" role="menu" aria-label="Trocar organização" hidden>
-          <p class="menu__label t-meta">Organizações</p>
-          <button type="button" class="menu__item" role="menuitemradio" aria-checked="true" data-value="Colégio São José">Colégio São José</button>
-          <button type="button" class="menu__item" role="menuitemradio" aria-checked="false" data-value="Instituto Santa Clara">Instituto Santa Clara</button>
+      <!-- Contexto ativo: toda consulta filtra por entidade e unidade (SDD, doc 03) -->
+      <div class="hdr-context-group">
+        <div class="hdr-menu-anchor">
+          <button type="button" class="ttsc-btn ttsc-btn-outline hdr-context-btn" id="btn-org-dropdown" data-menu aria-controls="menu-org">
+            <svg class="icon icon--sm" aria-hidden="true"><use href="#i-building"/></svg>
+            <span class="hdr-context-btn__text"><small>Organização</small><span data-context-value="org">Colégio São José</span></span>
+            <svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron-down"/></svg>
+          </button>
+          <div class="ttsc-dropdown-menu ttsc-dropdown-menu--start" id="menu-org" role="menu" aria-label="Trocar organização">
+            <ul class="ttsc-dropdown-menu-sub" role="none">
+              <li role="none"><button type="button" class="ttsc-dropdown-menu-link" role="menuitemradio" aria-checked="true" data-context="org" data-value="Colégio São José">Colégio São José</button></li>
+              <li role="none"><button type="button" class="ttsc-dropdown-menu-link" role="menuitemradio" aria-checked="false" data-context="org" data-value="Instituto Santa Clara">Instituto Santa Clara</button></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="hdr-menu-anchor">
+          <button type="button" class="ttsc-btn ttsc-btn-outline hdr-context-btn" id="btn-unit-dropdown" data-menu aria-controls="menu-unit">
+            <svg class="icon icon--sm" aria-hidden="true"><use href="#i-pinmap"/></svg>
+            <span class="hdr-context-btn__text"><small>Unidade</small><span data-context-value="unit">Unidade Centro</span></span>
+            <svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron-down"/></svg>
+          </button>
+          <div class="ttsc-dropdown-menu ttsc-dropdown-menu--start" id="menu-unit" role="menu" aria-label="Trocar unidade">
+            <ul class="ttsc-dropdown-menu-sub" role="none">
+              <li role="none"><button type="button" class="ttsc-dropdown-menu-link" role="menuitemradio" aria-checked="true" data-context="unit" data-value="Unidade Centro">Unidade Centro</button></li>
+              <li role="none"><button type="button" class="ttsc-dropdown-menu-link" role="menuitemradio" aria-checked="false" data-context="unit" data-value="Unidade Jardim">Unidade Jardim</button></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="hdr-menu-anchor">
+          <button type="button" class="ttsc-btn ttsc-btn-outline hdr-context-btn" id="btn-period-dropdown" data-menu aria-controls="menu-period">
+            <svg class="icon icon--sm" aria-hidden="true"><use href="#i-calendar"/></svg>
+            <span class="hdr-context-btn__text"><small>Período letivo</small><span data-context-value="period">2026</span></span>
+            <svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron-down"/></svg>
+          </button>
+          <div class="ttsc-dropdown-menu ttsc-dropdown-menu--start" id="menu-period" role="menu" aria-label="Trocar período letivo">
+            <ul class="ttsc-dropdown-menu-sub" role="none">
+              <li role="none"><button type="button" class="ttsc-dropdown-menu-link" role="menuitemradio" aria-checked="false" data-context="period" data-value="2027">2027</button></li>
+              <li role="none"><button type="button" class="ttsc-dropdown-menu-link" role="menuitemradio" aria-checked="true" data-context="period" data-value="2026">2026</button></li>
+              <li role="none"><button type="button" class="ttsc-dropdown-menu-link" role="menuitemradio" aria-checked="false" data-context="period" data-value="2025">2025</button></li>
+            </ul>
+          </div>
         </div>
       </div>
 
-      <!-- Contexto: unidade -->
-      <div class="hdr-context hdr-unit-ctx">
-        <button type="button" class="hdr-context__btn" id="btn-unit-dropdown" data-menu aria-controls="menu-unit">
-          <svg class="icon icon--sm" aria-hidden="true"><use href="#i-pinmap"/></svg>
-          <span class="hdr-context__label"><small>Unidade</small><span data-menu-value>Unidade Centro</span></span>
-          <svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron-down"/></svg>
+      <!-- < 900px: os três contextos num menu só (mesmas opções, sincronizadas pelo data-context) -->
+      <div class="hdr-menu-anchor">
+        <button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon" id="btn-context-sm" data-menu aria-controls="menu-context-sm"
+                aria-label="Trocar organização, unidade ou período letivo">
+          <svg class="icon" aria-hidden="true"><use href="#i-sliders"/></svg>
         </button>
-        <div class="menu menu--left" id="menu-unit" role="menu" aria-label="Trocar unidade" hidden>
-          <p class="menu__label t-meta">Unidades</p>
-          <button type="button" class="menu__item" role="menuitemradio" aria-checked="true" data-value="Unidade Centro">Unidade Centro</button>
-          <button type="button" class="menu__item" role="menuitemradio" aria-checked="false" data-value="Unidade Jardim">Unidade Jardim</button>
-          <button type="button" class="menu__item" role="menuitemradio" aria-checked="false" data-value="Todas as unidades">Todas as unidades</button>
-        </div>
-      </div>
-
-      <!-- Contexto: período letivo -->
-      <div class="hdr-context hdr-period-ctx">
-        <button type="button" class="hdr-context__btn" id="btn-period-dropdown" data-menu aria-controls="menu-period">
-          <svg class="icon icon--sm" aria-hidden="true"><use href="#i-calendar"/></svg>
-          <span class="hdr-context__label"><small>Período</small><span data-menu-value>2026</span></span>
-          <svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron-down"/></svg>
-        </button>
-        <div class="menu menu--left" id="menu-period" role="menu" aria-label="Trocar período letivo" hidden>
-          <p class="menu__label t-meta">Períodos letivos</p>
-          <button type="button" class="menu__item" role="menuitemradio" aria-checked="false" data-value="2027">2027 (planejamento)</button>
-          <button type="button" class="menu__item" role="menuitemradio" aria-checked="true" data-value="2026">2026 (em curso)</button>
-          <button type="button" class="menu__item" role="menuitemradio" aria-checked="false" data-value="2025">2025 (encerrado)</button>
+        <div class="ttsc-dropdown-menu ttsc-dropdown-menu--start" id="menu-context-sm" role="menu" aria-label="Contexto">
+          <ul class="ttsc-dropdown-menu-sub" role="group" aria-label="Organização">
+            <li class="hdr-menu-title" role="none" aria-hidden="true">Organização</li>
+            <li role="none"><button type="button" class="ttsc-dropdown-menu-link" role="menuitemradio" aria-checked="true" data-context="org" data-value="Colégio São José">Colégio São José</button></li>
+            <li role="none"><button type="button" class="ttsc-dropdown-menu-link" role="menuitemradio" aria-checked="false" data-context="org" data-value="Instituto Santa Clara">Instituto Santa Clara</button></li>
+          </ul>
+          <ul class="ttsc-dropdown-menu-sub" role="group" aria-label="Unidade">
+            <li class="hdr-menu-title" role="none" aria-hidden="true">Unidade</li>
+            <li role="none"><button type="button" class="ttsc-dropdown-menu-link" role="menuitemradio" aria-checked="true" data-context="unit" data-value="Unidade Centro">Unidade Centro</button></li>
+            <li role="none"><button type="button" class="ttsc-dropdown-menu-link" role="menuitemradio" aria-checked="false" data-context="unit" data-value="Unidade Jardim">Unidade Jardim</button></li>
+          </ul>
+          <ul class="ttsc-dropdown-menu-sub" role="group" aria-label="Período letivo">
+            <li class="hdr-menu-title" role="none" aria-hidden="true">Período letivo</li>
+            <li role="none"><button type="button" class="ttsc-dropdown-menu-link" role="menuitemradio" aria-checked="false" data-context="period" data-value="2027">2027</button></li>
+            <li role="none"><button type="button" class="ttsc-dropdown-menu-link" role="menuitemradio" aria-checked="true" data-context="period" data-value="2026">2026</button></li>
+            <li role="none"><button type="button" class="ttsc-dropdown-menu-link" role="menuitemradio" aria-checked="false" data-context="period" data-value="2025">2025</button></li>
+          </ul>
         </div>
       </div>
     </div>
 
     <div class="hdr-right">
-      <label class="hdr-search" for="global-search">
+      <div class="ttsc-input hdr-search">
         <svg class="icon icon--sm" aria-hidden="true"><use href="#i-search"/></svg>
-        <span class="sr-only">Buscar no sistema</span>
-        <input id="global-search" type="search" placeholder="Buscar alunos, turmas, páginas…" autocomplete="off">
-        <kbd aria-hidden="true">Ctrl K</kbd>
-      </label>
-      <button type="button" class="icon-btn" id="btn-search-sm" aria-controls="global-search" aria-expanded="false" aria-label="Buscar">
+        <input id="global-search" type="search" placeholder="Buscar alunos, turmas, páginas…" autocomplete="off"
+               aria-label="Buscar no sistema" aria-keyshortcuts="Control+K Meta+K">
+        <kbd class="ttsc-kbd ttsc-kbd-xs" aria-hidden="true">Ctrl K</kbd>
+      </div>
+      <button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon" id="btn-search-sm" aria-controls="global-search" aria-expanded="false" aria-label="Buscar no sistema">
         <svg class="icon" aria-hidden="true"><use href="#i-search"/></svg>
       </button>
 
-      <a class="icon-btn hdr-hide-sm" href="#" aria-label="Calendário">
+      <a class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon hdr-shortcut" href="#" aria-label="Calendário">
         <svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg>
       </a>
 
-      <div class="hdr-context">
-        <button type="button" class="icon-btn" id="btn-notifications" data-menu aria-controls="menu-notifications" aria-label="Notificações, 3 não lidas">
+      <div class="hdr-menu-anchor">
+        <button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon" id="btn-notifications" data-menu aria-controls="menu-notifications" aria-label="Notificações, 3 não lidas">
           <svg class="icon" aria-hidden="true"><use href="#i-bell"/></svg>
-          <span class="badge" aria-hidden="true">3</span>
+          <span class="ttsc-badge ttsc-badge-sm ttsc-badge-destructive hdr-counter" aria-hidden="true">3</span>
         </button>
-        <div class="menu" id="menu-notifications" role="menu" aria-label="Notificações" hidden>
-          <p class="menu__label t-meta">Não lidas</p>
-          <a class="menu__item" role="menuitem" href="#">Conselho de classe do 9º ano amanhã às 14h</a>
-          <a class="menu__item" role="menuitem" href="#">12 diários com frequência pendente</a>
-          <a class="menu__item" role="menuitem" href="#">Rematrícula 2027 abre em 10/11</a>
-          <div class="menu__sep" role="separator"></div>
-          <a class="menu__item" role="menuitem" href="#">Ver todas</a>
+        <div class="ttsc-dropdown-menu" id="menu-notifications" role="menu" aria-label="Notificações não lidas">
+          <ul class="ttsc-dropdown-menu-sub" role="none">
+            <li role="none"><a class="ttsc-dropdown-menu-link" role="menuitem" href="#">Grade de horários 2026 com 2 conflitos para revisar</a></li>
+            <li role="none"><a class="ttsc-dropdown-menu-link" role="menuitem" href="#">9º ano A sem professor regente</a></li>
+            <li role="none"><a class="ttsc-dropdown-menu-link" role="menuitem" href="#">3 pedidos de remanejamento aguardando</a></li>
+            <li class="ttsc-dropdown-menu-separator" role="separator"></li>
+            <li role="none"><a class="ttsc-dropdown-menu-link" role="menuitem" href="#">Ver todas as notificações</a></li>
+          </ul>
         </div>
       </div>
 
-      <a class="icon-btn hdr-hide-sm" href="#" aria-label="Ajuda">
+      <a class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon hdr-shortcut" href="#" aria-label="Ajuda">
         <svg class="icon" aria-hidden="true"><use href="#i-help"/></svg>
       </a>
 
-      <button type="button" class="icon-btn" id="btn-theme" aria-pressed="false" aria-label="Usar tema escuro">
+      <button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon" id="btn-theme" aria-pressed="false" aria-label="Usar tema escuro">
         <svg class="icon" aria-hidden="true"><use href="#i-moon"/></svg>
       </button>
 
-      <div class="hdr-context">
-        <button type="button" class="hdr-user" id="btn-user-menu" data-menu aria-controls="menu-user" aria-label="Menu do usuário: Ana Ribeiro">
-          <span class="avatar" aria-hidden="true">AR</span>
+      <div class="hdr-menu-anchor">
+        <button type="button" class="hdr-user" id="btn-user-menu" data-menu aria-controls="menu-user" aria-label="Conta de Ana Ribeiro, Coordenação pedagógica">
+          <span class="ttsc-avatar size-8" aria-hidden="true"><span class="ttsc-avatar-fallback">AR</span></span>
           <span class="hdr-user__name" aria-hidden="true"><span>Ana Ribeiro</span><small>Coordenação pedagógica</small></span>
         </button>
-        <div class="menu" id="menu-user" role="menu" aria-label="Conta" hidden>
-          <a class="menu__item" role="menuitem" href="#"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-user"/></svg>Meu perfil</a>
-          <a class="menu__item" role="menuitem" href="#"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-settings"/></svg>Preferências</a>
-          <div class="menu__sep" role="separator"></div>
-          <a class="menu__item" role="menuitem" href="#"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-logout"/></svg>Sair</a>
+        <div class="ttsc-dropdown-menu" id="menu-user" role="menu" aria-label="Conta">
+          <ul class="ttsc-dropdown-menu-sub" role="none">
+            <li role="none"><a class="ttsc-dropdown-menu-link" role="menuitem" href="#"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-user"/></svg>Meu perfil</a></li>
+            <li role="none"><a class="ttsc-dropdown-menu-link" role="menuitem" href="#"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-calendar"/></svg>Calendário</a></li>
+            <li role="none"><a class="ttsc-dropdown-menu-link" role="menuitem" href="#"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-help"/></svg>Ajuda</a></li>
+            <li role="none"><a class="ttsc-dropdown-menu-link" role="menuitem" href="#"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-settings"/></svg>Preferências</a></li>
+            <li class="ttsc-dropdown-menu-separator" role="separator"></li>
+            <li role="none"><a class="ttsc-dropdown-menu-link" role="menuitem" href="#"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-logout"/></svg>Sair</a></li>
+          </ul>
         </div>
       </div>
     </div>
@@ -206,15 +239,16 @@
 
     <!-- ==================================================================
          REGIÃO 2 — SIDEBAR (rail, 60px → 288px)
-         Expande no hover e no foco; o alfinete fixa expandido (desktop).
-         Abaixo de 1100px vira gaveta aberta por #btn-mobile.
+         Expande no hover e no foco; #btn-rail-pin fixa expandido (desktop).
+         < 1100px vira gaveta aberta por #btn-mobile.
+         Itens vêm das permissões do usuário (SDD, doc 78): só aparece o que ele pode abrir.
          ================================================================== -->
     <div id="primary-rail-wrapper">
       <aside id="primary-rail" aria-label="Menu principal">
         <div class="rail-top">
-          <a class="rail-item" id="btn-sidebar-portal" href="#" aria-label="Portal Gestão — trocar portal">
+          <a class="rail-item" id="btn-sidebar-portal" href="#" aria-label="Portal Gestão, trocar portal">
             <span class="hdr-brand__logo" aria-hidden="true"><svg class="icon icon--sm"><use href="#i-grid"/></svg></span>
-            <span class="rail-label">Portal Gestão</span>
+            <span class="rail-label" aria-hidden="true">Portal Gestão</span>
             <svg class="icon icon--sm rail-chevron" aria-hidden="true"><use href="#i-chevron-right"/></svg>
           </a>
         </div>
@@ -236,8 +270,8 @@
                 </summary>
                 <ul>
                   <li><a class="rail-item" href="#"><span class="rail-label">Estrutura acadêmica</span></a></li>
-                  <li><a class="rail-item is-active" href="#" aria-current="page"><span class="rail-label">Turmas e grade</span></a></li>
-                  <li><a class="rail-item" href="#"><span class="rail-label">Diário de classe</span></a></li>
+                  <li><a class="rail-item is-active" href="#" aria-current="page"><span class="rail-label">Séries e turmas</span></a></li>
+                  <li><a class="rail-item" href="#"><span class="rail-label">Coordenação e diário</span></a></li>
                   <li><a class="rail-item" href="#"><span class="rail-label">Boletim e conselho</span></a></li>
                 </ul>
               </details>
@@ -273,19 +307,19 @@
             <li>
               <a class="rail-item" href="#">
                 <svg class="icon" aria-hidden="true"><use href="#i-users"/></svg>
-                <span class="rail-label">Pessoas</span>
+                <span class="rail-label">Pessoas e RH</span>
               </a>
             </li>
             <li>
               <a class="rail-item" href="#">
                 <svg class="icon" aria-hidden="true"><use href="#i-megaphone"/></svg>
-                <span class="rail-label">Comunicação</span>
+                <span class="rail-label">Atendimento</span>
               </a>
             </li>
             <li>
               <a class="rail-item" href="#">
                 <svg class="icon" aria-hidden="true"><use href="#i-chart"/></svg>
-                <span class="rail-label">Relatórios</span>
+                <span class="rail-label">Relatórios e gráficos</span>
               </a>
             </li>
           </ul>
@@ -294,7 +328,7 @@
         <div class="rail-bottom">
           <a class="rail-item" href="#">
             <svg class="icon" aria-hidden="true"><use href="#i-settings"/></svg>
-            <span class="rail-label">Configurações</span>
+            <span class="rail-label">Configuração e acesso</span>
           </a>
           <button type="button" class="rail-item" id="btn-rail-pin" aria-pressed="false" aria-label="Fixar menu lateral expandido">
             <svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg>
@@ -306,66 +340,76 @@
 
     <!-- ==================================================================
          REGIÃO 3 — SUB-SIDEBAR (320px)
-         Cabeçalho do módulo, filtro ("/"), seções sanfona com contagem, rodapé com ação.
+         Cabeçalho do módulo, filtro ("/"), seções sanfona com contagem, ação principal.
+         Telas do módulo conforme o SDD (série e turmas, seção 3 da ficha).
          Recolhe no desktop (#subsidebar-collapse-btn); vira gaveta < 1100px.
          ================================================================== -->
-    <aside id="sub-sidebar" aria-label="Menu do módulo Turmas e grade">
+    <aside id="sub-sidebar" aria-label="Menu do módulo Séries e turmas">
       <div class="sb-head">
         <span class="sb-tile" aria-hidden="true"><svg class="icon"><use href="#i-academic"/></svg></span>
         <div class="sb-head__text">
-          <p class="sb-title">Turmas e grade</p>
-          <p class="sb-sub">Acadêmico · 2026</p>
+          <p class="sb-title">Séries e turmas</p>
+          <p class="sb-sub">Acadêmico · grade de horários</p>
         </div>
-        <button type="button" class="icon-btn" id="subsidebar-collapse-btn" aria-controls="sub-sidebar" aria-expanded="true" aria-label="Recolher menu do módulo">
+        <button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon" id="subsidebar-collapse-btn" aria-controls="sub-sidebar" aria-expanded="true" aria-label="Recolher menu do módulo">
           <svg class="icon" aria-hidden="true"><use href="#i-panel-close"/></svg>
         </button>
       </div>
 
-      <label class="sb-search-filter" for="subsidebar-filter">
+      <div class="ttsc-input ttsc-input-sm sb-search-filter">
         <svg class="icon icon--sm" aria-hidden="true"><use href="#i-filter"/></svg>
-        <span class="sr-only">Filtrar itens do menu</span>
-        <input id="subsidebar-filter" type="search" placeholder="Filtrar menu" autocomplete="off">
-        <kbd aria-hidden="true">/</kbd>
-      </label>
+        <input id="subsidebar-filter" type="search" placeholder="Filtrar menu" autocomplete="off" aria-label="Filtrar itens do menu" aria-keyshortcuts="/">
+        <kbd class="ttsc-kbd ttsc-kbd-xs" aria-hidden="true">/</kbd>
+      </div>
 
       <nav class="sb-scroll" aria-label="Páginas do módulo">
         <div class="subnav-group">
           <button type="button" class="sb-section-btn" aria-expanded="true" aria-controls="sec-turmas">
             <svg class="icon icon--sm sb-chevron" aria-hidden="true"><use href="#i-chevron-down"/></svg>
             Turmas
-            <span class="sb-count-pill" aria-label="4 páginas">4</span>
+            <span class="ttsc-badge ttsc-badge-sm ttsc-badge-outline sb-count-pill" aria-label="3 páginas">3</span>
           </button>
           <ul class="subnav-accordion-content is-open" id="sec-turmas">
             <li><a class="subnav-link is-active" href="#" aria-current="page">Lista de turmas</a></li>
             <li><a class="subnav-link" href="#">Nova turma</a></li>
-            <li><a class="subnav-link" href="#">Enturmação de alunos</a></li>
-            <li><a class="subnav-link" href="#">Remanejamento <span class="subnav-link__tag">3 pendentes</span></a></li>
+            <li><a class="subnav-link" href="#">Enturmação <span class="ttsc-badge ttsc-badge-sm ttsc-badge-light ttsc-badge-warning">3 pendentes</span></a></li>
           </ul>
         </div>
 
         <div class="subnav-group">
           <button type="button" class="sb-section-btn" aria-expanded="true" aria-controls="sec-grade">
             <svg class="icon icon--sm sb-chevron" aria-hidden="true"><use href="#i-chevron-down"/></svg>
-            Grade horária
-            <span class="sb-count-pill" aria-label="3 páginas">3</span>
+            Grade de horários
+            <span class="ttsc-badge ttsc-badge-sm ttsc-badge-outline sb-count-pill" aria-label="2 páginas">2</span>
           </button>
           <ul class="subnav-accordion-content is-open" id="sec-grade">
-            <li><a class="subnav-link" href="#">Quadro de horários</a></li>
-            <li><a class="subnav-link" href="#">Alocação de professores</a></li>
-            <li><a class="subnav-link" href="#">Salas e espaços</a></li>
+            <li><a class="subnav-link" href="#">Montagem da grade</a></li>
+            <li><a class="subnav-link" href="#">Grupos de horários</a></li>
           </ul>
         </div>
 
         <div class="subnav-group">
-          <button type="button" class="sb-section-btn" aria-expanded="false" aria-controls="sec-config">
+          <button type="button" class="sb-section-btn" aria-expanded="false" aria-controls="sec-consultas">
             <svg class="icon icon--sm sb-chevron" aria-hidden="true"><use href="#i-chevron-down"/></svg>
-            Configuração
-            <span class="sb-count-pill" aria-label="3 páginas">3</span>
+            Consultas
+            <span class="ttsc-badge ttsc-badge-sm ttsc-badge-outline sb-count-pill" aria-label="4 páginas">4</span>
           </button>
-          <ul class="subnav-accordion-content is-closed" id="sec-config">
-            <li><a class="subnav-link" href="#">Turnos</a></li>
-            <li><a class="subnav-link" href="#">Capacidade por sala</a></li>
-            <li><a class="subnav-link" href="#">Regras de enturmação</a></li>
+          <ul class="subnav-accordion-content is-closed" id="sec-consultas">
+            <li><a class="subnav-link" href="#">Grade por professor</a></li>
+            <li><a class="subnav-link" href="#">Grade por sala</a></li>
+            <li><a class="subnav-link" href="#">Grade por turma</a></li>
+            <li><a class="subnav-link" href="#">Ocupação da unidade</a></li>
+          </ul>
+        </div>
+
+        <div class="subnav-group">
+          <button type="button" class="sb-section-btn" aria-expanded="false" aria-controls="sec-cadastros">
+            <svg class="icon icon--sm sb-chevron" aria-hidden="true"><use href="#i-chevron-down"/></svg>
+            Cadastros
+            <span class="ttsc-badge ttsc-badge-sm ttsc-badge-outline sb-count-pill" aria-label="1 página">1</span>
+          </button>
+          <ul class="subnav-accordion-content is-closed" id="sec-cadastros">
+            <li><a class="subnav-link" href="#">Salas</a></li>
           </ul>
         </div>
 
@@ -373,7 +417,7 @@
       </nav>
 
       <div class="sb-foot">
-        <a class="btn btn--primary btn--block" href="#">
+        <a class="ttsc-btn ttsc-btn-primary w-full" href="#">
           <svg class="icon icon--sm" aria-hidden="true"><use href="#i-plus"/></svg>
           Nova turma
         </a>
@@ -384,102 +428,193 @@
 
       <!-- ================================================================
            REGIÃO 4 — CONTAINER (main#main-viewport, rola sozinho)
-           Exemplo: lista de turmas. Troque pelo conteúdo real da página.
+           Exemplo: tela "Turmas" (DataTable) da ficha do SDD. Quatro estados no
+           bloco de dados: data | empty | loading | error (veja ?estado=vazio|carregando|erro).
            ================================================================ -->
+      <!-- page-spec {"id":"layout-main-turmas","archetype":"records","variant":"kpi-table","density":"comfortable","intent":"listar as turmas do período letivo com ocupação e situação dentro do chassi completo","components":["ttsc-page-header","ttsc-breadcrumb","ttsc-btn","ttsc-card","ttsc-input","ttsc-table","ttsc-badge","ttsc-pagination","ttsc-empty-state","ttsc-skeleton"]} -->
       <main id="main-viewport" data-od-id="content" tabindex="-1">
-        <div class="page">
-          <nav class="breadcrumb" aria-label="Você está em">
-            <a href="#">Gestão</a>
-            <svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron-right"/></svg>
-            <a href="#">Acadêmico</a>
-            <svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron-right"/></svg>
-            <a href="#">Turmas e grade</a>
-            <svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron-right"/></svg>
-            <span aria-current="page">Lista de turmas</span>
-          </nav>
+        <div class="ttsc-container ttsc-stack" data-turmas aria-busy="false">
 
-          <div class="page-header">
-            <div class="page-header__lead">
-              <button type="button" class="icon-btn" id="sub-sidebar-expand-btn" aria-controls="sub-sidebar" aria-expanded="true" aria-label="Mostrar menu do módulo" hidden>
-                <svg class="icon" aria-hidden="true"><use href="#i-panel-open"/></svg>
-              </button>
-              <div>
-                <h1 class="t-page-title">Lista de turmas</h1>
-                <p class="t-muted">Período letivo 2026 · Unidade Centro</p>
+          <header class="ttsc-page-header">
+            <div class="ttsc-stack ttsc-stack--tight">
+              <nav aria-label="Trilha de navegação">
+                <ol class="ttsc-breadcrumb">
+                  <li class="ttsc-breadcrumb-item"><a class="ttsc-breadcrumb-link" href="#">Acadêmico</a></li>
+                  <li class="ttsc-breadcrumb-separator" aria-hidden="true"><svg class="icon icon--sm"><use href="#i-chevron-right"/></svg></li>
+                  <li class="ttsc-breadcrumb-item"><a class="ttsc-breadcrumb-link" href="#">Séries e turmas</a></li>
+                  <li class="ttsc-breadcrumb-separator" aria-hidden="true"><svg class="icon icon--sm"><use href="#i-chevron-right"/></svg></li>
+                  <li class="ttsc-breadcrumb-item"><span class="ttsc-breadcrumb-page" aria-current="page">Lista de turmas</span></li>
+                </ol>
+              </nav>
+              <div class="ttsc-toolbar">
+                <button type="button" class="ttsc-btn ttsc-btn-ghost ttsc-btn-icon" id="sub-sidebar-expand-btn" aria-controls="sub-sidebar" aria-expanded="true" aria-label="Mostrar menu do módulo" hidden>
+                  <svg class="icon" aria-hidden="true"><use href="#i-panel-open"/></svg>
+                </button>
+                <h1 class="ttsc-title-fluid">Lista de turmas</h1>
               </div>
+              <p class="text-muted-foreground">Período letivo <span data-context-value="period">2026</span> · <span data-context-value="unit">Unidade Centro</span> · dados fictícios de exemplo</p>
             </div>
-            <div class="page-header__actions">
-              <button type="button" class="btn">
+            <div class="ttsc-page-header__actions">
+              <button type="button" class="ttsc-btn ttsc-btn-outline">
                 <svg class="icon icon--sm" aria-hidden="true"><use href="#i-download"/></svg>
-                Exportar
+                <span>Exportar</span>
               </button>
-              <a class="btn btn--primary" href="#">
+              <a class="ttsc-btn ttsc-btn-primary" href="#">
                 <svg class="icon icon--sm" aria-hidden="true"><use href="#i-plus"/></svg>
-                Nova turma
+                <span>Nova turma</span>
               </a>
             </div>
+          </header>
+
+          <!-- Estado: dados -->
+          <div class="ttsc-stack" data-state="data">
+            <section class="ttsc-grid ttsc-grid--kpi" aria-label="Resumo das turmas">
+              <section class="ttsc-card ttsc-card-kpi" aria-labelledby="kpi-abertas">
+                <div class="ttsc-card-content">
+                  <span class="ttsc-kpi-label" id="kpi-abertas">Turmas abertas</span>
+                  <div class="ttsc-kpi-value ttsc-kpi-value-fluid">38</div>
+                  <div class="ttsc-kpi-delta">em 3 turnos</div>
+                </div>
+              </section>
+              <section class="ttsc-card ttsc-card-kpi" aria-labelledby="kpi-ocupacao">
+                <div class="ttsc-card-content">
+                  <span class="ttsc-kpi-label" id="kpi-ocupacao">Ocupação da unidade</span>
+                  <div class="ttsc-kpi-value ttsc-kpi-value-fluid">87%</div>
+                  <div class="ttsc-kpi-delta is-up">1.046 de 1.200 vagas</div>
+                </div>
+              </section>
+              <section class="ttsc-card ttsc-card-kpi" aria-labelledby="kpi-lotadas">
+                <div class="ttsc-card-content">
+                  <span class="ttsc-kpi-label" id="kpi-lotadas">Turmas lotadas</span>
+                  <div class="ttsc-kpi-value ttsc-kpi-value-fluid">5</div>
+                  <div class="ttsc-kpi-delta">enturmação bloqueada sem vaga</div>
+                </div>
+              </section>
+              <section class="ttsc-card ttsc-card-kpi" aria-labelledby="kpi-conflitos">
+                <div class="ttsc-card-content">
+                  <span class="ttsc-kpi-label" id="kpi-conflitos">Conflitos na grade</span>
+                  <div class="ttsc-kpi-value ttsc-kpi-value-fluid">2</div>
+                  <div class="ttsc-kpi-delta is-down">a grade não publica com conflito</div>
+                </div>
+              </section>
+            </section>
+
+            <section class="ttsc-card" aria-labelledby="tbl-turmas">
+              <div class="ttsc-card-header">
+                <div class="ttsc-card-heading">
+                  <h2 class="ttsc-card-title" id="tbl-turmas">Turmas do período</h2>
+                  <p class="ttsc-card-description" data-turmas-count>Mostrando 6 de 6</p>
+                </div>
+                <div class="ttsc-card-toolbar">
+                  <div class="ttsc-input ttsc-input-sm">
+                    <svg class="icon icon--sm" aria-hidden="true"><use href="#i-search"/></svg>
+                    <input type="search" placeholder="Buscar turma, curso ou sala" autocomplete="off" aria-label="Buscar turma" data-turmas-search>
+                  </div>
+                </div>
+              </div>
+
+              <div class="ttsc-card-table">
+                <div class="ttsc-table-wrapper ttsc-table-wrapper--scroll" tabindex="0" role="region" aria-label="Lista de turmas">
+                  <table class="ttsc-table ttsc-table-highlight">
+                    <thead>
+                      <tr>
+                        <th scope="col">Turma</th>
+                        <th scope="col" class="ttsc-hide-sm">Curso</th>
+                        <th scope="col" class="ttsc-hide-sm">Turno</th>
+                        <th scope="col" class="ttsc-hide-sm">Sala</th>
+                        <th scope="col">Vagas</th>
+                        <th scope="col">Situação</th>
+                      </tr>
+                    </thead>
+                    <tbody data-turmas-rows>
+                      <tr><td><a class="ttsc-link" href="#">1º ano A</a></td><td class="ttsc-hide-sm">Ensino Fundamental I</td><td class="ttsc-hide-sm">Manhã</td><td class="ttsc-hide-sm">Sala 101</td><td>28 / 30</td><td><span class="ttsc-badge ttsc-badge-sm ttsc-badge-light ttsc-badge-success">Aberta</span></td></tr>
+                      <tr><td><a class="ttsc-link" href="#">1º ano B</a></td><td class="ttsc-hide-sm">Ensino Fundamental I</td><td class="ttsc-hide-sm">Tarde</td><td class="ttsc-hide-sm">Sala 101</td><td>25 / 30</td><td><span class="ttsc-badge ttsc-badge-sm ttsc-badge-light ttsc-badge-success">Aberta</span></td></tr>
+                      <tr><td><a class="ttsc-link" href="#">5º ano A</a></td><td class="ttsc-hide-sm">Ensino Fundamental I</td><td class="ttsc-hide-sm">Manhã</td><td class="ttsc-hide-sm">Sala 205</td><td>30 / 30</td><td><span class="ttsc-badge ttsc-badge-sm ttsc-badge-light ttsc-badge-warning">Lotada</span></td></tr>
+                      <tr><td><a class="ttsc-link" href="#">9º ano A</a></td><td class="ttsc-hide-sm">Ensino Fundamental II</td><td class="ttsc-hide-sm">Manhã</td><td class="ttsc-hide-sm">Sala 302</td><td>32 / 35</td><td><span class="ttsc-badge ttsc-badge-sm ttsc-badge-light ttsc-badge-destructive">Sem regente</span></td></tr>
+                      <tr><td><a class="ttsc-link" href="#">1ª série A</a></td><td class="ttsc-hide-sm">Ensino Médio</td><td class="ttsc-hide-sm">Manhã</td><td class="ttsc-hide-sm">Sala 401</td><td>34 / 40</td><td><span class="ttsc-badge ttsc-badge-sm ttsc-badge-light ttsc-badge-success">Aberta</span></td></tr>
+                      <tr><td><a class="ttsc-link" href="#">3ª série A</a></td><td class="ttsc-hide-sm">Ensino Médio</td><td class="ttsc-hide-sm">Integral</td><td class="ttsc-hide-sm">Sala 403</td><td>29 / 40</td><td><span class="ttsc-badge ttsc-badge-sm ttsc-badge-light ttsc-badge-success">Aberta</span></td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Sem resultado para a busca -->
+              <div class="ttsc-card-content" data-turmas-no-results hidden>
+                <div class="ttsc-empty-state is-no-results" role="status" aria-live="polite">
+                  <span class="ttsc-empty-state-icon"><svg class="icon" aria-hidden="true"><use href="#i-search"/></svg></span>
+                  <h3 class="ttsc-empty-state-title">Nenhuma turma para “<span data-turmas-term></span>”</h3>
+                  <p class="ttsc-empty-state-desc">Confira o nome da turma, do curso ou da sala, ou limpe a busca para ver todas.</p>
+                  <button type="button" class="ttsc-empty-state-action" data-action="clear-search">Limpar busca</button>
+                </div>
+              </div>
+
+              <div class="ttsc-card-footer">
+                <nav class="ttsc-pagination-standard" aria-label="Paginação de turmas">
+                  <span class="info">Página 1 de 1</span>
+                  <div class="ttsc-pagination">
+                    <div class="ttsc-pagination-item">
+                      <button type="button" class="ttsc-btn ttsc-btn-icon ttsc-btn-sm" aria-label="Página anterior" disabled><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron-left"/></svg></button>
+                    </div>
+                    <div class="ttsc-pagination-item">
+                      <button type="button" class="ttsc-btn ttsc-btn-icon ttsc-btn-sm active" aria-current="page" aria-label="Página 1">1</button>
+                    </div>
+                    <div class="ttsc-pagination-item">
+                      <button type="button" class="ttsc-btn ttsc-btn-icon ttsc-btn-sm" aria-label="Próxima página" disabled><svg class="icon icon--sm" aria-hidden="true"><use href="#i-chevron-right"/></svg></button>
+                    </div>
+                  </div>
+                </nav>
+              </div>
+            </section>
           </div>
 
-          <section class="kpis" aria-label="Resumo">
-            <div class="card card__body">
-              <p class="t-meta">Turmas ativas</p>
-              <p class="kpi__value">38</p>
-              <p class="kpi__trend">em 3 turnos</p>
-            </div>
-            <div class="card card__body">
-              <p class="t-meta">Alunos enturmados</p>
-              <p class="kpi__value">1.046</p>
-              <p class="kpi__trend kpi__trend--up">+24 desde agosto</p>
-            </div>
-            <div class="card card__body">
-              <p class="t-meta">Ocupação média</p>
-              <p class="kpi__value">87%</p>
-              <p class="kpi__trend">capacidade total 1.200</p>
-            </div>
-            <div class="card card__body">
-              <p class="t-meta">Sem professor regente</p>
-              <p class="kpi__value">2</p>
-              <p class="kpi__trend kpi__trend--down">resolver antes do conselho</p>
+          <!-- Estado: vazio (nenhuma turma no período) -->
+          <section class="ttsc-card" data-state="empty" aria-label="Nenhuma turma" hidden>
+            <div class="ttsc-card-content">
+              <div class="ttsc-empty-state is-no-data" role="status">
+                <span class="ttsc-empty-state-icon"><svg class="icon" aria-hidden="true"><use href="#i-academic"/></svg></span>
+                <h3 class="ttsc-empty-state-title">Nenhuma turma no período letivo</h3>
+                <p class="ttsc-empty-state-desc">As turmas da unidade aparecem aqui assim que a primeira for criada.</p>
+                <a class="ttsc-empty-state-action" href="#"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-plus"/></svg>Nova turma</a>
+              </div>
             </div>
           </section>
 
-          <section class="card" aria-labelledby="tbl-title">
-            <div class="card__head">
-              <h2 class="t-subheading" id="tbl-title">Turmas de 2026</h2>
-              <span class="t-muted">Mostrando 6 de 38</span>
+          <!-- Estado: carregando (formato dos KPIs e da tabela) -->
+          <section class="ttsc-stack" data-state="loading" aria-label="Carregando turmas" hidden>
+            <div class="ttsc-grid ttsc-grid--kpi" aria-hidden="true">
+              <div class="ttsc-card"><div class="ttsc-card-content ttsc-stack ttsc-stack--tight"><div class="ttsc-skeleton ttsc-skeleton-line"></div><div class="ttsc-skeleton ttsc-skeleton-block"></div></div></div>
+              <div class="ttsc-card"><div class="ttsc-card-content ttsc-stack ttsc-stack--tight"><div class="ttsc-skeleton ttsc-skeleton-line"></div><div class="ttsc-skeleton ttsc-skeleton-block"></div></div></div>
+              <div class="ttsc-card"><div class="ttsc-card-content ttsc-stack ttsc-stack--tight"><div class="ttsc-skeleton ttsc-skeleton-line"></div><div class="ttsc-skeleton ttsc-skeleton-block"></div></div></div>
+              <div class="ttsc-card"><div class="ttsc-card-content ttsc-stack ttsc-stack--tight"><div class="ttsc-skeleton ttsc-skeleton-line"></div><div class="ttsc-skeleton ttsc-skeleton-block"></div></div></div>
             </div>
-            <div class="table-wrap">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">Turma</th>
-                    <th scope="col">Segmento</th>
-                    <th scope="col">Turno</th>
-                    <th scope="col">Regente</th>
-                    <th scope="col" class="num">Alunos</th>
-                    <th scope="col">Situação</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr><td><a href="#">1º ano A</a></td><td>Fundamental I</td><td>Manhã</td><td>Marta Lopes</td><td class="num">28 / 30</td><td><span class="status status--ok">Ativa</span></td></tr>
-                  <tr><td><a href="#">1º ano B</a></td><td>Fundamental I</td><td>Tarde</td><td>Paulo Mendes</td><td class="num">25 / 30</td><td><span class="status status--ok">Ativa</span></td></tr>
-                  <tr><td><a href="#">5º ano A</a></td><td>Fundamental I</td><td>Manhã</td><td>Cláudia Reis</td><td class="num">30 / 30</td><td><span class="status status--warn">Lotada</span></td></tr>
-                  <tr><td><a href="#">9º ano A</a></td><td>Fundamental II</td><td>Manhã</td><td>—</td><td class="num">32 / 35</td><td><span class="status status--danger">Sem regente</span></td></tr>
-                  <tr><td><a href="#">1ª série EM</a></td><td>Ensino Médio</td><td>Manhã</td><td>Rafael Souza</td><td class="num">34 / 40</td><td><span class="status status--ok">Ativa</span></td></tr>
-                  <tr><td><a href="#">3ª série EM</a></td><td>Ensino Médio</td><td>Integral</td><td>Helena Dias</td><td class="num">29 / 40</td><td><span class="status status--ok">Ativa</span></td></tr>
-                </tbody>
-              </table>
+            <div class="ttsc-card" aria-hidden="true">
+              <div class="ttsc-card-content ttsc-stack">
+                <div class="ttsc-skeleton ttsc-skeleton-line"></div>
+                <div class="ttsc-skeleton ttsc-skeleton-line"></div>
+                <div class="ttsc-skeleton ttsc-skeleton-line"></div>
+                <div class="ttsc-skeleton ttsc-skeleton-line"></div>
+              </div>
             </div>
-            <div class="card__foot">
-              <span class="t-muted">Página 1 de 7</span>
-              <button type="button" class="btn">Próxima página</button>
+            <p class="sr-only" role="status">Carregando turmas…</p>
+          </section>
+
+          <!-- Estado: erro ao carregar -->
+          <section class="ttsc-card" data-state="error" aria-label="Erro ao carregar turmas" hidden>
+            <div class="ttsc-card-content">
+              <div class="ttsc-empty-state is-error" role="alert">
+                <span class="ttsc-empty-state-icon"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg></span>
+                <h3 class="ttsc-empty-state-title">Não foi possível carregar as turmas</h3>
+                <p class="ttsc-empty-state-desc">O servidor não respondeu. O contexto e a busca foram mantidos.</p>
+                <button type="button" class="ttsc-empty-state-action" data-action="retry"><svg class="icon icon--sm" aria-hidden="true"><use href="#i-refresh"/></svg>Tentar novamente</button>
+              </div>
             </div>
           </section>
+
         </div>
       </main>
 
       <!-- ================================================================
-           REGIÃO 5 — FOOTER (40px)
+           REGIÃO 5 — FOOTER (40px, quebra linha em tela estreita)
            ================================================================ -->
       <footer class="app-footer">
         <span>© 2026 TotusTuus · v2.0</span>
@@ -488,7 +623,7 @@
           <a href="#">Termos de uso</a>
           <a href="#">Suporte</a>
         </nav>
-        <span class="ftr-status" role="status">Sistemas operando</span>
+        <span class="ftr-status">Sistemas operando</span>
       </footer>
     </div>
   </div>
@@ -496,5 +631,7 @@
 
 <div id="navigation-backdrop" hidden></div>
 
+<script type="module" src="js/layout.js"></script>
+<script type="module" src="js/pagina-turmas.js"></script>
 </body>
 </html>

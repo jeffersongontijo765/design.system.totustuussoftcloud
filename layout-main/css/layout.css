@@ -10,17 +10,26 @@
  *   └────────┴─────────────────────┴────────────────────────────────────────┘
  *
  * Abaixo de 1100px o rail e o sub-sidebar viram gavetas abertas pelos botões do header,
- * como no chassi real do app (layouts/main.php). Só posição e tamanho ficam aqui;
+ * como no chassi real do app (layouts/main.php, components/Navigation/README.md).
+ * 1100px é o corte do chassi; dentro do container valem os breakpoints do DS
+ * (480/768/1024/1280, ttsc-responsive.css). Só posição e tamanho ficam aqui;
  * aparência de itens fica em components.css.
  */
 
 /* 1. Página inteira: header em cima, corpo embaixo ------------------------- */
 .app-shell {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);   /* o header nunca alarga a página */
   grid-template-rows: var(--ttsc-header-h) minmax(0, 1fr);
   height: 100vh;
   height: 100dvh;
   overflow: hidden;              /* só o container rola */
+}
+
+/* .ttsc-page dá o movimento reduzido e o overflow-x do DS; o respiro no fim da página
+   fica no container (#main-viewport), não no chassi. */
+.app-shell.ttsc-page {
+  padding-bottom: 0;
 }
 
 /* 2. Header ---------------------------------------------------------------- */
@@ -31,6 +40,7 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--ttsc-space-3);
+  min-width: 0;
   padding: 0 var(--ttsc-space-4);
   background: var(--ttsc-surface);
   border-bottom: 1px solid var(--ttsc-border);
@@ -96,15 +106,8 @@
   flex: 1 1 auto;
   min-height: 0;
   overflow: auto;
-  padding: var(--ttsc-space-4) var(--ttsc-space-4) var(--ttsc-space-16);  /* 64px de folga no fim */
+  padding: var(--ttsc-space-4) 0 var(--ttsc-space-16);   /* laterais vêm do .ttsc-container */
   background: var(--ttsc-canvas);
-}
-
-@media (min-width: 640px) {
-  #main-viewport {
-    padding-left: var(--ttsc-space-5);
-    padding-right: var(--ttsc-space-5);
-  }
 }
 
 .app-footer {
@@ -113,8 +116,9 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--ttsc-space-3);
-  height: var(--ttsc-footer-h);
-  padding: 0 var(--ttsc-space-4);
+  flex-wrap: wrap;               /* em tela estreita quebra linha em vez de esconder itens */
+  min-height: var(--ttsc-footer-h);
+  padding: var(--ttsc-space-2) var(--ttsc-space-4);
   background: var(--ttsc-surface);
   border-top: 1px solid var(--ttsc-border);
 }
@@ -123,12 +127,16 @@
 #navigation-backdrop {
   position: fixed;
   inset: 0;
-  z-index: var(--ttsc-z-backdrop);
-  background: rgba(15, 23, 42, 0.4);
+  background: var(--ttsc-scrim);
 }
 
-#navigation-backdrop[hidden] {
-  display: none;
+/* O bundle põe o fundo em --ttsc-z-backdrop (1040), mas força o rail com foco a
+   z-index 50 !important. Com a gaveta aberta o foco está dentro dela, e ela ficava
+   embaixo do fundo, borrada. O fundo fica entre o header/rail (30/40) e as gavetas
+   (50 ou mais). Mesma especificidade da regra do bundle, carregada depois.
+   docs/ai/gaps.md, GAP-07. */
+#navigation-backdrop:not([hidden]) {
+  z-index: calc(var(--ttsc-z-floating) + 5);
 }
 
 /* 8. Gavetas abaixo de 1100px ---------------------------------------------- */
@@ -140,9 +148,7 @@
   #primary-rail-wrapper,
   #sub-sidebar {
     position: fixed;
-    top: var(--ttsc-header-h);
-    bottom: 0;
-    left: 0;
+    inset: 0 auto 0 0;           /* altura toda, como o chassi do bundle */
     z-index: var(--ttsc-z-drawer);
     width: min(320px, 100vw - 48px);
     transform: translateX(-100%);

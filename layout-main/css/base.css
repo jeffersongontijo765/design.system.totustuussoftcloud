@@ -1,24 +1,23 @@
 /*
- * base.css — reset, tipografia, foco e utilitários.
+ * base.css — o mínimo que o chassi precisa além do design system.
  *
- * Ordem de carga: tokens.css → base.css → layout.css → components.css.
- * Regras deste arquivo valem para a página inteira; nada aqui posiciona o chassi.
+ * Ordem de carga:
+ *   ../components/ttsc.css  (tokens + bundle + ponte de tema + camada responsiva)
+ *   → base.css → layout.css → components.css
+ *
+ * O ttsc.css já traz reset (preflight), .sr-only, [hidden] e movimento reduzido
+ * (dentro de .ttsc-page). Aqui ficam só: fonte e cor do corpo, foco visível,
+ * ícones do sprite e o link "pular para o conteúdo".
  */
 
-/* 1. Reset mínimo ------------------------------------------------------------ */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
+/* 1. Corpo ------------------------------------------------------------------- */
 html,
 body {
   height: 100%;
-  margin: 0;
 }
 
 body {
+  margin: 0;
   font-family: var(--font-sans);
   font-size: 13px;               /* corpo do design system (README do DS, Tipografia) */
   line-height: 1.5;
@@ -27,80 +26,18 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-img,
-svg {
-  display: block;
-  max-width: 100%;
-}
-
-button,
-input,
-select,
-textarea {
-  font: inherit;
-  color: inherit;
-}
-
-button {
-  cursor: pointer;
-  background: none;
-  border: 0;
-  padding: 0;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-ul,
-ol {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-h1,
-h2,
-h3,
-p {
-  margin: 0;
-}
-
-/* 2. Tipografia (escala do DS) ---------------------------------------------- */
-.t-page-title {
-  font-size: 20px;
-  line-height: 28px;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-}
-
-.t-subheading {
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 600;
-}
-
-.t-meta {
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--ttsc-text-muted);
-}
-
-.t-muted {
-  color: var(--ttsc-text-muted);
-}
-
-/* 3. Foco visível ------------------------------------------------------------ */
+/* 2. Foco visível ------------------------------------------------------------ */
 :focus-visible {
-  outline: 2px solid var(--ttsc-accent);
+  outline: 2px solid var(--ttsc-accent-text);   /* accent-text: contraste AA nos dois temas */
   outline-offset: 2px;
-  border-radius: var(--ttsc-radius-xs);
 }
 
-/* 4. Ícones (sprite SVG no topo do index.html) ------------------------------ */
+/* Campo com ícone (div.ttsc-input > input): o anel de foco é o do wrapper (:focus-within). */
+.ttsc-input > input:focus-visible {
+  outline: none;
+}
+
+/* 3. Ícones do sprite SVG (index.html, topo do <body>) ---------------------- */
 .icon {
   width: 18px;
   height: 18px;
@@ -117,24 +54,14 @@ p {
   height: 14px;
 }
 
-/* 5. Utilitários ------------------------------------------------------------- */
-/* [hidden] sempre esconde, mesmo com display definido por classe ou por "svg { display:block }". */
-[hidden] {
-  display: none !important;
-}
-
-.sr-only {
-  position: absolute !important;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
+.icon-sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
   overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
 }
 
+/* 4. Pular para o conteúdo --------------------------------------------------- */
 .skip-link {
   position: absolute;
   left: var(--ttsc-space-2);
@@ -148,14 +75,4 @@ p {
 
 .skip-link:focus {
   top: var(--ttsc-space-2);
-}
-
-/* 6. Movimento reduzido ------------------------------------------------------ */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    transition-duration: 0.01ms !important;
-    animation-duration: 0.01ms !important;
-  }
 }

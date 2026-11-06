@@ -3,13 +3,20 @@
    Uso: <link rel="stylesheet" href="components/ttsc.css">
 
    Ordem obrigatória:
-     1. tokens (variáveis dos temas claro/escuro)
-     2. bundle de componentes (ttscui + plugins + utilitários compilados)
+     1. bundle de componentes (ttscui + plugins + utilitários compilados)
+     2. tokens (variáveis dos temas claro/escuro)
      3. ponte de tema (variáveis do bundle -> tokens TTSC)
      4. camada responsiva (breakpoints e primitivos)
+
+   Os tokens vêm DEPOIS do bundle de propósito: o bundle traz um bloco :root de
+   apelidos do chassi (--ttsc-canvas: var(--bg), --ttsc-border: var(--border)…)
+   que, carregado por último, sobrescrevia 7 tokens no tema claro e criava o
+   ciclo --ttsc-border → --border → --ttsc-border (as duas variáveis ficavam
+   vazias e as bordas sumiam). Com os tokens depois, eles voltam a ser a fonte
+   da verdade nos dois temas. Registro: docs/ai/gaps.md (GAP-02).
    ========================================================================== */
 
-@import url("./__tokens.css");
 @import url("./bundle.css");
+@import url("./__tokens.css");
 @import url("./ttsc-theme-bridge.css");
 @import url("./ttsc-responsive.css");
